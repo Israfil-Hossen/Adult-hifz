@@ -1,6 +1,6 @@
 # নতুন ভাষা যোগ করা · Adding a language
 
-অ্যাপের সব লেখা `lang/` ফোল্ডারে। কোডে হাত না দিয়েই যেকোনো ভাষা যোগ করা যায়।
+অ্যাপের সব লেখা `index.html`-এর উপরের দিকে, আলাদা ব্লকে। বাকি কোডে হাত না দিয়েই যেকোনো ভাষা যোগ করা যায়।
 
 বর্তমানে আছে: **বাংলা** (`bn`) · **English** (`en`) · **اردو** (`ur`) · **中文** (`zh`)
 
@@ -8,51 +8,49 @@
 
 ## তিন ধাপে নতুন ভাষা
 
-### ১ · ফাইল কপি করুন
+চার ভাষাই এখন `index.html`-এর **ভেতরে**। ফাইলের উপরের দিকে খুঁজুন — পরপর চারটা ব্লক:
 
-`lang/en.js` কপি করে ভাষার কোড নামে রাখুন — যেমন তুর্কির জন্য `lang/tr.js`, আরবির জন্য `lang/ar.js`, ইন্দোনেশিয়ার জন্য `lang/id.js`।
-
-ভাষার কোড দুই অক্ষরের ([ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) তালিকা)।
-
-### ২ · উপরের নামটা বদলান
-
-ফাইলের প্রথম লাইনে:
-
-```js
-window.HIFZ_LANG_en = {     →     window.HIFZ_LANG_tr = {
+```
+window.HIFZ_LANG_en = { ... }
+window.HIFZ_LANG_bn = { ... }
+window.HIFZ_LANG_ur = { ... }
+window.HIFZ_LANG_zh = { ... }
 ```
 
-তারপর মাথার সেটিংসগুলো:
+### ১ · একটা ব্লক কপি করুন
+
+`window.HIFZ_LANG_en = {` থেকে তার শেষ `};` পর্যন্ত পুরোটা কপি করে ঠিক নিচে বসান, নতুন `<script>` ট্যাগের ভেতরে।
+
+### ২ · নাম ও সেটিংস বদলান
 
 ```js
-code: "tr",
-name: "Türkçe",              // পিকারে যে নামটা দেখাবে — নিজের ভাষাতেই লিখুন
-dir: "ltr",                  // আরবি, উর্দু, ফারসি, হিব্রু হলে "rtl"
-digits: "0123456789",        // ভাষার নিজস্ব অঙ্ক থাকলে বসান
-locale: "tr-TR",
-fonts: {
-  google: "Spectral:wght@400;500&family=Inter:wght@400;600",
-  display: '"Spectral", Georgia, serif',
-  body: '"Inter", system-ui, sans-serif',
-  lineHeight: "1.7"          // নাস্তালিক লিপির জন্য ২.০+, চীনার জন্য ১.৮৫
-}
+window.HIFZ_LANG_tr = {       // ← ভাষার কোড, যেমন তুর্কির জন্য tr
+  code: "tr",
+  name: "Türkçe",             // পিকারে যা দেখাবে — নিজের ভাষাতেই
+  dir: "ltr",                 // আরবি, উর্দু, ফারসি, হিব্রু হলে "rtl"
+  digits: "0123456789",       // ভাষার নিজস্ব অঙ্ক থাকলে বসান
+  locale: "tr-TR",
+  fonts: {
+    google: "Spectral:wght@400;500&family=Inter:wght@400;600",
+    display: '"Spectral", Georgia, serif',
+    body: '"Inter", system-ui, sans-serif',
+    lineHeight: "1.7"         // নাস্তালিকের জন্য ২.০+, চীনার জন্য ১.৮৫
+  },
 ```
 
 তারপর ডান পাশের লেখাগুলো অনুবাদ করুন।
 
 ### ৩ · তালিকায় যোগ করুন
 
-`index.html` ফাইলে একটামাত্র লাইন:
+একই ফাইলে নিচের দিকে একটামাত্র লাইন:
 
 ```js
-var LANGS = ["bn", "en", "ur", "zh"];      →     var LANGS = ["bn", "en", "ur", "zh", "tr"];
+var LANGS = ["bn", "en", "ur", "zh"];   →   var LANGS = ["bn", "en", "ur", "zh", "tr"];
 ```
 
-শেষে `sw.js`-এ `"./lang/tr.js"` যোগ করুন আর `CACHE` সংখ্যাটা বাড়িয়ে দিন।
+শেষে `sw.js`-এ `CACHE` সংখ্যাটা এক বাড়িয়ে দিন, যাতে সবার ফোনে নতুন সংস্করণ পৌঁছায়।
 
-**ব্যস।** ভাষা পিকারে নতুন নামটা চলে আসবে।
-
----
+**ব্যস।** পিকারে নতুন ভাষাটা চলে আসবে।
 
 ## অনুবাদের নিয়ম
 
@@ -80,45 +78,24 @@ week: "<b>{1}–{2} সংখ্যক পৃষ্ঠা — এই সপ্�
 
 ---
 
-## অনুবাদ যাচাই করার স্ক্রিপ্ট
+## অনুবাদ ঠিক আছে কি না দেখা
 
-Node ইনস্টল থাকলে ফোল্ডারে এই ফাইলটা বানিয়ে চালান — কোন কী বাদ পড়েছে, কোথায় প্লেসহোল্ডার মেলেনি, সব ধরিয়ে দেবে:
+ব্রাউজারে অ্যাপটা খুলে **F12** চেপে Console-এ এটা চালান — কোন কী বাদ পড়েছে, কোথায় প্লেসহোল্ডার মেলেনি, ধরিয়ে দেবে:
 
 ```js
-// check.js  —  node check.js tr
-const fs = require("fs");
-const code = process.argv[2];
-global.window = {};
-eval(fs.readFileSync("lang/en.js", "utf8"));
-eval(fs.readFileSync("lang/" + code + ".js", "utf8"));
-
-const walk = (o, pre, out) => {
-  for (const k in o) {
-    const v = o[k], p = pre ? pre + "." + k : k;
-    if (Array.isArray(v)) out[p] = "array:" + v.length;
-    else if (v && typeof v === "object") walk(v, p, out);
-    else out[p] = typeof v;
-  }
-  return out;
-};
-const get = (o, p) => p.split(".").reduce((a, b) => a && a[b], o);
-const en = walk(window.HIFZ_LANG_en, "", {});
-const tr = walk(window["HIFZ_LANG_" + code], "", {});
-
-const missing = Object.keys(en).filter(k => !(k in tr));
-const wrongLen = Object.keys(en).filter(k => k in tr && tr[k] !== en[k]);
-const badPh = Object.keys(en).filter(k => {
-  if (en[k] !== "string" || !(k in tr)) return false;
-  const r = s => (String(s || "").match(/\{\d\}/g) || []).sort().join();
-  return r(get(window.HIFZ_LANG_en, k)) !== r(get(window["HIFZ_LANG_" + code], k));
-});
-
-console.log("বাদ পড়েছে :", missing.length ? missing.join(", ") : "কিছু না");
-console.log("দৈর্ঘ্য ভুল :", wrongLen.length ? wrongLen.join(", ") : "কিছু না");
-console.log("প্লেসহোল্ডার:", badPh.length ? badPh.join(", ") : "ঠিক আছে");
+(code => {
+  const walk = (o, p, out) => { for (const k in o) { const v = o[k], q = p ? p+"."+k : k;
+    if (Array.isArray(v)) out[q] = "array:"+v.length;
+    else if (v && typeof v === "object") walk(v, q, out); else out[q] = typeof v; } return out; };
+  const get = (o, p) => p.split(".").reduce((a,b) => a && a[b], o);
+  const en = walk(window.HIFZ_LANG_en, "", {}), t = walk(window["HIFZ_LANG_"+code], "", {});
+  const r = s => (String(s||"").match(/\{\d\}/g)||[]).sort().join();
+  console.log("বাদ পড়েছে :", Object.keys(en).filter(k => !(k in t)).join(", ") || "কিছু না");
+  console.log("দৈর্ঘ্য ভুল :", Object.keys(en).filter(k => k in t && t[k] !== en[k]).join(", ") || "কিছু না");
+  console.log("প্লেসহোল্ডার:", Object.keys(en).filter(k => en[k] === "string" && k in t &&
+    r(get(window.HIFZ_LANG_en, k)) !== r(get(window["HIFZ_LANG_"+code], k))).join(", ") || "ঠিক আছে");
+})("tr");   // ← আপনার ভাষার কোড
 ```
-
----
 
 ## ডান-থেকে-বামে ভাষা
 
@@ -141,13 +118,13 @@ console.log("প্লেসহোল্ডার:", badPh.length ? badPh.join("
 <details>
 <summary><b>English</b></summary>
 
-All user-facing text lives in `lang/`. Adding a language never requires touching application code.
+All four languages live inline near the top of `index.html`. Adding one never requires touching application logic.
 
 **Three steps:**
 
-1. Copy `lang/en.js` to `lang/xx.js` (ISO 639-1 code).
-2. Rename `window.HIFZ_LANG_en` to `window.HIFZ_LANG_xx`, set `code`, `name`, `dir`, `digits`, `locale`, and `fonts`, then translate the values.
-3. Add `"xx"` to the `LANGS` array in `index.html`, add `"./lang/xx.js"` to `sw.js`, and bump `CACHE`.
+1. Near the top of `index.html`, copy the whole `window.HIFZ_LANG_en = { ... };` block into a new `<script>` tag below it.
+2. Rename it to `window.HIFZ_LANG_xx`, set `code`, `name`, `dir`, `digits`, `locale` and `fonts`, then translate the values.
+3. Add `"xx"` to the `LANGS` array further down the same file, and bump `CACHE` in `sw.js`.
 
 **Never translate:** the keys on the left, `{0}`-style placeholders, HTML tags, or researcher names. Placeholder *order* may change to suit your grammar; the numbers must all still appear.
 

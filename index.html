@@ -11,6 +11,1346 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link id="fontlink" rel="stylesheet" href="">
+<script>window.HIFZ_CONFIG = { googleClientId: "", driveFileName: "hifz-backup.json" };</script>
+<script>
+/* =========================================================
+   English — the reference language file.
+
+   To add a new language: copy this file, rename it to your
+   language code (e.g. lang/tr.js for Turkish), translate the
+   values on the right, and register it in index.html's LANGS
+   list. Any key you leave out falls back to English, so a
+   half-finished translation still works.
+
+   Do NOT translate: the keys on the left, {0} placeholders,
+   or anything inside code fences.
+   ========================================================= */
+
+window.HIFZ_LANG_en = {
+  code: "en",
+  name: "English",
+  dir: "ltr",
+  digits: "0123456789",
+  locale: "en-US",
+  fonts: {
+    google: "Spectral:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600;700",
+    display: '"Spectral", Georgia, serif',
+    body: '"Inter", system-ui, -apple-system, sans-serif',
+    lineHeight: "1.7"
+  },
+
+  months: ["January","February","March","April","May","June",
+           "July","August","September","October","November","December"],
+  monthsShort: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+  weekdays: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+
+  app: {
+    name: "Daily Companion",
+    title: "Hifz · Daily Companion",
+    desc: "A research-based Qur'an memorization tracker for adults",
+    streak: "day streak",
+    footer1: "Hifz · Daily Companion — <b>for adult learners</b>",
+    footer2: "Built on memory research · your data stays on your device"
+  },
+
+  nav: { today:"Today", routine:"Method", progress:"Progress", settings:"Settings" },
+
+  ob: {
+    kicker: "Let's begin",
+    h1a: "One page a day.",
+    h1b: "The app remembers the rest.",
+    lede: "Three answers, and from tomorrow the app tells you every morning which page is new, which seven to review, and which juz is due.",
+    lang: "Language",
+    date: "Start date",
+    dateHint: "Use today's date. The six-week ramp is counted from here.",
+    page: "First page you'll take",
+    pageHint: "Madani mushaf page number (1–604). Starting from the short surahs? Use 582 (Surah An-Naba).",
+    rest: "Weekly rest day",
+    restHint: "No new lesson that day — just the whole week reviewed in one sitting.",
+    go: "Start"
+  },
+
+  phase: {
+    week: "Week {0}",
+    rest: "Rest day",
+    target: "Target {0} lines",
+    noNew: "No new lesson today",
+    page: "Page {0}",
+    restNote: "The week's six pages in one sitting, unbroken.",
+    manual: "Your own chosen target.",
+    notes: [
+      "Just building the habit. Don't think about speed yet.",
+      "This is where the review load first bites.",
+      "Two blocks and a half — practice joining them.",
+      "Full page. The real arithmetic starts here."
+    ]
+  },
+
+  gate: {
+    q: "Yesterday's lesson — page {0} — could you recite it without the mushaf, without a single error?",
+    yes: "I could",
+    no: "I couldn't",
+    fail: "<b>No new lesson today.</b> Yesterday's page again — same drill, from the top.",
+    failStreak: " That's {0} days running. Drop to half a page for two weeks — you can change the target in Settings.",
+    pass: "Gate passed. Today's page is open."
+  },
+
+  blk: {
+    sabaq: "New lesson",
+    sabaqRepeat: "Repeat — yesterday's page",
+    sabaqMeta: "Page {0} · {1} lines · 50 minutes",
+    listen: "Passive listening",
+    listenMeta: "All day · costs no extra time",
+    sabaqi: "Sabaqi — the last seven days",
+    sabaqiMeta: "After Dhuhr · 25 minutes",
+    salah: "Recite in prayer",
+    salahMeta: "Five prayers · costs no extra time",
+    manzil: "Manzil — everything older",
+    manzilMeta: "Maghrib–Isha · 35 minutes · juz {0}",
+    manzilWait: "Maghrib–Isha · waiting",
+    night: "Final pass",
+    nightMeta: "Right before sleep · 10 minutes",
+    doneLabel: "Mark complete"
+  },
+
+  sabaq: {
+    pageLabel: "Today's page number",
+    pageHint: "The app assumes the next page. If your order differs — starting from Surah An-Naba, say — change it here.",
+    blocked: "<b>Nothing new today.</b> Same page, same drill, right from the start.",
+    intro: "Five steps per block. Tap a block above once you've finished it.",
+    after: "<b>After {0} blocks:</b> the whole passage 3 times with the mushaf closed, unbroken.",
+    drill: [
+      "<b>Listen 5 times</b> — eyes on those five lines, lips still",
+      "<b>Read aloud 7 times</b> — looking at the mushaf, unhurried",
+      "<b>Meaning once</b> — word by word, what each word means",
+      "<b>Cover and recite 3 times</b> — a count only starts when it's flawless",
+      "<b>Join twice</b> — pulling in from the last line of the previous block"
+    ]
+  },
+
+  listen: {
+    body: "Let today's page play in the same reciter's voice — in the car, the kitchen, on a walk. You don't need to concentrate; the ear does the work.",
+    qari: " Your reciter: <b>{0}</b>."
+  },
+
+  sabaqi: {
+    empty: "No review queue yet — it fills from tomorrow, once you've done your first lesson.",
+    weakLabel: "<b>Weak pages</b> — give these one extra pass:",
+    order: "<b>The order is the whole point:</b> close the mushaf and recite first, then open it and check. Do it the other way round and you lose everything this block is for.",
+    ago: "{0} days ago",
+    page: "p {0}"
+  },
+
+  salah: {
+    body: "Recite from today's lesson and this week's pages. Standing, no mushaf, pulling it out of memory under pressure — this is retrieval practice in its purest form.",
+    counted: "prayers recited"
+  },
+
+  manzil: {
+    week: "<b>This week's juz: {0}</b> — pages {1}–{2}. Only the parts you've memorized.",
+    rot: "The rotation is automatic. The more juz you accumulate, the further apart each one returns — which is exactly the interval at which Ebbinghaus's curve breaks.",
+    empty: "Manzil hasn't started yet. It switches on by itself once you have about 8 pages."
+  },
+
+  night: {
+    body: "Today's page once more, sitting on the bed. What goes in right before sleep consolidates best overnight. No screens after this."
+  },
+
+  timer: { start: "{0}-minute timer", stop: "Stop" },
+
+  log: {
+    err: "How many errors today",
+    errHint: "Whether this number is falling is the real measure of progress — not the page count.",
+    min: "Active time (minutes)",
+    note: "Weak spots / notes",
+    notePh: "Which ayah keeps catching you? Where did two similar verses blur together?",
+    weak: "Flag as weak (page number)",
+    weakPh: "e.g. 45",
+    weakAdd: "Add",
+    weakClear: "Clear list",
+    weakHint: "Flagged pages return to your review queue every day until you remove them."
+  },
+
+  sum: {
+    done: "Completed today",
+    total: "Total memorized",
+    stat: "{0} pages · {1} minutes today"
+  },
+
+  rt: {
+    ramp: {
+      k: "Starting out", h: "The six-week ramp",
+      p: "Memorizing new material is easy; holding on to it is not. These six weeks build the habit — not the speed — before the review load gets heavy.",
+      lines: "lines",
+      labels: ["Weeks 1–2","Weeks 3–4","Weeks 5–6","Week 7 →"]
+    },
+    day: {
+      k: "Every day", h: "Six touches through the day",
+      p: "Not three hours in one sitting — short sessions spread across the day. Cepeda's work on distributed practice shows the same total time retains far more when it's broken up.",
+      th: ["When","What","Time"],
+      rows: [
+        ["Fajr + 15m","New lesson — three blocks, then the whole page 3 times","50m"],
+        ["All day","Passive listening — the same reciter","0"],
+        ["After Dhuhr","Sabaqi — the last 7 days, mushaf closed first","25m"],
+        ["Five prayers","Recite from the lesson in salah","0"],
+        ["Maghrib–Isha","Manzil — one juz a week, rotating","35m"],
+        ["Before sleep","Today's page one last time","10m"]
+      ]
+    },
+    stuck: {
+      k: "When you're stuck", h: "The stubborn-line protocol",
+      p: "Reading a line ten more times doesn't work when it won't stick — you have to change method. Work down the list and stop at whichever one opens it.",
+      steps: [
+        "<b>Split it</b> — break the line into two or three pieces, set each separately, then join",
+        "<b>Go to the meaning</b> — getting stuck is almost always a sign you don't know what it says; read the translation of that stretch",
+        "<b>Write it by hand</b> — writing it once brings in a different sensory channel",
+        "<b>Pull from the line before</b> — not alone, but together with the previous line, 5 times",
+        "<b>Go to sleep</b> — if you've been stuck 20 minutes, stop. It often opens on its own the next morning"
+      ]
+    },
+    mut: {
+      k: "The biggest trap", h: "Mutashabihat — near-identical verses",
+      p: "The number one cause of hifz breaking down isn't new pages — it's two verses with near-identical wording blurring together. Memory research calls this interference, and the only cure is to learn the difference <b>deliberately</b>.",
+      steps: [
+        "<b>Write them side by side</b> — both verses on one sheet, one above the other",
+        "<b>Mark the exact word</b> — where they diverge",
+        "<b>Anchor the address</b> — \"this one is low on the right page, that one high on the left\"; spatial memory is what saves you here",
+        "<b>Log it in your notes</b> — in today's note field; review the whole list once a week"
+      ],
+      nh: "A small rule",
+      np: "A pair that blurred once will blur again. Write it down the very first time — six months from now this list will be the most valuable page you own."
+    },
+    real: {
+      k: "Real life", h: "Travel, illness, a brutal week",
+      p: "The routine will break. The only question is what you do on the day it breaks — and if the answer is \"nothing,\" hifz stops there.",
+      th: ["Situation","What to do"],
+      rows: [
+        ["No time","Skip the new lesson. Sabaqi only — 25 minutes. The streak survives."],
+        ["Travelling","Skip the new lesson. Listen, and recite in salah. The day still counts."],
+        ["Ill","Complete rest. Push through and you'll bake in wrong pronunciation, which is hard to undo."],
+        ["A week missed","Don't resume where you stopped — go back <b>two weeks</b> and spend two days on review only."],
+        ["A month missed","No new lesson for two weeks. Cycle once through everything you have, then restart."]
+      ]
+    },
+    month: {
+      k: "Monthly", h: "One day a month — the test",
+      p: "On the last rest day of the month: recite everything you memorized that month in one unbroken run — to someone, or into a recorder. Flag every page you stumbled on as <b>weak</b>. The app will feed them back into your daily review.",
+      gh: "The gate",
+      g1: "If you can't recite yesterday's page without the mushaf and without error — nothing new today.",
+      g2: "Two days stuck in a row: drop to half a page and try again in two weeks. Skip this rule and four months from now you'll have 100 pages you \"more or less remember\" — which counts as zero."
+    },
+    basis: {
+      k: "Foundations", h: "Where each step comes from",
+      th: ["Research","What it shows","Where it lands"],
+      rows: [
+        ["Craik &amp; Lockhart 1972<br>Craik &amp; Tulving 1975","Material understood for meaning is encoded far deeper than sound alone","Drill step 3 — word-by-word translation"],
+        ["Karpicke &amp; Roediger 2008<br>Roediger &amp; Butler 2011","Pulling from memory beats re-reading by a wide margin","Covered recitation · closed-mushaf-first sabaqi · reciting in salah"],
+        ["Ebbinghaus 1885<br>Cepeda 2006","Without review, much is lost within 24 hours; at widening intervals it becomes near-permanent","7-day sabaqi · manzil rotation · six touches a day"],
+        ["Miller 1956<br>Gobet 2001","Working memory holds only a few units at once","Splitting the page into 5-line blocks"],
+        ["Maguire 2000, 2003<br>Dresler 2017","The brain is extraordinary at remembering place and position","The same mushaf for life · anchoring mutashabihat by location"],
+        ["Paivio 1986<br>Shams &amp; Seitz 2008","Memory holds better when it enters through several senses","Listen + see + speak + write when stuck"],
+        ["Mayer &amp; Moreno 2003<br>Baddeley 2000","Interruption eats working-memory capacity","Phone in another room · 50-minute ceiling"],
+        ["Draganski 2004<br>Park &amp; Bischof 2013","Training produces structural change in adult brains too","32 isn't late — method is your advantage"]
+      ]
+    },
+    fixed: {
+      k: "Non-negotiable", h: "Three things with no give in them",
+      items: [
+        ["Tajweed first","Memorize with wrong pronunciation and fixing it is harder than memorizing from scratch. Recite to a teacher at least once a week."],
+        ["Seven hours of sleep","Consolidation happens largely during sleep. Cutting sleep to gain memorization time is a net loss — you shed more than you add."],
+        ["One mushaf, one reciter","Change the mushaf and the whole spatial layer is wiped; change the reciter and the melodic cue goes. Choose once, then don't touch it."]
+      ]
+    }
+  },
+
+  pg: {
+    k: "Progress", h: "Where you stand",
+    report: "Weekly report — for your teacher",
+    stats: ["pages memorized","full juz","complete","day streak","total hours","avg errors / day"],
+    map: "Mushaf map · 604 pages",
+    legend: ["Memorized","Today's","Weak","Remaining"],
+    heat: "Last 84 days",
+    heatNote: "Darker means more completed",
+    juz: "By juz",
+    rate: "At your current pace",
+    rateDaily: "Daily average",
+    rateLeft: "Remaining",
+    rateFinish: "Projected finish",
+    rateNone: "Let a few more days accumulate",
+    ratePages: "{0} pages",
+    weakH: "Weak pages",
+    weakP: "These come back into your review queue every day. Once you've been flawless for seven days running, clear them in Settings.",
+    notes: "Recent notes"
+  },
+
+  set: {
+    k: "Settings", h: "Your setup",
+    p: "Everything is stored on this device — nothing goes to a server. Clearing your browser wipes it, so either turn on Drive sync below or download a backup once a month.",
+    lang: "Language",
+    langHint: "The whole app switches — including the method tab.",
+    date: "Start date",
+    page: "First page",
+    rest: "Rest day",
+    lines: "Daily target (lines)",
+    linesAuto: "Automatic — follow the ramp",
+    linesN: "{0} lines",
+    linesHint: "Stuck at the gate two days running? Come down here. That isn't going backwards.",
+    qari: "Your reciter",
+    qariPh: "one, for life",
+    mushaf: "Your mushaf",
+    weakLabel: "Weak pages",
+    weakHint: "Tap to remove once you've been flawless for seven days.",
+    driveLabel: "Google Drive sync",
+    driveHint: "While linked, every change reaches your Drive within seconds. Sign in on a new phone with the same Google account and everything returns. The app can see only the one file it created — nothing else in your Drive.",
+    driveNoConfig: "Add your Client ID in config.js to switch this on.",
+    backupLabel: "File backup",
+    exp: "Download data (JSON)",
+    imp: "Restore from backup",
+    backupHint: "Download once a month and keep it in email or Drive. Restoring that file on a new phone brings everything back.",
+    danger: "Danger zone",
+    reset: "Erase all data",
+    confirmReset: "All data will be erased and cannot be recovered. Have you downloaded a backup?",
+    restored: "Backup restored.",
+    badFile: "Couldn't read that file. Pick a valid backup."
+  },
+
+  sync: {
+    off: "Sync off", connecting: "Connecting", ok: "Synced", failed: "Sync failed",
+    pushing: "Sending", pulling: "Fetching", reconciling: "Reconciling", cancelled: "Cancelled",
+    noConfig: "No Google Client ID set — add one in <b>config.js</b> to switch sync on.",
+    notLinked: "Not linked yet. Once linked, your data saves to your Drive automatically.",
+    linked: "Linked: <b>{0}</b>",
+    last: " · last sync {0}",
+    never: " · not synced yet",
+    connect: "Connect with Google",
+    push: "Send now",
+    pull: "Fetch from Drive",
+    unlink: "Unlink",
+    confirmOff: "Once unlinked, new changes stop reaching your Drive. The existing file stays there.",
+    notReady: "The Google library hasn't loaded yet — try again in a few seconds.",
+    pushFail: "Couldn't reach Drive. Check your connection and try again.",
+    pullFail: "No backup found in Drive.",
+    pulled: "Data restored from Drive."
+  },
+
+  rep: {
+    title: "Weekly Hifz Report",
+    stats: ["new pages","total memorized","total errors","hours"],
+    daily: "Day by day",
+    th: ["Date","Lesson","Gate","Errors","Minutes","Done"],
+    pass: "Pass", fail: "Fail", rest: "Rest",
+    gateH: "Gate results",
+    gateLine: "Pass <span class=\"ok\">{0}</span> days · Fail <span class=\"no\">{1}</span> days · Lesson completed {2} days. ",
+    verdictGood: "Pace is right — worth considering an increase.",
+    verdictBad: "The target is too high. Cut the daily line count and hold there two weeks.",
+    verdictOk: "Pace is about right. Stay at this target another week.",
+    weakH: "Weak pages — listen to these especially",
+    notesH: "Student's notes",
+    comment: "Teacher's comment",
+    signature: "Signature & date",
+    print: "Print / PDF",
+    close: "Close",
+    page: "Page {0}"
+  }
+};
+</script>
+<script>
+/* বাংলা — মূল ভাষা */
+
+window.HIFZ_LANG_bn = {
+  code: "bn",
+  name: "বাংলা",
+  dir: "ltr",
+  digits: "০১২৩৪৫৬৭৮৯",
+  locale: "bn-BD",
+  fonts: {
+    google: "Tiro+Bangla:ital@0;1&family=Anek+Bangla:wght@300;400;500;600;700",
+    display: '"Tiro Bangla","Noto Serif Bengali","Nirmala UI",Georgia,serif',
+    body: '"Anek Bangla","Noto Sans Bengali","Hind Siliguri","Nirmala UI",system-ui,sans-serif',
+    lineHeight: "1.72"
+  },
+
+  months: ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন",
+           "জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"],
+  monthsShort: ["জানু","ফেব","মার্চ","এপ্রি","মে","জুন","জুলা","আগ","সেপ্ট","অক্টো","নভে","ডিসে"],
+  weekdays: ["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"],
+
+  app: {
+    name: "দৈনিক সঙ্গী",
+    title: "হিফজ · দৈনিক সঙ্গী",
+    desc: "প্রাপ্তবয়স্কদের জন্য গবেষণা-ভিত্তিক কোরআন হিফজ ট্র্যাকার",
+    streak: "দিন ধারাবাহিক",
+    footer1: "হিফজ · দৈনিক সঙ্গী — <b>প্রাপ্তবয়স্কদের জন্য</b>",
+    footer2: "স্মৃতি-গবেষণার ভিত্তিতে সাজানো · ডেটা আপনার ডিভাইসেই থাকে"
+  },
+
+  nav: { today:"আজ", routine:"রুটিন", progress:"অগ্রগতি", settings:"সেটিংস" },
+
+  ob: {
+    kicker: "শুরু করা যাক",
+    h1a: "প্রতিদিন এক পৃষ্ঠা।",
+    h1b: "বাকিটা অ্যাপ মনে রাখবে।",
+    lede: "তিনটা তথ্য দিন — এরপর প্রতিদিন সকালে অ্যাপ নিজেই বলে দেবে আজ কোন পৃষ্ঠা নতুন, কোন সাতটা সাবকি, আর কোন পারা মানজিল।",
+    lang: "ভাষা",
+    date: "শুরুর তারিখ",
+    dateHint: "আজকের তারিখ দিন। এখান থেকেই র‍্যাম্পের সপ্তাহ গোনা হবে।",
+    page: "প্রথম যে পৃষ্ঠা ধরবেন",
+    pageHint: "মাদানি মুসহাফের পৃষ্ঠা নম্বর (১–৬০৪)। শেষ দিক থেকে শুরু করলে ৫৮২ (সূরা নাবা)।",
+    rest: "সাপ্তাহিক বিশ্রামের দিন",
+    restHint: "ওইদিন নতুন সবক নয় — শুধু পুরো সপ্তাহ একটানা মুরাজাআ।",
+    go: "শুরু করুন"
+  },
+
+  phase: {
+    week: "সপ্তাহ {0}",
+    rest: "বিশ্রামের দিন",
+    target: "লক্ষ্য {0} লাইন",
+    noNew: "আজ নতুন সবক নেই",
+    page: "পৃষ্ঠা {0}",
+    restNote: "সপ্তাহের ছয় পৃষ্ঠা একটানা, একবারে, বিরতি ছাড়া।",
+    manual: "নিজের ঠিক করা লক্ষ্য।",
+    notes: [
+      "শুধু রুটিন বসানোর সময়। গতি নিয়ে ভাববেন না।",
+      "এখানেই প্রথম সাবকি-চাপ টের পাবেন।",
+      "দুই ব্লক ও অর্ধেক — জোড়া লাগানোর অনুশীলন।",
+      "পূর্ণ পৃষ্ঠা। এখান থেকেই আসল হিসাব।"
+    ]
+  },
+
+  gate: {
+    q: "গতকালের সবক — পৃষ্ঠা {0} — মুসহাফ ছাড়া, ভুল ছাড়া বলতে পেরেছেন?",
+    yes: "পেরেছি",
+    no: "পারিনি",
+    fail: "<b>আজ নতুন সবক নয়।</b> গতকালের পৃষ্ঠাটাই আবার — একই ড্রিল, শুরু থেকে।",
+    failStreak: " এটা টানা {0} দিন। দুই সপ্তাহের জন্য অর্ধেক পৃষ্ঠায় নেমে আসুন — সেটিংসে লক্ষ্য বদলাতে পারেন।",
+    pass: "গেট পার। আজকের পৃষ্ঠা খোলা।"
+  },
+
+  blk: {
+    sabaq: "নতুন সবক",
+    sabaqRepeat: "পুনরাবৃত্তি — গতকালের পৃষ্ঠা",
+    sabaqMeta: "পৃষ্ঠা {0} · {1} লাইন · ৫০ মিনিট",
+    listen: "নিষ্ক্রিয় শ্রবণ",
+    listenMeta: "দিনভর · অতিরিক্ত সময় লাগে না",
+    sabaqi: "সাবকি — গত সাত দিন",
+    sabaqiMeta: "জোহরের পর · ২৫ মিনিট",
+    salah: "নামাজে পাঠ",
+    salahMeta: "পাঁচ ওয়াক্ত · অতিরিক্ত সময় লাগে না",
+    manzil: "মানজিল — পুরোনো সব",
+    manzilMeta: "মাগরিব–এশা · ৩৫ মিনিট · পারা {0}",
+    manzilWait: "মাগরিব–এশা · অপেক্ষায়",
+    night: "শেষ পাঠ",
+    nightMeta: "ঘুমের ঠিক আগে · ১০ মিনিট",
+    doneLabel: "সম্পন্ন"
+  },
+
+  sabaq: {
+    pageLabel: "আজকের পৃষ্ঠা নম্বর",
+    pageHint: "অ্যাপ নিজেই পরের পৃষ্ঠা ধরে নেয়। আপনার ক্রম আলাদা হলে — যেমন সূরা নাবা থেকে শুরু — এখানে বদলে দিন।",
+    blocked: "<b>আজ নতুন কিছু নয়।</b> একই পৃষ্ঠা, একই ড্রিল, একদম শুরু থেকে।",
+    intro: "প্রতিটি ব্লকে ঠিক এই পাঁচ ধাপ। ব্লক শেষ হলে উপরে ট্যাপ করে চিহ্নিত করুন।",
+    after: "<b>{0} ব্লক শেষে:</b> পুরো অংশ মুসহাফ বন্ধ করে ৩ বার, একটানা।",
+    drill: [
+      "<b>শুনুন ৫ বার</b> — চোখ ওই পাঁচ লাইনে, ঠোঁট নড়বে না",
+      "<b>দেখে পড়ুন ৭ বার</b> — উচ্চস্বরে, তাড়াহুড়ো ছাড়া",
+      "<b>অর্থ একবার</b> — শব্দে শব্দে, কোন শব্দের কী মানে",
+      "<b>ঢেকে বলুন ৩ বার</b> — নির্ভুল না হলে গোনা শুরু হবে না",
+      "<b>জোড়া দিন ২ বার</b> — আগের ব্লকের শেষ লাইন থেকে টেনে"
+    ]
+  },
+
+  listen: {
+    body: "আজকের পৃষ্ঠা একই ক্বারীর কণ্ঠে বাজতে থাকুক — গাড়িতে, রান্নাঘরে, হাঁটার সময়। মনোযোগ না দিলেও চলবে; কানই কাজটা করবে।",
+    qari: " আপনার ক্বারী: <b>{0}</b>।"
+  },
+
+  sabaqi: {
+    empty: "এখনো সাবকি নেই — প্রথম সবক শেষ হলে কাল থেকে এখানে আসবে।",
+    weakLabel: "<b>দুর্বল পৃষ্ঠা</b> — এগুলোয় বাড়তি একটা পাস দিন:",
+    order: "<b>ক্রমটাই আসল:</b> প্রথমে মুসহাফ বন্ধ করে বলুন, তারপর খুলে মিলিয়ে নিন। উল্টো করলে এই ব্লকের পুরো সুবিধাটা হারিয়ে যায়।",
+    ago: "{0} দিন আগে",
+    page: "পৃ {0}"
+  },
+
+  salah: {
+    body: "আজকের সবক ও চলতি সপ্তাহের অংশ থেকে পড়ুন। দাঁড়িয়ে, মুসহাফ ছাড়া, স্মৃতি থেকে বের করে আনা — এটাই রিট্রিভাল প্র্যাকটিসের সবচেয়ে খাঁটি রূপ।",
+    counted: "ওয়াক্তে পড়েছি"
+  },
+
+  manzil: {
+    week: "<b>এই সপ্তাহের পারা: {0}</b> — পৃষ্ঠা {1}–{2}। এর মধ্যে যেটুকু মুখস্থ, সেটুকুই।",
+    rot: "ঘূর্ণনটা স্বয়ংক্রিয়। যত পারা জমবে, প্রতিটি পারা তত সপ্তাহ পর পর ফিরে আসবে — Ebbinghaus-এর বক্ররেখা ঠিক এই ব্যবধানেই ভাঙে।",
+    empty: "মানজিল এখনো শুরু হয়নি। প্রায় ৮ পৃষ্ঠা জমলে এই ঘূর্ণন নিজে থেকেই চালু হবে।"
+  },
+
+  night: {
+    body: "আজকের পৃষ্ঠাটা একবার, বিছানায় বসে। ঘুমের ঠিক আগে যা যায়, রাতভর তার একত্রীকরণ সবচেয়ে ভালো হয়। এরপর আর স্ক্রিন নয়।"
+  },
+
+  timer: { start: "{0} মিনিটের টাইমার", stop: "শেষ" },
+
+  log: {
+    err: "আজ মোট কতগুলো ভুল হয়েছে",
+    errHint: "সংখ্যাটা কমছে কি না — সেটাই আসল অগ্রগতির মাপকাঠি, পৃষ্ঠার সংখ্যা নয়।",
+    min: "সক্রিয় সময় (মিনিট)",
+    note: "দুর্বল জায়গা / নোট",
+    notePh: "কোন আয়াতে বারবার আটকাচ্ছে? মুতাশাবিহাত কোথায় গুলিয়ে গেল?",
+    weak: "দুর্বল হিসেবে চিহ্নিত করুন (পৃষ্ঠা নম্বর)",
+    weakPh: "যেমন ৪৫",
+    weakAdd: "যোগ করুন",
+    weakClear: "তালিকা খালি করুন",
+    weakHint: "চিহ্নিত পৃষ্ঠা প্রতিদিন সাবকিতে ফিরে আসবে, যতক্ষণ না আপনি সরিয়ে দেন।"
+  },
+
+  sum: {
+    done: "আজকের সম্পন্ন",
+    total: "মোট মুখস্থ",
+    stat: "{0} পৃষ্ঠা · {1} মিনিট আজ"
+  },
+
+  rt: {
+    ramp: {
+      k: "শুরু", h: "ছয় সপ্তাহের র‍্যাম্প",
+      p: "নতুন মুখস্থ করা সহজ, ধরে রাখা কঠিন। এই দেড় মাসে গতি নয়, অভ্যাসটা তৈরি হয় — মুরাজাআর বোঝা ভারী হওয়ার আগেই।",
+      lines: "লাইন",
+      labels: ["সপ্তাহ ১–২","সপ্তাহ ৩–৪","সপ্তাহ ৫–৬","সপ্তাহ ৭ →"]
+    },
+    day: {
+      k: "প্রতিদিন", h: "দিনের ছয়টি স্পর্শ",
+      p: "একটানা তিন ঘণ্টা বসা নয় — দিনজুড়ে ছড়ানো ছোট সেশন। Cepeda-র বিতরণকৃত অনুশীলন গবেষণা বলে, একই সময় ভাগ করে দিলে ধারণক্ষমতা বহুগুণ বাড়ে।",
+      th: ["কখন","কী","সময়"],
+      rows: [
+        ["ফজর + ১৫ মি","নতুন সবক — তিন ব্লক, তারপর পুরো পৃষ্ঠা ৩ বার","৫০ মি"],
+        ["দিনভর","নিষ্ক্রিয় শ্রবণ — একই ক্বারী","০"],
+        ["জোহরের পর","সাবকি — গত ৭ দিন, বন্ধ-মুসহাফে আগে","২৫ মি"],
+        ["পাঁচ ওয়াক্ত","নামাজে সবক থেকে পাঠ","০"],
+        ["মাগরিব–এশা","মানজিল — সপ্তাহে এক পারা ঘূর্ণন","৩৫ মি"],
+        ["ঘুমের আগে","আজকের পৃষ্ঠা শেষবার","১০ মি"]
+      ]
+    },
+    stuck: {
+      k: "আটকে গেলে", h: "একগুঁয়ে লাইনের প্রোটোকল",
+      p: "একই লাইনে বারবার আটকালে আরও দশবার পড়া কাজ দেয় না — পদ্ধতি বদলাতে হয়। ক্রম অনুযায়ী চেষ্টা করুন, যেটায় খুলে যায় সেখানেই থামুন।",
+      steps: [
+        "<b>ভাগ করুন</b> — লাইনটা দুই বা তিন টুকরো করে আলাদা বসান, তারপর জোড়া দিন",
+        "<b>অর্থে যান</b> — আটকে যাওয়া প্রায় সবসময় অর্থ না জানার লক্ষণ; ওই অংশের অনুবাদ পড়ুন",
+        "<b>হাতে লিখুন</b> — একবার লিখলে ভিন্ন ইন্দ্রিয়পথ যুক্ত হয়",
+        "<b>আগের লাইন থেকে টানুন</b> — একা নয়, আগের লাইনের সাথে একসাথে ৫ বার",
+        "<b>ঘুমাতে যান</b> — টানা ২০ মিনিট আটকে থাকলে থামুন। পরদিন সকালে প্রায়ই নিজে থেকেই খুলে যায়"
+      ]
+    },
+    mut: {
+      k: "সবচেয়ে বড় ফাঁদ", h: "মুতাশাবিহাত — একই রকম আয়াত",
+      p: "হিফজ ভাঙার এক নম্বর কারণ নতুন পৃষ্ঠা নয় — কাছাকাছি শব্দের দুটি আয়াত গুলিয়ে ফেলা। স্মৃতি-গবেষণায় একে বলে হস্তক্ষেপ, আর এর একমাত্র চিকিৎসা হলো পার্থক্যটা <b>ইচ্ছাকৃতভাবে</b> শেখা।",
+      steps: [
+        "<b>পাশাপাশি লিখুন</b> — দুটো আয়াত এক কাগজে, উপর-নিচে",
+        "<b>ঠিক এক শব্দ চিহ্নিত করুন</b> — যেখানে তারা আলাদা হয়ে যায়",
+        "<b>ঠিকানা বাঁধুন</b> — “এটা ডান পৃষ্ঠার নিচে, ওটা বাঁ পৃষ্ঠার উপরে”; স্থানিক স্মৃতিই এখানে বাঁচায়",
+        "<b>নোটে লিখে রাখুন</b> — আজকের নোট ঘরে; সপ্তাহে একবার পুরো তালিকা দেখে নিন"
+      ],
+      nh: "ছোট নিয়ম",
+      np: "যে জোড়া একবার গুলিয়েছে, সেটা আবার গুলাবে। প্রথমবারেই নোটে তুলুন — ছয় মাস পর এই তালিকাটাই আপনার সবচেয়ে দামি কাগজ হবে।"
+    },
+    real: {
+      k: "বাস্তবতা", h: "ভ্রমণ, অসুস্থতা, ব্যস্ত সপ্তাহ",
+      p: "রুটিন ভাঙবেই। প্রশ্ন হলো ভাঙার দিনে কী করবেন — এবং উত্তরটা “কিছুই না” হলে হিফজ সেখানেই থেমে যায়।",
+      th: ["পরিস্থিতি","যা করবেন"],
+      rows: [
+        ["সময় নেই","নতুন সবক বাদ। শুধু সাবকি — ২৫ মিনিট। ধারাবাহিকতা টিকে থাকবে।"],
+        ["ভ্রমণে","নতুন সবক বাদ। শোনা + নামাজে পাঠ। এতেও দিন গোনা হবে।"],
+        ["অসুস্থ","সম্পূর্ণ বিশ্রাম। জোর করলে ভুল উচ্চারণ বসে যায়, যা পরে ঠিক করা কঠিন।"],
+        ["এক সপ্তাহ বাদ পড়েছে","যেখানে ছিলেন সেখান থেকে নয় — <b>দুই সপ্তাহ পিছিয়ে</b> শুরু করুন, দুই দিন শুধু মুরাজাআ।"],
+        ["এক মাস বাদ পড়েছে","নতুন সবক দুই সপ্তাহ বন্ধ। পুরো মুখস্থ অংশ একবার ঘুরে আসুন, তারপর আবার শুরু।"]
+      ]
+    },
+    month: {
+      k: "মাসিক", h: "প্রতি মাসে একদিন — পরীক্ষা",
+      p: "মাসের শেষ বিশ্রামের দিনে: গত মাসে যত পৃষ্ঠা মুখস্থ হয়েছে, সব একটানা বলুন — কারও সামনে, বা রেকর্ড করে। যেখানে আটকাবেন সেই পৃষ্ঠাগুলো <b>দুর্বল</b> হিসেবে চিহ্নিত করুন। অ্যাপ সেগুলো প্রতিদিন সাবকিতে ফিরিয়ে আনবে।",
+      gh: "এগোনোর গেট",
+      g1: "গতকালের পৃষ্ঠা মুসহাফ ছাড়া, ভুল ছাড়া বলতে না পারলে — আজ নতুন কিছু নয়।",
+      g2: "পরপর দুই দিন আটকে গেলে অর্ধেক পৃষ্ঠায় নেমে আসুন, দুই সপ্তাহ পর আবার চেষ্টা করুন। এই শর্ত না মানলে চার মাস পর হাতে থাকবে ১০০ পৃষ্ঠা “মোটামুটি মনে আছে” — যেটা হিসাবে শূন্য।"
+    },
+    basis: {
+      k: "ভিত্তি", h: "প্রতিটা ধাপ কোথা থেকে এসেছে",
+      th: ["গবেষণা","যা বলে","রুটিনে যেখানে"],
+      rows: [
+        ["Craik &amp; Lockhart ১৯৭২<br>Craik &amp; Tulving ১৯৭৫","অর্থ বুঝে শেখা স্মৃতিতে গভীরে বসে; নিছক আওয়াজ অগভীর স্তরে থাকে","ড্রিলের ধাপ ৩ — শব্দে-শব্দে অনুবাদ"],
+        ["Karpicke &amp; Roediger ২০০৮<br>Roediger &amp; Butler ২০১১","স্মৃতি থেকে বের করে আনা, বারবার পড়ার চেয়ে বহুগুণ শক্তিশালী","ঢেকে বলা · সাবকি বন্ধ-মুসহাফে আগে · নামাজে পাঠ"],
+        ["Ebbinghaus ১৮৮৫<br>Cepeda ২০০৬","রিভিশন না হলে ২৪ ঘণ্টায় বড় অংশ হারায়; ক্রমবর্ধমান ব্যবধানে তা প্রায় স্থায়ী হয়","সাবকি ৭ দিন · মানজিল ঘূর্ণন · দিনে ছয় স্পর্শ"],
+        ["Miller ১৯৫৬<br>Gobet ২০০১","ওয়ার্কিং মেমরি একসাথে অল্প কয়েকটি একক ধরে","পৃষ্ঠা ভাঙা ৫ লাইনের ব্লকে"],
+        ["Maguire ২০০০, ২০০৩<br>Dresler ২০১৭","মস্তিষ্ক স্থান ও অবস্থান অসাধারণভাবে মনে রাখে","আজীবন একই মুসহাফ · মুতাশাবিহাতে ঠিকানা বাঁধা"],
+        ["Paivio ১৯৮৬<br>Shams &amp; Seitz ২০০৮","একাধিক ইন্দ্রিয়পথে ঢুকলে স্মৃতি বেশি টেকে","শোনা + দেখা + বলা + আটকালে লেখা"],
+        ["Mayer &amp; Moreno ২০০৩<br>Baddeley ২০০০","বিঘ্ন ওয়ার্কিং মেমরির জায়গা খেয়ে ফেলে","ফোন অন্য ঘরে · ৫০ মিনিটের সীমা"],
+        ["Draganski ২০০৪<br>Park &amp; Bischof ২০১৩","প্রশিক্ষণে প্রাপ্তবয়স্ক মস্তিষ্কেও গঠনগত পরিবর্তন হয়","৩২ বছর দেরি নয় — কৌশলটাই সুবিধা"]
+      ]
+    },
+    fixed: {
+      k: "অটল", h: "তিনটি শর্ত, যেগুলোয় ছাড় নেই",
+      items: [
+        ["তাজবীদ আগে","ভুল উচ্চারণে মুখস্থ হয়ে গেলে সেটা ঠিক করা নতুন করে মুখস্থের চেয়েও কঠিন। সপ্তাহে অন্তত একদিন শিক্ষকের কাছে শোনান।"],
+        ["ঘুম সাত ঘণ্টা","স্মৃতির একত্রীকরণ মূলত ঘুমেই হয়। ঘুম কেটে মুখস্থের সময় বাড়ানো নিট লোকসান — যতটা যোগ হয়, তার বেশি হারায়।"],
+        ["একই মুসহাফ, একই ক্বারী","মুসহাফ পাল্টালে স্থানিক স্মৃতির স্তরটা মুছে যায়, ক্বারী পাল্টালে সুরের সংকেত। একবার বেছে নিন, তারপর আর ছোঁবেন না।"]
+      ]
+    }
+  },
+
+  pg: {
+    k: "অগ্রগতি", h: "আপনি কোথায় দাঁড়িয়ে",
+    report: "সাপ্তাহিক রিপোর্ট — উস্তাদের জন্য",
+    stats: ["পৃষ্ঠা মুখস্থ","পূর্ণ পারা","সম্পন্ন","দিন ধারাবাহিক","মোট ঘণ্টা","গড় ভুল / দিন"],
+    map: "মুসহাফ মানচিত্র · ৬০৪ পৃষ্ঠা",
+    legend: ["মুখস্থ","আজকের","দুর্বল","বাকি"],
+    heat: "গত ৮৪ দিন",
+    heatNote: "গাঢ় মানে বেশি সম্পন্ন",
+    juz: "পারা অনুযায়ী",
+    rate: "বর্তমান গতিতে",
+    rateDaily: "দৈনিক গড়",
+    rateLeft: "বাকি",
+    rateFinish: "সম্ভাব্য সমাপ্তি",
+    rateNone: "আরও কয়েকদিন ডেটা জমুক",
+    ratePages: "{0} পৃষ্ঠা",
+    weakH: "দুর্বল পৃষ্ঠা",
+    weakP: "এগুলো প্রতিদিন সাবকিতে ফিরছে। টানা সাত দিন নির্ভুল হলে সেটিংস থেকে সরিয়ে দিন।",
+    notes: "সাম্প্রতিক নোট"
+  },
+
+  set: {
+    k: "সেটিংস", h: "আপনার হিসাব",
+    p: "সব ডেটা এই ডিভাইসেই থাকে — কোনো সার্ভারে যায় না। ব্রাউজার পরিষ্কার করলে মুছে যাবে, তাই নিচের ড্রাইভ সিঙ্ক চালু করুন অথবা মাসে একবার ব্যাকআপ নামিয়ে রাখুন।",
+    lang: "ভাষা",
+    langHint: "পুরো অ্যাপ বদলে যাবে — রুটিন ট্যাবসহ।",
+    date: "শুরুর তারিখ",
+    page: "প্রথম পৃষ্ঠা",
+    rest: "বিশ্রামের দিন",
+    lines: "দৈনিক লক্ষ্য (লাইন)",
+    linesAuto: "স্বয়ংক্রিয় — র‍্যাম্প অনুযায়ী",
+    linesN: "{0} লাইন",
+    linesHint: "গেটে টানা দুই দিন আটকালে এখানে নেমে আসুন। এটা পিছিয়ে যাওয়া নয়।",
+    qari: "আপনার ক্বারী",
+    qariPh: "একজন, আজীবন",
+    mushaf: "আপনার মুসহাফ",
+    weakLabel: "দুর্বল পৃষ্ঠা",
+    weakHint: "টানা সাত দিন নির্ভুল হলে ট্যাপ করে সরিয়ে দিন।",
+    driveLabel: "Google Drive সিঙ্ক",
+    driveHint: "যুক্ত থাকলে প্রতিটি পরিবর্তন কয়েক সেকেন্ডের মধ্যে আপনার ড্রাইভে চলে যায়। নতুন ফোনে একই Google অ্যাকাউন্টে যুক্ত হলেই সব ফিরে আসবে। অ্যাপ শুধু নিজের বানানো ওই একটা ফাইলই দেখতে পায় — ড্রাইভের বাকি কিছুই নয়।",
+    driveNoConfig: "config.js ফাইলে Client ID বসালে এই অংশটা চালু হবে।",
+    backupLabel: "ফাইল ব্যাকআপ",
+    exp: "ডেটা নামান (JSON)",
+    imp: "ব্যাকআপ থেকে ফেরান",
+    backupHint: "মাসে একবার নামিয়ে ইমেইলে বা ড্রাইভে রাখুন। নতুন ফোনে ওই ফাইলটা ফেরালেই সব ফিরে আসবে।",
+    danger: "বিপজ্জনক",
+    reset: "সব ডেটা মুছে ফেলুন",
+    confirmReset: "সব ডেটা মুছে যাবে এবং ফেরানো যাবে না। আগে ব্যাকআপ নামিয়েছেন?",
+    restored: "ব্যাকআপ ফেরানো হয়েছে।",
+    badFile: "ফাইলটা পড়া গেল না। সঠিক ব্যাকআপ ফাইল বেছে নিন।"
+  },
+
+  sync: {
+    off: "সিঙ্ক বন্ধ", connecting: "যুক্ত হচ্ছে", ok: "সিঙ্ক হয়েছে", failed: "সিঙ্ক ব্যর্থ",
+    pushing: "পাঠাচ্ছে", pulling: "নামাচ্ছে", reconciling: "মিলিয়ে নিচ্ছে", cancelled: "সংযোগ বাতিল",
+    noConfig: "Google Client ID বসানো হয়নি — <b>config.js</b> ফাইলে বসালে সিঙ্ক চালু হবে।",
+    notLinked: "এখনো যুক্ত নয়। যুক্ত করলে ডেটা নিজে থেকেই আপনার ড্রাইভে জমা হবে।",
+    linked: "যুক্ত: <b>{0}</b>",
+    last: " · শেষ সিঙ্ক {0}",
+    never: " · এখনো সিঙ্ক হয়নি",
+    connect: "Google দিয়ে যুক্ত হোন",
+    push: "এখনই পাঠান",
+    pull: "ড্রাইভ থেকে নামান",
+    unlink: "সংযোগ ছাড়ুন",
+    confirmOff: "সংযোগ ছাড়লে নতুন পরিবর্তন আর ড্রাইভে যাবে না। ড্রাইভের পুরোনো ফাইলটা থেকে যাবে।",
+    notReady: "Google লাইব্রেরি এখনো লোড হয়নি — কয়েক সেকেন্ড পর আবার চেষ্টা করুন।",
+    pushFail: "ড্রাইভে পাঠানো যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।",
+    pullFail: "ড্রাইভে কোনো ব্যাকআপ পাওয়া গেল না।",
+    pulled: "ড্রাইভ থেকে ডেটা ফেরানো হয়েছে।"
+  },
+
+  rep: {
+    title: "সাপ্তাহিক হিফজ রিপোর্ট",
+    stats: ["নতুন পৃষ্ঠা","মোট মুখস্থ","মোট ভুল","ঘণ্টা"],
+    daily: "দৈনিক হিসাব",
+    th: ["তারিখ","সবক","গেট","ভুল","মিনিট","সম্পন্ন"],
+    pass: "পাশ", fail: "ফেল", rest: "বিশ্রাম",
+    gateH: "গেটের ফল",
+    gateLine: "পাশ <span class=\"ok\">{0}</span> দিন · ফেল <span class=\"no\">{1}</span> দিন · সবক সম্পন্ন {2} দিন। ",
+    verdictGood: "গতি ঠিক আছে — লক্ষ্য বাড়ানোর কথা ভাবা যায়।",
+    verdictBad: "লক্ষ্য বেশি হয়ে যাচ্ছে। দৈনিক লাইন কমিয়ে দুই সপ্তাহ চালানো উচিত।",
+    verdictOk: "গতি মোটামুটি ঠিক। আরেক সপ্তাহ একই লক্ষ্যে থাকুন।",
+    weakH: "দুর্বল পৃষ্ঠা — বিশেষভাবে শুনুন",
+    notesH: "ছাত্রের নোট",
+    comment: "উস্তাদের মন্তব্য",
+    signature: "স্বাক্ষর ও তারিখ",
+    print: "প্রিন্ট / PDF",
+    close: "বন্ধ",
+    page: "পৃষ্ঠা {0}"
+  }
+};
+</script>
+<script>
+/* اردو — Urdu (RTL)
+   نوٹ: اصطلاحات (سبق، سبقی، منزل) اردو مدارس کی رائج زبان میں رکھی گئی ہیں۔
+   شائع کرنے سے پہلے کسی اردو داں سے ایک بار نظرثانی کروا لیں۔ */
+
+window.HIFZ_LANG_ur = {
+  code: "ur",
+  name: "اردو",
+  dir: "rtl",
+  digits: "۰۱۲۳۴۵۶۷۸۹",
+  locale: "ur-PK",
+  fonts: {
+    google: "Noto+Nastaliq+Urdu:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700",
+    display: '"Noto Nastaliq Urdu","Jameel Noori Nastaleeq",serif',
+    body: '"Noto Naskh Arabic","Noto Nastaliq Urdu",system-ui,sans-serif',
+    lineHeight: "2.05"
+  },
+
+  months: ["جنوری","فروری","مارچ","اپریل","مئی","جون",
+           "جولائی","اگست","ستمبر","اکتوبر","نومبر","دسمبر"],
+  monthsShort: ["جنو","فرو","مار","اپر","مئی","جون","جول","اگس","ستم","اکت","نوم","دسم"],
+  weekdays: ["اتوار","پیر","منگل","بدھ","جمعرات","جمعہ","ہفتہ"],
+
+  app: {
+    name: "روزانہ ساتھی",
+    title: "حفظ · روزانہ ساتھی",
+    desc: "بڑی عمر میں حفظ کرنے والوں کے لیے تحقیق پر مبنی ٹریکر",
+    streak: "دن مسلسل",
+    footer1: "حفظ · روزانہ ساتھی — <b>بڑی عمر والوں کے لیے</b>",
+    footer2: "یادداشت کی تحقیق پر مبنی · آپ کا ڈیٹا آپ ہی کے آلے میں رہتا ہے"
+  },
+
+  nav: { today:"آج", routine:"طریقہ", progress:"پیش رفت", settings:"ترتیبات" },
+
+  ob: {
+    kicker: "آغاز کریں",
+    h1a: "روزانہ ایک صفحہ۔",
+    h1b: "باقی سب ایپ یاد رکھے گی۔",
+    lede: "تین باتیں بتا دیں — پھر ہر صبح ایپ خود بتائے گی کہ آج کون سا صفحہ نیا ہے، کون سے سات صفحے سبقی ہیں، اور کون سا پارہ منزل۔",
+    lang: "زبان",
+    date: "آغاز کی تاریخ",
+    dateHint: "آج کی تاریخ دیں۔ چھ ہفتوں کا مرحلہ یہیں سے شمار ہوگا۔",
+    page: "پہلا صفحہ جو شروع کریں گے",
+    pageHint: "مدنی مصحف کا صفحہ نمبر (۱–۶۰۴)۔ آخر سے شروع کر رہے ہیں تو ۵۸۲ (سورۃ النبأ)۔",
+    rest: "ہفتہ وار آرام کا دن",
+    restHint: "اس دن نیا سبق نہیں — صرف پورے ہفتے کا مراجعہ ایک نشست میں۔",
+    go: "شروع کریں"
+  },
+
+  phase: {
+    week: "ہفتہ {0}",
+    rest: "آرام کا دن",
+    target: "ہدف {0} سطریں",
+    noNew: "آج نیا سبق نہیں",
+    page: "صفحہ {0}",
+    restNote: "ہفتے کے چھ صفحے ایک ہی نشست میں، بغیر رکے۔",
+    manual: "آپ کا اپنا مقرر کردہ ہدف۔",
+    notes: [
+      "صرف معمول بٹھانے کا وقت۔ رفتار کی فکر ابھی نہ کریں۔",
+      "یہیں پہلی بار سبقی کا بوجھ محسوس ہوگا۔",
+      "دو بلاک اور آدھا — جوڑنے کی مشق۔",
+      "پورا صفحہ۔ اصل حساب یہیں سے شروع ہوتا ہے۔"
+    ]
+  },
+
+  gate: {
+    q: "کل کا سبق — صفحہ {0} — کیا آپ مصحف کے بغیر، بغیر کسی غلطی کے سنا سکے؟",
+    yes: "ہاں، سنا سکا",
+    no: "نہیں سنا سکا",
+    fail: "<b>آج نیا سبق نہیں۔</b> کل والا صفحہ دوبارہ — وہی مشق، شروع سے۔",
+    failStreak: " یہ مسلسل {0} دن ہو گئے۔ دو ہفتوں کے لیے آدھے صفحے پر آ جائیں — ترتیبات میں ہدف بدل سکتے ہیں۔",
+    pass: "دروازہ کھل گیا۔ آج کا صفحہ حاضر ہے۔"
+  },
+
+  blk: {
+    sabaq: "نیا سبق",
+    sabaqRepeat: "اعادہ — کل والا صفحہ",
+    sabaqMeta: "صفحہ {0} · {1} سطریں · ۵۰ منٹ",
+    listen: "غیر ارادی سماعت",
+    listenMeta: "سارا دن · اضافی وقت نہیں لگتا",
+    sabaqi: "سبقی — گزشتہ سات دن",
+    sabaqiMeta: "ظہر کے بعد · ۲۵ منٹ",
+    salah: "نماز میں تلاوت",
+    salahMeta: "پانچ نمازیں · اضافی وقت نہیں لگتا",
+    manzil: "منزل — پرانا سب کچھ",
+    manzilMeta: "مغرب–عشاء · ۳۵ منٹ · پارہ {0}",
+    manzilWait: "مغرب–عشاء · انتظار میں",
+    night: "آخری دور",
+    nightMeta: "سونے سے ٹھیک پہلے · ۱۰ منٹ",
+    doneLabel: "مکمل"
+  },
+
+  sabaq: {
+    pageLabel: "آج کا صفحہ نمبر",
+    pageHint: "ایپ خود اگلا صفحہ فرض کر لیتی ہے۔ آپ کی ترتیب مختلف ہو — مثلاً سورۃ النبأ سے آغاز — تو یہاں بدل دیں۔",
+    blocked: "<b>آج کچھ نیا نہیں۔</b> وہی صفحہ، وہی مشق، بالکل شروع سے۔",
+    intro: "ہر بلاک میں یہی پانچ مرحلے۔ بلاک مکمل ہو جائے تو اوپر ٹیپ کر کے نشان لگا دیں۔",
+    after: "<b>{0} بلاک کے بعد:</b> پورا حصہ مصحف بند کر کے ۳ بار، بغیر رکے۔",
+    drill: [
+      "<b>۵ بار سنیں</b> — نگاہ انہی پانچ سطروں پر، ہونٹ ساکن",
+      "<b>دیکھ کر ۷ بار پڑھیں</b> — بلند آواز سے، بغیر جلدی کے",
+      "<b>ایک بار معنی</b> — لفظ بہ لفظ، کس لفظ کا کیا مطلب",
+      "<b>ڈھانپ کر ۳ بار سنائیں</b> — بے عیب نہ ہو تو گنتی شروع ہی نہیں ہوگی",
+      "<b>۲ بار جوڑیں</b> — پچھلے بلاک کی آخری سطر سے کھینچ کر"
+    ]
+  },
+
+  listen: {
+    body: "آج کا صفحہ اسی ایک قاری کی آواز میں چلتا رہے — گاڑی میں، باورچی خانے میں، چلتے پھرتے۔ توجہ نہ بھی دیں تو چلے گا؛ کان خود کام کر لے گا۔",
+    qari: " آپ کے قاری: <b>{0}</b>۔"
+  },
+
+  sabaqi: {
+    empty: "ابھی سبقی نہیں ہے — پہلا سبق مکمل ہوتے ہی کل سے یہاں آنا شروع ہو جائے گا۔",
+    weakLabel: "<b>کمزور صفحات</b> — ان پر ایک اضافی دور دیں:",
+    order: "<b>ترتیب ہی اصل ہے:</b> پہلے مصحف بند کر کے سنائیں، پھر کھول کر ملائیں۔ الٹا کریں گے تو اس بلاک کا سارا فائدہ ضائع ہو جاتا ہے۔",
+    ago: "{0} دن پہلے",
+    page: "ص {0}"
+  },
+
+  salah: {
+    body: "آج کے سبق اور اس ہفتے کے حصے سے پڑھیں۔ کھڑے ہو کر، مصحف کے بغیر، دباؤ میں یادداشت سے نکالنا — یہی استرجاع کی سب سے خالص شکل ہے۔",
+    counted: "نمازوں میں پڑھا"
+  },
+
+  manzil: {
+    week: "<b>اس ہفتے کا پارہ: {0}</b> — صفحہ {1}–{2}۔ اس میں سے جتنا یاد ہے، بس اتنا۔",
+    rot: "یہ گردش خودکار ہے۔ جتنے پارے جمع ہوں گے، ہر پارہ اتنے ہی زیادہ ہفتوں بعد لوٹے گا — Ebbinghaus کا منحنی خط بالکل اسی وقفے پر ٹوٹتا ہے۔",
+    empty: "منزل ابھی شروع نہیں ہوئی۔ تقریباً ۸ صفحے جمع ہوتے ہی یہ گردش خود بخود چل پڑے گی۔"
+  },
+
+  night: {
+    body: "آج کا صفحہ ایک بار اور، بستر پر بیٹھ کر۔ سونے سے ٹھیک پہلے جو جاتا ہے، رات بھر اس کا استحکام سب سے بہتر ہوتا ہے۔ اس کے بعد اسکرین نہیں۔"
+  },
+
+  timer: { start: "{0} منٹ کا ٹائمر", stop: "ختم" },
+
+  log: {
+    err: "آج کل غلطیاں ہوئیں",
+    errHint: "یہ عدد گھٹ رہا ہے یا نہیں — اصل پیش رفت کی کسوٹی یہی ہے، صفحات کی تعداد نہیں۔",
+    min: "فعال وقت (منٹ)",
+    note: "کمزور مقامات / نوٹ",
+    notePh: "کس آیت پر بار بار اٹکتے ہیں؟ متشابہات کہاں گڈمڈ ہوئیں؟",
+    weak: "کمزور کے طور پر نشان زد کریں (صفحہ نمبر)",
+    weakPh: "مثلاً ۴۵",
+    weakAdd: "شامل کریں",
+    weakClear: "فہرست خالی کریں",
+    weakHint: "نشان زد صفحات روزانہ سبقی میں واپس آتے رہیں گے، جب تک آپ ہٹا نہ دیں۔"
+  },
+
+  sum: {
+    done: "آج مکمل",
+    total: "کل یاد شدہ",
+    stat: "{0} صفحے · آج {1} منٹ"
+  },
+
+  rt: {
+    ramp: {
+      k: "آغاز", h: "چھ ہفتوں کا مرحلہ",
+      p: "نیا یاد کرنا آسان ہے، سنبھالے رکھنا مشکل۔ ان ڈیڑھ مہینوں میں رفتار نہیں، عادت بنتی ہے — اس سے پہلے کہ مراجعے کا بوجھ بھاری ہو جائے۔",
+      lines: "سطریں",
+      labels: ["ہفتہ ۱–۲","ہفتہ ۳–۴","ہفتہ ۵–۶","ہفتہ ۷ →"]
+    },
+    day: {
+      k: "ہر روز", h: "دن کے چھ لمحے",
+      p: "مسلسل تین گھنٹے بیٹھنا نہیں — دن بھر بکھری ہوئی چھوٹی نشستیں۔ Cepeda کی منتشر مشق پر تحقیق بتاتی ہے کہ وہی وقت تقسیم کر دیں تو یادداشت کئی گنا بہتر ہوتی ہے۔",
+      th: ["کب","کیا","وقت"],
+      rows: [
+        ["فجر + ۱۵ منٹ","نیا سبق — تین بلاک، پھر پورا صفحہ ۳ بار","۵۰ منٹ"],
+        ["دن بھر","غیر ارادی سماعت — وہی ایک قاری","۰"],
+        ["ظہر کے بعد","سبقی — گزشتہ ۷ دن، پہلے مصحف بند","۲۵ منٹ"],
+        ["پانچ نمازیں","نماز میں سبق سے تلاوت","۰"],
+        ["مغرب–عشاء","منزل — ہفتے میں ایک پارہ، گردش میں","۳۵ منٹ"],
+        ["سونے سے پہلے","آج کا صفحہ آخری بار","۱۰ منٹ"]
+      ]
+    },
+    stuck: {
+      k: "اٹک جائیں تو", h: "ضدی سطر کا طریقہ",
+      p: "ایک ہی سطر پر بار بار اٹکیں تو دس بار اور پڑھنے سے کام نہیں چلتا — طریقہ بدلنا پڑتا ہے۔ ترتیب سے آزمائیں، جس پر کھل جائے وہیں رک جائیں۔",
+      steps: [
+        "<b>تقسیم کریں</b> — سطر کو دو یا تین ٹکڑوں میں الگ الگ بٹھائیں، پھر جوڑیں",
+        "<b>معنی کی طرف جائیں</b> — اٹکنا تقریباً ہمیشہ معنی نہ جاننے کی علامت ہے؛ اس حصے کا ترجمہ پڑھیں",
+        "<b>ہاتھ سے لکھیں</b> — ایک بار لکھنے سے ایک الگ حسی راستہ شامل ہو جاتا ہے",
+        "<b>پچھلی سطر سے کھینچیں</b> — اکیلے نہیں، پچھلی سطر کے ساتھ ملا کر ۵ بار",
+        "<b>سو جائیں</b> — مسلسل ۲۰ منٹ اٹکے رہیں تو رک جائیں۔ اگلی صبح اکثر خود بخود کھل جاتی ہے"
+      ]
+    },
+    mut: {
+      k: "سب سے بڑا پھندا", h: "متشابہات — ملتی جلتی آیات",
+      p: "حفظ ٹوٹنے کی پہلی وجہ نئے صفحات نہیں — قریب قریب ایک جیسے الفاظ والی دو آیات کا گڈمڈ ہو جانا ہے۔ یادداشت کی تحقیق میں اسے مداخلت کہتے ہیں، اور اس کا واحد علاج فرق کو <b>ارادی طور پر</b> سیکھنا ہے۔",
+      steps: [
+        "<b>ساتھ ساتھ لکھیں</b> — دونوں آیات ایک کاغذ پر، اوپر نیچے",
+        "<b>ٹھیک وہ ایک لفظ نشان زد کریں</b> — جہاں سے وہ الگ ہوتی ہیں",
+        "<b>پتہ باندھیں</b> — ”یہ دائیں صفحے کے نیچے ہے، وہ بائیں صفحے کے اوپر“؛ یہاں مکانی یادداشت ہی بچاتی ہے",
+        "<b>نوٹ میں لکھ رکھیں</b> — آج کے نوٹ کے خانے میں؛ ہفتے میں ایک بار پوری فہرست دیکھ لیں"
+      ],
+      nh: "ایک چھوٹا اصول",
+      np: "جو جوڑا ایک بار گڈمڈ ہوا، وہ دوبارہ بھی ہوگا۔ پہلی ہی بار نوٹ کر لیں — چھ مہینے بعد یہی فہرست آپ کا سب سے قیمتی کاغذ ہوگی۔"
+    },
+    real: {
+      k: "حقیقت", h: "سفر، بیماری، مصروف ہفتہ",
+      p: "معمول ٹوٹے گا ضرور۔ سوال یہ ہے کہ ٹوٹنے والے دن آپ کیا کرتے ہیں — اور اگر جواب ”کچھ نہیں“ ہو تو حفظ وہیں رک جاتا ہے۔",
+      th: ["صورتحال","کیا کریں"],
+      rows: [
+        ["وقت نہیں","نیا سبق چھوڑ دیں۔ صرف سبقی — ۲۵ منٹ۔ تسلسل بچ جائے گا۔"],
+        ["سفر میں","نیا سبق چھوڑ دیں۔ سننا + نماز میں تلاوت۔ دن پھر بھی شمار ہوگا۔"],
+        ["بیمار","مکمل آرام۔ زور لگائیں گے تو غلط تلفظ بیٹھ جائے گا، جو بعد میں درست کرنا مشکل ہے۔"],
+        ["ایک ہفتہ چھوٹ گیا","جہاں تھے وہاں سے نہیں — <b>دو ہفتے پیچھے</b> سے شروع کریں، دو دن صرف مراجعہ۔"],
+        ["ایک مہینہ چھوٹ گیا","دو ہفتے نیا سبق بند۔ پورا یاد شدہ حصہ ایک بار گھوم لیں، پھر دوبارہ آغاز۔"]
+      ]
+    },
+    month: {
+      k: "ماہانہ", h: "ہر مہینے ایک دن — امتحان",
+      p: "مہینے کے آخری آرام والے دن: گزشتہ مہینے میں جتنے صفحے یاد ہوئے، سب ایک ساتھ سنائیں — کسی کے سامنے، یا ریکارڈ کر کے۔ جہاں اٹکیں وہ صفحات <b>کمزور</b> کے طور پر نشان زد کریں۔ ایپ انہیں روزانہ سبقی میں واپس لے آئے گی۔",
+      gh: "آگے بڑھنے کا دروازہ",
+      g1: "کل کا صفحہ مصحف کے بغیر، بغیر غلطی کے نہ سنا سکیں — تو آج کچھ نیا نہیں۔",
+      g2: "لگاتار دو دن اٹکیں تو آدھے صفحے پر آ جائیں، دو ہفتے بعد دوبارہ کوشش کریں۔ یہ شرط نہ مانیں تو چار مہینے بعد ہاتھ میں ۱۰۰ صفحے ہوں گے جو ”تقریباً یاد ہیں“ — یعنی حساب میں صفر۔"
+    },
+    basis: {
+      k: "بنیاد", h: "ہر قدم کہاں سے آیا",
+      th: ["تحقیق","کیا بتاتی ہے","معمول میں کہاں"],
+      rows: [
+        ["Craik &amp; Lockhart ۱۹۷۲<br>Craik &amp; Tulving ۱۹۷۵","معنی سمجھ کر سیکھی ہوئی چیز یادداشت میں کہیں گہری بیٹھتی ہے","مشق کا تیسرا مرحلہ — لفظ بہ لفظ ترجمہ"],
+        ["Karpicke &amp; Roediger ۲۰۰۸<br>Roediger &amp; Butler ۲۰۱۱","یادداشت سے نکالنا، بار بار پڑھنے سے کہیں زیادہ مؤثر ہے","ڈھانپ کر سنانا · سبقی پہلے بند مصحف پر · نماز میں تلاوت"],
+        ["Ebbinghaus ۱۸۸۵<br>Cepeda ۲۰۰۶","مراجعہ نہ ہو تو ۲۴ گھنٹے میں بڑا حصہ ضائع؛ بڑھتے وقفوں سے وہی تقریباً مستقل","سبقی ۷ دن · منزل کی گردش · دن میں چھ لمحے"],
+        ["Miller ۱۹۵۶<br>Gobet ۲۰۰۱","عامل یادداشت بیک وقت چند اکائیاں ہی تھامتی ہے","صفحے کو ۵ سطروں کے بلاک میں توڑنا"],
+        ["Maguire ۲۰۰۰، ۲۰۰۳<br>Dresler ۲۰۱۷","دماغ جگہ اور مقام غیر معمولی طور پر یاد رکھتا ہے","تاحیات ایک ہی مصحف · متشابہات کا پتہ باندھنا"],
+        ["Paivio ۱۹۸۶<br>Shams &amp; Seitz ۲۰۰۸","کئی حسی راستوں سے داخل ہو تو یادداشت زیادہ ٹھہرتی ہے","سننا + دیکھنا + بولنا + اٹکنے پر لکھنا"],
+        ["Mayer &amp; Moreno ۲۰۰۳<br>Baddeley ۲۰۰۰","خلل عامل یادداشت کی گنجائش کھا جاتا ہے","فون دوسرے کمرے میں · ۵۰ منٹ کی حد"],
+        ["Draganski ۲۰۰۴<br>Park &amp; Bischof ۲۰۱۳","تربیت سے بالغ دماغ میں بھی ساختی تبدیلی آتی ہے","۳۲ سال دیر نہیں — طریقہ ہی آپ کی برتری ہے"]
+      ]
+    },
+    fixed: {
+      k: "اٹل", h: "تین شرطیں، جن میں کوئی رعایت نہیں",
+      items: [
+        ["پہلے تجوید","غلط تلفظ کے ساتھ یاد ہو جائے تو اسے درست کرنا نئے سرے سے یاد کرنے سے بھی مشکل ہے۔ ہفتے میں کم از کم ایک دن استاد کو سنائیں۔"],
+        ["سات گھنٹے نیند","یادداشت کا استحکام بڑی حد تک نیند ہی میں ہوتا ہے۔ نیند کاٹ کر حفظ کا وقت بڑھانا خالص نقصان ہے — جتنا جڑتا ہے، اس سے زیادہ بکھرتا ہے۔"],
+        ["ایک مصحف، ایک قاری","مصحف بدلیں تو مکانی یادداشت کی پوری تہہ مٹ جاتی ہے، قاری بدلیں تو لحن کا اشارہ۔ ایک بار چن لیں، پھر ہاتھ نہ لگائیں۔"]
+      ]
+    }
+  },
+
+  pg: {
+    k: "پیش رفت", h: "آپ کہاں کھڑے ہیں",
+    report: "ہفتہ وار رپورٹ — استاد کے لیے",
+    stats: ["صفحے یاد","مکمل پارے","مکمل","دن مسلسل","کل گھنٹے","اوسط غلطی / دن"],
+    map: "مصحف کا نقشہ · ۶۰۴ صفحے",
+    legend: ["یاد شدہ","آج کا","کمزور","باقی"],
+    heat: "گزشتہ ۸۴ دن",
+    heatNote: "گہرا رنگ یعنی زیادہ مکمل",
+    juz: "پارے کے حساب سے",
+    rate: "موجودہ رفتار پر",
+    rateDaily: "روزانہ اوسط",
+    rateLeft: "باقی",
+    rateFinish: "متوقع تکمیل",
+    rateNone: "کچھ دن اور ڈیٹا جمع ہونے دیں",
+    ratePages: "{0} صفحے",
+    weakH: "کمزور صفحات",
+    weakP: "یہ روزانہ سبقی میں لوٹ رہے ہیں۔ لگاتار سات دن بے عیب ہو جائیں تو ترتیبات سے ہٹا دیں۔",
+    notes: "حالیہ نوٹ"
+  },
+
+  set: {
+    k: "ترتیبات", h: "آپ کا حساب",
+    p: "سارا ڈیٹا اسی آلے میں رہتا ہے — کسی سرور پر نہیں جاتا۔ براؤزر صاف کریں تو مٹ جائے گا، اس لیے نیچے ڈرائیو سنک چالو کریں یا مہینے میں ایک بار بیک اپ اتار رکھیں۔",
+    lang: "زبان",
+    langHint: "پوری ایپ بدل جائے گی — طریقہ والا ٹیب بھی۔",
+    date: "آغاز کی تاریخ",
+    page: "پہلا صفحہ",
+    rest: "آرام کا دن",
+    lines: "روزانہ ہدف (سطریں)",
+    linesAuto: "خودکار — مرحلے کے مطابق",
+    linesN: "{0} سطریں",
+    linesHint: "دروازے پر لگاتار دو دن اٹکیں تو یہاں نیچے آ جائیں۔ یہ پیچھے ہٹنا نہیں۔",
+    qari: "آپ کے قاری",
+    qariPh: "ایک، تاحیات",
+    mushaf: "آپ کا مصحف",
+    weakLabel: "کمزور صفحات",
+    weakHint: "لگاتار سات دن بے عیب ہو جائیں تو ٹیپ کر کے ہٹا دیں۔",
+    driveLabel: "Google Drive سنک",
+    driveHint: "جڑے رہیں تو ہر تبدیلی چند سیکنڈ میں آپ کی ڈرائیو میں چلی جاتی ہے۔ نئے فون پر اسی Google اکاؤنٹ سے جڑتے ہی سب واپس آ جائے گا۔ ایپ صرف اپنی بنائی ہوئی وہی ایک فائل دیکھ سکتی ہے — ڈرائیو کا باقی کچھ نہیں۔",
+    driveNoConfig: "config.js فائل میں Client ID رکھیں تو یہ حصہ چالو ہو جائے گا۔",
+    backupLabel: "فائل بیک اپ",
+    exp: "ڈیٹا اتاریں (JSON)",
+    imp: "بیک اپ سے بحال کریں",
+    backupHint: "مہینے میں ایک بار اتار کر ای میل یا ڈرائیو میں رکھ لیں۔ نئے فون پر وہی فائل بحال کرتے ہی سب واپس آ جائے گا۔",
+    danger: "خطرناک",
+    reset: "سارا ڈیٹا مٹا دیں",
+    confirmReset: "سارا ڈیٹا مٹ جائے گا اور واپس نہیں آ سکے گا۔ کیا آپ نے پہلے بیک اپ اتار لیا ہے؟",
+    restored: "بیک اپ بحال کر دیا گیا۔",
+    badFile: "یہ فائل پڑھی نہیں جا سکی۔ درست بیک اپ فائل منتخب کریں۔"
+  },
+
+  sync: {
+    off: "سنک بند", connecting: "جڑ رہا ہے", ok: "سنک ہو گیا", failed: "سنک ناکام",
+    pushing: "بھیج رہا ہے", pulling: "اتار رہا ہے", reconciling: "ملا رہا ہے", cancelled: "منسوخ",
+    noConfig: "Google Client ID نہیں رکھا گیا — <b>config.js</b> میں رکھیں تو سنک چالو ہو جائے گا۔",
+    notLinked: "ابھی جڑا نہیں۔ جوڑ دیں تو ڈیٹا خود بخود آپ کی ڈرائیو میں محفوظ ہوتا رہے گا۔",
+    linked: "جڑا ہوا: <b>{0}</b>",
+    last: " · آخری سنک {0}",
+    never: " · ابھی سنک نہیں ہوا",
+    connect: "Google سے جڑیں",
+    push: "ابھی بھیجیں",
+    pull: "ڈرائیو سے اتاریں",
+    unlink: "تعلق ختم کریں",
+    confirmOff: "تعلق ختم کرنے پر نئی تبدیلیاں ڈرائیو تک نہیں جائیں گی۔ پرانی فائل وہیں رہے گی۔",
+    notReady: "Google لائبریری ابھی لوڈ نہیں ہوئی — چند سیکنڈ بعد دوبارہ کوشش کریں۔",
+    pushFail: "ڈرائیو تک نہیں پہنچا جا سکا۔ انٹرنیٹ دیکھ کر دوبارہ کوشش کریں۔",
+    pullFail: "ڈرائیو میں کوئی بیک اپ نہیں ملا۔",
+    pulled: "ڈرائیو سے ڈیٹا بحال کر دیا گیا۔"
+  },
+
+  rep: {
+    title: "ہفتہ وار حفظ رپورٹ",
+    stats: ["نئے صفحے","کل یاد شدہ","کل غلطیاں","گھنٹے"],
+    daily: "روزانہ حساب",
+    th: ["تاریخ","سبق","دروازہ","غلطیاں","منٹ","مکمل"],
+    pass: "کامیاب", fail: "ناکام", rest: "آرام",
+    gateH: "دروازے کا نتیجہ",
+    gateLine: "کامیاب <span class=\"ok\">{0}</span> دن · ناکام <span class=\"no\">{1}</span> دن · سبق مکمل {2} دن۔ ",
+    verdictGood: "رفتار درست ہے — ہدف بڑھانے پر غور کیا جا سکتا ہے۔",
+    verdictBad: "ہدف زیادہ ہو رہا ہے۔ روزانہ سطریں کم کر کے دو ہفتے چلائیں۔",
+    verdictOk: "رفتار تقریباً ٹھیک ہے۔ ایک ہفتہ اور اسی ہدف پر رہیں۔",
+    weakH: "کمزور صفحات — انہیں خاص طور پر سنیں",
+    notesH: "طالب علم کے نوٹ",
+    comment: "استاد کا تبصرہ",
+    signature: "دستخط و تاریخ",
+    print: "پرنٹ / PDF",
+    close: "بند کریں",
+    page: "صفحہ {0}"
+  }
+};
+</script>
+<script>
+/* 简体中文 — Simplified Chinese
+   注：宗教术语沿用中国穆斯林通行译法（如"扫白"→"新课"）。
+   正式发布前建议请一位中文母语的穆斯林通读一遍。 */
+
+window.HIFZ_LANG_zh = {
+  code: "zh",
+  name: "中文",
+  dir: "ltr",
+  digits: "0123456789",
+  locale: "zh-CN",
+  fonts: {
+    google: "Noto+Serif+SC:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;700",
+    display: '"Noto Serif SC","Songti SC","SimSun",serif',
+    body: '"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif',
+    lineHeight: "1.85"
+  },
+
+  months: ["一月","二月","三月","四月","五月","六月",
+           "七月","八月","九月","十月","十一月","十二月"],
+  monthsShort: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
+  weekdays: ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"],
+
+  app: {
+    name: "每日伴侣",
+    title: "背记古兰 · 每日伴侣",
+    desc: "为成年学习者设计、以记忆科学为基础的古兰背记记录工具",
+    streak: "天连续",
+    footer1: "背记古兰 · 每日伴侣 — <b>为成年学习者而作</b>",
+    footer2: "基于记忆研究 · 数据只留在你自己的设备上"
+  },
+
+  nav: { today:"今天", routine:"方法", progress:"进度", settings:"设置" },
+
+  ob: {
+    kicker: "开始吧",
+    h1a: "每天一页。",
+    h1b: "其余交给这个应用记。",
+    lede: "回答三个问题，此后每天清晨应用会自己告诉你：今天背哪一页、复习哪七页、轮到哪一卷。",
+    lang: "语言",
+    date: "起始日期",
+    dateHint: "填今天的日期。六周的渐进计划从这里开始计算。",
+    page: "从第几页开始",
+    pageHint: "麦地那版《古兰经》页码（1–604）。若从短章开始，请填 582（奈拜厄章）。",
+    rest: "每周休息日",
+    restHint: "这一天不背新课，只把整周的内容一口气通背一遍。",
+    go: "开始"
+  },
+
+  phase: {
+    week: "第 {0} 周",
+    rest: "休息日",
+    target: "目标 {0} 行",
+    noNew: "今天没有新课",
+    page: "第 {0} 页",
+    restNote: "本周六页，一口气通背，中途不停。",
+    manual: "你自己设定的目标。",
+    notes: [
+      "只是把习惯立起来。先别想速度。",
+      "复习的压力从这里开始显现。",
+      "两个半段落 — 练习把它们接起来。",
+      "整页。真正的账目从这里开始算。"
+    ]
+  },
+
+  gate: {
+    q: "昨天的功课 — 第 {0} 页 — 你能不看经本、一字不错地背下来吗？",
+    yes: "能背下来",
+    no: "背不下来",
+    fail: "<b>今天不背新课。</b>重来昨天那一页 — 同样的步骤，从头开始。",
+    failStreak: " 这已经连续 {0} 天了。先降到半页，坚持两周 — 可在设置里调整目标。",
+    pass: "通过。今天的新页可以开始了。"
+  },
+
+  blk: {
+    sabaq: "新课",
+    sabaqRepeat: "重来 — 昨天那一页",
+    sabaqMeta: "第 {0} 页 · {1} 行 · 50 分钟",
+    listen: "被动聆听",
+    listenMeta: "全天 · 不额外占时间",
+    sabaqi: "近课复习 — 最近七天",
+    sabaqiMeta: "晌礼后 · 25 分钟",
+    salah: "在礼拜中诵读",
+    salahMeta: "五番拜 · 不额外占时间",
+    manzil: "远课复习 — 更早的全部",
+    manzilMeta: "昏礼至宵礼 · 35 分钟 · 第 {0} 卷",
+    manzilWait: "昏礼至宵礼 · 等待中",
+    night: "睡前一遍",
+    nightMeta: "临睡之前 · 10 分钟",
+    doneLabel: "标记完成"
+  },
+
+  sabaq: {
+    pageLabel: "今天的页码",
+    pageHint: "应用默认接着上一页往下走。如果你的顺序不同 — 比如从奈拜厄章开始 — 在这里改。",
+    blocked: "<b>今天没有新内容。</b>同一页，同样的步骤，从头再来一遍。",
+    intro: "每一段都走这五步。做完一段就点上面标记一下。",
+    after: "<b>{0} 段做完后：</b>合上经本，把整段连着背 3 遍，中途不停。",
+    drill: [
+      "<b>听 5 遍</b> — 眼睛盯着那五行，嘴不要动",
+      "<b>看着念 7 遍</b> — 出声，不要赶",
+      "<b>看一遍意思</b> — 逐字对照，每个词是什么意思",
+      "<b>盖住背 3 遍</b> — 没背到一字不错，这遍就不算数",
+      "<b>接背 2 遍</b> — 从上一段的最后一行接下来"
+    ]
+  },
+
+  listen: {
+    body: "让今天这一页用同一位诵读者的声音一直放着 — 在车上、厨房里、散步时。不用刻意听，耳朵自己会做工。",
+    qari: " 你的诵读者：<b>{0}</b>。"
+  },
+
+  sabaqi: {
+    empty: "还没有复习内容 — 完成第一课后，从明天起就会出现在这里。",
+    weakLabel: "<b>薄弱页</b> — 这几页多过一遍：",
+    order: "<b>顺序才是关键：</b>先合上经本背，再打开对照。反过来做，这一段的全部好处就没了。",
+    ago: "{0} 天前",
+    page: "第{0}页"
+  },
+
+  salah: {
+    body: "从今天的新课和本周的内容里选着念。站着、不看经本、在压力下从记忆里调出来 — 这是提取练习最纯粹的形式。",
+    counted: "番拜中诵读过"
+  },
+
+  manzil: {
+    week: "<b>本周轮到第 {0} 卷</b> — 第 {1}–{2} 页。其中已经背下来的部分。",
+    rot: "轮转是自动的。背下的卷数越多，每一卷回来的间隔就越长 — 这正是艾宾浩斯遗忘曲线被打断的节奏。",
+    empty: "远课复习还没开始。大约积累到 8 页时，这个轮转会自动启动。"
+  },
+
+  night: {
+    body: "今天这一页再过一遍，坐在床上就行。临睡前进去的东西，整夜的巩固效果最好。之后就别看屏幕了。"
+  },
+
+  timer: { start: "{0} 分钟计时", stop: "结束" },
+
+  log: {
+    err: "今天一共错了多少处",
+    errHint: "这个数字有没有在下降 — 这才是真正的进度尺度，不是页数。",
+    min: "有效时长（分钟）",
+    note: "薄弱之处 / 笔记",
+    notePh: "哪一节经文总是卡住？哪两处相似的经文混了？",
+    weak: "标为薄弱（页码）",
+    weakPh: "例如 45",
+    weakAdd: "添加",
+    weakClear: "清空列表",
+    weakHint: "标记过的页会每天回到复习队列，直到你把它移除。"
+  },
+
+  sum: {
+    done: "今日完成度",
+    total: "累计背记",
+    stat: "{0} 页 · 今天 {1} 分钟"
+  },
+
+  rt: {
+    ramp: {
+      k: "起步", h: "六周渐进计划",
+      p: "背下新内容不难，难的是守住。这一个半月里长出来的是习惯，不是速度 — 要赶在复习负担变重之前。",
+      lines: "行",
+      labels: ["第 1–2 周","第 3–4 周","第 5–6 周","第 7 周起"]
+    },
+    day: {
+      k: "每天", h: "一天里的六次触碰",
+      p: "不是一口气坐三个小时，而是散在一天里的短时段。Cepeda 关于分散练习的研究表明：同样的总时长，拆开来记住的会多得多。",
+      th: ["什么时候","做什么","时长"],
+      rows: [
+        ["晨礼后 15 分","新课 — 三段，然后整页背 3 遍","50 分"],
+        ["全天","被动聆听 — 同一位诵读者","0"],
+        ["晌礼后","近课复习 — 最近 7 天，先合本背","25 分"],
+        ["五番拜","礼拜中诵读新课内容","0"],
+        ["昏礼至宵礼","远课复习 — 每周一卷轮转","35 分"],
+        ["睡前","今天这一页最后一遍","10 分"]
+      ]
+    },
+    stuck: {
+      k: "卡住的时候", h: "顽固句的处理步骤",
+      p: "同一行反复卡住时，再念十遍是没用的 — 必须换方法。按顺序试，哪一步打开了就停在哪一步。",
+      steps: [
+        "<b>拆开</b> — 把这一行切成两三小块分别记住，再接起来",
+        "<b>回到意思上</b> — 卡住几乎总是不懂意思的信号；读一遍那一段的译文",
+        "<b>手写一遍</b> — 写一次就多接入了一条感官通道",
+        "<b>从上一行拉过来</b> — 不要单独背，连着上一行一起背 5 遍",
+        "<b>去睡觉</b> — 连续卡了 20 分钟就停下。第二天早上常常自己就通了"
+      ]
+    },
+    mut: {
+      k: "最大的陷阱", h: "相似经文 — 最容易混的地方",
+      p: "背记崩掉的头号原因不是新页，而是措辞相近的两节经文混在一起。记忆研究把这叫做干扰，唯一的解法是<b>刻意</b>去学那个差别。",
+      steps: [
+        "<b>并排写下来</b> — 两节经文写在同一张纸上，一上一下",
+        "<b>圈出那一个词</b> — 它们从哪里开始不一样",
+        "<b>记住位置</b> — “这一处在右页靠下，那一处在左页靠上”；在这里救你的是空间记忆",
+        "<b>记进笔记</b> — 写在今天的笔记栏里；每周把整份清单看一遍"
+      ],
+      nh: "一条小规矩",
+      np: "混过一次的一对，还会再混。第一次就记下来 — 半年后这份清单会是你最值钱的一页纸。"
+    },
+    real: {
+      k: "现实", h: "出差、生病、忙疯的一周",
+      p: "计划一定会被打断。真正的问题是被打断那天你做什么 — 如果答案是“什么都不做”，背记就停在那里了。",
+      th: ["情况","怎么做"],
+      rows: [
+        ["没时间","跳过新课。只做近课复习 — 25 分钟。连续记录就保住了。"],
+        ["在路上","跳过新课。听 + 在礼拜中诵读。这一天照样算数。"],
+        ["生病","完全休息。硬撑会把错误的发音固定下来，之后很难改。"],
+        ["漏了一周","别从停下的地方接 — <b>往回退两周</b>，先花两天只做复习。"],
+        ["漏了一个月","两周不碰新课。把已背的全部过一遍，然后重新开始。"]
+      ]
+    },
+    month: {
+      k: "每月", h: "每月一天 — 检验",
+      p: "在当月最后一个休息日：把这个月背下的全部内容一口气背出来 — 背给人听，或者录下来。凡是卡住的页，标为<b>薄弱</b>。应用会把它们每天送回复习队列。",
+      gh: "前进的闸门",
+      g1: "昨天那一页若不能不看经本、一字不错地背出来 — 今天就不学新的。",
+      g2: "连续两天卡住就降到半页，两周后再试。不守这条，四个月后你手里会有 100 页“大致记得”的内容 — 算起来等于零。"
+    },
+    basis: {
+      k: "依据", h: "每一步的来处",
+      th: ["研究","结论","落在哪里"],
+      rows: [
+        ["Craik &amp; Lockhart 1972<br>Craik &amp; Tulving 1975","理解了意思再记，比只记声音深得多","第三步 — 逐字对照译文"],
+        ["Karpicke &amp; Roediger 2008<br>Roediger &amp; Butler 2011","从记忆里调取，远胜过反复阅读","盖住背诵 · 先合本再对照 · 礼拜中诵读"],
+        ["Ebbinghaus 1885<br>Cepeda 2006","不复习则 24 小时内大量流失；间隔递增则近乎长存","七天近课 · 远课轮转 · 一天六次触碰"],
+        ["Miller 1956<br>Gobet 2001","工作记忆一次只能握住少数几个单位","把一页拆成 5 行一段"],
+        ["Maguire 2000, 2003<br>Dresler 2017","大脑对位置和空间的记忆极为出色","终身只用一本经本 · 用位置锚定相似经文"],
+        ["Paivio 1986<br>Shams &amp; Seitz 2008","经由多条感官进入的记忆留存更久","听 + 看 + 念 + 卡住时写"],
+        ["Mayer &amp; Moreno 2003<br>Baddeley 2000","打断会吃掉工作记忆的容量","手机放到另一间房 · 50 分钟上限"],
+        ["Draganski 2004<br>Park &amp; Bischof 2013","训练同样能让成年人的大脑发生结构变化","三十几岁不算晚 — 方法才是你的优势"]
+      ]
+    },
+    fixed: {
+      k: "不可让步", h: "三条没有余地的规矩",
+      items: [
+        ["先学诵读规则","用错误的发音背下来，改正比重新背还难。每周至少一次背给老师听。"],
+        ["睡足七小时","记忆的巩固主要在睡眠中完成。削减睡眠去换背记时间是净亏 — 掉的比加的多。"],
+        ["一本经本，一位诵读者","换经本，整层空间记忆就抹掉了；换诵读者，声调线索就没了。选定一次，之后别再动。"]
+      ]
+    }
+  },
+
+  pg: {
+    k: "进度", h: "你现在在哪里",
+    report: "每周报告 — 交给老师",
+    stats: ["页已背","完整卷","完成度","天连续","累计小时","日均错误"],
+    map: "经本地图 · 604 页",
+    legend: ["已背","今天","薄弱","未背"],
+    heat: "最近 84 天",
+    heatNote: "颜色越深，完成度越高",
+    juz: "按卷统计",
+    rate: "按当前速度",
+    rateDaily: "日均",
+    rateLeft: "剩余",
+    rateFinish: "预计完成",
+    rateNone: "再积累几天数据",
+    ratePages: "{0} 页",
+    weakH: "薄弱页",
+    weakP: "这些每天都会回到复习队列。连续七天一字不错后，可在设置里移除。",
+    notes: "近期笔记"
+  },
+
+  set: {
+    k: "设置", h: "你的设定",
+    p: "所有数据都存在这台设备上 — 不会上传到任何服务器。清理浏览器就会丢失，所以请打开下面的云端同步，或者每月下载一次备份。",
+    lang: "语言",
+    langHint: "整个应用都会切换 — 包括方法那一页。",
+    date: "起始日期",
+    page: "起始页",
+    rest: "休息日",
+    lines: "每日目标（行）",
+    linesAuto: "自动 — 按渐进计划",
+    linesN: "{0} 行",
+    linesHint: "闸门连续两天没过？就降到这里。这不是后退。",
+    qari: "你的诵读者",
+    qariPh: "一位，终身",
+    mushaf: "你的经本",
+    weakLabel: "薄弱页",
+    weakHint: "连续七天一字不错后，点一下移除。",
+    driveLabel: "Google Drive 同步",
+    driveHint: "连接后，每次改动几秒内就会写进你自己的云端硬盘。在新手机上用同一个 Google 账号登录，全部内容就会回来。应用只能看见它自己创建的那一个文件 — 你云端硬盘里的其他内容一概看不到。",
+    driveNoConfig: "在 config.js 里填入 Client ID，这一块就会启用。",
+    backupLabel: "文件备份",
+    exp: "下载数据（JSON）",
+    imp: "从备份恢复",
+    backupHint: "每月下载一次，放进邮箱或云盘。在新手机上恢复这个文件，全部内容就会回来。",
+    danger: "危险操作",
+    reset: "清除全部数据",
+    confirmReset: "全部数据将被清除且无法恢复。你已经下载过备份了吗？",
+    restored: "备份已恢复。",
+    badFile: "这个文件读不出来。请选择正确的备份文件。"
+  },
+
+  sync: {
+    off: "同步已关", connecting: "连接中", ok: "已同步", failed: "同步失败",
+    pushing: "上传中", pulling: "下载中", reconciling: "核对中", cancelled: "已取消",
+    noConfig: "尚未填入 Google Client ID — 在 <b>config.js</b> 里填入即可启用同步。",
+    notLinked: "尚未连接。连接后，数据会自动存进你自己的云端硬盘。",
+    linked: "已连接：<b>{0}</b>",
+    last: " · 上次同步 {0}",
+    never: " · 还未同步过",
+    connect: "用 Google 账号连接",
+    push: "立即上传",
+    pull: "从云端取回",
+    unlink: "断开连接",
+    confirmOff: "断开后，新的改动不会再进入你的云端硬盘。已有的文件会保留。",
+    notReady: "Google 组件还没加载完 — 过几秒再试。",
+    pushFail: "无法连上云端硬盘。检查网络后重试。",
+    pullFail: "云端硬盘里没有找到备份。",
+    pulled: "已从云端硬盘恢复数据。"
+  },
+
+  rep: {
+    title: "每周背记报告",
+    stats: ["新增页数","累计背记","错误总数","小时"],
+    daily: "逐日明细",
+    th: ["日期","新课","闸门","错误","分钟","完成"],
+    pass: "通过", fail: "未过", rest: "休息",
+    gateH: "闸门结果",
+    gateLine: "通过 <span class=\"ok\">{0}</span> 天 · 未过 <span class=\"no\">{1}</span> 天 · 完成新课 {2} 天。",
+    verdictGood: "速度合适 — 可以考虑加量。",
+    verdictBad: "目标定得偏高。减少每天的行数，先稳两周。",
+    verdictOk: "速度大致合适。这个目标再保持一周。",
+    weakH: "薄弱页 — 请重点听这几页",
+    notesH: "学生笔记",
+    comment: "老师评语",
+    signature: "签名与日期",
+    print: "打印 / PDF",
+    close: "关闭",
+    page: "第 {0} 页"
+  }
+};
+</script>
 <script src="config.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
@@ -1411,7 +2751,19 @@ document.getElementById("rep-print").onclick = function(){ window.print(); };
 document.getElementById("rep").onclick       = function(e){ if (e.target === this) this.classList.remove("on"); };
 
 /* ---------- init ---------- */
-(async function init(){
+function fatal(err){
+  document.body.innerHTML =
+    '<div style="max-width:620px;margin:60px auto;padding:0 22px;font-family:system-ui,sans-serif;line-height:1.7">' +
+    '<div style="font-size:30px;color:#A4813F">حفظ</div>' +
+    '<h1 style="font-weight:400;font-size:23px;margin:14px 0 10px">The app could not start</h1>' +
+    '<p style="color:#69707E;font-size:15px">Your saved data is safe — this is a display problem, not a data problem. ' +
+    'Try reloading the page. If it keeps happening, send the line below to the developer.</p>' +
+    '<pre style="background:#E6E8E2;padding:14px;overflow:auto;font-size:12.5px;margin-top:16px">' +
+    esc(err && (err.stack || err.message) || err) + '</pre></div>';
+}
+window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message); });
+
+(async function init(){ try {
   var loaded = await Store.get();
   var fresh = !(loaded && loaded.settings);
 
@@ -1441,7 +2793,7 @@ document.getElementById("rep").onclick       = function(e){ if (e.target === thi
   if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
     navigator.serviceWorker.register("sw.js").catch(function(){});
   }
-})();
+} catch(err){ fatal(err); } })();
 </script>
 </body>
 </html>
