@@ -1,11 +1,15 @@
 /* হিফজ · দৈনিক সঙ্গী — অফলাইন ক্যাশ
    অ্যাপ আপডেট করলে নিচের সংখ্যাটা বাড়িয়ে দিন: hifz-v2, hifz-v3 … */
-const CACHE = "hifz-v2";
+const CACHE = "hifz-v4";
 const SHELL = [
   "./",
   "./index.html",
   "./config.js",
   "./manifest.json",
+  "./lang/bn.js",
+  "./lang/en.js",
+  "./lang/ur.js",
+  "./lang/zh.js",
   "./icon.svg"
 ];
 
