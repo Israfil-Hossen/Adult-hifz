@@ -1,6 +1,6 @@
 /* হিফজ · দৈনিক সঙ্গী — অফলাইন ক্যাশ
    অ্যাপ আপডেট করলে নিচের সংখ্যাটা বাড়িয়ে দিন: hifz-v2, hifz-v3 … */
-const CACHE = "hifz-v14";
+const CACHE = "hifz-v17";
 const SHELL = [
   "./",
   "./index.html",
@@ -53,14 +53,21 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  // অ্যাপ শেল: আগে নেটওয়ার্ক (নতুন সংস্করণের জন্য), ব্যর্থ হলে ক্যাশ
+  // অ্যাপ শেল: ক্যাশ থাকলে সাথে সাথে দেখাও, পিছনে নতুন সংস্করণ নামাও।
+  // নেট ধীর/বন্ধ (চীন) হলেও অ্যাপ কখনো সাদা পর্দায় আটকে থাকবে না।
   e.respondWith(
-    fetch(req)
-      .then((res) => {
+    caches.match(req).then((hit) => {
+      const net = fetch(req).then((res) => {
         const copy = res.clone();
         caches.open(CACHE).then((c) => c.put(req, copy));
         return res;
-      })
-      .catch(() => caches.match(req).then((hit) => hit || caches.match("./index.html")))
+      }).catch(() => hit || caches.match("./index.html"));
+      if (hit) { net.catch(() => {}); return hit; }
+      // ক্যাশে নেই: ৬ সেকেন্ড পর হাল ছেড়ে যা আছে তাই দেখাও
+      return Promise.race([
+        net,
+        new Promise((r) => setTimeout(() => r(caches.match("./index.html")), 6000))
+      ]).then((r) => r || net);
+    })
   );
 });
