@@ -12,8 +12,27 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link id="fontlink" rel="stylesheet" href="">
-<link rel="stylesheet" href="https://fonts.maateen.me/solaiman-lipi/font.css">
-<script>window.HIFZ_CONFIG = { googleClientId: "", driveFileName: "hifz-backup.json" };</script>
+<link id="blfont" rel="stylesheet" href="https://fonts.maateen.me/solaiman-lipi/font.css">
+<script>window.HIFZ_CONFIG = { googleClientId: "", driveFileName: "hifz-backup.json" };
+/* সীমিত ইন্টারনেটের দেশে (চীন) গুগলের ঠিকানা বন্ধ — আয়না ব্যবহার করি */
+window.cnMode = function(){
+  try {
+    var v = localStorage.getItem("hifz-cn");
+    if (v === "1") return true;
+    if (v === "0") return false;
+    var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || "");
+    return /Shanghai|Chongqing|Urumqi|Harbin|Macau/i.test(tz);
+  } catch(e){ return false; }
+};
+window.fontBase = function(){
+  return cnMode() ? "https://fonts.loli.net/css2?family="
+                  : "https://fonts.googleapis.com/css2?family=";
+};
+(function(){
+  var b = document.getElementById("blfont");
+  if (cnMode() && b) b.href = "https://cdn.jsdelivr.net/npm/@fontsource/hind-siliguri@5.0.8/index.css";
+})();
+</script>
 <script>
 /* =========================================================
    English — the reference language file.
@@ -66,6 +85,8 @@ window.HIFZ_LANG_en = {
          compare:"Play the reciter, then you", none:"Nothing recorded yet", denied:"Microphone permission is needed.",
          saved:"Saved with today's page", dl:"Save the file",
          phrase:"Loop a phrase", phraseHint:"Tap the first and the last word of the stubborn phrase · it repeats slowly, on its own." },
+  cn: { h:"Limited-internet mode", lab:"Use mirrors for fonts (China)", auto:"Auto",
+        hint:"Google's servers are blocked in mainland China. With this on, fonts load from a mirror and Google Drive sync is hidden. Changing it reloads the app." },
   ins: { h:"Install as an app", btn:"Install on this device", done:"Already installed",
          ios:"On iPhone: Safari · Share (⬆) · Add to Home Screen. Chrome on iOS cannot do it.",
          hint:"It then opens from the home screen, with no address bar, and works offline." },
@@ -438,6 +459,8 @@ window.HIFZ_LANG_bn = {
          compare:"আগে ক্বারী, তারপর আপনি", none:"এখনো কিছু রেকর্ড হয়নি", denied:"মাইক্রোফোনের অনুমতি লাগবে।",
          saved:"আজকের পৃষ্ঠার সাথে জমা হলো", dl:"ফাইলটা নামিয়ে রাখুন",
          phrase:"টুকরো লুপ", phraseHint:"যে টুকরোয় আটকাচ্ছেন, তার প্রথম ও শেষ শব্দে ট্যাপ করুন · ওটুকু ধীরে ধীরে নিজে নিজে বাজতে থাকবে।" },
+  cn: { h:"সীমিত ইন্টারনেট মোড", lab:"ফন্টের জন্য আয়না ব্যবহার করুন (চীন)", auto:"নিজে থেকে",
+        hint:"চীনের মূল ভূখণ্ডে গুগলের সার্ভার বন্ধ। এটা চালু থাকলে ফন্ট আয়না থেকে আসে আর গুগল ড্রাইভ সিঙ্ক লুকানো থাকে। বদলালে অ্যাপ আবার চালু হবে।" },
   ins: { h:"অ্যাপ হিসেবে বসান", btn:"এই ডিভাইসে বসান", done:"ইতিমধ্যে বসানো আছে",
          ios:"আইফোনে: Safari · Share (⬆) · Add to Home Screen। আইফোনের Chrome-এ হবে না।",
          hint:"এরপর হোম স্ক্রিন থেকেই খুলবে, অ্যাড্রেস বার থাকবে না, ইন্টারনেট ছাড়াও চলবে।" },
@@ -812,6 +835,8 @@ window.HIFZ_LANG_ur = {
          compare:"پہلے قاری، پھر آپ", none:"ابھی کچھ ریکارڈ نہیں ہوا", denied:"مائیکروفون کی اجازت درکار ہے۔",
          saved:"آج کے صفحے کے ساتھ محفوظ", dl:"فائل محفوظ کریں",
          phrase:"ٹکڑے کی تکرار", phraseHint:"جس ٹکڑے پر اٹکتے ہیں اس کے پہلے اور آخری لفظ پر ٹیپ کریں · وہ آہستہ آہستہ خود دہراتا رہے گا۔" },
+  cn: { h:"محدود انٹرنیٹ موڈ", lab:"فونٹ کے لیے مرر استعمال کریں (چین)", auto:"خودکار",
+        hint:"چین میں گوگل کے سرور بند ہیں۔ یہ آن ہو تو فونٹ مرر سے آتے ہیں اور گوگل ڈرائیو سنک چھپ جاتی ہے۔ تبدیلی پر ایپ دوبارہ لوڈ ہوگی۔" },
   ins: { h:"ایپ کے طور پر انسٹال کریں", btn:"اس آلے پر انسٹال کریں", done:"پہلے سے انسٹال ہے",
          ios:"آئی فون پر: Safari · Share (⬆) · Add to Home Screen۔ آئی فون کے Chrome میں نہیں ہوگا۔",
          hint:"پھر یہ ہوم اسکرین سے کھلے گا، ایڈریس بار کے بغیر، اور آف لائن بھی چلے گا۔" },
@@ -1186,6 +1211,8 @@ window.HIFZ_LANG_zh = {
          compare:"先听诵读者，再听自己", none:"还没有录音", denied:"需要麦克风权限。",
          saved:"已随今天这一页保存", dl:"保存文件",
          phrase:"片段循环", phraseHint:"点选卡住那一段的首词与末词 · 它会自动放慢重复。" },
+  cn: { h:"受限网络模式", lab:"字体使用镜像（中国大陆）", auto:"自动",
+        hint:"中国大陆无法访问 Google 服务器。开启后字体从镜像加载，并隐藏 Google Drive 同步。更改后应用会重新加载。" },
   ins: { h:"安装为应用", btn:"安装到本设备", done:"已安装",
          ios:"iPhone：Safari · 分享（⬆）· 添加到主屏幕。iOS 版 Chrome 无法安装。",
          hint:"之后可从主屏幕直接打开，没有地址栏，离线也能用。" },
@@ -1518,7 +1545,15 @@ window.HIFZ_LANG_zh = {
 };
 </script>
 <script src="config.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+(function(){
+  var c = window.HIFZ_CONFIG || {};
+  if (!c.googleClientId || cnMode()) return;   /* চীনে accounts.google.com পৌঁছায় না */
+  var g = document.createElement("script");
+  g.src = "https://accounts.google.com/gsi/client"; g.async = true; g.defer = true;
+  document.head.appendChild(g);
+})();
+</script>
 <style>
 :root{
   /* Warm, low-contrast palette — nothing pure black or pure white, accents
@@ -1544,6 +1579,7 @@ html{-webkit-text-size-adjust:100%}
   .rdgrp{width:100%}
   .rdgrp>*{flex:1 1 auto;padding:9px 8px;font-size:13px}
   .rdgrp input{flex:0 0 56px}
+  .rdplay .rdic{padding:9px 6px;justify-content:center}
   .rdline{gap:7px}
   .rdmini{font-size:12px;padding:6px 11px}
   .paper{padding:16px 11px 12px}
@@ -1564,6 +1600,7 @@ html{-webkit-text-size-adjust:100%}
 }
 @media (hover:none){
   .tab,.abtn,.rdmini,.qp,.gbtn{min-height:44px}
+  .rdtools .rdmini{min-width:44px;min-height:44px}
   .rdgrp>*{min-height:44px}
 }
 html:not([lang="en"]) .kicker, html:not([lang="en"]) .fld label, html:not([lang="en"]) .blk-h .meta,
@@ -1737,6 +1774,9 @@ h3{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.4}
 }
 .fld textarea{min-height:74px;resize:vertical}
 .hint{font-size:13px;color:var(--muted);margin-top:6px}
+.fld label.chk{display:flex;align-items:center;gap:9px;font-family:var(--body);font-size:15px;
+  letter-spacing:0;text-transform:none;color:var(--ink);margin:0;cursor:pointer;min-height:32px}
+.fld label.chk input{width:18px;height:18px;flex:0 0 auto;accent-color:var(--verdigris)}
 
 .sum{background:var(--ink);color:var(--paper);padding:20px 18px;margin-top:22px}
 .sum-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
@@ -1981,7 +2021,27 @@ footer b{color:#AEB6BD;font-weight:500}
 .rdfoot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:#77808A;padding-top:10px;margin-top:8px;border-top:1px solid rgba(33,43,54,.12);direction:ltr}
 .wmean{margin-top:12px;min-height:44px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.05);font-size:14px}
 .wmean b{font-size:19px}
-.rdnote{font-size:13px;opacity:.7;margin-bottom:12px}
+.rdnote{font-size:12px;opacity:.55;margin:0 0 9px}
+
+/* কম জায়গায় বেশি কাজ — চিহ্নের টুলবার */
+.rdbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.rdplay .rdic{padding:8px 11px;font-size:14px;display:flex;align-items:center;gap:5px;
+  cursor:pointer;background:none;border:none;color:inherit;line-height:1;font-family:inherit}
+.rdplay .rdic i{font-style:normal;font-family:var(--mono);font-size:11.5px;opacity:.85}
+.rdplay .rdic.go{background:var(--verdigris);color:#fff}
+.rdplay .rdic.go:hover{opacity:.92;background:var(--verdigris)}
+.rdplay .rdic:hover{background:var(--paper-2)}
+.rdtools{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.rdtools .rdmini,#rd-selbar .rdmini{display:inline-flex;align-items:center;gap:6px;padding:6px 12px}
+.rdmini .ic{font-size:14px;line-height:1}
+.rdmini b{font-weight:500}
+@media (max-width:620px){
+  .rdtools .rdmini b{display:none}
+  .rdtools .rdmini{padding:0;width:40px;height:40px;justify-content:center;gap:0}
+  .rdtools .rdmini.wide{width:auto;padding:0 13px}
+  .rdtools .rdmini.wide b{display:inline}
+  .rdmini .ic{font-size:16px}
+}
 .rdprog{font-family:var(--mono);font-size:12px;opacity:.8}
 </style>
 <main class="wrap">
@@ -2020,7 +2080,380 @@ footer b{color:#AEB6BD;font-weight:500}
 /* ---------- language registry ----------
    To add a language: create lang/xx.js (copy lang/en.js),
    then add its code to this list. Nothing else changes. */
-var LANGS = ["bn", "en", "ur", "zh"];
+
+/* العربية */
+window.HIFZ_LANG_ar = {
+  code: "ar",
+  name: "العربية",
+  dir: "rtl",
+  digits: "٠١٢٣٤٥٦٧٨٩",
+  locale: "ar-SA",
+  fonts: {
+    google: "Noto+Naskh+Arabic:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400",
+    display: '"Amiri","Noto Naskh Arabic",serif',
+    body: '"Noto Naskh Arabic","Amiri",system-ui,sans-serif',
+    lineHeight: "1.9"
+  },
+
+  months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو",
+           "يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"],
+  monthsShort: ["ينا","فبر","مار","أبر","مايو","يون","يول","أغس","سبت","أكت","نوف","ديس"],
+  weekdays: ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"],
+
+  app: {
+    name: "الرفيق اليومي",
+    title: "الحفظ · الرفيق اليومي",
+    desc: "برنامج لحفظ القرآن للكبار، مبني على أبحاث الذاكرة",
+    streak: "يومًا متتاليًا",
+    footer1: "الحفظ · الرفيق اليومي · <b>للكبار</b>",
+    footer2: "مبني على أبحاث الذاكرة · بياناتك تبقى في جهازك"
+  },
+
+  ex: { open:"اختبر نفسك", title:"اختبار الاسترجاع", sub:"الاسترجاع أنفع من إعادة القراءة · كاربيك ورويدجر (٢٠٠٨).",
+        order:"رتّبها كما هي", cloze:"املأ الفراغ", next:"ما الذي يليها",
+        orderHint:"انقر المقاطع بالترتيب الصحيح.", clozeHint:"اختر الكلمة الناقصة.",
+        nextHint:"اختر المقطع الذي تكمل به الآية.",
+        q:"{0} / {1}", right:"صحيح", wrong:"ليست هذه", done:"انتهى الاختبار",
+        score:"{0} صحيحة، {1} خاطئة", again:"مرة أخرى", close:"إغلاق", weakAdd:"عُلّمت الصفحة ضعيفة",
+        need:"افتح صفحة واختر مقطعًا أولًا." },
+  rec: { start:"سجّل تلاوتك", stop:"أوقف التسجيل", mine:"تلاوتك", qari:"تلاوة القارئ",
+         compare:"القارئ أولًا ثم أنت", none:"لا يوجد تسجيل بعد", denied:"يلزم الإذن باستخدام الميكروفون.",
+         saved:"حُفظ مع صفحة اليوم", dl:"احفظ الملف",
+         phrase:"كرّر مقطعًا", phraseHint:"انقر أول كلمة وآخر كلمة من المقطع العسير · يُعاد ببطء من تلقاء نفسه." },
+  cn: { h:"وضع الإنترنت المحدود", lab:"استخدم مرآة للخطوط (الصين)", auto:"تلقائي",
+        hint:"خوادم جوجل محجوبة في الصين. عند تفعيل هذا الوضع تُحمَّل الخطوط من مرآة ويُخفى مزامنة جوجل درايف. تغييره يعيد تحميل التطبيق." },
+  ins: { h:"ثبّته كتطبيق", btn:"ثبّته على هذا الجهاز", done:"مثبّت بالفعل",
+         ios:"في الآيفون: سفاري · مشاركة (⬆) · إضافة إلى الشاشة الرئيسية.",
+         hint:"يفتح بعدها من الشاشة الرئيسية بلا شريط عنوان، ويعمل دون إنترنت." },
+  nt: { h:"التذكيرات", allow:"فعّل الإشعارات", allowed:"الإشعارات مفعّلة", denied:"المتصفح يحجب الإشعارات. اسمح بها من إعدادات الموقع.",
+        daily:"تذكير يومي", dailyOff:"مغلق", dailyHint:"تنبيه في هذا الوقت إن لم يتم درس اليوم.",
+        zikr:"تذكير بالذكر", zikrOff:"مغلق", zikrN:"كل {0} دقيقة", zikrHint:"ذكر قصير، واحدًا تلو الآخر. صامت من العاشرة ليلًا حتى الخامسة فجرًا.",
+        dailyTitle:"درس اليوم في انتظارك", dailyBody:"صفحة {0} · الأسطر {1}–{2}. افتح واقرأ.",
+        note:"تعمل التذكيرات ما دام التطبيق مفتوحًا أو يعمل في الخلفية. ثبّته على شاشتك الرئيسية واتركه." },
+  rev: { ask:"صفحة {0} · كيف كانت؟", good:"متقنة", ok:"مهتزّة", bad:"منسيّة",
+         due:"مستحقّة اليوم", dueNone:"لا شيء قديم مستحق اليوم", strength:"القوة",
+         note:"ما تتقنه يعود بعد مدة أطول، والمهتزّ يعود غدًا." },
+  mut: { h:"الآيات المتشابهة", find:"ابحث عن المتشابهات", busy:"جارٍ المقارنة…",
+         none:"لا شيء في هذه الصفحة يشبه ما حفظته.",
+         at:"صفحة {0} · آية {1}", hint:"الكلمات المسطّرة ترد في مواضع أخرى. اقرأ الموضعين معًا مرة، ثم قيّد الفرق بينهما.",
+         only:"تُقارن الصفحات الموجودة في جهازك فقط." },
+  nav: { today:"اليوم", mushaf:"المصحف", routine:"المنهج", progress:"التقدّم", settings:"الإعدادات" },
+  rd: { title:"الصفحة", pageLbl:"صفحة", prev:"السابقة", next:"التالية", hide:"استر الأسطر", show:"أظهر",
+        loop:"التكرار", speed:"السرعة", meaning:"معاني الكلمات", dl:"نزّل هذا الجزء", dling:"جارٍ التنزيل {0}%",
+        dlDone:"هذا الجزء محفوظ في جهازك", tap:"انقر أي كلمة، تُتلى الآية ويظهر معناها أدناه.",
+        todayHi:"أسطر اليوم واضحة، وبقية الصفحة باهتة.",
+        loading:"جارٍ تحميل الصفحة…", err:"تعذّر تحميل الصفحة. تحقق من الاتصال وحاول مجددًا.",
+        notMadani:"يحتاج عرض الصفحة إلى مصحف المدينة (٦٠٤ صفحات، ١٥ سطرًا)، طبعة ١٤٠٥ أو ١٤٢١. غيّر مصحفك من الإعدادات.",
+        reciter:"التلاوة", playAll:"شغّل المحدَّد", juz:"الجزء {0}", openPage:"افتح هذه الصفحة في المصحف",
+        tr:"التفسير", trBy:"التفسير الميسّر", trOff:"أخفِ التفسير", pause:"إيقاف مؤقت", resume:"متابعة", stop:"إيقاف",
+        ay:"آية", auto:"تلقائي", cover:"استر", pick:"اختر من الصفحة",
+        pickA:"انقر أول كلمة في المقطع", pickB:"الآن انقر آخر كلمة", setDay:"اجعله درس اليوم", setDone:"جُعل درس اليوم",
+        selNote:"يبدأ المقطع من هدفك اليومي ({0} أسطر) ويُقرَّب إلى آيات كاملة، وتستطيع تعديله." },
+
+  ob: {
+    kicker: "لنبدأ",
+    h1a: "صفحة كل يوم.",
+    h1b: "والتطبيق يتذكّر الباقي.",
+    lede: "ثلاث إجابات، ومن الغد يخبرك التطبيق كل صباح: أي صفحة جديدة، وأي سبع تُراجع، وأي جزء استحقّ دوره.",
+    lang: "اللغة",
+    date: "تاريخ البداية",
+    dateHint: "ضع تاريخ اليوم. تُحسب الأسابيع الستة التمهيدية من هنا.",
+    page: "أول صفحة تبدأ بها",
+    pageHint: "رقم صفحة مصحف المدينة (١–٦٠٤). تبدأ من قصار السور؟ ابدأ بالصفحة ٥٨٢ (سورة النبأ).",
+    rest: "يوم الراحة الأسبوعي",
+    restHint: "لا درس جديد في ذلك اليوم، بل مراجعة الأسبوع كله في جلسة واحدة.",
+    go: "ابدأ"
+  },
+
+  phase: {
+    week: "الأسبوع {0}",
+    rest: "يوم راحة",
+    target: "الهدف {0} أسطر",
+    noNew: "لا درس جديد اليوم",
+    page: "صفحة {0}",
+    lineRange: "الأسطر {0}–{1}",
+    restNote: "صفحات الأسبوع الست في جلسة واحدة متصلة.",
+    manual: "هدفك الذي اخترته.",
+    notes: [
+      "المقصود بناء العادة. لا تفكّر في السرعة بعد.",
+      "هنا يبدأ حمل المراجعة يثقل.",
+      "مقطعان ونصف، تدرّب على وصلها.",
+      "صفحة كاملة. هنا يبدأ الحساب الحقيقي."
+    ]
+  },
+
+  gate: {
+    q: "درس الأمس، صفحة {0}، هل تستطيع تلاوتها دون مصحف ودون خطأ واحد؟",
+    yes: "أستطيع",
+    no: "لا أستطيع",
+    fail: "<b>لا درس جديد اليوم.</b> أعد صفحة الأمس، بالتمرين نفسه، من أوله.",
+    failStreak: " هذا اليوم {0} على التوالي. انزل إلى نصف صفحة أسبوعين، وتستطيع تغيير الهدف من الإعدادات.",
+    pass: "اجتزت البوابة. صفحة اليوم مفتوحة."
+  },
+
+  blk: {
+    sabaq: "الدرس الجديد",
+    sabaqRepeat: "إعادة · صفحة الأمس",
+    sabaqMeta: "صفحة {0} · {1} أسطر · ٥٠ دقيقة",
+    listen: "الاستماع العابر",
+    listenMeta: "طوال اليوم · لا يكلّف وقتًا إضافيًا",
+    sabaqi: "السبقي · آخر سبعة أيام",
+    sabaqiMeta: "بعد الظهر · ٢٥ دقيقة",
+    salah: "اقرأ في الصلاة",
+    salahMeta: "خمس صلوات · لا يكلّف وقتًا إضافيًا",
+    manzil: "المنزل · كل ما مضى",
+    manzilMeta: "بين المغرب والعشاء · ٣٥ دقيقة · الجزء {0}",
+    manzilWait: "بين المغرب والعشاء · في الانتظار",
+    night: "المراجعة الأخيرة",
+    nightMeta: "قبل النوم · ١٠ دقائق",
+    doneLabel: "علّمه منجزًا"
+  },
+
+  sabaq: {
+    pageLabel: "رقم صفحة اليوم",
+    pageHint: "يفترض التطبيق الصفحة التالية. إن كان ترتيبك مختلفًا، غيّره من هنا.",
+    blocked: "<b>لا جديد اليوم.</b> الصفحة نفسها، التمرين نفسه، من أوله.",
+    intro: "خمس خطوات لكل مقطع. انقر المقطع في الأعلى متى أتممته.",
+    after: "<b>بعد المقاطع {0}:</b> المقطع كله ٣ مرات والمصحف مغلق، دون توقّف.",
+    drill: [
+      "<b>استمع ٥ مرات</b> · عيناك على تلك الأسطر، وشفتاك ساكنتان",
+      "<b>اقرأ جهرًا ٧ مرات</b> · ناظرًا في المصحف، على مهل",
+      "<b>المعنى مرة</b> · كلمة كلمة، ما معنى كل كلمة",
+      "<b>استر واقرأ ٣ مرات</b> · لا تُحسب المرة إلا إذا كانت بلا خطأ",
+      "<b>الوصل مرتين</b> · ابدأ من آخر سطر في المقطع السابق"
+    ]
+  },
+
+  listen: {
+    body: "اجعل صفحة اليوم تُتلى بصوت القارئ نفسه: في السيارة، في المطبخ، في المشي. لا يلزمك تركيز؛ الأذن تعمل وحدها.",
+    qari: " قارئك: <b>{0}</b>."
+  },
+
+  sabaqi: {
+    empty: "لا توجد قائمة مراجعة بعد، تمتلئ من الغد بعد أول درس.",
+    weakLabel: "<b>الصفحات الضعيفة</b> · أعطها مرورًا إضافيًا:",
+    order: "<b>الترتيب هو المقصود:</b> أغلق المصحف واقرأ من حفظك أولًا، ثم افتحه وصحّح. إن عكست ضاع مقصود هذا الباب.",
+    ago: "قبل {0} أيام",
+    page: "ص {0}"
+  },
+
+  salah: {
+    body: "اقرأ من درس اليوم ومن صفحات هذا الأسبوع. قائمًا، بلا مصحف، تستخرجه من ذاكرتك تحت الضغط؛ هذا أصفى صور الاسترجاع.",
+    counted: "صلوات قُرئ فيها"
+  },
+
+  manzil: {
+    week: "<b>جزء هذا الأسبوع: {0}</b>، الصفحات {1}–{2}. ما حفظته منها فقط.",
+    rot: "الدورة تلقائية. وكلما زادت أجزاؤك تباعدت عودة كل جزء، وهو الفاصل الذي ينكسر عنده منحنى إبنجهاوس.",
+    empty: "لم يبدأ المنزل بعد. يبدأ تلقائيًا عند بلوغ ثماني صفحات تقريبًا."
+  },
+
+  night: {
+    body: "صفحة اليوم مرة أخيرة، جالسًا على فراشك. ما يدخل قبيل النوم يثبت أفضل في الليل. ولا شاشات بعد ذلك."
+  },
+
+  timer: { start: "مؤقّت {0} دقيقة", stop: "أوقف" },
+
+  log: {
+    err: "كم خطأ اليوم",
+    errHint: "نزول هذا الرقم هو المقياس الحقيقي للتقدّم، لا عدد الصفحات.",
+    min: "الوقت الفعلي (دقائق)",
+    note: "المواضع الضعيفة / ملاحظات",
+    notePh: "أي آية تتعثّر فيها دائمًا؟ وأين اختلط عليك موضعان متشابهان؟",
+    weak: "علّم صفحة ضعيفة (رقم الصفحة)",
+    weakPh: "مثال: ٤٥",
+    weakAdd: "أضف",
+    weakClear: "امسح القائمة",
+    weakHint: "الصفحات المعلَّمة تعود إلى مراجعتك كل يوم حتى تحذفها."
+  },
+
+  sum: {
+    done: "أُنجز اليوم",
+    total: "مجموع المحفوظ",
+    stat: "{0} صفحات · {1} دقيقة اليوم"
+  },
+
+  rt: {
+    ramp: {
+      k: "البداية", h: "الأسابيع الستة التمهيدية",
+      p: "حفظ الجديد سهل، والإبقاء عليه هو الصعب. هذه الأسابيع تبني العادة لا السرعة، قبل أن يثقل حمل المراجعة.",
+      lines: "أسطر",
+      labels: ["الأسبوعان ١–٢","الأسبوعان ٣–٤","الأسبوعان ٥–٦","الأسبوع ٧ ←"]
+    },
+    day: {
+      k: "كل يوم", h: "ست لمسات في اليوم",
+      p: "لا ثلاث ساعات في جلسة واحدة، بل جلسات قصيرة موزّعة على اليوم. أبحاث سيبيدا في التوزيع تبيّن أن الوقت نفسه يثبت أضعافًا إذا فُرّق.",
+      th: ["متى","ماذا","الوقت"],
+      rows: [
+        ["الفجر + ١٥ د","الدرس الجديد · ثلاثة مقاطع ثم الصفحة كلها ٣ مرات","٥٠ د"],
+        ["طوال اليوم","استماع عابر · القارئ نفسه","٠"],
+        ["بعد الظهر","السبقي · آخر ٧ أيام، والمصحف مغلق أولًا","٢٥ د"],
+        ["خمس صلوات","اقرأ من الدرس في الصلاة","٠"],
+        ["المغرب–العشاء","المنزل · جزء كل أسبوع بالدور","٣٥ د"],
+        ["قبل النوم","صفحة اليوم مرة أخيرة","١٠ د"]
+      ]
+    },
+    stuck: {
+      k: "إذا تعسّر عليك", h: "بروتوكول السطر العنيد",
+      p: "إعادة السطر عشر مرات أخرى لا تنفع إذا أبى أن يثبت؛ لا بد من تغيير الطريقة. انزل في القائمة وقف عند ما يفتحه عليك.",
+      steps: [
+        "<b>جزّئه</b> · اقسم السطر قطعتين أو ثلاثًا، ثبّت كل قطعة وحدها ثم صِلها",
+        "<b>اذهب إلى المعنى</b> · التعثّر في الغالب علامة أنك لا تدري ما يقول؛ اقرأ تفسير ذلك الموضع",
+        "<b>اكتبه بيدك</b> · الكتابة مرة واحدة تُدخل حاسّة أخرى",
+        "<b>اسحبه من السطر قبله</b> · لا وحده، بل مع السطر السابق، ٥ مرات",
+        "<b>نم</b> · إن مضت عشرون دقيقة وأنت واقف، فقف. كثيرًا ما ينفتح وحده في الصباح"
+      ]
+    },
+    mut: {
+      k: "أكبر مزلق", h: "المتشابهات · آيات تكاد تتطابق",
+      p: "أول أسباب انهيار الحفظ ليس الصفحات الجديدة، بل آيتان يتشابه لفظهما فيختلطان. تسمّي أبحاث الذاكرة هذا تداخلًا، ودواؤه الوحيد أن تتعلّم الفرق <b>قصدًا</b>.",
+      steps: [
+        "<b>اكتبهما متقابلتين</b> · الآيتان في ورقة واحدة، إحداهما فوق الأخرى",
+        "<b>حدّد الكلمة الفارقة</b> · موضع الاختلاف بالضبط",
+        "<b>ثبّت الموضع</b> · «هذه أسفل الصفحة اليمنى، وتلك أعلى اليسرى»؛ ذاكرة المكان هي التي تنجيك هنا",
+        "<b>قيّده في ملاحظاتك</b> · في حقل ملاحظة اليوم، وراجع القائمة كلها مرة في الأسبوع"
+      ],
+      nh: "قاعدة صغيرة",
+      np: "ما اختلط عليك مرة سيختلط ثانية. قيّده من أول مرة؛ بعد ستة أشهر ستكون هذه أنفع ورقة تملكها."
+    },
+    real: {
+      k: "واقع الحياة", h: "سفر، ومرض، وأسبوع قاسٍ",
+      p: "سينكسر النظام لا محالة. والسؤال الوحيد: ماذا تصنع يوم ينكسر؟ فإن كان الجواب «لا شيء» توقّف الحفظ عندها.",
+      th: ["الحال","ما تصنع"],
+      rows: [
+        ["لا وقت","اترك الدرس الجديد. السبقي فقط، ٢٥ دقيقة. وتبقى السلسلة."],
+        ["في سفر","اترك الدرس الجديد. استمع، واقرأ في الصلاة. ويُحسب اليوم."],
+        ["مريض","راحة تامة. إن أجهدت نفسك رسّخت نطقًا خاطئًا، وإصلاحه عسير."],
+        ["فاتك أسبوع","لا تستأنف من حيث وقفت، بل ارجع <b>أسبوعين</b> وخصّص يومين للمراجعة فقط."],
+        ["فاتك شهر","لا درس جديد أسبوعين. مرّ على كل ما تحفظ مرة، ثم استأنف."]
+      ]
+    },
+    month: {
+      k: "شهريًا", h: "يوم في الشهر · الاختبار",
+      p: "في آخر يوم راحة من الشهر: اقرأ كل ما حفظته في الشهر في جلسة واحدة متصلة، على شخص أو في مسجّل. وعلّم كل صفحة تعثّرت فيها <b>ضعيفة</b>، فيعيدها التطبيق إلى مراجعتك اليومية.",
+      gh: "البوابة",
+      g1: "إن لم تستطع تلاوة صفحة الأمس بلا مصحف وبلا خطأ، فلا جديد اليوم.",
+      g2: "يومان متتاليان عند البوابة: انزل إلى نصف صفحة وأعد المحاولة بعد أسبوعين. وتركُ هذه القاعدة يعني بعد أربعة أشهر مئة صفحة «تتذكّرها تقريبًا»، وهي في الحساب صفر."
+    },
+    basis: {
+      k: "الأسس", h: "من أين جاءت كل خطوة",
+      th: ["البحث","ما يدلّ عليه","أين وقع في المنهج"],
+      rows: [
+        ["كريك ولوكهارت ١٩٧٢<br>كريك وتولفنج ١٩٧٥","ما يُفهم معناه يترسّخ أعمق مما يُسمع صوته فقط","الخطوة الثالثة · المعنى كلمة كلمة"],
+        ["كاربيك ورويدجر ٢٠٠٨<br>رويدجر وبتلر ٢٠١١","الاستخراج من الذاكرة يتفوّق على إعادة القراءة بفارق كبير","القراءة على الستر · السبقي والمصحف مغلق · القراءة في الصلاة"],
+        ["إبنجهاوس ١٨٨٥<br>سيبيدا ٢٠٠٦","بلا مراجعة يضيع الكثير خلال ٢٤ ساعة، وبفواصل متباعدة يكاد يثبت","سبقي سبعة أيام · دورة المنزل · ست لمسات في اليوم"],
+        ["ميلر ١٩٥٦<br>جوبيه ٢٠٠١","الذاكرة العاملة لا تمسك إلا وحدات قليلة معًا","تقسيم الصفحة مقاطع من خمسة أسطر"],
+        ["ماجواير ٢٠٠٠، ٢٠٠٣<br>دريسلر ٢٠١٧","الدماغ عجيب في حفظ المكان والموضع","مصحف واحد للعمر · تثبيت المتشابهات بالموضع"],
+        ["بايفيو ١٩٨٦<br>شمس وسايتز ٢٠٠٨","ما يدخل من حواسّ عدة يثبت أكثر","استمع + انظر + انطق + اكتب عند التعسّر"],
+        ["ماير ومورينو ٢٠٠٣<br>بادلي ٢٠٠٠","المقاطعة تأكل سعة الذاكرة العاملة","الهاتف في غرفة أخرى · سقف ٥٠ دقيقة"],
+        ["دراجانسكي ٢٠٠٤<br>بارك وبيشوف ٢٠١٣","التدريب يحدث تغيّرًا بنيويًا في أدمغة الكبار أيضًا","الثانية والثلاثون ليست متأخرة · المنهج هو ميزتك"]
+      ]
+    },
+    fixed: {
+      k: "لا تفاوض فيها", h: "ثلاث لا تُترك",
+      items: [
+        ["التجويد أولًا","إن حفظت بنطق خاطئ كان إصلاحه أشقّ من الحفظ ابتداءً. اقرأ على شيخ مرة في الأسبوع على الأقل."],
+        ["سبع ساعات نوم","التثبيت يقع في النوم أكثره. اقتطاع النوم لتزيد الحفظ خسارة صافية؛ تفقد أكثر مما تكسب."],
+        ["مصحف واحد وقارئ واحد","تغيير المصحف يمحو طبقة المكان كلها، وتغيير القارئ يُذهب الإشارة اللحنية. اختر مرة ثم لا تبدّل."]
+      ]
+    }
+  },
+
+  pg: {
+    k: "التقدّم", h: "أين أنت الآن",
+    report: "تقرير أسبوعي · لشيخك",
+    stats: ["صفحات محفوظة","أجزاء كاملة","من المصحف","يومًا متتاليًا","مجموع الساعات","متوسط الأخطاء / يوم"],
+    map: "خريطة المصحف",
+    legend: ["محفوظة","اليوم","ضعيفة","الباقي"],
+    heat: "آخر ٨٤ يومًا",
+    heatNote: "كلما دكن اللون زاد الإنجاز",
+    juz: "بحسب الأجزاء",
+    rate: "بوتيرتك الحالية",
+    rateDaily: "المعدل اليومي",
+    rateLeft: "المتبقّي",
+    rateFinish: "الختم المتوقّع",
+    rateNone: "دع بضعة أيام تتراكم",
+    ratePages: "{0} صفحات",
+    weakH: "الصفحات الضعيفة",
+    weakP: "تعود هذه إلى مراجعتك كل يوم. فإذا أتقنتها سبعة أيام متتالية فامسحها من الإعدادات.",
+    notes: "آخر الملاحظات"
+  },
+
+  set: {
+    k: "الإعدادات", h: "إعدادك",
+    p: "كل شيء محفوظ في هذا الجهاز، ولا يذهب إلى خادم. مسح المتصفح يمحوه، فإما أن تفعّل مزامنة درايف أدناه أو تنزّل نسخة احتياطية كل شهر.",
+    lang: "اللغة",
+    langHint: "يتغيّر التطبيق كله، بما في ذلك صفحة المنهج.",
+    date: "تاريخ البداية",
+    page: "أول صفحة",
+    rest: "يوم الراحة",
+    lines: "الهدف اليومي (أسطر)",
+    linesAuto: "تلقائي · اتبع التدرّج",
+    linesN: "{0} أسطر",
+    linesHint: "وقفت عند البوابة يومين؟ انزل من هنا. ليس هذا تراجعًا.",
+    qari: "قارئك",
+    qariPh: "واحد، للعمر",
+    mushaf: "مصحفك",
+    mushafHint: "عدد الصفحات والأسطر يتبع هذه الطبعة. وتغييرها يغيّر الخريطة كلها.",
+    mushafEd: "الطبعة أو الناشر",
+    mushafEdPh: "النسخة التي بين يديك · واحدة، للعمر",
+    weakLabel: "الصفحات الضعيفة",
+    weakHint: "انقر لحذفها بعد سبعة أيام بلا خطأ.",
+    driveLabel: "مزامنة جوجل درايف",
+    driveHint: "ما دام مرتبطًا يصل كل تغيير إلى درايف خلال ثوانٍ. سجّل الدخول بالحساب نفسه في هاتف جديد فيعود كل شيء. لا يرى التطبيق إلا الملف الذي أنشأه.",
+    driveNoConfig: "أضف Client ID في config.js لتفعيله.",
+    backupLabel: "نسخة احتياطية كملف",
+    exp: "نزّل البيانات (JSON)",
+    imp: "استعد من نسخة",
+    backupHint: "نزّلها مرة كل شهر واحفظها في بريدك أو درايف. استعادتها في هاتف جديد تُرجع كل شيء.",
+    danger: "منطقة الخطر",
+    reset: "امسح كل البيانات",
+    confirmReset: "ستُمحى كل البيانات ولا يمكن استرجاعها. هل نزّلت نسخة احتياطية؟",
+    restored: "استُعيدت النسخة.",
+    badFile: "تعذّرت قراءة الملف. اختر نسخة صحيحة."
+  },
+
+  sync: {
+    off: "المزامنة مغلقة", connecting: "جارٍ الاتصال", ok: "تمت المزامنة", failed: "فشلت المزامنة",
+    pushing: "جارٍ الإرسال", pulling: "جارٍ الجلب", reconciling: "جارٍ التوفيق", cancelled: "أُلغيت",
+    noConfig: "لا يوجد Google Client ID، أضفه في <b>config.js</b> لتفعيل المزامنة.",
+    notLinked: "غير مرتبط بعد. بعد الربط تُحفظ بياناتك في درايف تلقائيًا.",
+    linked: "مرتبط: <b>{0}</b>",
+    last: " · آخر مزامنة {0}",
+    never: " · لم تتم مزامنة بعد",
+    connect: "اربط بحساب جوجل",
+    push: "أرسل الآن",
+    pull: "اجلب من درايف",
+    unlink: "فك الارتباط",
+    confirmOff: "بعد فك الارتباط تتوقف التغييرات عن الوصول إلى درايف. ويبقى الملف الموجود هناك.",
+    notReady: "لم تُحمَّل مكتبة جوجل بعد، أعد المحاولة بعد ثوانٍ.",
+    pushFail: "تعذّر الوصول إلى درايف. تحقق من اتصالك.",
+    pullFail: "لا توجد نسخة في درايف.",
+    pulled: "استُعيدت البيانات من درايف."
+  },
+
+  rep: {
+    title: "تقرير الحفظ الأسبوعي",
+    stats: ["صفحات جديدة","مجموع المحفوظ","مجموع الأخطاء","ساعات"],
+    daily: "يومًا بيوم",
+    th: ["التاريخ","الدرس","البوابة","الأخطاء","الدقائق","أُنجز"],
+    pass: "اجتاز", fail: "لم يجتز", rest: "راحة",
+    gateH: "نتائج البوابة",
+    gateLine: "اجتاز <span class=\"ok\">{0}</span> يومًا · لم يجتز <span class=\"no\">{1}</span> يومًا · أُنجز الدرس {2} يومًا. ",
+    verdictGood: "الوتيرة مناسبة، ويمكن التفكير في زيادتها.",
+    verdictBad: "الهدف مرتفع. أنقص عدد الأسطر واثبت عليه أسبوعين.",
+    verdictOk: "الوتيرة قريبة من الصواب. ابقَ على هذا الهدف أسبوعًا آخر.",
+    weakH: "الصفحات الضعيفة · استمع إليها خاصة",
+    notesH: "ملاحظات الطالب",
+    comment: "تعليق الشيخ",
+    signature: "التوقيع والتاريخ",
+    print: "طباعة / PDF",
+    close: "إغلاق",
+    page: "صفحة {0}"
+  }
+};
+
+var LANGS = ["bn", "en", "ar", "ur", "zh"];
 var FALLBACK = "en";
 
 var L = null;
@@ -2067,7 +2500,7 @@ async function setLang(code, rerender){
   r.setProperty("--body", L.fonts.body);
   r.setProperty("--lh", L.fonts.lineHeight);
   document.getElementById("fontlink").href =
-    "https://fonts.googleapis.com/css2?family=" + L.fonts.google +
+    fontBase() + L.fonts.google +
     "&family=Amiri:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap";
 
   if (S){ S.settings.lang = code; save(); }
@@ -2101,8 +2534,8 @@ function addDays(d, x){ var y = new Date(d.getTime()); y.setDate(y.getDate() + x
 function daysBetween(a, b){ return Math.round((parseKey(b) - parseKey(a)) / 86400000); }
 function hijriDate(d){
   var code = (L && L.code) || "en";
-  var loc = { bn:"bn", ur:"ur", zh:"zh", en:"en" }[code] || "en";
-  var suffix = { bn:"হিজরি", ur:"ھ", zh:"希吉来历", en:"AH" }[code] || "AH";
+  var loc = { bn:"bn", ur:"ur", zh:"zh", en:"en", ar:"ar-SA" }[code] || "en";
+  var suffix = { bn:"হিজরি", ur:"ھ", zh:"希吉来历", en:"AH", ar:"هـ" }[code] || "AH";
   function build(l){
     /* Intl appends an era designator ("যুগ" in Bengali) — drop it and use the
        proper hijri label instead. */
@@ -2122,11 +2555,11 @@ var TODAY = key(new Date());
 /* Mushaf editions — page count and lines per page differ by print, so every
    page/line calculation reads these instead of a fixed 604/15. */
 var MUSHAFS = [
-  { id:"madani",     pages:604, lines:15, qcf:"v1", nm:{ en:"Madani (1405 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪০৫ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۰۵ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1405 年版）— 604 页 · 15 行" } },
-  { id:"madani1421", pages:604, lines:15, qcf:"v2", nm:{ en:"Madani (1421 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪২১ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۲۱ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1421 年版）— 604 页 · 15 行" } },
-  { id:"indopak15", pages:611, lines:15, nm:{ en:"Indo-Pak 15-line (Majidi / Hafizi) · 611 pages", bn:"ইন্দো-পাক ১৫ লাইন (মাজিদী · হাফেজি) · ৬১১ পৃষ্ঠা", ur:"انڈو پاک ۱۵ سطری (مجیدی · حافظی) · ۶۱۱ صفحے", zh:"印巴 15 行（马吉迪 · 哈菲兹版）— 611 页" } },
-  { id:"indopak16", pages:550, lines:16, nm:{ en:"Indo-Pak 16-line (Taj) · 550 pages", bn:"ইন্দো-পাক ১৬ লাইন (তাজ) · ৫৫০ পৃষ্ঠা", ur:"انڈو پاک ۱۶ سطری (تاج) · ۵۵۰ صفحے", zh:"印巴 16 行（Taj）— 550 页" } },
-  { id:"indopak13", pages:847, lines:13, nm:{ en:"Indo-Pak 13-line · 847 pages", bn:"ইন্দো-পাক ১৩ লাইন · ৮৪৭ পৃষ্ঠা", ur:"انڈو پاک ۱۳ سطری · ۸۴۷ صفحے", zh:"印巴 13 行 · 847 页" } }
+  { id:"madani",     pages:604, lines:15, qcf:"v1", nm:{ ar:"مصحف المدينة (طبعة ١٤٠٥) · ٦٠٤ صفحات، ١٥ سطرًا", en:"Madani (1405 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪০৫ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۰۵ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1405 年版）— 604 页 · 15 行" } },
+  { id:"madani1421", pages:604, lines:15, qcf:"v2", nm:{ ar:"مصحف المدينة (طبعة ١٤٢١) · ٦٠٤ صفحات، ١٥ سطرًا", en:"Madani (1421 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪২১ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۲۱ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1421 年版）— 604 页 · 15 行" } },
+  { id:"indopak15", pages:611, lines:15, nm:{ ar:"الهندي الباكستاني ١٥ سطرًا (المجيدي · الحافظي) · ٦١١ صفحة", en:"Indo-Pak 15-line (Majidi / Hafizi) · 611 pages", bn:"ইন্দো-পাক ১৫ লাইন (মাজিদী · হাফেজি) · ৬১১ পৃষ্ঠা", ur:"انڈو پاک ۱۵ سطری (مجیدی · حافظی) · ۶۱۱ صفحے", zh:"印巴 15 行（马吉迪 · 哈菲兹版）— 611 页" } },
+  { id:"indopak16", pages:550, lines:16, nm:{ ar:"الهندي الباكستاني ١٦ سطرًا (تاج) · ٥٥٠ صفحة", en:"Indo-Pak 16-line (Taj) · 550 pages", bn:"ইন্দো-পাক ১৬ লাইন (তাজ) · ৫৫০ পৃষ্ঠা", ur:"انڈو پاک ۱۶ سطری (تاج) · ۵۵۰ صفحے", zh:"印巴 16 行（Taj）— 550 页" } },
+  { id:"indopak13", pages:847, lines:13, nm:{ ar:"الهندي الباكستاني ١٣ سطرًا · ٨٤٧ صفحة", en:"Indo-Pak 13-line · 847 pages", bn:"ইন্দো-পাক ১৩ লাইন · ৮৪৭ পৃষ্ঠা", ur:"انڈو پاک ۱۳ سطری · ۸۴۷ صفحے", zh:"印巴 13 行 · 847 页" } }
 ];
 function mushafDef(){
   var id = S && S.settings ? S.settings.mushafId : "madani";
@@ -2833,6 +3266,9 @@ function renderSettings(){
       [3,5,8,11,15].map(function(v){
         return '<option value="' + v + '"' + (s.manualLines === v ? " selected" : "") + '>' + fmt(T.linesN, n(v)) + '</option>';
       }).join("") + '</select><div class="hint">' + T.linesHint + '</div></div>' +
+    '<div class="fld"><label>' + L.cn.h + '</label>' +
+      '<label class="chk"><input type="checkbox" id="s-cn"' + (cnMode() ? " checked" : "") + '> ' +
+      L.cn.lab + '</label><div class="hint">' + L.cn.hint + '</div></div>' +
     '<div class="fld"><label>' + L.ins.h + '</label>' +
       (insStandalone() ? '<div class="hint">' + L.ins.done + '</div>'
        : (INS.evt ? '<button class="abtn go" id="s-install" style="margin-bottom:8px">' + L.ins.btn + '</button>' +
@@ -2903,6 +3339,11 @@ function renderSettings(){
   g("s-qari").onchange   = function(){ S.settings.qari = this.value; save(); };
   g("s-reciter").onchange = function(){ S.settings.reciter = this.value; save(); };
   var ins = g("s-install"); if (ins) ins.onclick = insPrompt;
+  var cn = g("s-cn");
+  if (cn) cn.onchange = function(){
+    try { localStorage.setItem("hifz-cn", this.checked ? "1" : "0"); } catch(e){}
+    location.reload();
+  };
   var ask = g("s-ntask"); if (ask) ask.onclick = ntAsk;
   g("s-ntat").onchange = function(){ S.settings.notifyAt = this.value || ""; save(); ntSchedule(); };
   g("s-zikr").onchange = function(){ S.settings.zikrEvery = +this.value; save(); ntSchedule(); };
@@ -3225,11 +3666,11 @@ function openReport(){
    from everyayah.com. Everything is put through the Cache API, so a page you
    have opened once — or a juz you downloaded — works with no network. */
 var RECITERS = [
-  { id:"Ayman_Sowaid_64kbps",        nm:{ en:"Ayman Suwayd", bn:"আয়মান সুওয়াইদ", ur:"ایمن سوید", zh:"艾曼·苏韦德" } },
-  { id:"Husary_128kbps",             nm:{ en:"Mahmoud Khalil Al-Husary", bn:"মাহমুদ খলিল আল-হুসারি", ur:"محمود خلیل الحصری", zh:"侯赛里" } },
-  { id:"Minshawy_Murattal_128kbps",  nm:{ en:"Al-Minshawi (murattal)", bn:"আল-মিনশাবি (মুরাত্তাল)", ur:"المنشاوی (مرتل)", zh:"敏沙威（慢诵）" } },
-  { id:"Abdul_Basit_Murattal_64kbps",nm:{ en:"Abdul Basit (murattal)", bn:"আব্দুল বাসিত (মুরাত্তাল)", ur:"عبد الباسط (مرتل)", zh:"阿卜杜勒·巴西特（慢诵）" } },
-  { id:"Alafasy_128kbps",            nm:{ en:"Mishary Alafasy", bn:"মিশারি আল-আফাসি", ur:"مشاری العفاسی", zh:"阿法西" } }
+  { id:"Ayman_Sowaid_64kbps",        nm:{ ar:"أيمن سويد", en:"Ayman Suwayd", bn:"আয়মান সুওয়াইদ", ur:"ایمن سوید", zh:"艾曼·苏韦德" } },
+  { id:"Husary_128kbps",             nm:{ ar:"الحصري (مرتل)", en:"Mahmoud Khalil Al-Husary", bn:"মাহমুদ খলিল আল-হুসারি", ur:"محمود خلیل الحصری", zh:"侯赛里" } },
+  { id:"Minshawy_Murattal_128kbps",  nm:{ ar:"المنشاوي (مرتل)", en:"Al-Minshawi (murattal)", bn:"আল-মিনশাবি (মুরাত্তাল)", ur:"المنشاوی (مرتل)", zh:"敏沙威（慢诵）" } },
+  { id:"Abdul_Basit_Murattal_64kbps",nm:{ ar:"عبد الباسط (مرتل)", en:"Abdul Basit (murattal)", bn:"আব্দুল বাসিত (মুরাত্তাল)", ur:"عبد الباسط (مرتل)", zh:"阿卜杜勒·巴西特（慢诵）" } },
+  { id:"Alafasy_128kbps",            nm:{ ar:"مشاري العفاسي", en:"Mishary Alafasy", bn:"মিশারি আল-আফাসি", ur:"مشاری العفاسی", zh:"阿法西" } }
 ];
 var RD_CACHE = "hifz-mushaf-v1";
 var QCF_BASE = "https://cdn.jsdelivr.net/gh/quran/quran.com-frontend-next@master/public/fonts/quran/hafs/";
@@ -3264,14 +3705,24 @@ async function rdLoadFont(p){
   return fam;
 }
 function trId(){ return { bn:161, en:85, ur:234, zh:56 }[L.code] || 85; }
+var AR_TAFSIR = 16;   /* التفسير الميسّر — العربية ليس لها ترجمة، فالتفسير مقامها */
+async function arTafsir(keys, tr){
+  await Promise.all(keys.map(async function(k){
+    try {
+      var j = await rdFetch("https://api.quran.com/api/v4/tafsirs/" + AR_TAFSIR + "/by_ayah/" + k, "json");
+      var t = j && j.tafsir && j.tafsir.text;
+      if (t) tr[k] = String(t).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    } catch(e){}
+  }));
+}
 async function rdLoadPage(p){
   var v = qcfVer();
-  if (RD.pages[p] && RD.pages[p].v === v) return RD.pages[p];
+  if (RD.pages[p] && RD.pages[p].v === v && RD.pages[p].lang === L.code) return RD.pages[p];
   var url = "https://api.quran.com/api/v4/verses/by_page/" + p +
             "?words=true&per_page=all&mushaf=" + (v === "v1" ? 1 : 2) +
-            "&translations=" + trId() +
+            (L.code === "ar" ? "" : "&translations=" + trId()) +
             "&word_fields=code_" + v + ",line_number,char_type_name,text_uthmani&language=" +
-            (L.code === "zh" ? "zh" : L.code === "ur" ? "ur" : L.code === "en" ? "en" : "bn");
+            (L.code === "zh" ? "zh" : L.code === "ur" ? "ur" : L.code === "en" ? "en" : L.code === "ar" ? "ar" : "bn");
   var j = await rdFetch(url, "json"), lines = {}, keys = [], tr = {};
   (j.verses || []).forEach(function(v){
     keys.push(v.verse_key);
@@ -3286,7 +3737,8 @@ async function rdLoadPage(p){
       });
     });
   });
-  RD.pages[p] = { lines:lines, keys:keys, tr:tr, v:v };
+  if (L.code === "ar") await arTafsir(keys, tr);
+  RD.pages[p] = { lines:lines, keys:keys, tr:tr, v:v, lang:L.code };
   return RD.pages[p];
 }
 
@@ -3301,7 +3753,12 @@ function rdStop(){
 }
 function rdSyncBtns(){
   var p = document.getElementById("rd-pause");
-  if (p) p.textContent = (rdAudio && !rdAudio.paused) ? L.rd.pause : L.rd.resume;
+  if (p){
+    var on = rdAudio && !rdAudio.paused;
+    p.textContent = on ? "‖" : "▶";
+    p.title = p.setAttribute ? (on ? L.rd.pause : L.rd.resume) : p.title;
+    p.setAttribute("aria-label", on ? L.rd.pause : L.rd.resume);
+  }
 }
 function rdTogglePause(){
   if (!rdAudio) return;
@@ -3392,44 +3849,46 @@ function renderMushaf(){
   var d = day(TODAY), tp = (d.sabaq.pages && d.sabaq.pages[0]) || S.settings.startPage;
   if (!RD.page) RD.page = tp;
 
-  var h = '<div class="kicker">' + Rd.title + '</div><h2>' + fmt(L.phase.page, n(RD.page)) + '</h2>';
+  var h = '<h2 style="margin-bottom:12px">' + fmt(L.phase.page, n(RD.page)) + '</h2>';
   if (!mushafDef().qcf){
     el.innerHTML = h + '<p class="empty">' + Rd.notMadani + '</p>';
     return;
   }
+  var chip = function(k, ic, lab, on){
+    return '<button class="rdmini" data-rd="' + k + '" title="' + lab + '" aria-label="' + lab + '"' +
+      (on === undefined ? "" : ' aria-pressed="' + (on ? "true" : "false") + '"') +
+      '><span class="ic">' + ic + '</span><b>' + lab + '</b></button>';
+  };
   h += '<div class="rdcard">' +
-       '<div class="rdline">' +
+       '<div class="rdbar">' +
          '<div class="rdgrp">' +
-           '<button data-rd="prev">‹</button>' +
+           '<button data-rd="prev" aria-label="' + Rd.prev + '">‹</button>' +
            '<input type="number" id="rd-page" min="1" max="' + TOTAL_PAGES + '" value="' + RD.page + '">' +
-           '<button data-rd="next">›</button>' +
+           '<button data-rd="next" aria-label="' + Rd.next + '">›</button>' +
          '</div>' +
-         '<div class="rdgrp">' +
-           '<button class="rdgo" data-rd="play">' + Rd.playAll + '</button>' +
-           '<button id="rd-pause" data-rd="pause">' + Rd.pause + '</button>' +
-           '<button data-rd="stop">' + Rd.stop + '</button>' +
-           '<select id="rd-loop">' + [1,3,5,7].map(function(v){
-              return '<option value="' + v + '"' + (RD.loops === v ? " selected" : "") + '>' + Rd.loop + ' ×' + n(v) + '</option>'; }).join("") + '</select>' +
-           '<select id="rd-speed">' + [0.7,0.85,1].map(function(v){
-              return '<option value="' + v + '"' + (RD.speed === v ? " selected" : "") + '>' + Rd.speed + ' ' + n(v) + '×</option>'; }).join("") + '</select>' +
+         '<div class="rdgrp rdplay">' +
+           '<button class="rdic go" data-rd="play" title="' + Rd.playAll + '" aria-label="' + Rd.playAll + '">▶</button>' +
+           '<button class="rdic" id="rd-pause" data-rd="pause" title="' + Rd.pause + '" aria-label="' + Rd.pause + '">‖</button>' +
+           '<button class="rdic" data-rd="stop" title="' + Rd.stop + '" aria-label="' + Rd.stop + '">■</button>' +
+           '<button class="rdic num" id="rd-loop" data-rd="loopc" title="' + Rd.loop + '" aria-label="' + Rd.loop + '">↻<i>' + n(RD.loops) + '</i></button>' +
+           '<button class="rdic num" id="rd-speed" data-rd="speedc" title="' + Rd.speed + '" aria-label="' + Rd.speed + '">⏱<i>' + n(RD.speed) + '×</i></button>' +
          '</div>' +
-         '<span class="rdsep"></span>' +
          '<span class="rdprog" id="rd-prog"></span>' +
        '</div>' +
        '<div class="rdline" id="rd-selbar"></div>' +
-       '<div class="rdline">' +
-         '<button class="rdmini" data-rd="hide" aria-pressed="' + (RD.hide ? "true" : "false") + '">' + Rd.cover + '</button>' +
-         '<button class="rdmini" data-rd="pick" aria-pressed="' + (RD.pick ? "true" : "false") + '">' + Rd.pick + '</button>' +
-         '<button class="rdmini" data-rd="phrase" aria-pressed="' + (RD.phrase ? "true" : "false") + '">' + L.rec.phrase + '</button>' +
-         '<button class="rdmini" data-rd="tr" aria-pressed="' + (RD.tr === false ? "false" : "true") + '">' + Rd.tr + '</button>' +
-         '<button class="rdmini" data-rd="exam">' + L.ex.open + '</button>' +
-         '<button class="rdmini" data-rd="mut">' + L.mut.find + '</button>' +
-         '<button class="rdmini" data-rd="dl">' + Rd.dl + '</button>' +
+       '<div class="rdtools">' +
+         chip("hide",   "▨", Rd.cover,        RD.hide) +
+         chip("pick",   "⌖", Rd.pick,         RD.pick) +
+         chip("phrase", "↔", L.rec.phrase,    RD.phrase) +
+         chip("tr",     "文", Rd.tr,           RD.tr !== false) +
+         chip("exam",   "？", L.ex.open) +
+         chip("mut",    "≈", L.mut.find) +
+         chip("dl",     "↓", Rd.dl) +
        '</div></div>';
 
   if (RD.pick) h += '<p class="pickmsg">' + (RD.pickA ? Rd.pickB : Rd.pickA) + '</p>';
   if (RD.phrase) h += '<p class="pickmsg">' + L.rec.phraseHint + '</p>';
-  h += '<p class="rdnote">' + fmt(Rd.selNote, n(targetLines())) + ' ' + Rd.tap + '</p>';
+  if (!RD.sel) h += '<p class="rdnote">' + fmt(Rd.selNote, n(targetLines())) + ' ' + Rd.tap + '</p>';
   h += '<div class="paper" id="rd-paper"><p style="text-align:center;color:#77808A">' + Rd.loading + '</p></div>';
   h += '<div class="wmean" id="rd-mean"></div>';
   h += '<div class="trbox" id="rd-tr"></div>';
@@ -3455,11 +3914,18 @@ function renderMushaf(){
       else if (k === "exam"){ rdStop(); exOpen("order"); }
       else if (k === "mut"){ var mb = document.getElementById("rd-mut"); if (mb) mb.style.display = "block"; mutScan(); }
       else if (k === "dl") rdDownloadJuz();
+      else if (k === "loopc"){
+        var LP = [1,3,5,7]; RD.loops = LP[(LP.indexOf(RD.loops) + 1) % LP.length];
+        b.querySelector("i").textContent = n(RD.loops);
+      }
+      else if (k === "speedc"){
+        var SP = [0.7,0.85,1]; RD.speed = SP[(SP.indexOf(RD.speed) + 1) % SP.length];
+        if (rdAudio) rdAudio.playbackRate = RD.speed;
+        b.querySelector("i").textContent = n(RD.speed) + "×";
+      }
     };
   });
   g("rd-page").onchange  = function(){ rdStop(); RD.page = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); RD.sel = null; renderMushaf(); };
-  g("rd-loop").onchange  = function(){ RD.loops = +this.value; };
-  g("rd-speed").onchange = function(){ RD.speed = +this.value; if (rdAudio) rdAudio.playbackRate = RD.speed; };
 
   rdPaint(RD.page, RD.page === tp);
   recBox();
@@ -3483,6 +3949,7 @@ function rdSetToday(pg){
 function rdSelBar(pg){
   var bar = document.getElementById("rd-selbar");
   if (!bar || !RD.sel) return;
+  var nt = document.querySelector(".rdnote"); if (nt) nt.style.display = "none";
   var opts = function(sel){
     return pg.keys.map(function(k, i){
       return '<option value="' + i + '"' + (i === sel ? " selected" : "") + '>' + n(k.split(":")[1]) + '</option>';
@@ -3493,8 +3960,8 @@ function rdSelBar(pg){
       '<select id="rd-a">' + opts(RD.sel.a) + '</select>' +
       '<select id="rd-b">' + opts(RD.sel.b) + '</select>' +
     '</div>' +
-    '<button class="rdmini" data-rd="auto">' + L.rd.auto + '</button>' +
-    '<button class="rdmini" data-rd="setday">' + L.rd.setDay + '</button>';
+    '<button class="rdmini wide" data-rd="auto" title="' + L.rd.auto + '"><span class="ic">⤢</span><b>' + L.rd.auto + '</b></button>' +
+    '<button class="rdmini wide go" data-rd="setday" title="' + L.rd.setDay + '"><span class="ic">✓</span><b>' + L.rd.setDay + '</b></button>';
   document.getElementById("rd-a").onchange = function(){
     RD.sel.a = +this.value; if (RD.sel.b < RD.sel.a) RD.sel.b = RD.sel.a; renderMushaf();
   };
@@ -3820,7 +4287,7 @@ function ntTick(){
   if (every && hh >= 5 && hh < 22){
     if (Date.now() - ntLast("zikr") >= every * 60000){
       var i = Math.floor(Date.now() / (every * 60000)) % ZIKR.length, z = ZIKR[i];
-      ntShow(z.ar, z.nm[L.code] || z.nm.en);
+      ntShow(z.ar, L.code === "ar" ? "" : (z.nm[L.code] || z.nm.en));
       ntMark("zikr");
     }
   }
