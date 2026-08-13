@@ -13,6 +13,16 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link id="fontlink" rel="stylesheet" href="">
 <link id="blfont" rel="stylesheet" href="https://fonts.maateen.me/solaiman-lipi/font.css">
+<style>
+@font-face{font-family:'SolaimanLipi';font-style:normal;font-weight:400;font-display:swap;
+  src:local('SolaimanLipi'),local('Solaiman Lipi'),
+      url('https://fonts.maateen.me/solaiman-lipi/solaimanlipi-normal-v1.0.woff2') format('woff2'),
+      url('https://fonts.maateen.me/solaiman-lipi/solaimanlipi-normal-v1.0.ttf') format('truetype')}
+@font-face{font-family:'SolaimanLipi';font-style:normal;font-weight:700;font-display:swap;
+  src:local('SolaimanLipi Bold'),local('SolaimanLipi'),
+      url('https://fonts.maateen.me/solaiman-lipi/solaimanlipi-bold-v1.0.woff2') format('woff2'),
+      url('https://fonts.maateen.me/solaiman-lipi/solaimanlipi-bold-v1.0.ttf') format('truetype')}
+</style>
 <script>window.HIFZ_CONFIG = { googleClientId: "", driveFileName: "hifz-backup.json" };
 /* সীমিত ইন্টারনেটের দেশে (চীন) গুগলের ঠিকানা বন্ধ — আয়না ব্যবহার করি */
 window.cnMode = function(){
@@ -1978,7 +1988,8 @@ footer b{color:#AEB6BD;font-weight:500}
 .rdgrp>*+*{border-inline-start:1px solid var(--rule)}
 .rdgrp button{cursor:pointer}
 .rdgrp button:hover{background:var(--paper-2)}
-.rdgrp input{width:62px;text-align:center}
+.rdgrp input{width:57px;text-align:center}
+#rd-selbar select{width:58px}
 .rdgo{background:var(--verdigris);color:#fff}
 .rdgo:hover{background:var(--verdigris);opacity:.92}
 .rdmini{font-size:12.5px;padding:7px 13px;border:1px solid var(--rule);border-radius:999px;
@@ -2178,6 +2189,93 @@ footer b{color:var(--ink-2)}
   .phase .b{font-size:29px}
   .top-in{padding:14px 0 2px}
 }
+/* ---------- FLOATING RECITATION BUTTON (Tartil-style) ---------- */
+.fab{position:fixed;inset-inline-end:18px;bottom:calc(74px + env(safe-area-inset-bottom));z-index:58;
+  width:60px;height:60px;border-radius:50%;border:none;background:var(--verdigris);color:#fff;
+  font-size:24px;line-height:1;display:none;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 8px 22px rgba(20,160,166,.42);transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s}
+body.mushaf .fab{display:flex}
+body.focus .fab{bottom:calc(20px + env(safe-area-inset-bottom))}
+.fab:active{transform:scale(.92)}
+.fab.open{transform:rotate(45deg)}
+.fab.rec{background:#c0392b;box-shadow:0 0 0 0 rgba(192,57,43,.55);animation:recpulse 1.4s infinite}
+@keyframes recpulse{70%{box-shadow:0 0 0 16px rgba(192,57,43,0)}100%{box-shadow:0 0 0 0 rgba(192,57,43,0)}}
+.fabm{position:fixed;inset-inline-end:20px;bottom:calc(142px + env(safe-area-inset-bottom));z-index:58;
+  display:none;grid-template-columns:repeat(3,46px);gap:11px;justify-items:center;direction:ltr}
+.fabm.on{display:grid!important}
+.fabm.on{display:flex}
+.fabb{width:46px;height:46px;border-radius:50%;border:1px solid var(--rule);background:var(--card);color:var(--ink);
+  font-size:17px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 5px 16px rgba(51,65,79,.18);animation:bub .2s cubic-bezier(.2,.9,.3,1) both}
+.fabb i{font-style:normal;font-size:11px;margin-inline-start:1px}
+.fabb:active{transform:scale(.9)}
+@keyframes bub{from{opacity:0;transform:translateY(14px) scale(.6)}to{opacity:1;transform:none}}
+.fabhint{position:fixed;inset-inline-end:18px;bottom:calc(140px + env(safe-area-inset-bottom));z-index:58;
+  background:var(--ink);color:var(--paper);padding:7px 12px;border-radius:999px;font-size:12.5px;display:none;
+  box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.fabhint.on{display:block}
+.w.said{background:rgba(20,160,166,.26);border-radius:3px}
+
+/* the crowded toolbar: playback now lives on the floating button, so the card
+   shrinks to one slim row — page, ayah range, and the two actions */
+.rdplay{display:none}
+.rdtools{display:none!important}
+#rd-selbar{display:contents}
+#rd-selbar .rdmini{display:none}
+.rdbar .rdset{margin-inline-start:auto;gap:2px}
+.rdbar .rdic.t{min-width:38px;height:34px;font-size:15px;border-radius:10px}
+.rdbar .rdic.t[aria-pressed="true"]{background:var(--verdigris);color:#fff}
+#rd-paper{min-height:695px}
+@media (max-width:560px){#rd-paper{min-height:0}}
+.rdcard{flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:9px 10px;margin-bottom:10px}
+.rdcard>.rdline{flex:0 0 auto}
+.rdcard .rdline{gap:8px;margin:0}
+.rdtools{gap:8px}
+#rd-selbar{gap:8px}
+#rd-selbar .rdlbl{display:none}
+.rdprog{margin-inline-start:2px}
+
+/* ---------- NATIVE SKIN: app bar, icon tabs, sheets ---------- */
+.top{border-bottom:1px solid transparent;transition:box-shadow .18s,border-color .18s}
+body.scrolled .top{box-shadow:0 2px 14px rgba(51,65,79,.10);border-bottom-color:rgba(51,65,79,.06)}
+.top-in{padding:12px 0 8px}
+.brand .mark{font-size:21px}
+.brand .nm{font-size:16.5px}
+.streak{display:flex;align-items:center;gap:6px;background:var(--verd-soft);color:var(--verdigris);
+  padding:6px 13px;border-radius:999px}
+.streak .v{font-size:16px}
+.streak .l{font-size:11.5px;opacity:.85}
+.topbtns{padding-bottom:8px}
+.sync{border-radius:999px;padding:6px 13px;font-size:12px}
+
+.tabs .wrap{display:flex;gap:0;padding:0 8px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-size:11px;padding:7px 0 8px;border:none;background:none;position:relative}
+.tab::before{font-size:19px;line-height:1.05;padding:3px 15px;border-radius:999px;transition:background .18s,color .18s}
+.tab[data-v="today"]::before{content:"☀"}
+.tab[data-v="mushaf"]::before{content:"❑"}
+.tab[data-v="routine"]::before{content:"↻"}
+.tab[data-v="review"]::before{content:"↻"}
+.tab[data-v="progress"]::before{content:"▤"}
+.tab[data-v="settings"]::before{content:"⚙"}
+.tab[aria-selected="true"]::before{background:rgba(20,160,166,.14)}
+
+/* bottom sheets instead of web modals */
+.ovl{align-items:flex-end;padding:0}
+.exsheet,.sheet{border-radius:20px 20px 0 0;max-height:88vh;padding-bottom:calc(26px + env(safe-area-inset-bottom))}
+.ovl.on .exsheet,.rep.on .sheet{animation:sheetup .26s cubic-bezier(.2,.8,.25,1) both}
+@keyframes sheetup{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+.rep{display:none;align-items:flex-end;padding:0}
+.rep.on{display:flex}
+.sheet{width:100%;max-width:720px;margin:0 auto;overflow:auto}
+
+/* controls sized for thumbs */
+select,input[type="text"],input[type="number"],input[type="time"]{
+  border-radius:12px;min-height:44px;padding:10px 12px;border:1px solid var(--rule);background:var(--card);font-family:inherit}
+.gbtn,.phase .start,.rdgo{border-radius:999px}
+.gbtn{min-height:44px}
+.blk,.log,.gate,.st,.pg{transition:transform .12s}
+.blk:active,.log:active,.pg:active{transform:scale(.985)}
 /* ---------- APP SHELL: behaves like a native app, not a web page ---------- */
 html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 body{display:flex;flex-direction:column;padding-bottom:0!important;
@@ -2202,6 +2300,9 @@ button:active,.tab:active,.tbtn:active{opacity:.72;transition:opacity .06s}
   <section class="view" id="v-progress"></section>
   <section class="view" id="v-settings"></section>
 </main>
+<button class="fab" id="fab" aria-label="তিলাওয়াত">▶</button>
+<div class="fabm" id="fabm"></div>
+<div class="fabhint" id="fabhint"></div>
 <div class="ovl" id="exam"><div class="exsheet" id="exam-in"></div></div>
 
 <div class="rep" id="rep">
@@ -3043,8 +3144,9 @@ function renderToday(){
     d.sabaq.pages = [slot.page];
     d.sabaq.from  = slot.from;
     d.sabaq.to    = Math.min(LINES_PER_PAGE, slot.from + lines - 1);
-  } else if (!rest && !d.sabaq.done){
-    d.sabaq.to    = Math.min(LINES_PER_PAGE, d.sabaq.from + lines - 1);
+  } else if (!rest){
+    var nto = Math.min(LINES_PER_PAGE, (d.sabaq.from || 1) + lines - 1);
+    if (nto !== d.sabaq.to){ d.sabaq.to = nto; d.sabaq.ayahFrom = null; d.sabaq.ayahTo = null; }
   }
 
   var lineFrom  = d.sabaq.from || 1;
@@ -3434,7 +3536,7 @@ function renderSettings(){
       '</select></div>' +
     '<div class="fld"><label for="s-lines">' + T.lines + '</label><select id="s-lines">' +
       '<option value="0"' + (s.manualLines === 0 ? " selected" : "") + '>' + T.linesAuto + '</option>' +
-      [3,5,8,11,15].map(function(v){
+      [2,3,4,5,6,7,8,9,10,11,12,13,15].map(function(v){
         return '<option value="' + v + '"' + (s.manualLines === v ? " selected" : "") + '>' + fmt(T.linesN, n(v)) + '</option>';
       }).join("") + '</select><div class="hint">' + T.linesHint + '</div></div>' +
     '<div class="fld"><label>' + L.cn.h + '</label>' +
@@ -3510,7 +3612,7 @@ function renderSettings(){
   g("s-date").onchange   = function(){ S.settings.startDate = this.value || TODAY; save(); renderAll(); };
   g("s-page").onchange   = function(){ S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); save(); renderAll(); };
   g("s-rest").onchange   = function(){ S.settings.restDay = +this.value; save(); renderAll(); };
-  g("s-lines").onchange  = function(){ S.settings.manualLines = +this.value; save(); renderAll(); };
+  g("s-lines").onchange  = function(){ S.settings.manualLines = +this.value; RD.sel = null; save(); renderAll(); };
   g("s-qari").onchange   = function(){ S.settings.qari = this.value; save(); };
   g("s-reciter").onchange = function(){ S.settings.reciter = this.value; save(); };
   var ins = g("s-install"); if (ins) ins.onclick = insPrompt;
@@ -3966,6 +4068,107 @@ function rdTrack(){
     RD.wi = i;
   }
 }
+/* ---------- floating button: bubbles up, long-press turns into a mic ---------- */
+var FAB = { open:false, rec:false, timer:null, held:false, sr:null, ptr:0, words:[] };
+function gid(id){ return document.getElementById(id); }
+function fabHint(t){
+  var e = gid("fabhint"); if (!e) return;
+  e.textContent = t; e.classList.add("on");
+  clearTimeout(FAB.ht); FAB.ht = setTimeout(function(){ e.classList.remove("on"); }, 1900);
+}
+function fabRender(){
+  var m = gid("fabm"), f = gid("fab"); if (!m || !f) return;
+  f.classList.toggle("open", FAB.open && !FAB.rec);
+  f.classList.toggle("rec", FAB.rec);
+  f.textContent = FAB.rec ? "●" : (FAB.open ? "✕" : "▶");
+  if (!FAB.open || FAB.rec){ m.classList.remove("on"); m.innerHTML = ""; return; }
+  var items = [
+    ["play","▶"], ["pause","‖"], ["stop","■"],
+    ["loopc","↻<i>" + n(RD.loops) + "</i>"], ["speedc","⏱<i>" + n(RD.speed) + "×</i>"],
+    ["rd:hide","▨"], ["rd:pick","⌖"], ["rd:auto","⤢"], ["rd:setday","✓"],
+    ["rd:focus","↗"], ["rd:phrase","↔"], ["rd:tr","文"], ["rd:exam","？"], ["rd:mut","≈"], ["rd:dl","↓"]
+  ];
+  m.innerHTML = items.map(function(it, i){
+    return '<button class="fabb" data-fab="' + it[0] + '" style="animation-delay:' + (i * 28) + 'ms">' + it[1] + '</button>';
+  }).join("");
+  m.classList.add("on");
+  qa("#fabm [data-fab]").forEach(function(b){
+    b.onclick = function(){
+      var k = b.dataset.fab, pg = RD.pages[RD.page];
+      if (k.indexOf("rd:") === 0){
+        var src = document.querySelector('[data-rd="' + k.slice(3) + '"]');
+        FAB.open = false; fabRender();
+        if (src) src.click();
+        return;
+      }
+      if (k === "play"){ if (pg) rdPlay(rdSelKeys(pg), RD.loops); }
+      else if (k === "pause") rdTogglePause();
+      else if (k === "stop") rdStop();
+      else if (k === "loopc"){ RD.loops = RD.loops >= 7 ? 1 : RD.loops + 2; fabRender(); renderMushaf(); }
+      else if (k === "speedc"){ RD.speed = RD.speed === 1 ? 0.7 : (RD.speed === 0.7 ? 0.85 : 1); fabRender(); renderMushaf(); }
+      else if (k === "hide"){ RD.hide = !RD.hide; renderMushaf(); }
+      FAB.open = false; fabRender();
+    };
+  });
+}
+/* highlight each word as it is recited (needs the phone's speech engine) */
+function fabListenStart(){
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var pg = RD.pages[RD.page]; if (!SR || !pg || !RD.sel) return false;
+  FAB.words = qa("#rd-paper .w").filter(function(el){
+    return !el.dataset.end && el.dataset.t && !el.classList.contains("off");
+  });
+  FAB.ptr = 0;
+  try {
+    var r = new SR();
+    r.lang = "ar-SA"; r.continuous = true; r.interimResults = true;
+    r.onresult = function(e){
+      var txt = "";
+      for (var i = e.resultIndex; i < e.results.length; i++) txt += e.results[i][0].transcript + " ";
+      txt.trim().split(/\s+/).forEach(function(spoken){
+        var s = mutNorm(spoken); if (!s) return;
+        for (var j = FAB.ptr; j < Math.min(FAB.ptr + 4, FAB.words.length); j++){
+          var t = mutNorm(FAB.words[j].dataset.t);
+          if (t && (t === s || t.indexOf(s) === 0 || s.indexOf(t) === 0)){
+            for (var k = FAB.ptr; k <= j; k++) FAB.words[k].classList.add("said");
+            FAB.ptr = j + 1; return;
+          }
+        }
+      });
+    };
+    r.onerror = function(){};
+    r.start(); FAB.sr = r; return true;
+  } catch(e){ return false; }
+}
+function fabListenStop(){
+  if (FAB.sr){ try { FAB.sr.stop(); } catch(e){} FAB.sr = null; }
+}
+function fabMic(){
+  FAB.rec = true; FAB.open = false; fabRender();
+  recStart();
+  fabHint(fabListenStart() ? (L.fab ? L.fab.listen : "শুনছি — পড়তে থাকুন") : (L.fab ? L.fab.recOn : "রেকর্ড হচ্ছে"));
+}
+function fabMicStop(){
+  FAB.rec = false; fabListenStop(); recStop(); fabRender();
+  qa("#rd-paper .w.said").forEach(function(el){ el.classList.remove("said"); });
+}
+function fabWire(){
+  var f = gid("fab"); if (!f || f.dataset.w) return; f.dataset.w = "1";
+  function down(){
+    FAB.held = false;
+    FAB.timer = setTimeout(function(){ FAB.held = true; if (!FAB.rec) fabMic(); }, 550);
+  }
+  function up(){
+    clearTimeout(FAB.timer);
+    if (FAB.held) return;
+    if (FAB.rec){ fabMicStop(); return; }
+    FAB.open = !FAB.open; fabRender();
+  }
+  f.addEventListener("pointerdown", down);
+  f.addEventListener("pointerup", up);
+  f.addEventListener("pointerleave", function(){ clearTimeout(FAB.timer); });
+  f.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+}
 function rdPlay(keys, loops){
   rdStop();
   RD.queue = keys.slice(); RD.qi = 0; RD.left = Math.max(1, loops || 1);
@@ -4003,17 +4206,25 @@ function rdLinesOf(pg, vk){
 }
 /* The daily block starts at the target number of lines and is then rounded out
    to a whole ayah — half an ayah cannot be memorized. */
+function rdSelFromLines(pg, ln0, ln1){
+  ln0 = Math.max(1, Math.min(LINES_PER_PAGE, ln0 || 1));
+  ln1 = Math.max(ln0, Math.min(LINES_PER_PAGE, ln1 || ln0));
+  var a = null, b = null;
+  for (var i = 0; i < pg.keys.length; i++){
+    var r = rdLinesOf(pg, pg.keys[i]);
+    if (!r) continue;
+    if (r[1] >= ln0 && r[0] <= ln1){ if (a === null) a = i; b = i; }
+  }
+  return { a:(a === null ? 0 : a), b:(b === null ? 0 : b), ln0:ln0, ln1:ln1 };
+}
+/* Exactly the number of lines chosen in settings — never more, never fewer.
+   Audio still covers the whole ayahs those lines touch. */
 function rdAutoSel(pg, startIdx){
   var N = targetLines(), a = Math.max(0, startIdx || 0);
   var r0 = rdLinesOf(pg, pg.keys[a]);
-  if (!r0) return { a:a, b:a };
-  var lastLine = r0[0] + N - 1, b = a;
-  for (var i = a; i < pg.keys.length; i++){
-    var r = rdLinesOf(pg, pg.keys[i]);
-    if (!r) continue;
-    if (r[1] <= lastLine) b = i; else break;
-  }
-  return { a:a, b:Math.max(a, b) };
+  var ln0 = r0 ? r0[0] : 1;
+  if (ln0 + N - 1 > LINES_PER_PAGE) ln0 = Math.max(1, LINES_PER_PAGE - N + 1);
+  return rdSelFromLines(pg, ln0, ln0 + N - 1);
 }
 function rdSelKeys(pg){
   if (!RD.sel) return [];
@@ -4021,6 +4232,7 @@ function rdSelKeys(pg){
 }
 
 function openMushaf(p){
+  document.body.classList.add("mushaf");
   if (p) { RD.page = Math.max(1, Math.min(TOTAL_PAGES, p)); RD.sel = null; }
   qa(".tab").forEach(function(t){ t.setAttribute("aria-selected", t.dataset.v === "mushaf" ? "true" : "false"); });
   qa(".view").forEach(function(v){ v.classList.remove("on"); });
@@ -4058,6 +4270,14 @@ function renderMushaf(){
            '<button class="rdic" data-rd="stop" title="' + Rd.stop + '" aria-label="' + Rd.stop + '">■</button>' +
            '<button class="rdic num" id="rd-loop" data-rd="loopc" title="' + Rd.loop + '" aria-label="' + Rd.loop + '">↻<i>' + n(RD.loops) + '</i></button>' +
            '<button class="rdic num" id="rd-speed" data-rd="speedc" title="' + Rd.speed + '" aria-label="' + Rd.speed + '">⏱<i>' + n(RD.speed) + '×</i></button>' +
+         '</div>' +
+         '<div class="rdgrp rdset">' +
+           '<button class="rdic t" data-rd="hide" title="' + Rd.cover + '" aria-label="' + Rd.cover + '" aria-pressed="' + (RD.hide ? "true" : "false") + '">▨</button>' +
+           '<button class="rdic t" data-rd="pick" title="' + Rd.pick + '" aria-label="' + Rd.pick + '" aria-pressed="' + (RD.pick ? "true" : "false") + '">⌖</button>' +
+           '<button class="rdic t" data-rd="phrase" title="' + Rd.phrase + '" aria-label="' + Rd.phrase + '" aria-pressed="' + (RD.phrase ? "true" : "false") + '">↔</button>' +
+           '<button class="rdic t" data-rd="tr" title="' + Rd.trans + '" aria-label="' + Rd.trans + '" aria-pressed="' + (RD.tr === false ? "false" : "true") + '">文</button>' +
+           '<button class="rdic t" data-rd="exam" title="' + Rd.exam + '" aria-label="' + Rd.exam + '">？</button>' +
+           '<button class="rdic t" data-rd="focus" title="' + Rd.focus + '" aria-label="' + Rd.focus + '">◱</button>' +
          '</div>' +
          '<span class="rdprog" id="rd-prog"></span>' +
        '</div>' +
@@ -4128,8 +4348,8 @@ function rdSetToday(pg){
   if (!keys.length) return;
   var r0 = rdLinesOf(pg, keys[0]), r1 = rdLinesOf(pg, keys[keys.length - 1]);
   d.sabaq.pages    = [RD.page];
-  d.sabaq.from     = r0 ? r0[0] : 1;
-  d.sabaq.to       = r1 ? r1[1] : LINES_PER_PAGE;
+  d.sabaq.from     = (RD.sel && RD.sel.ln0) || (r0 ? r0[0] : 1);
+  d.sabaq.to       = (RD.sel && RD.sel.ln1) || (r1 ? r1[1] : LINES_PER_PAGE);
   d.sabaq.ayahFrom = keys[0];
   d.sabaq.ayahTo   = keys[keys.length - 1];
   d.sabaq.blocks   = [false,false,false];
@@ -4174,36 +4394,31 @@ async function rdPaint(p, isTodayPage){
     var fam = await rdLoadFont(p), pg = await rdLoadPage(p);
     if (RD.page !== p || !document.getElementById("rd-paper")) return;
     if (!RD.sel || RD.sel.page !== p){
-      var d = day(TODAY), start = 0;
-      if (isTodayPage && d.sabaq.ayahFrom){
-        var ix = rdKeyIdx(pg, d.sabaq.ayahFrom);
-        if (ix > -1) start = ix;
-      } else if (isTodayPage && d.sabaq.from > 1){
-        for (var i = 0; i < pg.keys.length; i++){
-          var rr = rdLinesOf(pg, pg.keys[i]);
-          if (rr && rr[1] >= d.sabaq.from){ start = i; break; }
-        }
-      }
-      RD.sel = rdAutoSel(pg, start);
+      var d = day(TODAY);
+      if (isTodayPage && d.sabaq.from)
+        RD.sel = rdSelFromLines(pg, d.sabaq.from, d.sabaq.to || (d.sabaq.from + targetLines() - 1));
+      else
+        RD.sel = rdAutoSel(pg, 0);
       RD.sel.page = p;
-      if (isTodayPage && d.sabaq.ayahTo){
-        var ib = rdKeyIdx(pg, d.sabaq.ayahTo);
-        if (ib > -1) RD.sel.b = Math.max(RD.sel.a, ib);
-      }
     }
-    var sel = {};
-    if (RD.pick && RD.pickA != null) sel[pg.keys[RD.pickA]] = true;
+    if (RD.sel.ln0 == null){
+      var rA = rdLinesOf(pg, pg.keys[RD.sel.a]), rB = rdLinesOf(pg, pg.keys[RD.sel.b]);
+      RD.sel.ln0 = rA ? rA[0] : 1; RD.sel.ln1 = rB ? rB[1] : LINES_PER_PAGE;
+    }
+    var sel = {}, pickOne = RD.pick && RD.pickA != null;
+    if (pickOne) sel[pg.keys[RD.pickA]] = true;
     else rdSelKeys(pg).forEach(function(k){ sel[k] = true; });
+    function lnOn(ln){ return pickOne ? false : (ln >= RD.sel.ln0 && ln <= RD.sel.ln1); }
 
     var h = "";
     for (var ln = 1; ln <= LINES_PER_PAGE; ln++){
       var ws = pg.lines[ln];
       if (!ws){ h += '<div class="qline"></div>'; continue; }
-      var any = ws.some(function(w){ return sel[w.vk]; });
+      var any = pickOne ? ws.some(function(w){ return sel[w.vk]; }) : lnOn(ln);
       h += '<div class="qline' + (any ? " tl" : "") + (ws.length < 4 ? " qcen" : "") +
            '" style="font-family:\'' + fam + '\'">' +
         ws.map(function(w){
-          var on = !!sel[w.vk];
+          var on = pickOne ? !!sel[w.vk] : any;
           return '<span class="w' + (on ? "" : " off") + (on && RD.hide ? " cov" : "") +
                  '" data-vk="' + w.vk + '"' + (w.end ? ' data-end="1"' : '') +
                  ' data-t="' + esc(w.t || "") + '" data-m="' + esc(w.m) + '">' + w.g +
@@ -4244,7 +4459,10 @@ async function rdPaint(p, isTodayPage){
         if (RD.pick){
           if (RD.pickA == null){ RD.pickA = ix; }
           else {
-            RD.sel = { a:Math.min(RD.pickA, ix), b:Math.max(RD.pickA, ix), page:RD.page };
+            var pa = Math.min(RD.pickA, ix), pb = Math.max(RD.pickA, ix);
+            var ra = rdLinesOf(pg, pg.keys[pa]), rb = rdLinesOf(pg, pg.keys[pb]);
+            RD.sel = { a:pa, b:pb, page:RD.page,
+                       ln0:(ra ? ra[0] : 1), ln1:(rb ? rb[1] : LINES_PER_PAGE) };
             RD.pickA = null; RD.pick = false;
           }
           renderMushaf();
@@ -4856,9 +5074,14 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
   new MutationObserver(function(){
     var now=document.querySelector('.view.on');
     if(now&&now!==last){ if(last) pos[last.id]=main.scrollTop; last=now; main.scrollTop=pos[now.id]||0; }
+    document.body.classList.toggle('mushaf', !!(now&&now.id==='v-mushaf'));
+    try{ if(typeof fabWire==='function') fabWire(); }catch(e){}
+    if(!(now&&now.id==='v-mushaf')&&typeof fabMicStop==='function'&&window.FAB&&FAB.rec) fabMicStop();
   }).observe(main,{subtree:true,attributes:true,attributeFilter:['class']});
 
   function back(){
+    if(window.FAB&&FAB.rec){ fabMicStop(); return true; }
+    if(window.FAB&&FAB.open){ FAB.open=false; fabRender(); return true; }
     if(document.body.classList.contains('focus')){
       var f=document.querySelector('.fexit'); if(f){f.click(); return true;}
     }
@@ -4871,6 +5094,11 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
   history.pushState({h:1},'');
   addEventListener('popstate',function(){ if(back()) history.pushState({h:1},''); });
   document.addEventListener('gesturestart',function(e){e.preventDefault();});
+  main.addEventListener('scroll',function(){
+    document.body.classList.toggle('scrolled', main.scrollTop > 4);
+  },{passive:true});
+  try{ document.body.classList.toggle('mushaf', !!document.querySelector('#v-mushaf.on'));
+       try{ if(typeof fabWire==='function') fabWire(); }catch(e){} }catch(e){}
 })();
 </script>
 </body>
