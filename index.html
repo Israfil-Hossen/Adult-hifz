@@ -4,13 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>হিফজ · দৈনিক সঙ্গী</title>
-<meta name="theme-color" content="#131F35">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#33414F">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link id="fontlink" rel="stylesheet" href="">
+<link rel="stylesheet" href="https://fonts.maateen.me/solaiman-lipi/font.css">
 <script>window.HIFZ_CONFIG = { googleClientId: "", driveFileName: "hifz-backup.json" };</script>
 <script>
 /* =========================================================
@@ -49,11 +51,48 @@ window.HIFZ_LANG_en = {
     title: "Hifz · Daily Companion",
     desc: "A research-based Qur'an memorization tracker for adults",
     streak: "day streak",
-    footer1: "Hifz · Daily Companion — <b>for adult learners</b>",
+    footer1: "Hifz · Daily Companion · <b>for adult learners</b>",
     footer2: "Built on memory research · your data stays on your device"
   },
 
-  nav: { today:"Today", routine:"Method", progress:"Progress", settings:"Settings" },
+  ex: { open:"Test yourself", title:"Retrieval test", sub:"Recall beats re-reading — Karpicke & Roediger (2008).",
+        order:"Put it back in order", cloze:"Fill the gap", next:"What comes next",
+        orderHint:"Tap the pieces in the right order.", clozeHint:"Choose the missing word.",
+        nextHint:"Choose the piece that continues the ayah.",
+        q:"{0} / {1}", right:"Correct", wrong:"Not that one", done:"Test finished",
+        score:"{0} right, {1} wrong", again:"Again", close:"Close", weakAdd:"Page marked weak",
+        need:"Open a page and pick a block first." },
+  rec: { start:"Record yourself", stop:"Stop recording", mine:"Your recitation", qari:"The reciter",
+         compare:"Play the reciter, then you", none:"Nothing recorded yet", denied:"Microphone permission is needed.",
+         saved:"Saved with today's page", dl:"Save the file",
+         phrase:"Loop a phrase", phraseHint:"Tap the first and the last word of the stubborn phrase · it repeats slowly, on its own." },
+  ins: { h:"Install as an app", btn:"Install on this device", done:"Already installed",
+         ios:"On iPhone: Safari · Share (⬆) · Add to Home Screen. Chrome on iOS cannot do it.",
+         hint:"It then opens from the home screen, with no address bar, and works offline." },
+  nt: { h:"Reminders", allow:"Turn on notifications", allowed:"Notifications are on", denied:"The browser has blocked notifications. Allow them in site settings.",
+        daily:"Daily reminder", dailyOff:"Off", dailyHint:"A nudge at this time if today's lesson is not done yet.",
+        zikr:"Dhikr reminder", zikrOff:"Off", zikrN:"Every {0} minutes", zikrHint:"A short dhikr, one after another. Silent between 10 pm and 5 am.",
+        dailyTitle:"Today's lesson is waiting", dailyBody:"Page {0} · lines {1}–{2}. Open and read.",
+        note:"Reminders work while the app is open or sitting in the background. Install it on your home screen and leave it there." },
+  rev: { ask:"Page {0} · how did it go?", good:"Clean", ok:"Shaky", bad:"Forgotten",
+         due:"Due today", dueNone:"Nothing old is due today", strength:"Strength",
+         note:"Pages you recall cleanly come back later and later; a shaky one comes back tomorrow." },
+  mut: { h:"Look-alike ayahs", find:"Check look-alikes", busy:"Comparing…",
+         none:"Nothing on this page resembles what you have memorized.",
+         at:"page {0} · ayah {1}", hint:"Underlined words also appear elsewhere. Read both together once, then note what separates them.",
+         only:"Only pages already on your device are compared." },
+  nav: { today:"Today", mushaf:"Mushaf", routine:"Method", progress:"Progress", settings:"Settings" },
+  rd: { title:"The page", pageLbl:"Page", prev:"Previous", next:"Next", hide:"Cover the lines", show:"Uncover",
+        loop:"Repeat", speed:"Speed", meaning:"Word meanings", dl:"Download this juz", dling:"Downloading {0}%",
+        dlDone:"This juz is on your device", tap:"Tap any word, the ayah plays and its meaning shows below.",
+        todayHi:"Today's lines are bright; the rest of the page is dimmed.",
+        loading:"Loading the page…", err:"Could not load the page. Check your connection and try again.",
+        notMadani:"The page view needs a Madani print (604 pages, 15 lines), 1405 or 1421. Switch your mushaf in Settings to use it.",
+        reciter:"Recitation", playAll:"Play the selection", juz:"Juz {0}", openPage:"Open this page in the mushaf",
+        tr:"Translation", trBy:"M.A.S. Abdel Haleem", trOff:"Hide translation", pause:"Pause", resume:"Resume", stop:"Stop",
+        ay:"Ayah", auto:"Auto", cover:"Cover", pick:"Pick on the page",
+        pickA:"Tap the first word of the block", pickB:"Now tap the last word", setDay:"Make this today's lesson", setDone:"Set as today's lesson",
+        selNote:"The block starts from your daily target ({0} lines) and is rounded to whole ayahs, adjust it if you want." },
 
   ob: {
     kicker: "Let's begin",
@@ -66,7 +105,7 @@ window.HIFZ_LANG_en = {
     page: "First page you'll take",
     pageHint: "Madani mushaf page number (1–604). Starting from the short surahs? Use 582 (Surah An-Naba).",
     rest: "Weekly rest day",
-    restHint: "No new lesson that day — just the whole week reviewed in one sitting.",
+    restHint: "No new lesson that day, just the whole week reviewed in one sitting.",
     go: "Start"
   },
 
@@ -76,36 +115,37 @@ window.HIFZ_LANG_en = {
     target: "Target {0} lines",
     noNew: "No new lesson today",
     page: "Page {0}",
+    lineRange: "lines {0}–{1}",
     restNote: "The week's six pages in one sitting, unbroken.",
     manual: "Your own chosen target.",
     notes: [
       "Just building the habit. Don't think about speed yet.",
       "This is where the review load first bites.",
-      "Two blocks and a half — practice joining them.",
+      "Two blocks and a half, practice joining them.",
       "Full page. The real arithmetic starts here."
     ]
   },
 
   gate: {
-    q: "Yesterday's lesson — page {0} — could you recite it without the mushaf, without a single error?",
+    q: "Yesterday's lesson, page {0}, could you recite it without the mushaf, without a single error?",
     yes: "I could",
     no: "I couldn't",
-    fail: "<b>No new lesson today.</b> Yesterday's page again — same drill, from the top.",
-    failStreak: " That's {0} days running. Drop to half a page for two weeks — you can change the target in Settings.",
+    fail: "<b>No new lesson today.</b> Yesterday's page again, same drill, from the top.",
+    failStreak: " That's {0} days running. Drop to half a page for two weeks, you can change the target in Settings.",
     pass: "Gate passed. Today's page is open."
   },
 
   blk: {
     sabaq: "New lesson",
-    sabaqRepeat: "Repeat — yesterday's page",
+    sabaqRepeat: "Repeat · yesterday's page",
     sabaqMeta: "Page {0} · {1} lines · 50 minutes",
     listen: "Passive listening",
     listenMeta: "All day · costs no extra time",
-    sabaqi: "Sabaqi — the last seven days",
+    sabaqi: "Sabaqi · the last seven days",
     sabaqiMeta: "After Dhuhr · 25 minutes",
     salah: "Recite in prayer",
     salahMeta: "Five prayers · costs no extra time",
-    manzil: "Manzil — everything older",
+    manzil: "Manzil · everything older",
     manzilMeta: "Maghrib–Isha · 35 minutes · juz {0}",
     manzilWait: "Maghrib–Isha · waiting",
     night: "Final pass",
@@ -115,40 +155,40 @@ window.HIFZ_LANG_en = {
 
   sabaq: {
     pageLabel: "Today's page number",
-    pageHint: "The app assumes the next page. If your order differs — starting from Surah An-Naba, say — change it here.",
+    pageHint: "The app assumes the next page. If your order differs, starting from Surah An-Naba, say, change it here.",
     blocked: "<b>Nothing new today.</b> Same page, same drill, right from the start.",
     intro: "Five steps per block. Tap a block above once you've finished it.",
     after: "<b>After {0} blocks:</b> the whole passage 3 times with the mushaf closed, unbroken.",
     drill: [
-      "<b>Listen 5 times</b> — eyes on those five lines, lips still",
-      "<b>Read aloud 7 times</b> — looking at the mushaf, unhurried",
-      "<b>Meaning once</b> — word by word, what each word means",
-      "<b>Cover and recite 3 times</b> — a count only starts when it's flawless",
-      "<b>Join twice</b> — pulling in from the last line of the previous block"
+      "<b>Listen 5 times</b> · eyes on those five lines, lips still",
+      "<b>Read aloud 7 times</b> · looking at the mushaf, unhurried",
+      "<b>Meaning once</b> · word by word, what each word means",
+      "<b>Cover and recite 3 times</b> · a count only starts when it's flawless",
+      "<b>Join twice</b> · pulling in from the last line of the previous block"
     ]
   },
 
   listen: {
-    body: "Let today's page play in the same reciter's voice — in the car, the kitchen, on a walk. You don't need to concentrate; the ear does the work.",
+    body: "Let today's page play in the same reciter's voice, in the car, the kitchen, on a walk. You don't need to concentrate; the ear does the work.",
     qari: " Your reciter: <b>{0}</b>."
   },
 
   sabaqi: {
-    empty: "No review queue yet — it fills from tomorrow, once you've done your first lesson.",
-    weakLabel: "<b>Weak pages</b> — give these one extra pass:",
+    empty: "No review queue yet, it fills from tomorrow, once you've done your first lesson.",
+    weakLabel: "<b>Weak pages</b> · give these one extra pass:",
     order: "<b>The order is the whole point:</b> close the mushaf and recite first, then open it and check. Do it the other way round and you lose everything this block is for.",
     ago: "{0} days ago",
     page: "p {0}"
   },
 
   salah: {
-    body: "Recite from today's lesson and this week's pages. Standing, no mushaf, pulling it out of memory under pressure — this is retrieval practice in its purest form.",
+    body: "Recite from today's lesson and this week's pages. Standing, no mushaf, pulling it out of memory under pressure, this is retrieval practice in its purest form.",
     counted: "prayers recited"
   },
 
   manzil: {
-    week: "<b>This week's juz: {0}</b> — pages {1}–{2}. Only the parts you've memorized.",
-    rot: "The rotation is automatic. The more juz you accumulate, the further apart each one returns — which is exactly the interval at which Ebbinghaus's curve breaks.",
+    week: "<b>This week's juz: {0}</b>, pages {1}–{2}. Only the parts you've memorized.",
+    rot: "The rotation is automatic. The more juz you accumulate, the further apart each one returns, which is exactly the interval at which Ebbinghaus's curve breaks.",
     empty: "Manzil hasn't started yet. It switches on by itself once you have about 8 pages."
   },
 
@@ -160,7 +200,7 @@ window.HIFZ_LANG_en = {
 
   log: {
     err: "How many errors today",
-    errHint: "Whether this number is falling is the real measure of progress — not the page count.",
+    errHint: "Whether this number is falling is the real measure of progress, not the page count.",
     min: "Active time (minutes)",
     note: "Weak spots / notes",
     notePh: "Which ayah keeps catching you? Where did two similar verses blur together?",
@@ -180,84 +220,84 @@ window.HIFZ_LANG_en = {
   rt: {
     ramp: {
       k: "Starting out", h: "The six-week ramp",
-      p: "Memorizing new material is easy; holding on to it is not. These six weeks build the habit — not the speed — before the review load gets heavy.",
+      p: "Memorizing new material is easy; holding on to it is not. These six weeks build the habit, not the speed, before the review load gets heavy.",
       lines: "lines",
       labels: ["Weeks 1–2","Weeks 3–4","Weeks 5–6","Week 7 →"]
     },
     day: {
       k: "Every day", h: "Six touches through the day",
-      p: "Not three hours in one sitting — short sessions spread across the day. Cepeda's work on distributed practice shows the same total time retains far more when it's broken up.",
+      p: "Not three hours in one sitting, short sessions spread across the day. Cepeda's work on distributed practice shows the same total time retains far more when it's broken up.",
       th: ["When","What","Time"],
       rows: [
-        ["Fajr + 15m","New lesson — three blocks, then the whole page 3 times","50m"],
-        ["All day","Passive listening — the same reciter","0"],
-        ["After Dhuhr","Sabaqi — the last 7 days, mushaf closed first","25m"],
+        ["Fajr + 15m","New lesson · three blocks, then the whole page 3 times","50m"],
+        ["All day","Passive listening · the same reciter","0"],
+        ["After Dhuhr","Sabaqi · the last 7 days, mushaf closed first","25m"],
         ["Five prayers","Recite from the lesson in salah","0"],
-        ["Maghrib–Isha","Manzil — one juz a week, rotating","35m"],
+        ["Maghrib–Isha","Manzil · one juz a week, rotating","35m"],
         ["Before sleep","Today's page one last time","10m"]
       ]
     },
     stuck: {
       k: "When you're stuck", h: "The stubborn-line protocol",
-      p: "Reading a line ten more times doesn't work when it won't stick — you have to change method. Work down the list and stop at whichever one opens it.",
+      p: "Reading a line ten more times doesn't work when it won't stick, you have to change method. Work down the list and stop at whichever one opens it.",
       steps: [
-        "<b>Split it</b> — break the line into two or three pieces, set each separately, then join",
-        "<b>Go to the meaning</b> — getting stuck is almost always a sign you don't know what it says; read the translation of that stretch",
-        "<b>Write it by hand</b> — writing it once brings in a different sensory channel",
-        "<b>Pull from the line before</b> — not alone, but together with the previous line, 5 times",
-        "<b>Go to sleep</b> — if you've been stuck 20 minutes, stop. It often opens on its own the next morning"
+        "<b>Split it</b> · break the line into two or three pieces, set each separately, then join",
+        "<b>Go to the meaning</b> · getting stuck is almost always a sign you don't know what it says; read the translation of that stretch",
+        "<b>Write it by hand</b> · writing it once brings in a different sensory channel",
+        "<b>Pull from the line before</b> · not alone, but together with the previous line, 5 times",
+        "<b>Go to sleep</b>, if you've been stuck 20 minutes, stop. It often opens on its own the next morning"
       ]
     },
     mut: {
-      k: "The biggest trap", h: "Mutashabihat — near-identical verses",
-      p: "The number one cause of hifz breaking down isn't new pages — it's two verses with near-identical wording blurring together. Memory research calls this interference, and the only cure is to learn the difference <b>deliberately</b>.",
+      k: "The biggest trap", h: "Mutashabihat · near-identical verses",
+      p: "The number one cause of hifz breaking down isn't new pages, it's two verses with near-identical wording blurring together. Memory research calls this interference, and the only cure is to learn the difference <b>deliberately</b>.",
       steps: [
-        "<b>Write them side by side</b> — both verses on one sheet, one above the other",
-        "<b>Mark the exact word</b> — where they diverge",
-        "<b>Anchor the address</b> — \"this one is low on the right page, that one high on the left\"; spatial memory is what saves you here",
-        "<b>Log it in your notes</b> — in today's note field; review the whole list once a week"
+        "<b>Write them side by side</b> · both verses on one sheet, one above the other",
+        "<b>Mark the exact word</b> · where they diverge",
+        "<b>Anchor the address</b> · \"this one is low on the right page, that one high on the left\"; spatial memory is what saves you here",
+        "<b>Log it in your notes</b> · in today's note field; review the whole list once a week"
       ],
       nh: "A small rule",
-      np: "A pair that blurred once will blur again. Write it down the very first time — six months from now this list will be the most valuable page you own."
+      np: "A pair that blurred once will blur again. Write it down the very first time, six months from now this list will be the most valuable page you own."
     },
     real: {
       k: "Real life", h: "Travel, illness, a brutal week",
-      p: "The routine will break. The only question is what you do on the day it breaks — and if the answer is \"nothing,\" hifz stops there.",
+      p: "The routine will break. The only question is what you do on the day it breaks, and if the answer is \"nothing,\" hifz stops there.",
       th: ["Situation","What to do"],
       rows: [
-        ["No time","Skip the new lesson. Sabaqi only — 25 minutes. The streak survives."],
+        ["No time","Skip the new lesson. Sabaqi only, 25 minutes. The streak survives."],
         ["Travelling","Skip the new lesson. Listen, and recite in salah. The day still counts."],
         ["Ill","Complete rest. Push through and you'll bake in wrong pronunciation, which is hard to undo."],
-        ["A week missed","Don't resume where you stopped — go back <b>two weeks</b> and spend two days on review only."],
+        ["A week missed","Don't resume where you stopped, go back <b>two weeks</b> and spend two days on review only."],
         ["A month missed","No new lesson for two weeks. Cycle once through everything you have, then restart."]
       ]
     },
     month: {
-      k: "Monthly", h: "One day a month — the test",
-      p: "On the last rest day of the month: recite everything you memorized that month in one unbroken run — to someone, or into a recorder. Flag every page you stumbled on as <b>weak</b>. The app will feed them back into your daily review.",
+      k: "Monthly", h: "One day a month · the test",
+      p: "On the last rest day of the month: recite everything you memorized that month in one unbroken run, to someone, or into a recorder. Flag every page you stumbled on as <b>weak</b>. The app will feed them back into your daily review.",
       gh: "The gate",
-      g1: "If you can't recite yesterday's page without the mushaf and without error — nothing new today.",
-      g2: "Two days stuck in a row: drop to half a page and try again in two weeks. Skip this rule and four months from now you'll have 100 pages you \"more or less remember\" — which counts as zero."
+      g1: "If you can't recite yesterday's page without the mushaf and without error, nothing new today.",
+      g2: "Two days stuck in a row: drop to half a page and try again in two weeks. Skip this rule and four months from now you'll have 100 pages you \"more or less remember\", which counts as zero."
     },
     basis: {
       k: "Foundations", h: "Where each step comes from",
       th: ["Research","What it shows","Where it lands"],
       rows: [
-        ["Craik &amp; Lockhart 1972<br>Craik &amp; Tulving 1975","Material understood for meaning is encoded far deeper than sound alone","Drill step 3 — word-by-word translation"],
+        ["Craik &amp; Lockhart 1972<br>Craik &amp; Tulving 1975","Material understood for meaning is encoded far deeper than sound alone","Drill step 3 · word-by-word translation"],
         ["Karpicke &amp; Roediger 2008<br>Roediger &amp; Butler 2011","Pulling from memory beats re-reading by a wide margin","Covered recitation · closed-mushaf-first sabaqi · reciting in salah"],
         ["Ebbinghaus 1885<br>Cepeda 2006","Without review, much is lost within 24 hours; at widening intervals it becomes near-permanent","7-day sabaqi · manzil rotation · six touches a day"],
         ["Miller 1956<br>Gobet 2001","Working memory holds only a few units at once","Splitting the page into 5-line blocks"],
         ["Maguire 2000, 2003<br>Dresler 2017","The brain is extraordinary at remembering place and position","The same mushaf for life · anchoring mutashabihat by location"],
         ["Paivio 1986<br>Shams &amp; Seitz 2008","Memory holds better when it enters through several senses","Listen + see + speak + write when stuck"],
         ["Mayer &amp; Moreno 2003<br>Baddeley 2000","Interruption eats working-memory capacity","Phone in another room · 50-minute ceiling"],
-        ["Draganski 2004<br>Park &amp; Bischof 2013","Training produces structural change in adult brains too","32 isn't late — method is your advantage"]
+        ["Draganski 2004<br>Park &amp; Bischof 2013","Training produces structural change in adult brains too","32 isn't late · method is your advantage"]
       ]
     },
     fixed: {
       k: "Non-negotiable", h: "Three things with no give in them",
       items: [
         ["Tajweed first","Memorize with wrong pronunciation and fixing it is harder than memorizing from scratch. Recite to a teacher at least once a week."],
-        ["Seven hours of sleep","Consolidation happens largely during sleep. Cutting sleep to gain memorization time is a net loss — you shed more than you add."],
+        ["Seven hours of sleep","Consolidation happens largely during sleep. Cutting sleep to gain memorization time is a net loss, you shed more than you add."],
         ["One mushaf, one reciter","Change the mushaf and the whole spatial layer is wiped; change the reciter and the melodic cue goes. Choose once, then don't touch it."]
       ]
     }
@@ -265,9 +305,9 @@ window.HIFZ_LANG_en = {
 
   pg: {
     k: "Progress", h: "Where you stand",
-    report: "Weekly report — for your teacher",
+    report: "Weekly report · for your teacher",
     stats: ["pages memorized","full juz","complete","day streak","total hours","avg errors / day"],
-    map: "Mushaf map · 604 pages",
+    map: "Mushaf map",
     legend: ["Memorized","Today's","Weak","Remaining"],
     heat: "Last 84 days",
     heatNote: "Darker means more completed",
@@ -285,23 +325,26 @@ window.HIFZ_LANG_en = {
 
   set: {
     k: "Settings", h: "Your setup",
-    p: "Everything is stored on this device — nothing goes to a server. Clearing your browser wipes it, so either turn on Drive sync below or download a backup once a month.",
+    p: "Everything is stored on this device, nothing goes to a server. Clearing your browser wipes it, so either turn on Drive sync below or download a backup once a month.",
     lang: "Language",
-    langHint: "The whole app switches — including the method tab.",
+    langHint: "The whole app switches, including the method tab.",
     date: "Start date",
     page: "First page",
     rest: "Rest day",
     lines: "Daily target (lines)",
-    linesAuto: "Automatic — follow the ramp",
+    linesAuto: "Automatic · follow the ramp",
     linesN: "{0} lines",
     linesHint: "Stuck at the gate two days running? Come down here. That isn't going backwards.",
     qari: "Your reciter",
     qariPh: "one, for life",
     mushaf: "Your mushaf",
+    mushafHint: "Page counts and lines per page follow this print. Change it and the whole map follows.",
+    mushafEd: "Edition or publisher",
+    mushafEdPh: "the exact copy you hold · one, for life",
     weakLabel: "Weak pages",
     weakHint: "Tap to remove once you've been flawless for seven days.",
     driveLabel: "Google Drive sync",
-    driveHint: "While linked, every change reaches your Drive within seconds. Sign in on a new phone with the same Google account and everything returns. The app can see only the one file it created — nothing else in your Drive.",
+    driveHint: "While linked, every change reaches your Drive within seconds. Sign in on a new phone with the same Google account and everything returns. The app can see only the one file it created, nothing else in your Drive.",
     driveNoConfig: "Add your Client ID in config.js to switch this on.",
     backupLabel: "File backup",
     exp: "Download data (JSON)",
@@ -317,7 +360,7 @@ window.HIFZ_LANG_en = {
   sync: {
     off: "Sync off", connecting: "Connecting", ok: "Synced", failed: "Sync failed",
     pushing: "Sending", pulling: "Fetching", reconciling: "Reconciling", cancelled: "Cancelled",
-    noConfig: "No Google Client ID set — add one in <b>config.js</b> to switch sync on.",
+    noConfig: "No Google Client ID set, add one in <b>config.js</b> to switch sync on.",
     notLinked: "Not linked yet. Once linked, your data saves to your Drive automatically.",
     linked: "Linked: <b>{0}</b>",
     last: " · last sync {0}",
@@ -327,7 +370,7 @@ window.HIFZ_LANG_en = {
     pull: "Fetch from Drive",
     unlink: "Unlink",
     confirmOff: "Once unlinked, new changes stop reaching your Drive. The existing file stays there.",
-    notReady: "The Google library hasn't loaded yet — try again in a few seconds.",
+    notReady: "The Google library hasn't loaded yet, try again in a few seconds.",
     pushFail: "Couldn't reach Drive. Check your connection and try again.",
     pullFail: "No backup found in Drive.",
     pulled: "Data restored from Drive."
@@ -341,10 +384,10 @@ window.HIFZ_LANG_en = {
     pass: "Pass", fail: "Fail", rest: "Rest",
     gateH: "Gate results",
     gateLine: "Pass <span class=\"ok\">{0}</span> days · Fail <span class=\"no\">{1}</span> days · Lesson completed {2} days. ",
-    verdictGood: "Pace is right — worth considering an increase.",
+    verdictGood: "Pace is right, worth considering an increase.",
     verdictBad: "The target is too high. Cut the daily line count and hold there two weeks.",
     verdictOk: "Pace is about right. Stay at this target another week.",
-    weakH: "Weak pages — listen to these especially",
+    weakH: "Weak pages · listen to these especially",
     notesH: "Student's notes",
     comment: "Teacher's comment",
     signature: "Signature & date",
@@ -364,9 +407,9 @@ window.HIFZ_LANG_bn = {
   digits: "০১২৩৪৫৬৭৮৯",
   locale: "bn-BD",
   fonts: {
-    google: "Tiro+Bangla:ital@0;1&family=Anek+Bangla:wght@300;400;500;600;700",
-    display: '"Tiro Bangla","Noto Serif Bengali","Nirmala UI",Georgia,serif',
-    body: '"Anek Bangla","Noto Sans Bengali","Hind Siliguri","Nirmala UI",system-ui,sans-serif',
+    google: "Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@300;400;500;600;700",
+    display: '"SolaimanLipi","Tiro Bangla","Noto Serif Bengali","Nirmala UI",Georgia,serif',
+    body: '"SolaimanLipi","Hind Siliguri","Noto Sans Bengali","Nirmala UI",system-ui,sans-serif',
     lineHeight: "1.72"
   },
 
@@ -380,24 +423,61 @@ window.HIFZ_LANG_bn = {
     title: "হিফজ · দৈনিক সঙ্গী",
     desc: "প্রাপ্তবয়স্কদের জন্য গবেষণা-ভিত্তিক কোরআন হিফজ ট্র্যাকার",
     streak: "দিন ধারাবাহিক",
-    footer1: "হিফজ · দৈনিক সঙ্গী — <b>প্রাপ্তবয়স্কদের জন্য</b>",
+    footer1: "হিফজ · দৈনিক সঙ্গী · <b>প্রাপ্তবয়স্কদের জন্য</b>",
     footer2: "স্মৃতি-গবেষণার ভিত্তিতে সাজানো · ডেটা আপনার ডিভাইসেই থাকে"
   },
 
-  nav: { today:"আজ", routine:"রুটিন", progress:"অগ্রগতি", settings:"সেটিংস" },
+  ex: { open:"পরীক্ষা দিন", title:"স্মৃতি থেকে বের করার পরীক্ষা", sub:"বারবার পড়ার চেয়ে বের করে আনা বেশি কাজ দেয় · Karpicke ও Roediger (২০০৮)।",
+        order:"ক্রমে সাজান", cloze:"ফাঁক পূরণ", next:"এরপর কোনটা",
+        orderHint:"টুকরোগুলো ঠিক ক্রমে ট্যাপ করুন।", clozeHint:"যে শব্দটা নেই, সেটা বাছুন।",
+        nextHint:"আয়াতটি যেটা দিয়ে এগোয়, সেটা বাছুন।",
+        q:"{0} / {1}", right:"ঠিক আছে", wrong:"এটা নয়", done:"পরীক্ষা শেষ",
+        score:"ঠিক {0}টি, ভুল {1}টি", again:"আবার", close:"বন্ধ", weakAdd:"পৃষ্ঠাটি দুর্বল হিসেবে চিহ্নিত হলো",
+        need:"আগে একটা পৃষ্ঠা খুলে অংশ বেছে নিন।" },
+  rec: { start:"নিজের তিলাওয়াত রেকর্ড", stop:"রেকর্ড থামান", mine:"আপনার তিলাওয়াত", qari:"ক্বারীর তিলাওয়াত",
+         compare:"আগে ক্বারী, তারপর আপনি", none:"এখনো কিছু রেকর্ড হয়নি", denied:"মাইক্রোফোনের অনুমতি লাগবে।",
+         saved:"আজকের পৃষ্ঠার সাথে জমা হলো", dl:"ফাইলটা নামিয়ে রাখুন",
+         phrase:"টুকরো লুপ", phraseHint:"যে টুকরোয় আটকাচ্ছেন, তার প্রথম ও শেষ শব্দে ট্যাপ করুন · ওটুকু ধীরে ধীরে নিজে নিজে বাজতে থাকবে।" },
+  ins: { h:"অ্যাপ হিসেবে বসান", btn:"এই ডিভাইসে বসান", done:"ইতিমধ্যে বসানো আছে",
+         ios:"আইফোনে: Safari · Share (⬆) · Add to Home Screen। আইফোনের Chrome-এ হবে না।",
+         hint:"এরপর হোম স্ক্রিন থেকেই খুলবে, অ্যাড্রেস বার থাকবে না, ইন্টারনেট ছাড়াও চলবে।" },
+  nt: { h:"স্মরণ করিয়ে দেওয়া", allow:"বিজ্ঞপ্তি চালু করুন", allowed:"বিজ্ঞপ্তি চালু আছে", denied:"ব্রাউজার বিজ্ঞপ্তি আটকে রেখেছে। সাইট সেটিংস থেকে অনুমতি দিন।",
+        daily:"দৈনিক স্মরণ", dailyOff:"বন্ধ", dailyHint:"এই সময়ে আজকের সবক বাকি থাকলে মনে করিয়ে দেবে।",
+        zikr:"যিকিরের স্মরণ", zikrOff:"বন্ধ", zikrN:"প্রতি {0} মিনিটে", zikrHint:"একটার পর একটা ছোট যিকির। রাত ১০টা থেকে ভোর ৫টা পর্যন্ত চুপ থাকবে।",
+        dailyTitle:"আজকের সবক বাকি আছে", dailyBody:"পৃষ্ঠা {0} · লাইন {1}–{2}। খুলে পড়ে নিন।",
+        note:"অ্যাপটা খোলা থাকলে বা পিছনে চালু থাকলে স্মরণ কাজ করে। হোম স্ক্রিনে বসিয়ে রাখলে সবচেয়ে ভালো চলে।" },
+  rev: { ask:"পৃষ্ঠা {0} · কেমন হলো?", good:"নির্ভুল", ok:"একটু আটকেছে", bad:"ভুলে গেছি",
+         due:"আজ ফেরার কথা", dueNone:"আজ পুরোনো কিছু ফেরার নেই", strength:"শক্তি",
+         note:"যে পৃষ্ঠা নির্ভুল বলতে পারবেন, সেটা পরেরবার আরও দেরিতে ফিরবে; আটকে গেলে কালই ফিরবে।" },
+  mut: { h:"মিলে যাওয়া আয়াত", find:"মিল খুঁজুন", busy:"মিলিয়ে দেখছি…",
+         none:"এই পৃষ্ঠার সাথে আপনার মুখস্থ কিছুর মিল পাওয়া যায়নি।",
+         at:"পৃষ্ঠা {0} · আয়াত {1}", hint:"দাগ দেওয়া শব্দগুলো অন্য জায়গাতেও আছে। দুটো একসাথে একবার পড়ুন, তারপর পার্থক্যটা মনে গেঁথে নিন।",
+         only:"যে পৃষ্ঠাগুলো ইতিমধ্যে ডিভাইসে আছে, শুধু সেগুলোর সাথে মেলানো হয়।" },
+  nav: { today:"আজ", mushaf:"মুসহাফ", routine:"রুটিন", progress:"অগ্রগতি", settings:"সেটিংস" },
+  rd: { title:"পৃষ্ঠা", pageLbl:"পৃষ্ঠা", prev:"আগের", next:"পরের", hide:"লাইন ঢাকুন", show:"খুলুন",
+        loop:"পুনরাবৃত্তি", speed:"গতি", meaning:"শব্দার্থ", dl:"এই পারাটা নামান", dling:"নামছে {0}%",
+        dlDone:"এই পারা আপনার ডিভাইসে আছে", tap:"যেকোনো শব্দে ট্যাপ করুন, আয়াতটি বাজবে, নিচে অর্থ দেখাবে।",
+        todayHi:"আজকের লাইনগুলো উজ্জ্বল, পৃষ্ঠার বাকিটা ম্লান।",
+        loading:"পৃষ্ঠা আসছে…", err:"পৃষ্ঠাটা আনা গেল না। ইন্টারনেট দেখে আবার চেষ্টা করুন।",
+        notMadani:"পৃষ্ঠা-দৃশ্যের জন্য মাদানী ছাপা লাগে (৬০৪ পৃষ্ঠা, ১৫ লাইন), ১৪০৫ বা ১৪২১। সেটিংস থেকে মুসহাফ বদলে নিন।",
+        reciter:"তিলাওয়াত", playAll:"নির্বাচিত অংশ বাজান", juz:"পারা {0}", openPage:"মুসহাফে পৃষ্ঠাটা খুলুন",
+        tr:"অনুবাদ", trBy:"তাইসিরুল কুরআন", trOff:"অনুবাদ লুকান", pause:"বিরতি", resume:"আবার চালু", stop:"থামান",
+        ay:"আয়াত", auto:"স্বয়ংক্রিয়", cover:"ঢাকা", pick:"পৃষ্ঠা থেকে বাছুন",
+        pickA:"যেখান থেকে শুরু, সেই শব্দে ট্যাপ করুন", pickB:"এবার যেখানে শেষ, সেই শব্দে ট্যাপ করুন", setDay:"আজকের সবক করুন", setDone:"আজকের সবক সেট হয়েছে",
+        selNote:"আপনার দৈনিক লক্ষ্য ({0} লাইন) থেকে ব্লক শুরু হয়, তারপর পূর্ণ আয়াতে গিয়ে শেষ হয়, দরকারে বদলে নিন।" },
 
   ob: {
     kicker: "শুরু করা যাক",
     h1a: "প্রতিদিন এক পৃষ্ঠা।",
     h1b: "বাকিটা অ্যাপ মনে রাখবে।",
-    lede: "তিনটা তথ্য দিন — এরপর প্রতিদিন সকালে অ্যাপ নিজেই বলে দেবে আজ কোন পৃষ্ঠা নতুন, কোন সাতটা সাবকি, আর কোন পারা মানজিল।",
+    lede: "তিনটা তথ্য দিন, এরপর প্রতিদিন সকালে অ্যাপ নিজেই বলে দেবে আজ কোন পৃষ্ঠা নতুন, কোন সাতটা সাবকি, আর কোন পারা মানজিল।",
     lang: "ভাষা",
     date: "শুরুর তারিখ",
     dateHint: "আজকের তারিখ দিন। এখান থেকেই র‍্যাম্পের সপ্তাহ গোনা হবে।",
     page: "প্রথম যে পৃষ্ঠা ধরবেন",
     pageHint: "মাদানি মুসহাফের পৃষ্ঠা নম্বর (১–৬০৪)। শেষ দিক থেকে শুরু করলে ৫৮২ (সূরা নাবা)।",
     rest: "সাপ্তাহিক বিশ্রামের দিন",
-    restHint: "ওইদিন নতুন সবক নয় — শুধু পুরো সপ্তাহ একটানা মুরাজাআ।",
+    restHint: "ওইদিন নতুন সবক নয়, শুধু পুরো সপ্তাহ একটানা মুরাজাআ।",
     go: "শুরু করুন"
   },
 
@@ -407,36 +487,37 @@ window.HIFZ_LANG_bn = {
     target: "লক্ষ্য {0} লাইন",
     noNew: "আজ নতুন সবক নেই",
     page: "পৃষ্ঠা {0}",
+    lineRange: "লাইন {0}–{1}",
     restNote: "সপ্তাহের ছয় পৃষ্ঠা একটানা, একবারে, বিরতি ছাড়া।",
     manual: "নিজের ঠিক করা লক্ষ্য।",
     notes: [
       "শুধু রুটিন বসানোর সময়। গতি নিয়ে ভাববেন না।",
       "এখানেই প্রথম সাবকি-চাপ টের পাবেন।",
-      "দুই ব্লক ও অর্ধেক — জোড়া লাগানোর অনুশীলন।",
+      "দুই ব্লক ও অর্ধেক, জোড়া লাগানোর অনুশীলন।",
       "পূর্ণ পৃষ্ঠা। এখান থেকেই আসল হিসাব।"
     ]
   },
 
   gate: {
-    q: "গতকালের সবক — পৃষ্ঠা {0} — মুসহাফ ছাড়া, ভুল ছাড়া বলতে পেরেছেন?",
+    q: "গতকালের সবক, পৃষ্ঠা {0}, মুসহাফ ছাড়া, ভুল ছাড়া বলতে পেরেছেন?",
     yes: "পেরেছি",
     no: "পারিনি",
-    fail: "<b>আজ নতুন সবক নয়।</b> গতকালের পৃষ্ঠাটাই আবার — একই ড্রিল, শুরু থেকে।",
-    failStreak: " এটা টানা {0} দিন। দুই সপ্তাহের জন্য অর্ধেক পৃষ্ঠায় নেমে আসুন — সেটিংসে লক্ষ্য বদলাতে পারেন।",
+    fail: "<b>আজ নতুন সবক নয়।</b> গতকালের পৃষ্ঠাটাই আবার, একই ড্রিল, শুরু থেকে।",
+    failStreak: " এটা টানা {0} দিন। দুই সপ্তাহের জন্য অর্ধেক পৃষ্ঠায় নেমে আসুন, সেটিংসে লক্ষ্য বদলাতে পারেন।",
     pass: "গেট পার। আজকের পৃষ্ঠা খোলা।"
   },
 
   blk: {
     sabaq: "নতুন সবক",
-    sabaqRepeat: "পুনরাবৃত্তি — গতকালের পৃষ্ঠা",
+    sabaqRepeat: "পুনরাবৃত্তি · গতকালের পৃষ্ঠা",
     sabaqMeta: "পৃষ্ঠা {0} · {1} লাইন · ৫০ মিনিট",
     listen: "নিষ্ক্রিয় শ্রবণ",
     listenMeta: "দিনভর · অতিরিক্ত সময় লাগে না",
-    sabaqi: "সাবকি — গত সাত দিন",
+    sabaqi: "সাবকি · গত সাত দিন",
     sabaqiMeta: "জোহরের পর · ২৫ মিনিট",
     salah: "নামাজে পাঠ",
     salahMeta: "পাঁচ ওয়াক্ত · অতিরিক্ত সময় লাগে না",
-    manzil: "মানজিল — পুরোনো সব",
+    manzil: "মানজিল · পুরোনো সব",
     manzilMeta: "মাগরিব–এশা · ৩৫ মিনিট · পারা {0}",
     manzilWait: "মাগরিব–এশা · অপেক্ষায়",
     night: "শেষ পাঠ",
@@ -446,40 +527,40 @@ window.HIFZ_LANG_bn = {
 
   sabaq: {
     pageLabel: "আজকের পৃষ্ঠা নম্বর",
-    pageHint: "অ্যাপ নিজেই পরের পৃষ্ঠা ধরে নেয়। আপনার ক্রম আলাদা হলে — যেমন সূরা নাবা থেকে শুরু — এখানে বদলে দিন।",
+    pageHint: "অ্যাপ নিজেই পরের পৃষ্ঠা ধরে নেয়। আপনার ক্রম আলাদা হলে, যেমন সূরা নাবা থেকে শুরু, এখানে বদলে দিন।",
     blocked: "<b>আজ নতুন কিছু নয়।</b> একই পৃষ্ঠা, একই ড্রিল, একদম শুরু থেকে।",
     intro: "প্রতিটি ব্লকে ঠিক এই পাঁচ ধাপ। ব্লক শেষ হলে উপরে ট্যাপ করে চিহ্নিত করুন।",
     after: "<b>{0} ব্লক শেষে:</b> পুরো অংশ মুসহাফ বন্ধ করে ৩ বার, একটানা।",
     drill: [
-      "<b>শুনুন ৫ বার</b> — চোখ ওই পাঁচ লাইনে, ঠোঁট নড়বে না",
-      "<b>দেখে পড়ুন ৭ বার</b> — উচ্চস্বরে, তাড়াহুড়ো ছাড়া",
-      "<b>অর্থ একবার</b> — শব্দে শব্দে, কোন শব্দের কী মানে",
-      "<b>ঢেকে বলুন ৩ বার</b> — নির্ভুল না হলে গোনা শুরু হবে না",
-      "<b>জোড়া দিন ২ বার</b> — আগের ব্লকের শেষ লাইন থেকে টেনে"
+      "<b>শুনুন ৫ বার</b> · চোখ ওই পাঁচ লাইনে, ঠোঁট নড়বে না",
+      "<b>দেখে পড়ুন ৭ বার</b> · উচ্চস্বরে, তাড়াহুড়ো ছাড়া",
+      "<b>অর্থ একবার</b> · শব্দে শব্দে, কোন শব্দের কী মানে",
+      "<b>ঢেকে বলুন ৩ বার</b> · নির্ভুল না হলে গোনা শুরু হবে না",
+      "<b>জোড়া দিন ২ বার</b> · আগের ব্লকের শেষ লাইন থেকে টেনে"
     ]
   },
 
   listen: {
-    body: "আজকের পৃষ্ঠা একই ক্বারীর কণ্ঠে বাজতে থাকুক — গাড়িতে, রান্নাঘরে, হাঁটার সময়। মনোযোগ না দিলেও চলবে; কানই কাজটা করবে।",
+    body: "আজকের পৃষ্ঠা একই ক্বারীর কণ্ঠে বাজতে থাকুক, গাড়িতে, রান্নাঘরে, হাঁটার সময়। মনোযোগ না দিলেও চলবে; কানই কাজটা করবে।",
     qari: " আপনার ক্বারী: <b>{0}</b>।"
   },
 
   sabaqi: {
-    empty: "এখনো সাবকি নেই — প্রথম সবক শেষ হলে কাল থেকে এখানে আসবে।",
-    weakLabel: "<b>দুর্বল পৃষ্ঠা</b> — এগুলোয় বাড়তি একটা পাস দিন:",
+    empty: "এখনো সাবকি নেই, প্রথম সবক শেষ হলে কাল থেকে এখানে আসবে।",
+    weakLabel: "<b>দুর্বল পৃষ্ঠা</b> · এগুলোয় বাড়তি একটা পাস দিন:",
     order: "<b>ক্রমটাই আসল:</b> প্রথমে মুসহাফ বন্ধ করে বলুন, তারপর খুলে মিলিয়ে নিন। উল্টো করলে এই ব্লকের পুরো সুবিধাটা হারিয়ে যায়।",
     ago: "{0} দিন আগে",
     page: "পৃ {0}"
   },
 
   salah: {
-    body: "আজকের সবক ও চলতি সপ্তাহের অংশ থেকে পড়ুন। দাঁড়িয়ে, মুসহাফ ছাড়া, স্মৃতি থেকে বের করে আনা — এটাই রিট্রিভাল প্র্যাকটিসের সবচেয়ে খাঁটি রূপ।",
+    body: "আজকের সবক ও চলতি সপ্তাহের অংশ থেকে পড়ুন। দাঁড়িয়ে, মুসহাফ ছাড়া, স্মৃতি থেকে বের করে আনা, এটাই রিট্রিভাল প্র্যাকটিসের সবচেয়ে খাঁটি রূপ।",
     counted: "ওয়াক্তে পড়েছি"
   },
 
   manzil: {
-    week: "<b>এই সপ্তাহের পারা: {0}</b> — পৃষ্ঠা {1}–{2}। এর মধ্যে যেটুকু মুখস্থ, সেটুকুই।",
-    rot: "ঘূর্ণনটা স্বয়ংক্রিয়। যত পারা জমবে, প্রতিটি পারা তত সপ্তাহ পর পর ফিরে আসবে — Ebbinghaus-এর বক্ররেখা ঠিক এই ব্যবধানেই ভাঙে।",
+    week: "<b>এই সপ্তাহের পারা: {0}</b>, পৃষ্ঠা {1}–{2}। এর মধ্যে যেটুকু মুখস্থ, সেটুকুই।",
+    rot: "ঘূর্ণনটা স্বয়ংক্রিয়। যত পারা জমবে, প্রতিটি পারা তত সপ্তাহ পর পর ফিরে আসবে, Ebbinghaus-এর বক্ররেখা ঠিক এই ব্যবধানেই ভাঙে।",
     empty: "মানজিল এখনো শুরু হয়নি। প্রায় ৮ পৃষ্ঠা জমলে এই ঘূর্ণন নিজে থেকেই চালু হবে।"
   },
 
@@ -491,7 +572,7 @@ window.HIFZ_LANG_bn = {
 
   log: {
     err: "আজ মোট কতগুলো ভুল হয়েছে",
-    errHint: "সংখ্যাটা কমছে কি না — সেটাই আসল অগ্রগতির মাপকাঠি, পৃষ্ঠার সংখ্যা নয়।",
+    errHint: "সংখ্যাটা কমছে কি না, সেটাই আসল অগ্রগতির মাপকাঠি, পৃষ্ঠার সংখ্যা নয়।",
     min: "সক্রিয় সময় (মিনিট)",
     note: "দুর্বল জায়গা / নোট",
     notePh: "কোন আয়াতে বারবার আটকাচ্ছে? মুতাশাবিহাত কোথায় গুলিয়ে গেল?",
@@ -511,84 +592,84 @@ window.HIFZ_LANG_bn = {
   rt: {
     ramp: {
       k: "শুরু", h: "ছয় সপ্তাহের র‍্যাম্প",
-      p: "নতুন মুখস্থ করা সহজ, ধরে রাখা কঠিন। এই দেড় মাসে গতি নয়, অভ্যাসটা তৈরি হয় — মুরাজাআর বোঝা ভারী হওয়ার আগেই।",
+      p: "নতুন মুখস্থ করা সহজ, ধরে রাখা কঠিন। এই দেড় মাসে গতি নয়, অভ্যাসটা তৈরি হয়, মুরাজাআর বোঝা ভারী হওয়ার আগেই।",
       lines: "লাইন",
       labels: ["সপ্তাহ ১–২","সপ্তাহ ৩–৪","সপ্তাহ ৫–৬","সপ্তাহ ৭ →"]
     },
     day: {
       k: "প্রতিদিন", h: "দিনের ছয়টি স্পর্শ",
-      p: "একটানা তিন ঘণ্টা বসা নয় — দিনজুড়ে ছড়ানো ছোট সেশন। Cepeda-র বিতরণকৃত অনুশীলন গবেষণা বলে, একই সময় ভাগ করে দিলে ধারণক্ষমতা বহুগুণ বাড়ে।",
+      p: "একটানা তিন ঘণ্টা বসা নয়, দিনজুড়ে ছড়ানো ছোট সেশন। Cepeda-র বিতরণকৃত অনুশীলন গবেষণা বলে, একই সময় ভাগ করে দিলে ধারণক্ষমতা বহুগুণ বাড়ে।",
       th: ["কখন","কী","সময়"],
       rows: [
-        ["ফজর + ১৫ মি","নতুন সবক — তিন ব্লক, তারপর পুরো পৃষ্ঠা ৩ বার","৫০ মি"],
-        ["দিনভর","নিষ্ক্রিয় শ্রবণ — একই ক্বারী","০"],
-        ["জোহরের পর","সাবকি — গত ৭ দিন, বন্ধ-মুসহাফে আগে","২৫ মি"],
+        ["ফজরের ১৫ মিনিট পর","নতুন সবক · তিন ব্লক, তারপর পুরো পৃষ্ঠা ৩ বার","৫০ মিনিট"],
+        ["দিনভর","নিষ্ক্রিয় শ্রবণ · একই ক্বারী","০"],
+        ["জোহরের পর","সাবকি · গত ৭ দিন, বন্ধ-মুসহাফে আগে","২৫ মিনিট"],
         ["পাঁচ ওয়াক্ত","নামাজে সবক থেকে পাঠ","০"],
-        ["মাগরিব–এশা","মানজিল — সপ্তাহে এক পারা ঘূর্ণন","৩৫ মি"],
-        ["ঘুমের আগে","আজকের পৃষ্ঠা শেষবার","১০ মি"]
+        ["মাগরিব থেকে এশা","মানজিল · সপ্তাহে এক পারা ঘূর্ণন","৩৫ মিনিট"],
+        ["ঘুমের আগে","আজকের পৃষ্ঠা শেষবার","১০ মিনিট"]
       ]
     },
     stuck: {
       k: "আটকে গেলে", h: "একগুঁয়ে লাইনের প্রোটোকল",
-      p: "একই লাইনে বারবার আটকালে আরও দশবার পড়া কাজ দেয় না — পদ্ধতি বদলাতে হয়। ক্রম অনুযায়ী চেষ্টা করুন, যেটায় খুলে যায় সেখানেই থামুন।",
+      p: "একই লাইনে বারবার আটকালে আরও দশবার পড়া কাজ দেয় না, পদ্ধতি বদলাতে হয়। ক্রম অনুযায়ী চেষ্টা করুন, যেটায় খুলে যায় সেখানেই থামুন।",
       steps: [
-        "<b>ভাগ করুন</b> — লাইনটা দুই বা তিন টুকরো করে আলাদা বসান, তারপর জোড়া দিন",
-        "<b>অর্থে যান</b> — আটকে যাওয়া প্রায় সবসময় অর্থ না জানার লক্ষণ; ওই অংশের অনুবাদ পড়ুন",
-        "<b>হাতে লিখুন</b> — একবার লিখলে ভিন্ন ইন্দ্রিয়পথ যুক্ত হয়",
-        "<b>আগের লাইন থেকে টানুন</b> — একা নয়, আগের লাইনের সাথে একসাথে ৫ বার",
-        "<b>ঘুমাতে যান</b> — টানা ২০ মিনিট আটকে থাকলে থামুন। পরদিন সকালে প্রায়ই নিজে থেকেই খুলে যায়"
+        "<b>ভাগ করুন</b> · লাইনটা দুই বা তিন টুকরো করে আলাদা বসান, তারপর জোড়া দিন",
+        "<b>অর্থে যান</b> · আটকে যাওয়া প্রায় সবসময় অর্থ না জানার লক্ষণ; ওই অংশের অনুবাদ পড়ুন",
+        "<b>হাতে লিখুন</b> · একবার লিখলে ভিন্ন ইন্দ্রিয়পথ যুক্ত হয়",
+        "<b>আগের লাইন থেকে টানুন</b> · একা নয়, আগের লাইনের সাথে একসাথে ৫ বার",
+        "<b>ঘুমাতে যান</b>, টানা ২০ মিনিট আটকে থাকলে থামুন। পরদিন সকালে প্রায়ই নিজে থেকেই খুলে যায়"
       ]
     },
     mut: {
-      k: "সবচেয়ে বড় ফাঁদ", h: "মুতাশাবিহাত — একই রকম আয়াত",
-      p: "হিফজ ভাঙার এক নম্বর কারণ নতুন পৃষ্ঠা নয় — কাছাকাছি শব্দের দুটি আয়াত গুলিয়ে ফেলা। স্মৃতি-গবেষণায় একে বলে হস্তক্ষেপ, আর এর একমাত্র চিকিৎসা হলো পার্থক্যটা <b>ইচ্ছাকৃতভাবে</b> শেখা।",
+      k: "সবচেয়ে বড় ফাঁদ", h: "মুতাশাবিহাত · একই রকম আয়াত",
+      p: "হিফজ ভাঙার এক নম্বর কারণ নতুন পৃষ্ঠা নয়, কাছাকাছি শব্দের দুটি আয়াত গুলিয়ে ফেলা। স্মৃতি-গবেষণায় একে বলে হস্তক্ষেপ, আর এর একমাত্র চিকিৎসা হলো পার্থক্যটা <b>ইচ্ছাকৃতভাবে</b> শেখা।",
       steps: [
-        "<b>পাশাপাশি লিখুন</b> — দুটো আয়াত এক কাগজে, উপর-নিচে",
-        "<b>ঠিক এক শব্দ চিহ্নিত করুন</b> — যেখানে তারা আলাদা হয়ে যায়",
-        "<b>ঠিকানা বাঁধুন</b> — “এটা ডান পৃষ্ঠার নিচে, ওটা বাঁ পৃষ্ঠার উপরে”; স্থানিক স্মৃতিই এখানে বাঁচায়",
-        "<b>নোটে লিখে রাখুন</b> — আজকের নোট ঘরে; সপ্তাহে একবার পুরো তালিকা দেখে নিন"
+        "<b>পাশাপাশি লিখুন</b> · দুটো আয়াত এক কাগজে, উপর-নিচে",
+        "<b>ঠিক এক শব্দ চিহ্নিত করুন</b> · যেখানে তারা আলাদা হয়ে যায়",
+        "<b>ঠিকানা বাঁধুন</b> · “এটা ডান পৃষ্ঠার নিচে, ওটা বাঁ পৃষ্ঠার উপরে”; স্থানিক স্মৃতিই এখানে বাঁচায়",
+        "<b>নোটে লিখে রাখুন</b> · আজকের নোট ঘরে; সপ্তাহে একবার পুরো তালিকা দেখে নিন"
       ],
       nh: "ছোট নিয়ম",
-      np: "যে জোড়া একবার গুলিয়েছে, সেটা আবার গুলাবে। প্রথমবারেই নোটে তুলুন — ছয় মাস পর এই তালিকাটাই আপনার সবচেয়ে দামি কাগজ হবে।"
+      np: "যে জোড়া একবার গুলিয়েছে, সেটা আবার গুলাবে। প্রথমবারেই নোটে তুলুন, ছয় মাস পর এই তালিকাটাই আপনার সবচেয়ে দামি কাগজ হবে।"
     },
     real: {
       k: "বাস্তবতা", h: "ভ্রমণ, অসুস্থতা, ব্যস্ত সপ্তাহ",
-      p: "রুটিন ভাঙবেই। প্রশ্ন হলো ভাঙার দিনে কী করবেন — এবং উত্তরটা “কিছুই না” হলে হিফজ সেখানেই থেমে যায়।",
+      p: "রুটিন ভাঙবেই। প্রশ্ন হলো ভাঙার দিনে কী করবেন, এবং উত্তরটা “কিছুই না” হলে হিফজ সেখানেই থেমে যায়।",
       th: ["পরিস্থিতি","যা করবেন"],
       rows: [
-        ["সময় নেই","নতুন সবক বাদ। শুধু সাবকি — ২৫ মিনিট। ধারাবাহিকতা টিকে থাকবে।"],
+        ["সময় নেই","নতুন সবক বাদ। শুধু সাবকি, ২৫ মিনিট। ধারাবাহিকতা টিকে থাকবে।"],
         ["ভ্রমণে","নতুন সবক বাদ। শোনা + নামাজে পাঠ। এতেও দিন গোনা হবে।"],
         ["অসুস্থ","সম্পূর্ণ বিশ্রাম। জোর করলে ভুল উচ্চারণ বসে যায়, যা পরে ঠিক করা কঠিন।"],
-        ["এক সপ্তাহ বাদ পড়েছে","যেখানে ছিলেন সেখান থেকে নয় — <b>দুই সপ্তাহ পিছিয়ে</b> শুরু করুন, দুই দিন শুধু মুরাজাআ।"],
+        ["এক সপ্তাহ বাদ পড়েছে","যেখানে ছিলেন সেখান থেকে নয়, <b>দুই সপ্তাহ পিছিয়ে</b> শুরু করুন, দুই দিন শুধু মুরাজাআ।"],
         ["এক মাস বাদ পড়েছে","নতুন সবক দুই সপ্তাহ বন্ধ। পুরো মুখস্থ অংশ একবার ঘুরে আসুন, তারপর আবার শুরু।"]
       ]
     },
     month: {
-      k: "মাসিক", h: "প্রতি মাসে একদিন — পরীক্ষা",
-      p: "মাসের শেষ বিশ্রামের দিনে: গত মাসে যত পৃষ্ঠা মুখস্থ হয়েছে, সব একটানা বলুন — কারও সামনে, বা রেকর্ড করে। যেখানে আটকাবেন সেই পৃষ্ঠাগুলো <b>দুর্বল</b> হিসেবে চিহ্নিত করুন। অ্যাপ সেগুলো প্রতিদিন সাবকিতে ফিরিয়ে আনবে।",
+      k: "মাসিক", h: "প্রতি মাসে একদিন · পরীক্ষা",
+      p: "মাসের শেষ বিশ্রামের দিনে: গত মাসে যত পৃষ্ঠা মুখস্থ হয়েছে, সব একটানা বলুন, কারও সামনে, বা রেকর্ড করে। যেখানে আটকাবেন সেই পৃষ্ঠাগুলো <b>দুর্বল</b> হিসেবে চিহ্নিত করুন। অ্যাপ সেগুলো প্রতিদিন সাবকিতে ফিরিয়ে আনবে।",
       gh: "এগোনোর গেট",
-      g1: "গতকালের পৃষ্ঠা মুসহাফ ছাড়া, ভুল ছাড়া বলতে না পারলে — আজ নতুন কিছু নয়।",
-      g2: "পরপর দুই দিন আটকে গেলে অর্ধেক পৃষ্ঠায় নেমে আসুন, দুই সপ্তাহ পর আবার চেষ্টা করুন। এই শর্ত না মানলে চার মাস পর হাতে থাকবে ১০০ পৃষ্ঠা “মোটামুটি মনে আছে” — যেটা হিসাবে শূন্য।"
+      g1: "গতকালের পৃষ্ঠা মুসহাফ ছাড়া, ভুল ছাড়া বলতে না পারলে, আজ নতুন কিছু নয়।",
+      g2: "পরপর দুই দিন আটকে গেলে অর্ধেক পৃষ্ঠায় নেমে আসুন, দুই সপ্তাহ পর আবার চেষ্টা করুন। এই শর্ত না মানলে চার মাস পর হাতে থাকবে ১০০ পৃষ্ঠা “মোটামুটি মনে আছে”, যেটা হিসাবে শূন্য।"
     },
     basis: {
       k: "ভিত্তি", h: "প্রতিটা ধাপ কোথা থেকে এসেছে",
       th: ["গবেষণা","যা বলে","রুটিনে যেখানে"],
       rows: [
-        ["Craik &amp; Lockhart ১৯৭২<br>Craik &amp; Tulving ১৯৭৫","অর্থ বুঝে শেখা স্মৃতিতে গভীরে বসে; নিছক আওয়াজ অগভীর স্তরে থাকে","ড্রিলের ধাপ ৩ — শব্দে-শব্দে অনুবাদ"],
+        ["Craik &amp; Lockhart ১৯৭২<br>Craik &amp; Tulving ১৯৭৫","অর্থ বুঝে শেখা স্মৃতিতে গভীরে বসে; নিছক আওয়াজ অগভীর স্তরে থাকে","ড্রিলের ধাপ ৩ · শব্দে-শব্দে অনুবাদ"],
         ["Karpicke &amp; Roediger ২০০৮<br>Roediger &amp; Butler ২০১১","স্মৃতি থেকে বের করে আনা, বারবার পড়ার চেয়ে বহুগুণ শক্তিশালী","ঢেকে বলা · সাবকি বন্ধ-মুসহাফে আগে · নামাজে পাঠ"],
         ["Ebbinghaus ১৮৮৫<br>Cepeda ২০০৬","রিভিশন না হলে ২৪ ঘণ্টায় বড় অংশ হারায়; ক্রমবর্ধমান ব্যবধানে তা প্রায় স্থায়ী হয়","সাবকি ৭ দিন · মানজিল ঘূর্ণন · দিনে ছয় স্পর্শ"],
         ["Miller ১৯৫৬<br>Gobet ২০০১","ওয়ার্কিং মেমরি একসাথে অল্প কয়েকটি একক ধরে","পৃষ্ঠা ভাঙা ৫ লাইনের ব্লকে"],
         ["Maguire ২০০০, ২০০৩<br>Dresler ২০১৭","মস্তিষ্ক স্থান ও অবস্থান অসাধারণভাবে মনে রাখে","আজীবন একই মুসহাফ · মুতাশাবিহাতে ঠিকানা বাঁধা"],
         ["Paivio ১৯৮৬<br>Shams &amp; Seitz ২০০৮","একাধিক ইন্দ্রিয়পথে ঢুকলে স্মৃতি বেশি টেকে","শোনা + দেখা + বলা + আটকালে লেখা"],
         ["Mayer &amp; Moreno ২০০৩<br>Baddeley ২০০০","বিঘ্ন ওয়ার্কিং মেমরির জায়গা খেয়ে ফেলে","ফোন অন্য ঘরে · ৫০ মিনিটের সীমা"],
-        ["Draganski ২০০৪<br>Park &amp; Bischof ২০১৩","প্রশিক্ষণে প্রাপ্তবয়স্ক মস্তিষ্কেও গঠনগত পরিবর্তন হয়","৩২ বছর দেরি নয় — কৌশলটাই সুবিধা"]
+        ["Draganski ২০০৪<br>Park &amp; Bischof ২০১৩","প্রশিক্ষণে প্রাপ্তবয়স্ক মস্তিষ্কেও গঠনগত পরিবর্তন হয়","৩২ বছর দেরি নয় · কৌশলটাই সুবিধা"]
       ]
     },
     fixed: {
       k: "অটল", h: "তিনটি শর্ত, যেগুলোয় ছাড় নেই",
       items: [
         ["তাজবীদ আগে","ভুল উচ্চারণে মুখস্থ হয়ে গেলে সেটা ঠিক করা নতুন করে মুখস্থের চেয়েও কঠিন। সপ্তাহে অন্তত একদিন শিক্ষকের কাছে শোনান।"],
-        ["ঘুম সাত ঘণ্টা","স্মৃতির একত্রীকরণ মূলত ঘুমেই হয়। ঘুম কেটে মুখস্থের সময় বাড়ানো নিট লোকসান — যতটা যোগ হয়, তার বেশি হারায়।"],
+        ["ঘুম সাত ঘণ্টা","স্মৃতির একত্রীকরণ মূলত ঘুমেই হয়। ঘুম কেটে মুখস্থের সময় বাড়ানো নিট লোকসান, যতটা যোগ হয়, তার বেশি হারায়।"],
         ["একই মুসহাফ, একই ক্বারী","মুসহাফ পাল্টালে স্থানিক স্মৃতির স্তরটা মুছে যায়, ক্বারী পাল্টালে সুরের সংকেত। একবার বেছে নিন, তারপর আর ছোঁবেন না।"]
       ]
     }
@@ -596,7 +677,7 @@ window.HIFZ_LANG_bn = {
 
   pg: {
     k: "অগ্রগতি", h: "আপনি কোথায় দাঁড়িয়ে",
-    report: "সাপ্তাহিক রিপোর্ট — উস্তাদের জন্য",
+    report: "সাপ্তাহিক রিপোর্ট · উস্তাদের জন্য",
     stats: ["পৃষ্ঠা মুখস্থ","পূর্ণ পারা","সম্পন্ন","দিন ধারাবাহিক","মোট ঘণ্টা","গড় ভুল / দিন"],
     map: "মুসহাফ মানচিত্র · ৬০৪ পৃষ্ঠা",
     legend: ["মুখস্থ","আজকের","দুর্বল","বাকি"],
@@ -616,23 +697,26 @@ window.HIFZ_LANG_bn = {
 
   set: {
     k: "সেটিংস", h: "আপনার হিসাব",
-    p: "সব ডেটা এই ডিভাইসেই থাকে — কোনো সার্ভারে যায় না। ব্রাউজার পরিষ্কার করলে মুছে যাবে, তাই নিচের ড্রাইভ সিঙ্ক চালু করুন অথবা মাসে একবার ব্যাকআপ নামিয়ে রাখুন।",
+    p: "সব ডেটা এই ডিভাইসেই থাকে, কোনো সার্ভারে যায় না। ব্রাউজার পরিষ্কার করলে মুছে যাবে, তাই নিচের ড্রাইভ সিঙ্ক চালু করুন অথবা মাসে একবার ব্যাকআপ নামিয়ে রাখুন।",
     lang: "ভাষা",
-    langHint: "পুরো অ্যাপ বদলে যাবে — রুটিন ট্যাবসহ।",
+    langHint: "পুরো অ্যাপ বদলে যাবে, রুটিন ট্যাবসহ।",
     date: "শুরুর তারিখ",
     page: "প্রথম পৃষ্ঠা",
     rest: "বিশ্রামের দিন",
     lines: "দৈনিক লক্ষ্য (লাইন)",
-    linesAuto: "স্বয়ংক্রিয় — র‍্যাম্প অনুযায়ী",
+    linesAuto: "স্বয়ংক্রিয় · র‍্যাম্প অনুযায়ী",
     linesN: "{0} লাইন",
     linesHint: "গেটে টানা দুই দিন আটকালে এখানে নেমে আসুন। এটা পিছিয়ে যাওয়া নয়।",
     qari: "আপনার ক্বারী",
     qariPh: "একজন, আজীবন",
     mushaf: "আপনার মুসহাফ",
+    mushafHint: "পৃষ্ঠা সংখ্যা ও প্রতি পৃষ্ঠার লাইন এই ছাপা অনুযায়ী হিসাব হবে। বদলালে পুরো মানচিত্রও বদলাবে।",
+    mushafEd: "সংস্করণ বা প্রকাশক",
+    mushafEdPh: "আপনার হাতের কপিটাই · একটাই, আজীবন",
     weakLabel: "দুর্বল পৃষ্ঠা",
     weakHint: "টানা সাত দিন নির্ভুল হলে ট্যাপ করে সরিয়ে দিন।",
     driveLabel: "Google Drive সিঙ্ক",
-    driveHint: "যুক্ত থাকলে প্রতিটি পরিবর্তন কয়েক সেকেন্ডের মধ্যে আপনার ড্রাইভে চলে যায়। নতুন ফোনে একই Google অ্যাকাউন্টে যুক্ত হলেই সব ফিরে আসবে। অ্যাপ শুধু নিজের বানানো ওই একটা ফাইলই দেখতে পায় — ড্রাইভের বাকি কিছুই নয়।",
+    driveHint: "যুক্ত থাকলে প্রতিটি পরিবর্তন কয়েক সেকেন্ডের মধ্যে আপনার ড্রাইভে চলে যায়। নতুন ফোনে একই Google অ্যাকাউন্টে যুক্ত হলেই সব ফিরে আসবে। অ্যাপ শুধু নিজের বানানো ওই একটা ফাইলই দেখতে পায়, ড্রাইভের বাকি কিছুই নয়।",
     driveNoConfig: "config.js ফাইলে Client ID বসালে এই অংশটা চালু হবে।",
     backupLabel: "ফাইল ব্যাকআপ",
     exp: "ডেটা নামান (JSON)",
@@ -648,7 +732,7 @@ window.HIFZ_LANG_bn = {
   sync: {
     off: "সিঙ্ক বন্ধ", connecting: "যুক্ত হচ্ছে", ok: "সিঙ্ক হয়েছে", failed: "সিঙ্ক ব্যর্থ",
     pushing: "পাঠাচ্ছে", pulling: "নামাচ্ছে", reconciling: "মিলিয়ে নিচ্ছে", cancelled: "সংযোগ বাতিল",
-    noConfig: "Google Client ID বসানো হয়নি — <b>config.js</b> ফাইলে বসালে সিঙ্ক চালু হবে।",
+    noConfig: "Google Client ID বসানো হয়নি, <b>config.js</b> ফাইলে বসালে সিঙ্ক চালু হবে।",
     notLinked: "এখনো যুক্ত নয়। যুক্ত করলে ডেটা নিজে থেকেই আপনার ড্রাইভে জমা হবে।",
     linked: "যুক্ত: <b>{0}</b>",
     last: " · শেষ সিঙ্ক {0}",
@@ -658,7 +742,7 @@ window.HIFZ_LANG_bn = {
     pull: "ড্রাইভ থেকে নামান",
     unlink: "সংযোগ ছাড়ুন",
     confirmOff: "সংযোগ ছাড়লে নতুন পরিবর্তন আর ড্রাইভে যাবে না। ড্রাইভের পুরোনো ফাইলটা থেকে যাবে।",
-    notReady: "Google লাইব্রেরি এখনো লোড হয়নি — কয়েক সেকেন্ড পর আবার চেষ্টা করুন।",
+    notReady: "Google লাইব্রেরি এখনো লোড হয়নি, কয়েক সেকেন্ড পর আবার চেষ্টা করুন।",
     pushFail: "ড্রাইভে পাঠানো যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।",
     pullFail: "ড্রাইভে কোনো ব্যাকআপ পাওয়া গেল না।",
     pulled: "ড্রাইভ থেকে ডেটা ফেরানো হয়েছে।"
@@ -672,10 +756,10 @@ window.HIFZ_LANG_bn = {
     pass: "পাশ", fail: "ফেল", rest: "বিশ্রাম",
     gateH: "গেটের ফল",
     gateLine: "পাশ <span class=\"ok\">{0}</span> দিন · ফেল <span class=\"no\">{1}</span> দিন · সবক সম্পন্ন {2} দিন। ",
-    verdictGood: "গতি ঠিক আছে — লক্ষ্য বাড়ানোর কথা ভাবা যায়।",
+    verdictGood: "গতি ঠিক আছে, লক্ষ্য বাড়ানোর কথা ভাবা যায়।",
     verdictBad: "লক্ষ্য বেশি হয়ে যাচ্ছে। দৈনিক লাইন কমিয়ে দুই সপ্তাহ চালানো উচিত।",
     verdictOk: "গতি মোটামুটি ঠিক। আরেক সপ্তাহ একই লক্ষ্যে থাকুন।",
-    weakH: "দুর্বল পৃষ্ঠা — বিশেষভাবে শুনুন",
+    weakH: "দুর্বল পৃষ্ঠা · বিশেষভাবে শুনুন",
     notesH: "ছাত্রের নোট",
     comment: "উস্তাদের মন্তব্য",
     signature: "স্বাক্ষর ও তারিখ",
@@ -713,24 +797,61 @@ window.HIFZ_LANG_ur = {
     title: "حفظ · روزانہ ساتھی",
     desc: "بڑی عمر میں حفظ کرنے والوں کے لیے تحقیق پر مبنی ٹریکر",
     streak: "دن مسلسل",
-    footer1: "حفظ · روزانہ ساتھی — <b>بڑی عمر والوں کے لیے</b>",
+    footer1: "حفظ · روزانہ ساتھی · <b>بڑی عمر والوں کے لیے</b>",
     footer2: "یادداشت کی تحقیق پر مبنی · آپ کا ڈیٹا آپ ہی کے آلے میں رہتا ہے"
   },
 
-  nav: { today:"آج", routine:"طریقہ", progress:"پیش رفت", settings:"ترتیبات" },
+  ex: { open:"خود کو آزمائیں", title:"یادداشت سے نکالنے کا امتحان", sub:"دہرانے سے بہتر ہے یاد سے نکالنا · Karpicke و Roediger (۲۰۰۸)۔",
+        order:"ترتیب سے لگائیں", cloze:"خالی جگہ پُر کریں", next:"آگے کیا ہے",
+        orderHint:"ٹکڑوں کو درست ترتیب میں ٹیپ کریں۔", clozeHint:"غائب لفظ منتخب کریں۔",
+        nextHint:"آیت جس سے آگے بڑھتی ہے، وہ منتخب کریں۔",
+        q:"{0} / {1}", right:"درست", wrong:"یہ نہیں", done:"امتحان مکمل",
+        score:"درست {0}، غلط {1}", again:"دوبارہ", close:"بند کریں", weakAdd:"صفحہ کمزور نشان زد",
+        need:"پہلے کوئی صفحہ کھول کر حصہ منتخب کریں۔" },
+  rec: { start:"اپنی تلاوت ریکارڈ کریں", stop:"ریکارڈنگ بند کریں", mine:"آپ کی تلاوت", qari:"قاری کی تلاوت",
+         compare:"پہلے قاری، پھر آپ", none:"ابھی کچھ ریکارڈ نہیں ہوا", denied:"مائیکروفون کی اجازت درکار ہے۔",
+         saved:"آج کے صفحے کے ساتھ محفوظ", dl:"فائل محفوظ کریں",
+         phrase:"ٹکڑے کی تکرار", phraseHint:"جس ٹکڑے پر اٹکتے ہیں اس کے پہلے اور آخری لفظ پر ٹیپ کریں · وہ آہستہ آہستہ خود دہراتا رہے گا۔" },
+  ins: { h:"ایپ کے طور پر انسٹال کریں", btn:"اس آلے پر انسٹال کریں", done:"پہلے سے انسٹال ہے",
+         ios:"آئی فون پر: Safari · Share (⬆) · Add to Home Screen۔ آئی فون کے Chrome میں نہیں ہوگا۔",
+         hint:"پھر یہ ہوم اسکرین سے کھلے گا، ایڈریس بار کے بغیر، اور آف لائن بھی چلے گا۔" },
+  nt: { h:"یاد دہانی", allow:"اطلاعات آن کریں", allowed:"اطلاعات آن ہیں", denied:"براؤزر نے اطلاعات روک رکھی ہیں۔ سائٹ کی ترتیبات سے اجازت دیں۔",
+        daily:"روزانہ یاد دہانی", dailyOff:"بند", dailyHint:"اس وقت اگر آج کا سبق باقی ہو تو یاد دلائے گا۔",
+        zikr:"ذکر کی یاد دہانی", zikrOff:"بند", zikrN:"ہر {0} منٹ بعد", zikrHint:"ایک کے بعد ایک مختصر ذکر۔ رات ۱۰ سے صبح ۵ بجے تک خاموش۔",
+        dailyTitle:"آج کا سبق باقی ہے", dailyBody:"صفحہ {0} · سطریں {1}–{2}۔ کھول کر پڑھ لیں۔",
+        note:"ایپ کھلی ہو یا پس منظر میں چل رہی ہو تو یاد دہانی کام کرتی ہے۔ ہوم اسکرین پر رکھیں تو بہتر۔" },
+  rev: { ask:"صفحہ {0} · کیسا رہا؟", good:"بے عیب", ok:"کچھ اٹکا", bad:"بھول گیا",
+         due:"آج واپس آنے والے", dueNone:"آج پرانا کچھ واجب نہیں", strength:"مضبوطی",
+         note:"جو صفحہ بے عیب سنائیں گے وہ اگلی بار اور دیر سے آئے گا؛ اٹکا تو کل ہی آ جائے گا۔" },
+  mut: { h:"ملتی جلتی آیات", find:"مشابہت دیکھیں", busy:"موازنہ ہو رہا ہے…",
+         none:"اس صفحے کی آپ کے یاد کیے ہوئے سے کوئی مشابہت نہیں ملی۔",
+         at:"صفحہ {0} · آیت {1}", hint:"لکیر والے الفاظ کہیں اور بھی آتے ہیں۔ دونوں کو ایک ساتھ پڑھ کر فرق ذہن نشین کریں۔",
+         only:"صرف وہی صفحے موازنہ ہوتے ہیں جو پہلے سے آلے میں محفوظ ہیں۔" },
+  nav: { today:"آج", mushaf:"مصحف", routine:"طریقہ", progress:"پیش رفت", settings:"ترتیبات" },
+  rd: { title:"صفحہ", pageLbl:"صفحہ", prev:"پچھلا", next:"اگلا", hide:"سطریں ڈھانپیں", show:"کھولیں",
+        loop:"تکرار", speed:"رفتار", meaning:"لفظی معنی", dl:"یہ پارہ ڈاؤن لوڈ کریں", dling:"ڈاؤن لوڈ {0}%",
+        dlDone:"یہ پارہ آپ کے آلے میں محفوظ ہے", tap:"کسی بھی لفظ پر ٹیپ کریں، آیت چلے گی اور نیچے معنی آئے گا۔",
+        todayHi:"آج کی سطریں روشن، باقی صفحہ مدھم۔",
+        loading:"صفحہ آ رہا ہے…", err:"صفحہ نہیں آ سکا۔ کنکشن دیکھ کر دوبارہ کوشش کریں۔",
+        notMadani:"صفحہ منظر مدنی چھپائی کے مطابق ہے (۶۰۴ صفحے، ۱۵ سطریں)۔ ترتیبات سے مصحف بدلیں۔",
+        reciter:"تلاوت", playAll:"منتخب حصہ چلائیں", juz:"پارہ {0}", openPage:"مصحف میں یہ صفحہ کھولیں",
+        tr:"ترجمہ", trBy:"فتح محمد جالندھری", trOff:"ترجمہ چھپائیں", pause:"وقفہ", resume:"دوبارہ چلائیں", stop:"بند کریں",
+        ay:"آیت", auto:"خودکار", cover:"ڈھانپیں", pick:"صفحے سے منتخب کریں",
+        pickA:"جہاں سے شروع، اس لفظ پر ٹیپ کریں", pickB:"اب جہاں ختم، اس لفظ پر ٹیپ کریں", setDay:"آج کا سبق بنائیں", setDone:"آج کا سبق مقرر ہو گیا",
+        selNote:"بلاک آپ کے روزانہ ہدف ({0} سطریں) سے شروع ہو کر پوری آیت پر ختم ہوتا ہے، چاہیں تو بدل لیں۔" },
 
   ob: {
     kicker: "آغاز کریں",
     h1a: "روزانہ ایک صفحہ۔",
     h1b: "باقی سب ایپ یاد رکھے گی۔",
-    lede: "تین باتیں بتا دیں — پھر ہر صبح ایپ خود بتائے گی کہ آج کون سا صفحہ نیا ہے، کون سے سات صفحے سبقی ہیں، اور کون سا پارہ منزل۔",
+    lede: "تین باتیں بتا دیں، پھر ہر صبح ایپ خود بتائے گی کہ آج کون سا صفحہ نیا ہے، کون سے سات صفحے سبقی ہیں، اور کون سا پارہ منزل۔",
     lang: "زبان",
     date: "آغاز کی تاریخ",
     dateHint: "آج کی تاریخ دیں۔ چھ ہفتوں کا مرحلہ یہیں سے شمار ہوگا۔",
     page: "پہلا صفحہ جو شروع کریں گے",
     pageHint: "مدنی مصحف کا صفحہ نمبر (۱–۶۰۴)۔ آخر سے شروع کر رہے ہیں تو ۵۸۲ (سورۃ النبأ)۔",
     rest: "ہفتہ وار آرام کا دن",
-    restHint: "اس دن نیا سبق نہیں — صرف پورے ہفتے کا مراجعہ ایک نشست میں۔",
+    restHint: "اس دن نیا سبق نہیں، صرف پورے ہفتے کا مراجعہ ایک نشست میں۔",
     go: "شروع کریں"
   },
 
@@ -740,36 +861,37 @@ window.HIFZ_LANG_ur = {
     target: "ہدف {0} سطریں",
     noNew: "آج نیا سبق نہیں",
     page: "صفحہ {0}",
+    lineRange: "سطر {0}–{1}",
     restNote: "ہفتے کے چھ صفحے ایک ہی نشست میں، بغیر رکے۔",
     manual: "آپ کا اپنا مقرر کردہ ہدف۔",
     notes: [
       "صرف معمول بٹھانے کا وقت۔ رفتار کی فکر ابھی نہ کریں۔",
       "یہیں پہلی بار سبقی کا بوجھ محسوس ہوگا۔",
-      "دو بلاک اور آدھا — جوڑنے کی مشق۔",
+      "دو بلاک اور آدھا، جوڑنے کی مشق۔",
       "پورا صفحہ۔ اصل حساب یہیں سے شروع ہوتا ہے۔"
     ]
   },
 
   gate: {
-    q: "کل کا سبق — صفحہ {0} — کیا آپ مصحف کے بغیر، بغیر کسی غلطی کے سنا سکے؟",
+    q: "کل کا سبق، صفحہ {0}، کیا آپ مصحف کے بغیر، بغیر کسی غلطی کے سنا سکے؟",
     yes: "ہاں، سنا سکا",
     no: "نہیں سنا سکا",
-    fail: "<b>آج نیا سبق نہیں۔</b> کل والا صفحہ دوبارہ — وہی مشق، شروع سے۔",
-    failStreak: " یہ مسلسل {0} دن ہو گئے۔ دو ہفتوں کے لیے آدھے صفحے پر آ جائیں — ترتیبات میں ہدف بدل سکتے ہیں۔",
+    fail: "<b>آج نیا سبق نہیں۔</b> کل والا صفحہ دوبارہ، وہی مشق، شروع سے۔",
+    failStreak: " یہ مسلسل {0} دن ہو گئے۔ دو ہفتوں کے لیے آدھے صفحے پر آ جائیں، ترتیبات میں ہدف بدل سکتے ہیں۔",
     pass: "دروازہ کھل گیا۔ آج کا صفحہ حاضر ہے۔"
   },
 
   blk: {
     sabaq: "نیا سبق",
-    sabaqRepeat: "اعادہ — کل والا صفحہ",
+    sabaqRepeat: "اعادہ · کل والا صفحہ",
     sabaqMeta: "صفحہ {0} · {1} سطریں · ۵۰ منٹ",
     listen: "غیر ارادی سماعت",
     listenMeta: "سارا دن · اضافی وقت نہیں لگتا",
-    sabaqi: "سبقی — گزشتہ سات دن",
+    sabaqi: "سبقی · گزشتہ سات دن",
     sabaqiMeta: "ظہر کے بعد · ۲۵ منٹ",
     salah: "نماز میں تلاوت",
     salahMeta: "پانچ نمازیں · اضافی وقت نہیں لگتا",
-    manzil: "منزل — پرانا سب کچھ",
+    manzil: "منزل · پرانا سب کچھ",
     manzilMeta: "مغرب–عشاء · ۳۵ منٹ · پارہ {0}",
     manzilWait: "مغرب–عشاء · انتظار میں",
     night: "آخری دور",
@@ -779,40 +901,40 @@ window.HIFZ_LANG_ur = {
 
   sabaq: {
     pageLabel: "آج کا صفحہ نمبر",
-    pageHint: "ایپ خود اگلا صفحہ فرض کر لیتی ہے۔ آپ کی ترتیب مختلف ہو — مثلاً سورۃ النبأ سے آغاز — تو یہاں بدل دیں۔",
+    pageHint: "ایپ خود اگلا صفحہ فرض کر لیتی ہے۔ آپ کی ترتیب مختلف ہو، مثلاً سورۃ النبأ سے آغاز، تو یہاں بدل دیں۔",
     blocked: "<b>آج کچھ نیا نہیں۔</b> وہی صفحہ، وہی مشق، بالکل شروع سے۔",
     intro: "ہر بلاک میں یہی پانچ مرحلے۔ بلاک مکمل ہو جائے تو اوپر ٹیپ کر کے نشان لگا دیں۔",
     after: "<b>{0} بلاک کے بعد:</b> پورا حصہ مصحف بند کر کے ۳ بار، بغیر رکے۔",
     drill: [
-      "<b>۵ بار سنیں</b> — نگاہ انہی پانچ سطروں پر، ہونٹ ساکن",
-      "<b>دیکھ کر ۷ بار پڑھیں</b> — بلند آواز سے، بغیر جلدی کے",
-      "<b>ایک بار معنی</b> — لفظ بہ لفظ، کس لفظ کا کیا مطلب",
-      "<b>ڈھانپ کر ۳ بار سنائیں</b> — بے عیب نہ ہو تو گنتی شروع ہی نہیں ہوگی",
-      "<b>۲ بار جوڑیں</b> — پچھلے بلاک کی آخری سطر سے کھینچ کر"
+      "<b>۵ بار سنیں</b> · نگاہ انہی پانچ سطروں پر، ہونٹ ساکن",
+      "<b>دیکھ کر ۷ بار پڑھیں</b> · بلند آواز سے، بغیر جلدی کے",
+      "<b>ایک بار معنی</b> · لفظ بہ لفظ، کس لفظ کا کیا مطلب",
+      "<b>ڈھانپ کر ۳ بار سنائیں</b> · بے عیب نہ ہو تو گنتی شروع ہی نہیں ہوگی",
+      "<b>۲ بار جوڑیں</b> · پچھلے بلاک کی آخری سطر سے کھینچ کر"
     ]
   },
 
   listen: {
-    body: "آج کا صفحہ اسی ایک قاری کی آواز میں چلتا رہے — گاڑی میں، باورچی خانے میں، چلتے پھرتے۔ توجہ نہ بھی دیں تو چلے گا؛ کان خود کام کر لے گا۔",
+    body: "آج کا صفحہ اسی ایک قاری کی آواز میں چلتا رہے، گاڑی میں، باورچی خانے میں، چلتے پھرتے۔ توجہ نہ بھی دیں تو چلے گا؛ کان خود کام کر لے گا۔",
     qari: " آپ کے قاری: <b>{0}</b>۔"
   },
 
   sabaqi: {
-    empty: "ابھی سبقی نہیں ہے — پہلا سبق مکمل ہوتے ہی کل سے یہاں آنا شروع ہو جائے گا۔",
-    weakLabel: "<b>کمزور صفحات</b> — ان پر ایک اضافی دور دیں:",
+    empty: "ابھی سبقی نہیں ہے، پہلا سبق مکمل ہوتے ہی کل سے یہاں آنا شروع ہو جائے گا۔",
+    weakLabel: "<b>کمزور صفحات</b> · ان پر ایک اضافی دور دیں:",
     order: "<b>ترتیب ہی اصل ہے:</b> پہلے مصحف بند کر کے سنائیں، پھر کھول کر ملائیں۔ الٹا کریں گے تو اس بلاک کا سارا فائدہ ضائع ہو جاتا ہے۔",
     ago: "{0} دن پہلے",
     page: "ص {0}"
   },
 
   salah: {
-    body: "آج کے سبق اور اس ہفتے کے حصے سے پڑھیں۔ کھڑے ہو کر، مصحف کے بغیر، دباؤ میں یادداشت سے نکالنا — یہی استرجاع کی سب سے خالص شکل ہے۔",
+    body: "آج کے سبق اور اس ہفتے کے حصے سے پڑھیں۔ کھڑے ہو کر، مصحف کے بغیر، دباؤ میں یادداشت سے نکالنا، یہی استرجاع کی سب سے خالص شکل ہے۔",
     counted: "نمازوں میں پڑھا"
   },
 
   manzil: {
-    week: "<b>اس ہفتے کا پارہ: {0}</b> — صفحہ {1}–{2}۔ اس میں سے جتنا یاد ہے، بس اتنا۔",
-    rot: "یہ گردش خودکار ہے۔ جتنے پارے جمع ہوں گے، ہر پارہ اتنے ہی زیادہ ہفتوں بعد لوٹے گا — Ebbinghaus کا منحنی خط بالکل اسی وقفے پر ٹوٹتا ہے۔",
+    week: "<b>اس ہفتے کا پارہ: {0}</b>، صفحہ {1}–{2}۔ اس میں سے جتنا یاد ہے، بس اتنا۔",
+    rot: "یہ گردش خودکار ہے۔ جتنے پارے جمع ہوں گے، ہر پارہ اتنے ہی زیادہ ہفتوں بعد لوٹے گا، Ebbinghaus کا منحنی خط بالکل اسی وقفے پر ٹوٹتا ہے۔",
     empty: "منزل ابھی شروع نہیں ہوئی۔ تقریباً ۸ صفحے جمع ہوتے ہی یہ گردش خود بخود چل پڑے گی۔"
   },
 
@@ -824,7 +946,7 @@ window.HIFZ_LANG_ur = {
 
   log: {
     err: "آج کل غلطیاں ہوئیں",
-    errHint: "یہ عدد گھٹ رہا ہے یا نہیں — اصل پیش رفت کی کسوٹی یہی ہے، صفحات کی تعداد نہیں۔",
+    errHint: "یہ عدد گھٹ رہا ہے یا نہیں، اصل پیش رفت کی کسوٹی یہی ہے، صفحات کی تعداد نہیں۔",
     min: "فعال وقت (منٹ)",
     note: "کمزور مقامات / نوٹ",
     notePh: "کس آیت پر بار بار اٹکتے ہیں؟ متشابہات کہاں گڈمڈ ہوئیں؟",
@@ -844,84 +966,84 @@ window.HIFZ_LANG_ur = {
   rt: {
     ramp: {
       k: "آغاز", h: "چھ ہفتوں کا مرحلہ",
-      p: "نیا یاد کرنا آسان ہے، سنبھالے رکھنا مشکل۔ ان ڈیڑھ مہینوں میں رفتار نہیں، عادت بنتی ہے — اس سے پہلے کہ مراجعے کا بوجھ بھاری ہو جائے۔",
+      p: "نیا یاد کرنا آسان ہے، سنبھالے رکھنا مشکل۔ ان ڈیڑھ مہینوں میں رفتار نہیں، عادت بنتی ہے، اس سے پہلے کہ مراجعے کا بوجھ بھاری ہو جائے۔",
       lines: "سطریں",
       labels: ["ہفتہ ۱–۲","ہفتہ ۳–۴","ہفتہ ۵–۶","ہفتہ ۷ →"]
     },
     day: {
       k: "ہر روز", h: "دن کے چھ لمحے",
-      p: "مسلسل تین گھنٹے بیٹھنا نہیں — دن بھر بکھری ہوئی چھوٹی نشستیں۔ Cepeda کی منتشر مشق پر تحقیق بتاتی ہے کہ وہی وقت تقسیم کر دیں تو یادداشت کئی گنا بہتر ہوتی ہے۔",
+      p: "مسلسل تین گھنٹے بیٹھنا نہیں، دن بھر بکھری ہوئی چھوٹی نشستیں۔ Cepeda کی منتشر مشق پر تحقیق بتاتی ہے کہ وہی وقت تقسیم کر دیں تو یادداشت کئی گنا بہتر ہوتی ہے۔",
       th: ["کب","کیا","وقت"],
       rows: [
-        ["فجر + ۱۵ منٹ","نیا سبق — تین بلاک، پھر پورا صفحہ ۳ بار","۵۰ منٹ"],
-        ["دن بھر","غیر ارادی سماعت — وہی ایک قاری","۰"],
-        ["ظہر کے بعد","سبقی — گزشتہ ۷ دن، پہلے مصحف بند","۲۵ منٹ"],
+        ["فجر + ۱۵ منٹ","نیا سبق · تین بلاک، پھر پورا صفحہ ۳ بار","۵۰ منٹ"],
+        ["دن بھر","غیر ارادی سماعت · وہی ایک قاری","۰"],
+        ["ظہر کے بعد","سبقی · گزشتہ ۷ دن، پہلے مصحف بند","۲۵ منٹ"],
         ["پانچ نمازیں","نماز میں سبق سے تلاوت","۰"],
-        ["مغرب–عشاء","منزل — ہفتے میں ایک پارہ، گردش میں","۳۵ منٹ"],
+        ["مغرب–عشاء","منزل · ہفتے میں ایک پارہ، گردش میں","۳۵ منٹ"],
         ["سونے سے پہلے","آج کا صفحہ آخری بار","۱۰ منٹ"]
       ]
     },
     stuck: {
       k: "اٹک جائیں تو", h: "ضدی سطر کا طریقہ",
-      p: "ایک ہی سطر پر بار بار اٹکیں تو دس بار اور پڑھنے سے کام نہیں چلتا — طریقہ بدلنا پڑتا ہے۔ ترتیب سے آزمائیں، جس پر کھل جائے وہیں رک جائیں۔",
+      p: "ایک ہی سطر پر بار بار اٹکیں تو دس بار اور پڑھنے سے کام نہیں چلتا، طریقہ بدلنا پڑتا ہے۔ ترتیب سے آزمائیں، جس پر کھل جائے وہیں رک جائیں۔",
       steps: [
-        "<b>تقسیم کریں</b> — سطر کو دو یا تین ٹکڑوں میں الگ الگ بٹھائیں، پھر جوڑیں",
-        "<b>معنی کی طرف جائیں</b> — اٹکنا تقریباً ہمیشہ معنی نہ جاننے کی علامت ہے؛ اس حصے کا ترجمہ پڑھیں",
-        "<b>ہاتھ سے لکھیں</b> — ایک بار لکھنے سے ایک الگ حسی راستہ شامل ہو جاتا ہے",
-        "<b>پچھلی سطر سے کھینچیں</b> — اکیلے نہیں، پچھلی سطر کے ساتھ ملا کر ۵ بار",
-        "<b>سو جائیں</b> — مسلسل ۲۰ منٹ اٹکے رہیں تو رک جائیں۔ اگلی صبح اکثر خود بخود کھل جاتی ہے"
+        "<b>تقسیم کریں</b> · سطر کو دو یا تین ٹکڑوں میں الگ الگ بٹھائیں، پھر جوڑیں",
+        "<b>معنی کی طرف جائیں</b> · اٹکنا تقریباً ہمیشہ معنی نہ جاننے کی علامت ہے؛ اس حصے کا ترجمہ پڑھیں",
+        "<b>ہاتھ سے لکھیں</b> · ایک بار لکھنے سے ایک الگ حسی راستہ شامل ہو جاتا ہے",
+        "<b>پچھلی سطر سے کھینچیں</b> · اکیلے نہیں، پچھلی سطر کے ساتھ ملا کر ۵ بار",
+        "<b>سو جائیں</b>، مسلسل ۲۰ منٹ اٹکے رہیں تو رک جائیں۔ اگلی صبح اکثر خود بخود کھل جاتی ہے"
       ]
     },
     mut: {
-      k: "سب سے بڑا پھندا", h: "متشابہات — ملتی جلتی آیات",
-      p: "حفظ ٹوٹنے کی پہلی وجہ نئے صفحات نہیں — قریب قریب ایک جیسے الفاظ والی دو آیات کا گڈمڈ ہو جانا ہے۔ یادداشت کی تحقیق میں اسے مداخلت کہتے ہیں، اور اس کا واحد علاج فرق کو <b>ارادی طور پر</b> سیکھنا ہے۔",
+      k: "سب سے بڑا پھندا", h: "متشابہات · ملتی جلتی آیات",
+      p: "حفظ ٹوٹنے کی پہلی وجہ نئے صفحات نہیں، قریب قریب ایک جیسے الفاظ والی دو آیات کا گڈمڈ ہو جانا ہے۔ یادداشت کی تحقیق میں اسے مداخلت کہتے ہیں، اور اس کا واحد علاج فرق کو <b>ارادی طور پر</b> سیکھنا ہے۔",
       steps: [
-        "<b>ساتھ ساتھ لکھیں</b> — دونوں آیات ایک کاغذ پر، اوپر نیچے",
-        "<b>ٹھیک وہ ایک لفظ نشان زد کریں</b> — جہاں سے وہ الگ ہوتی ہیں",
-        "<b>پتہ باندھیں</b> — ”یہ دائیں صفحے کے نیچے ہے، وہ بائیں صفحے کے اوپر“؛ یہاں مکانی یادداشت ہی بچاتی ہے",
-        "<b>نوٹ میں لکھ رکھیں</b> — آج کے نوٹ کے خانے میں؛ ہفتے میں ایک بار پوری فہرست دیکھ لیں"
+        "<b>ساتھ ساتھ لکھیں</b> · دونوں آیات ایک کاغذ پر، اوپر نیچے",
+        "<b>ٹھیک وہ ایک لفظ نشان زد کریں</b> · جہاں سے وہ الگ ہوتی ہیں",
+        "<b>پتہ باندھیں</b> · ”یہ دائیں صفحے کے نیچے ہے، وہ بائیں صفحے کے اوپر“؛ یہاں مکانی یادداشت ہی بچاتی ہے",
+        "<b>نوٹ میں لکھ رکھیں</b> · آج کے نوٹ کے خانے میں؛ ہفتے میں ایک بار پوری فہرست دیکھ لیں"
       ],
       nh: "ایک چھوٹا اصول",
-      np: "جو جوڑا ایک بار گڈمڈ ہوا، وہ دوبارہ بھی ہوگا۔ پہلی ہی بار نوٹ کر لیں — چھ مہینے بعد یہی فہرست آپ کا سب سے قیمتی کاغذ ہوگی۔"
+      np: "جو جوڑا ایک بار گڈمڈ ہوا، وہ دوبارہ بھی ہوگا۔ پہلی ہی بار نوٹ کر لیں، چھ مہینے بعد یہی فہرست آپ کا سب سے قیمتی کاغذ ہوگی۔"
     },
     real: {
       k: "حقیقت", h: "سفر، بیماری، مصروف ہفتہ",
-      p: "معمول ٹوٹے گا ضرور۔ سوال یہ ہے کہ ٹوٹنے والے دن آپ کیا کرتے ہیں — اور اگر جواب ”کچھ نہیں“ ہو تو حفظ وہیں رک جاتا ہے۔",
+      p: "معمول ٹوٹے گا ضرور۔ سوال یہ ہے کہ ٹوٹنے والے دن آپ کیا کرتے ہیں، اور اگر جواب ”کچھ نہیں“ ہو تو حفظ وہیں رک جاتا ہے۔",
       th: ["صورتحال","کیا کریں"],
       rows: [
-        ["وقت نہیں","نیا سبق چھوڑ دیں۔ صرف سبقی — ۲۵ منٹ۔ تسلسل بچ جائے گا۔"],
+        ["وقت نہیں","نیا سبق چھوڑ دیں۔ صرف سبقی، ۲۵ منٹ۔ تسلسل بچ جائے گا۔"],
         ["سفر میں","نیا سبق چھوڑ دیں۔ سننا + نماز میں تلاوت۔ دن پھر بھی شمار ہوگا۔"],
         ["بیمار","مکمل آرام۔ زور لگائیں گے تو غلط تلفظ بیٹھ جائے گا، جو بعد میں درست کرنا مشکل ہے۔"],
-        ["ایک ہفتہ چھوٹ گیا","جہاں تھے وہاں سے نہیں — <b>دو ہفتے پیچھے</b> سے شروع کریں، دو دن صرف مراجعہ۔"],
+        ["ایک ہفتہ چھوٹ گیا","جہاں تھے وہاں سے نہیں، <b>دو ہفتے پیچھے</b> سے شروع کریں، دو دن صرف مراجعہ۔"],
         ["ایک مہینہ چھوٹ گیا","دو ہفتے نیا سبق بند۔ پورا یاد شدہ حصہ ایک بار گھوم لیں، پھر دوبارہ آغاز۔"]
       ]
     },
     month: {
-      k: "ماہانہ", h: "ہر مہینے ایک دن — امتحان",
-      p: "مہینے کے آخری آرام والے دن: گزشتہ مہینے میں جتنے صفحے یاد ہوئے، سب ایک ساتھ سنائیں — کسی کے سامنے، یا ریکارڈ کر کے۔ جہاں اٹکیں وہ صفحات <b>کمزور</b> کے طور پر نشان زد کریں۔ ایپ انہیں روزانہ سبقی میں واپس لے آئے گی۔",
+      k: "ماہانہ", h: "ہر مہینے ایک دن · امتحان",
+      p: "مہینے کے آخری آرام والے دن: گزشتہ مہینے میں جتنے صفحے یاد ہوئے، سب ایک ساتھ سنائیں، کسی کے سامنے، یا ریکارڈ کر کے۔ جہاں اٹکیں وہ صفحات <b>کمزور</b> کے طور پر نشان زد کریں۔ ایپ انہیں روزانہ سبقی میں واپس لے آئے گی۔",
       gh: "آگے بڑھنے کا دروازہ",
-      g1: "کل کا صفحہ مصحف کے بغیر، بغیر غلطی کے نہ سنا سکیں — تو آج کچھ نیا نہیں۔",
-      g2: "لگاتار دو دن اٹکیں تو آدھے صفحے پر آ جائیں، دو ہفتے بعد دوبارہ کوشش کریں۔ یہ شرط نہ مانیں تو چار مہینے بعد ہاتھ میں ۱۰۰ صفحے ہوں گے جو ”تقریباً یاد ہیں“ — یعنی حساب میں صفر۔"
+      g1: "کل کا صفحہ مصحف کے بغیر، بغیر غلطی کے نہ سنا سکیں، تو آج کچھ نیا نہیں۔",
+      g2: "لگاتار دو دن اٹکیں تو آدھے صفحے پر آ جائیں، دو ہفتے بعد دوبارہ کوشش کریں۔ یہ شرط نہ مانیں تو چار مہینے بعد ہاتھ میں ۱۰۰ صفحے ہوں گے جو ”تقریباً یاد ہیں“، یعنی حساب میں صفر۔"
     },
     basis: {
       k: "بنیاد", h: "ہر قدم کہاں سے آیا",
       th: ["تحقیق","کیا بتاتی ہے","معمول میں کہاں"],
       rows: [
-        ["Craik &amp; Lockhart ۱۹۷۲<br>Craik &amp; Tulving ۱۹۷۵","معنی سمجھ کر سیکھی ہوئی چیز یادداشت میں کہیں گہری بیٹھتی ہے","مشق کا تیسرا مرحلہ — لفظ بہ لفظ ترجمہ"],
+        ["Craik &amp; Lockhart ۱۹۷۲<br>Craik &amp; Tulving ۱۹۷۵","معنی سمجھ کر سیکھی ہوئی چیز یادداشت میں کہیں گہری بیٹھتی ہے","مشق کا تیسرا مرحلہ · لفظ بہ لفظ ترجمہ"],
         ["Karpicke &amp; Roediger ۲۰۰۸<br>Roediger &amp; Butler ۲۰۱۱","یادداشت سے نکالنا، بار بار پڑھنے سے کہیں زیادہ مؤثر ہے","ڈھانپ کر سنانا · سبقی پہلے بند مصحف پر · نماز میں تلاوت"],
         ["Ebbinghaus ۱۸۸۵<br>Cepeda ۲۰۰۶","مراجعہ نہ ہو تو ۲۴ گھنٹے میں بڑا حصہ ضائع؛ بڑھتے وقفوں سے وہی تقریباً مستقل","سبقی ۷ دن · منزل کی گردش · دن میں چھ لمحے"],
         ["Miller ۱۹۵۶<br>Gobet ۲۰۰۱","عامل یادداشت بیک وقت چند اکائیاں ہی تھامتی ہے","صفحے کو ۵ سطروں کے بلاک میں توڑنا"],
         ["Maguire ۲۰۰۰، ۲۰۰۳<br>Dresler ۲۰۱۷","دماغ جگہ اور مقام غیر معمولی طور پر یاد رکھتا ہے","تاحیات ایک ہی مصحف · متشابہات کا پتہ باندھنا"],
         ["Paivio ۱۹۸۶<br>Shams &amp; Seitz ۲۰۰۸","کئی حسی راستوں سے داخل ہو تو یادداشت زیادہ ٹھہرتی ہے","سننا + دیکھنا + بولنا + اٹکنے پر لکھنا"],
         ["Mayer &amp; Moreno ۲۰۰۳<br>Baddeley ۲۰۰۰","خلل عامل یادداشت کی گنجائش کھا جاتا ہے","فون دوسرے کمرے میں · ۵۰ منٹ کی حد"],
-        ["Draganski ۲۰۰۴<br>Park &amp; Bischof ۲۰۱۳","تربیت سے بالغ دماغ میں بھی ساختی تبدیلی آتی ہے","۳۲ سال دیر نہیں — طریقہ ہی آپ کی برتری ہے"]
+        ["Draganski ۲۰۰۴<br>Park &amp; Bischof ۲۰۱۳","تربیت سے بالغ دماغ میں بھی ساختی تبدیلی آتی ہے","۳۲ سال دیر نہیں · طریقہ ہی آپ کی برتری ہے"]
       ]
     },
     fixed: {
       k: "اٹل", h: "تین شرطیں، جن میں کوئی رعایت نہیں",
       items: [
         ["پہلے تجوید","غلط تلفظ کے ساتھ یاد ہو جائے تو اسے درست کرنا نئے سرے سے یاد کرنے سے بھی مشکل ہے۔ ہفتے میں کم از کم ایک دن استاد کو سنائیں۔"],
-        ["سات گھنٹے نیند","یادداشت کا استحکام بڑی حد تک نیند ہی میں ہوتا ہے۔ نیند کاٹ کر حفظ کا وقت بڑھانا خالص نقصان ہے — جتنا جڑتا ہے، اس سے زیادہ بکھرتا ہے۔"],
+        ["سات گھنٹے نیند","یادداشت کا استحکام بڑی حد تک نیند ہی میں ہوتا ہے۔ نیند کاٹ کر حفظ کا وقت بڑھانا خالص نقصان ہے، جتنا جڑتا ہے، اس سے زیادہ بکھرتا ہے۔"],
         ["ایک مصحف، ایک قاری","مصحف بدلیں تو مکانی یادداشت کی پوری تہہ مٹ جاتی ہے، قاری بدلیں تو لحن کا اشارہ۔ ایک بار چن لیں، پھر ہاتھ نہ لگائیں۔"]
       ]
     }
@@ -929,7 +1051,7 @@ window.HIFZ_LANG_ur = {
 
   pg: {
     k: "پیش رفت", h: "آپ کہاں کھڑے ہیں",
-    report: "ہفتہ وار رپورٹ — استاد کے لیے",
+    report: "ہفتہ وار رپورٹ · استاد کے لیے",
     stats: ["صفحے یاد","مکمل پارے","مکمل","دن مسلسل","کل گھنٹے","اوسط غلطی / دن"],
     map: "مصحف کا نقشہ · ۶۰۴ صفحے",
     legend: ["یاد شدہ","آج کا","کمزور","باقی"],
@@ -949,23 +1071,26 @@ window.HIFZ_LANG_ur = {
 
   set: {
     k: "ترتیبات", h: "آپ کا حساب",
-    p: "سارا ڈیٹا اسی آلے میں رہتا ہے — کسی سرور پر نہیں جاتا۔ براؤزر صاف کریں تو مٹ جائے گا، اس لیے نیچے ڈرائیو سنک چالو کریں یا مہینے میں ایک بار بیک اپ اتار رکھیں۔",
+    p: "سارا ڈیٹا اسی آلے میں رہتا ہے، کسی سرور پر نہیں جاتا۔ براؤزر صاف کریں تو مٹ جائے گا، اس لیے نیچے ڈرائیو سنک چالو کریں یا مہینے میں ایک بار بیک اپ اتار رکھیں۔",
     lang: "زبان",
-    langHint: "پوری ایپ بدل جائے گی — طریقہ والا ٹیب بھی۔",
+    langHint: "پوری ایپ بدل جائے گی، طریقہ والا ٹیب بھی۔",
     date: "آغاز کی تاریخ",
     page: "پہلا صفحہ",
     rest: "آرام کا دن",
     lines: "روزانہ ہدف (سطریں)",
-    linesAuto: "خودکار — مرحلے کے مطابق",
+    linesAuto: "خودکار · مرحلے کے مطابق",
     linesN: "{0} سطریں",
     linesHint: "دروازے پر لگاتار دو دن اٹکیں تو یہاں نیچے آ جائیں۔ یہ پیچھے ہٹنا نہیں۔",
     qari: "آپ کے قاری",
     qariPh: "ایک، تاحیات",
     mushaf: "آپ کا مصحف",
+    mushafHint: "صفحات کی تعداد اور فی صفحہ سطریں اسی چھپائی کے مطابق شمار ہوں گی۔",
+    mushafEd: "ایڈیشن یا ناشر",
+    mushafEdPh: "وہی نسخہ جو آپ کے ہاتھ میں ہے · ایک، تاحیات",
     weakLabel: "کمزور صفحات",
     weakHint: "لگاتار سات دن بے عیب ہو جائیں تو ٹیپ کر کے ہٹا دیں۔",
     driveLabel: "Google Drive سنک",
-    driveHint: "جڑے رہیں تو ہر تبدیلی چند سیکنڈ میں آپ کی ڈرائیو میں چلی جاتی ہے۔ نئے فون پر اسی Google اکاؤنٹ سے جڑتے ہی سب واپس آ جائے گا۔ ایپ صرف اپنی بنائی ہوئی وہی ایک فائل دیکھ سکتی ہے — ڈرائیو کا باقی کچھ نہیں۔",
+    driveHint: "جڑے رہیں تو ہر تبدیلی چند سیکنڈ میں آپ کی ڈرائیو میں چلی جاتی ہے۔ نئے فون پر اسی Google اکاؤنٹ سے جڑتے ہی سب واپس آ جائے گا۔ ایپ صرف اپنی بنائی ہوئی وہی ایک فائل دیکھ سکتی ہے، ڈرائیو کا باقی کچھ نہیں۔",
     driveNoConfig: "config.js فائل میں Client ID رکھیں تو یہ حصہ چالو ہو جائے گا۔",
     backupLabel: "فائل بیک اپ",
     exp: "ڈیٹا اتاریں (JSON)",
@@ -981,7 +1106,7 @@ window.HIFZ_LANG_ur = {
   sync: {
     off: "سنک بند", connecting: "جڑ رہا ہے", ok: "سنک ہو گیا", failed: "سنک ناکام",
     pushing: "بھیج رہا ہے", pulling: "اتار رہا ہے", reconciling: "ملا رہا ہے", cancelled: "منسوخ",
-    noConfig: "Google Client ID نہیں رکھا گیا — <b>config.js</b> میں رکھیں تو سنک چالو ہو جائے گا۔",
+    noConfig: "Google Client ID نہیں رکھا گیا، <b>config.js</b> میں رکھیں تو سنک چالو ہو جائے گا۔",
     notLinked: "ابھی جڑا نہیں۔ جوڑ دیں تو ڈیٹا خود بخود آپ کی ڈرائیو میں محفوظ ہوتا رہے گا۔",
     linked: "جڑا ہوا: <b>{0}</b>",
     last: " · آخری سنک {0}",
@@ -991,7 +1116,7 @@ window.HIFZ_LANG_ur = {
     pull: "ڈرائیو سے اتاریں",
     unlink: "تعلق ختم کریں",
     confirmOff: "تعلق ختم کرنے پر نئی تبدیلیاں ڈرائیو تک نہیں جائیں گی۔ پرانی فائل وہیں رہے گی۔",
-    notReady: "Google لائبریری ابھی لوڈ نہیں ہوئی — چند سیکنڈ بعد دوبارہ کوشش کریں۔",
+    notReady: "Google لائبریری ابھی لوڈ نہیں ہوئی، چند سیکنڈ بعد دوبارہ کوشش کریں۔",
     pushFail: "ڈرائیو تک نہیں پہنچا جا سکا۔ انٹرنیٹ دیکھ کر دوبارہ کوشش کریں۔",
     pullFail: "ڈرائیو میں کوئی بیک اپ نہیں ملا۔",
     pulled: "ڈرائیو سے ڈیٹا بحال کر دیا گیا۔"
@@ -1005,10 +1130,10 @@ window.HIFZ_LANG_ur = {
     pass: "کامیاب", fail: "ناکام", rest: "آرام",
     gateH: "دروازے کا نتیجہ",
     gateLine: "کامیاب <span class=\"ok\">{0}</span> دن · ناکام <span class=\"no\">{1}</span> دن · سبق مکمل {2} دن۔ ",
-    verdictGood: "رفتار درست ہے — ہدف بڑھانے پر غور کیا جا سکتا ہے۔",
+    verdictGood: "رفتار درست ہے، ہدف بڑھانے پر غور کیا جا سکتا ہے۔",
     verdictBad: "ہدف زیادہ ہو رہا ہے۔ روزانہ سطریں کم کر کے دو ہفتے چلائیں۔",
     verdictOk: "رفتار تقریباً ٹھیک ہے۔ ایک ہفتہ اور اسی ہدف پر رہیں۔",
-    weakH: "کمزور صفحات — انہیں خاص طور پر سنیں",
+    weakH: "کمزور صفحات · انہیں خاص طور پر سنیں",
     notesH: "طالب علم کے نوٹ",
     comment: "استاد کا تبصرہ",
     signature: "دستخط و تاریخ",
@@ -1046,11 +1171,48 @@ window.HIFZ_LANG_zh = {
     title: "背记古兰 · 每日伴侣",
     desc: "为成年学习者设计、以记忆科学为基础的古兰背记记录工具",
     streak: "天连续",
-    footer1: "背记古兰 · 每日伴侣 — <b>为成年学习者而作</b>",
+    footer1: "背记古兰 · 每日伴侣 · <b>为成年学习者而作</b>",
     footer2: "基于记忆研究 · 数据只留在你自己的设备上"
   },
 
-  nav: { today:"今天", routine:"方法", progress:"进度", settings:"设置" },
+  ex: { open:"自我测验", title:"提取练习测验", sub:"提取比重读更有效 · Karpicke 与 Roediger（2008）。",
+        order:"按顺序排好", cloze:"填空", next:"接下来是哪一段",
+        orderHint:"按正确顺序点选各段。", clozeHint:"选出缺失的词。",
+        nextHint:"选出接续这一节的片段。",
+        q:"{0} / {1}", right:"正确", wrong:"不是这个", done:"测验结束",
+        score:"对 {0}，错 {1}", again:"再来一次", close:"关闭", weakAdd:"该页已标为薄弱",
+        need:"请先打开页面并选定一段。" },
+  rec: { start:"录下自己的诵读", stop:"停止录音", mine:"你的诵读", qari:"诵读者",
+         compare:"先听诵读者，再听自己", none:"还没有录音", denied:"需要麦克风权限。",
+         saved:"已随今天这一页保存", dl:"保存文件",
+         phrase:"片段循环", phraseHint:"点选卡住那一段的首词与末词 · 它会自动放慢重复。" },
+  ins: { h:"安装为应用", btn:"安装到本设备", done:"已安装",
+         ios:"iPhone：Safari · 分享（⬆）· 添加到主屏幕。iOS 版 Chrome 无法安装。",
+         hint:"之后可从主屏幕直接打开，没有地址栏，离线也能用。" },
+  nt: { h:"提醒", allow:"开启通知", allowed:"通知已开启", denied:"浏览器已屏蔽通知，请在站点设置中允许。",
+        daily:"每日提醒", dailyOff:"关闭", dailyHint:"到这个时间，若今天的功课还没完成就提醒你。",
+        zikr:"记主提醒", zikrOff:"关闭", zikrN:"每 {0} 分钟", zikrHint:"一句接一句的简短记主词。夜里 10 点到早 5 点静默。",
+        dailyTitle:"今天的功课还没做", dailyBody:"第 {0} 页 · 第 {1}–{2} 行。打开读吧。",
+        note:"应用打开或在后台运行时提醒有效。装到主屏幕上效果最好。" },
+  rev: { ask:"第 {0} 页 · 背得如何？", good:"顺畅", ok:"有些卡", bad:"忘了",
+         due:"今天该复习", dueNone:"今天没有旧页到期", strength:"牢固度",
+         note:"背得顺的页下次隔更久再来；卡住的明天就回来。" },
+  mut: { h:"相似经文", find:"查找相似", busy:"正在比对…",
+         none:"这一页与你已背的内容没有相似之处。",
+         at:"第 {0} 页 · 第 {1} 节", hint:"带下划线的词在别处也出现过。把两处一起读一遍，记住它们的分别。",
+         only:"只比对已存在设备上的页面。" },
+  nav: { today:"今天", mushaf:"经本", routine:"方法", progress:"进度", settings:"设置" },
+  rd: { title:"页面", pageLbl:"页", prev:"上一页", next:"下一页", hide:"遮住行", show:"显示",
+        loop:"重复", speed:"速度", meaning:"逐词释义", dl:"下载本卷", dling:"下载中 {0}%",
+        dlDone:"本卷已存在设备上", tap:"点任意一个词，播放该节，下方显示词义。",
+        todayHi:"今天的行是亮的，页面其余部分变暗。",
+        loading:"正在载入页面…", err:"页面载入失败，请检查网络后重试。",
+        notMadani:"页面视图按麦地那版排版（604 页、15 行）。请在设置中切换经本。",
+        reciter:"诵读", playAll:"播放所选段落", juz:"第 {0} 卷", openPage:"在经本中打开这一页",
+        tr:"译文", trBy:"马坚", trOff:"隐藏译文", pause:"暂停", resume:"继续", stop:"停止",
+        ay:"节", auto:"自动", cover:"遮住", pick:"在页面上选取",
+        pickA:"点选起始的那个词", pickB:"再点选结束的那个词", setDay:"设为今天的功课", setDone:"已设为今天的功课",
+        selNote:"段落按每日目标（{0} 行）起算，并向整节取齐，可自行调整。" },
 
   ob: {
     kicker: "开始吧",
@@ -1073,36 +1235,37 @@ window.HIFZ_LANG_zh = {
     target: "目标 {0} 行",
     noNew: "今天没有新课",
     page: "第 {0} 页",
+    lineRange: "第 {0}–{1} 行",
     restNote: "本周六页，一口气通背，中途不停。",
     manual: "你自己设定的目标。",
     notes: [
       "只是把习惯立起来。先别想速度。",
       "复习的压力从这里开始显现。",
-      "两个半段落 — 练习把它们接起来。",
+      "两个半段落，练习把它们接起来。",
       "整页。真正的账目从这里开始算。"
     ]
   },
 
   gate: {
-    q: "昨天的功课 — 第 {0} 页 — 你能不看经本、一字不错地背下来吗？",
+    q: "昨天的功课 · 第 {0} 页 · 你能不看经本、一字不错地背下来吗？",
     yes: "能背下来",
     no: "背不下来",
-    fail: "<b>今天不背新课。</b>重来昨天那一页 — 同样的步骤，从头开始。",
-    failStreak: " 这已经连续 {0} 天了。先降到半页，坚持两周 — 可在设置里调整目标。",
+    fail: "<b>今天不背新课。</b>重来昨天那一页，同样的步骤，从头开始。",
+    failStreak: " 这已经连续 {0} 天了。先降到半页，坚持两周，可在设置里调整目标。",
     pass: "通过。今天的新页可以开始了。"
   },
 
   blk: {
     sabaq: "新课",
-    sabaqRepeat: "重来 — 昨天那一页",
+    sabaqRepeat: "重来 · 昨天那一页",
     sabaqMeta: "第 {0} 页 · {1} 行 · 50 分钟",
     listen: "被动聆听",
     listenMeta: "全天 · 不额外占时间",
-    sabaqi: "近课复习 — 最近七天",
+    sabaqi: "近课复习 · 最近七天",
     sabaqiMeta: "晌礼后 · 25 分钟",
     salah: "在礼拜中诵读",
     salahMeta: "五番拜 · 不额外占时间",
-    manzil: "远课复习 — 更早的全部",
+    manzil: "远课复习 · 更早的全部",
     manzilMeta: "昏礼至宵礼 · 35 分钟 · 第 {0} 卷",
     manzilWait: "昏礼至宵礼 · 等待中",
     night: "睡前一遍",
@@ -1112,40 +1275,40 @@ window.HIFZ_LANG_zh = {
 
   sabaq: {
     pageLabel: "今天的页码",
-    pageHint: "应用默认接着上一页往下走。如果你的顺序不同 — 比如从奈拜厄章开始 — 在这里改。",
+    pageHint: "应用默认接着上一页往下走。如果你的顺序不同，比如从奈拜厄章开始，在这里改。",
     blocked: "<b>今天没有新内容。</b>同一页，同样的步骤，从头再来一遍。",
     intro: "每一段都走这五步。做完一段就点上面标记一下。",
     after: "<b>{0} 段做完后：</b>合上经本，把整段连着背 3 遍，中途不停。",
     drill: [
-      "<b>听 5 遍</b> — 眼睛盯着那五行，嘴不要动",
-      "<b>看着念 7 遍</b> — 出声，不要赶",
-      "<b>看一遍意思</b> — 逐字对照，每个词是什么意思",
-      "<b>盖住背 3 遍</b> — 没背到一字不错，这遍就不算数",
-      "<b>接背 2 遍</b> — 从上一段的最后一行接下来"
+      "<b>听 5 遍</b> · 眼睛盯着那五行，嘴不要动",
+      "<b>看着念 7 遍</b> · 出声，不要赶",
+      "<b>看一遍意思</b> · 逐字对照，每个词是什么意思",
+      "<b>盖住背 3 遍</b> · 没背到一字不错，这遍就不算数",
+      "<b>接背 2 遍</b> · 从上一段的最后一行接下来"
     ]
   },
 
   listen: {
-    body: "让今天这一页用同一位诵读者的声音一直放着 — 在车上、厨房里、散步时。不用刻意听，耳朵自己会做工。",
+    body: "让今天这一页用同一位诵读者的声音一直放着，在车上、厨房里、散步时。不用刻意听，耳朵自己会做工。",
     qari: " 你的诵读者：<b>{0}</b>。"
   },
 
   sabaqi: {
-    empty: "还没有复习内容 — 完成第一课后，从明天起就会出现在这里。",
-    weakLabel: "<b>薄弱页</b> — 这几页多过一遍：",
+    empty: "还没有复习内容，完成第一课后，从明天起就会出现在这里。",
+    weakLabel: "<b>薄弱页</b> · 这几页多过一遍：",
     order: "<b>顺序才是关键：</b>先合上经本背，再打开对照。反过来做，这一段的全部好处就没了。",
     ago: "{0} 天前",
     page: "第{0}页"
   },
 
   salah: {
-    body: "从今天的新课和本周的内容里选着念。站着、不看经本、在压力下从记忆里调出来 — 这是提取练习最纯粹的形式。",
+    body: "从今天的新课和本周的内容里选着念。站着、不看经本、在压力下从记忆里调出来，这是提取练习最纯粹的形式。",
     counted: "番拜中诵读过"
   },
 
   manzil: {
-    week: "<b>本周轮到第 {0} 卷</b> — 第 {1}–{2} 页。其中已经背下来的部分。",
-    rot: "轮转是自动的。背下的卷数越多，每一卷回来的间隔就越长 — 这正是艾宾浩斯遗忘曲线被打断的节奏。",
+    week: "<b>本周轮到第 {0} 卷</b>，第 {1}–{2} 页。其中已经背下来的部分。",
+    rot: "轮转是自动的。背下的卷数越多，每一卷回来的间隔就越长，这正是艾宾浩斯遗忘曲线被打断的节奏。",
     empty: "远课复习还没开始。大约积累到 8 页时，这个轮转会自动启动。"
   },
 
@@ -1157,7 +1320,7 @@ window.HIFZ_LANG_zh = {
 
   log: {
     err: "今天一共错了多少处",
-    errHint: "这个数字有没有在下降 — 这才是真正的进度尺度，不是页数。",
+    errHint: "这个数字有没有在下降，这才是真正的进度尺度，不是页数。",
     min: "有效时长（分钟）",
     note: "薄弱之处 / 笔记",
     notePh: "哪一节经文总是卡住？哪两处相似的经文混了？",
@@ -1177,7 +1340,7 @@ window.HIFZ_LANG_zh = {
   rt: {
     ramp: {
       k: "起步", h: "六周渐进计划",
-      p: "背下新内容不难，难的是守住。这一个半月里长出来的是习惯，不是速度 — 要赶在复习负担变重之前。",
+      p: "背下新内容不难，难的是守住。这一个半月里长出来的是习惯，不是速度，要赶在复习负担变重之前。",
       lines: "行",
       labels: ["第 1–2 周","第 3–4 周","第 5–6 周","第 7 周起"]
     },
@@ -1186,75 +1349,75 @@ window.HIFZ_LANG_zh = {
       p: "不是一口气坐三个小时，而是散在一天里的短时段。Cepeda 关于分散练习的研究表明：同样的总时长，拆开来记住的会多得多。",
       th: ["什么时候","做什么","时长"],
       rows: [
-        ["晨礼后 15 分","新课 — 三段，然后整页背 3 遍","50 分"],
-        ["全天","被动聆听 — 同一位诵读者","0"],
-        ["晌礼后","近课复习 — 最近 7 天，先合本背","25 分"],
+        ["晨礼后 15 分","新课 · 三段，然后整页背 3 遍","50 分"],
+        ["全天","被动聆听 · 同一位诵读者","0"],
+        ["晌礼后","近课复习 · 最近 7 天，先合本背","25 分"],
         ["五番拜","礼拜中诵读新课内容","0"],
-        ["昏礼至宵礼","远课复习 — 每周一卷轮转","35 分"],
+        ["昏礼至宵礼","远课复习 · 每周一卷轮转","35 分"],
         ["睡前","今天这一页最后一遍","10 分"]
       ]
     },
     stuck: {
       k: "卡住的时候", h: "顽固句的处理步骤",
-      p: "同一行反复卡住时，再念十遍是没用的 — 必须换方法。按顺序试，哪一步打开了就停在哪一步。",
+      p: "同一行反复卡住时，再念十遍是没用的，必须换方法。按顺序试，哪一步打开了就停在哪一步。",
       steps: [
-        "<b>拆开</b> — 把这一行切成两三小块分别记住，再接起来",
-        "<b>回到意思上</b> — 卡住几乎总是不懂意思的信号；读一遍那一段的译文",
-        "<b>手写一遍</b> — 写一次就多接入了一条感官通道",
-        "<b>从上一行拉过来</b> — 不要单独背，连着上一行一起背 5 遍",
-        "<b>去睡觉</b> — 连续卡了 20 分钟就停下。第二天早上常常自己就通了"
+        "<b>拆开</b> · 把这一行切成两三小块分别记住，再接起来",
+        "<b>回到意思上</b> · 卡住几乎总是不懂意思的信号；读一遍那一段的译文",
+        "<b>手写一遍</b> · 写一次就多接入了一条感官通道",
+        "<b>从上一行拉过来</b> · 不要单独背，连着上一行一起背 5 遍",
+        "<b>去睡觉</b>，连续卡了 20 分钟就停下。第二天早上常常自己就通了"
       ]
     },
     mut: {
-      k: "最大的陷阱", h: "相似经文 — 最容易混的地方",
+      k: "最大的陷阱", h: "相似经文 · 最容易混的地方",
       p: "背记崩掉的头号原因不是新页，而是措辞相近的两节经文混在一起。记忆研究把这叫做干扰，唯一的解法是<b>刻意</b>去学那个差别。",
       steps: [
-        "<b>并排写下来</b> — 两节经文写在同一张纸上，一上一下",
-        "<b>圈出那一个词</b> — 它们从哪里开始不一样",
-        "<b>记住位置</b> — “这一处在右页靠下，那一处在左页靠上”；在这里救你的是空间记忆",
-        "<b>记进笔记</b> — 写在今天的笔记栏里；每周把整份清单看一遍"
+        "<b>并排写下来</b> · 两节经文写在同一张纸上，一上一下",
+        "<b>圈出那一个词</b> · 它们从哪里开始不一样",
+        "<b>记住位置</b> · “这一处在右页靠下，那一处在左页靠上”；在这里救你的是空间记忆",
+        "<b>记进笔记</b> · 写在今天的笔记栏里；每周把整份清单看一遍"
       ],
       nh: "一条小规矩",
-      np: "混过一次的一对，还会再混。第一次就记下来 — 半年后这份清单会是你最值钱的一页纸。"
+      np: "混过一次的一对，还会再混。第一次就记下来，半年后这份清单会是你最值钱的一页纸。"
     },
     real: {
       k: "现实", h: "出差、生病、忙疯的一周",
-      p: "计划一定会被打断。真正的问题是被打断那天你做什么 — 如果答案是“什么都不做”，背记就停在那里了。",
+      p: "计划一定会被打断。真正的问题是被打断那天你做什么，如果答案是“什么都不做”，背记就停在那里了。",
       th: ["情况","怎么做"],
       rows: [
-        ["没时间","跳过新课。只做近课复习 — 25 分钟。连续记录就保住了。"],
+        ["没时间","跳过新课。只做近课复习，25 分钟。连续记录就保住了。"],
         ["在路上","跳过新课。听 + 在礼拜中诵读。这一天照样算数。"],
         ["生病","完全休息。硬撑会把错误的发音固定下来，之后很难改。"],
-        ["漏了一周","别从停下的地方接 — <b>往回退两周</b>，先花两天只做复习。"],
+        ["漏了一周","别从停下的地方接，<b>往回退两周</b>，先花两天只做复习。"],
         ["漏了一个月","两周不碰新课。把已背的全部过一遍，然后重新开始。"]
       ]
     },
     month: {
-      k: "每月", h: "每月一天 — 检验",
-      p: "在当月最后一个休息日：把这个月背下的全部内容一口气背出来 — 背给人听，或者录下来。凡是卡住的页，标为<b>薄弱</b>。应用会把它们每天送回复习队列。",
+      k: "每月", h: "每月一天 · 检验",
+      p: "在当月最后一个休息日：把这个月背下的全部内容一口气背出来，背给人听，或者录下来。凡是卡住的页，标为<b>薄弱</b>。应用会把它们每天送回复习队列。",
       gh: "前进的闸门",
-      g1: "昨天那一页若不能不看经本、一字不错地背出来 — 今天就不学新的。",
-      g2: "连续两天卡住就降到半页，两周后再试。不守这条，四个月后你手里会有 100 页“大致记得”的内容 — 算起来等于零。"
+      g1: "昨天那一页若不能不看经本、一字不错地背出来，今天就不学新的。",
+      g2: "连续两天卡住就降到半页，两周后再试。不守这条，四个月后你手里会有 100 页“大致记得”的内容，算起来等于零。"
     },
     basis: {
       k: "依据", h: "每一步的来处",
       th: ["研究","结论","落在哪里"],
       rows: [
-        ["Craik &amp; Lockhart 1972<br>Craik &amp; Tulving 1975","理解了意思再记，比只记声音深得多","第三步 — 逐字对照译文"],
+        ["Craik &amp; Lockhart 1972<br>Craik &amp; Tulving 1975","理解了意思再记，比只记声音深得多","第三步 · 逐字对照译文"],
         ["Karpicke &amp; Roediger 2008<br>Roediger &amp; Butler 2011","从记忆里调取，远胜过反复阅读","盖住背诵 · 先合本再对照 · 礼拜中诵读"],
         ["Ebbinghaus 1885<br>Cepeda 2006","不复习则 24 小时内大量流失；间隔递增则近乎长存","七天近课 · 远课轮转 · 一天六次触碰"],
         ["Miller 1956<br>Gobet 2001","工作记忆一次只能握住少数几个单位","把一页拆成 5 行一段"],
         ["Maguire 2000, 2003<br>Dresler 2017","大脑对位置和空间的记忆极为出色","终身只用一本经本 · 用位置锚定相似经文"],
         ["Paivio 1986<br>Shams &amp; Seitz 2008","经由多条感官进入的记忆留存更久","听 + 看 + 念 + 卡住时写"],
         ["Mayer &amp; Moreno 2003<br>Baddeley 2000","打断会吃掉工作记忆的容量","手机放到另一间房 · 50 分钟上限"],
-        ["Draganski 2004<br>Park &amp; Bischof 2013","训练同样能让成年人的大脑发生结构变化","三十几岁不算晚 — 方法才是你的优势"]
+        ["Draganski 2004<br>Park &amp; Bischof 2013","训练同样能让成年人的大脑发生结构变化","三十几岁不算晚 · 方法才是你的优势"]
       ]
     },
     fixed: {
       k: "不可让步", h: "三条没有余地的规矩",
       items: [
         ["先学诵读规则","用错误的发音背下来，改正比重新背还难。每周至少一次背给老师听。"],
-        ["睡足七小时","记忆的巩固主要在睡眠中完成。削减睡眠去换背记时间是净亏 — 掉的比加的多。"],
+        ["睡足七小时","记忆的巩固主要在睡眠中完成。削减睡眠去换背记时间是净亏，掉的比加的多。"],
         ["一本经本，一位诵读者","换经本，整层空间记忆就抹掉了；换诵读者，声调线索就没了。选定一次，之后别再动。"]
       ]
     }
@@ -1262,9 +1425,9 @@ window.HIFZ_LANG_zh = {
 
   pg: {
     k: "进度", h: "你现在在哪里",
-    report: "每周报告 — 交给老师",
+    report: "每周报告 · 交给老师",
     stats: ["页已背","完整卷","完成度","天连续","累计小时","日均错误"],
-    map: "经本地图 · 604 页",
+    map: "经本地图",
     legend: ["已背","今天","薄弱","未背"],
     heat: "最近 84 天",
     heatNote: "颜色越深，完成度越高",
@@ -1282,23 +1445,26 @@ window.HIFZ_LANG_zh = {
 
   set: {
     k: "设置", h: "你的设定",
-    p: "所有数据都存在这台设备上 — 不会上传到任何服务器。清理浏览器就会丢失，所以请打开下面的云端同步，或者每月下载一次备份。",
+    p: "所有数据都存在这台设备上，不会上传到任何服务器。清理浏览器就会丢失，所以请打开下面的云端同步，或者每月下载一次备份。",
     lang: "语言",
-    langHint: "整个应用都会切换 — 包括方法那一页。",
+    langHint: "整个应用都会切换，包括方法那一页。",
     date: "起始日期",
     page: "起始页",
     rest: "休息日",
     lines: "每日目标（行）",
-    linesAuto: "自动 — 按渐进计划",
+    linesAuto: "自动 · 按渐进计划",
     linesN: "{0} 行",
     linesHint: "闸门连续两天没过？就降到这里。这不是后退。",
     qari: "你的诵读者",
     qariPh: "一位，终身",
     mushaf: "你的经本",
+    mushafHint: "页数与每页行数按这一版计算，改动后整张地图随之变化。",
+    mushafEd: "版本或出版社",
+    mushafEdPh: "你手里的那一本 · 一本，终身",
     weakLabel: "薄弱页",
     weakHint: "连续七天一字不错后，点一下移除。",
     driveLabel: "Google Drive 同步",
-    driveHint: "连接后，每次改动几秒内就会写进你自己的云端硬盘。在新手机上用同一个 Google 账号登录，全部内容就会回来。应用只能看见它自己创建的那一个文件 — 你云端硬盘里的其他内容一概看不到。",
+    driveHint: "连接后，每次改动几秒内就会写进你自己的云端硬盘。在新手机上用同一个 Google 账号登录，全部内容就会回来。应用只能看见它自己创建的那一个文件，你云端硬盘里的其他内容一概看不到。",
     driveNoConfig: "在 config.js 里填入 Client ID，这一块就会启用。",
     backupLabel: "文件备份",
     exp: "下载数据（JSON）",
@@ -1314,7 +1480,7 @@ window.HIFZ_LANG_zh = {
   sync: {
     off: "同步已关", connecting: "连接中", ok: "已同步", failed: "同步失败",
     pushing: "上传中", pulling: "下载中", reconciling: "核对中", cancelled: "已取消",
-    noConfig: "尚未填入 Google Client ID — 在 <b>config.js</b> 里填入即可启用同步。",
+    noConfig: "尚未填入 Google Client ID，在 <b>config.js</b> 里填入即可启用同步。",
     notLinked: "尚未连接。连接后，数据会自动存进你自己的云端硬盘。",
     linked: "已连接：<b>{0}</b>",
     last: " · 上次同步 {0}",
@@ -1324,7 +1490,7 @@ window.HIFZ_LANG_zh = {
     pull: "从云端取回",
     unlink: "断开连接",
     confirmOff: "断开后，新的改动不会再进入你的云端硬盘。已有的文件会保留。",
-    notReady: "Google 组件还没加载完 — 过几秒再试。",
+    notReady: "Google 组件还没加载完，过几秒再试。",
     pushFail: "无法连上云端硬盘。检查网络后重试。",
     pullFail: "云端硬盘里没有找到备份。",
     pulled: "已从云端硬盘恢复数据。"
@@ -1338,10 +1504,10 @@ window.HIFZ_LANG_zh = {
     pass: "通过", fail: "未过", rest: "休息",
     gateH: "闸门结果",
     gateLine: "通过 <span class=\"ok\">{0}</span> 天 · 未过 <span class=\"no\">{1}</span> 天 · 完成新课 {2} 天。",
-    verdictGood: "速度合适 — 可以考虑加量。",
+    verdictGood: "速度合适，可以考虑加量。",
     verdictBad: "目标定得偏高。减少每天的行数，先稳两周。",
     verdictOk: "速度大致合适。这个目标再保持一周。",
-    weakH: "薄弱页 — 请重点听这几页",
+    weakH: "薄弱页 · 请重点听这几页",
     notesH: "学生笔记",
     comment: "老师评语",
     signature: "签名与日期",
@@ -1355,12 +1521,14 @@ window.HIFZ_LANG_zh = {
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 :root{
-  --ink:#131F35; --ink-2:#24344F; --ink-3:#3C4C68;
-  --paper:#EFF0EC; --paper-2:#E6E8E2; --card:#F6F7F3;
-  --verdigris:#2C6A5E; --verd-soft:#DCE7E3;
-  --brass:#A4813F; --brass-soft:#EFE6D4;
-  --maroon:#7E3540; --maroon-soft:#F0DFE0;
-  --muted:#69707E; --rule:#D3D6CF;
+  /* Warm, low-contrast palette — nothing pure black or pure white, accents
+     desaturated, so long reading at fajr does not glare. */
+  --ink:#33414F; --ink-2:#4A5C6E; --ink-3:#6E7F8F;
+  --paper:#EFEDEA; --paper-2:#E2E0DC; --card:#FFFFFF;
+  --verdigris:#14A0A6; --verd-soft:#DDF2F3;
+  --brass:#E0A82E; --brass-soft:#FBF0D5;
+  --maroon:#B04A3C; --maroon-soft:#F6E2DE;
+  --muted:#6C757D; --rule:#DCDAD6;
   --display:Georgia,serif; --body:system-ui,sans-serif;
   --arabic:"Amiri","Traditional Arabic",serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -1368,6 +1536,54 @@ window.HIFZ_LANG_zh = {
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
+
+/* ---- fits any screen, from a small phone to a desktop ---- */
+@media (max-width:560px){
+  .wrap{padding:0 13px}
+  .rdcard{padding:11px 11px}
+  .rdgrp{width:100%}
+  .rdgrp>*{flex:1 1 auto;padding:9px 8px;font-size:13px}
+  .rdgrp input{flex:0 0 56px}
+  .rdline{gap:7px}
+  .rdmini{font-size:12px;padding:6px 11px}
+  .paper{padding:16px 11px 12px}
+  .recbox audio{max-width:100%;width:100%}
+  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab{flex:0 0 auto;padding-inline:14px}
+  h2{font-size:22px}
+  .blk-h{padding:14px 13px;gap:10px}
+  .exsheet{padding:18px 14px 20px}
+  .tbl{font-size:13.5px}
+}
+@media (max-width:380px){
+  .rdmini{font-size:11.5px;padding:6px 9px}
+  .fld input,.fld select,.fld textarea{font-size:14px}
+}
+@media (min-width:1100px){
+  .wrap{max-width:880px}
+}
+@media (hover:none){
+  .tab,.abtn,.rdmini,.qp,.gbtn{min-height:44px}
+  .rdgrp>*{min-height:44px}
+}
+html:not([lang="en"]) .kicker, html:not([lang="en"]) .fld label, html:not([lang="en"]) .blk-h .meta,
+html:not([lang="en"]) .st .l, html:not([lang="en"]) .sum .lab, html:not([lang="en"]) .maplbl .t,
+html:not([lang="en"]) .legend, html:not([lang="en"]) .rs .wk, html:not([lang="en"]) .tbl th,
+html:not([lang="en"]) .tbtn, html:not([lang="en"]) .sheet h4, html:not([lang="en"]) .streak .l,
+html:not([lang="en"]) .sheet-h .su, html:not([lang="en"]) .sync, html:not([lang="en"]) .tbar .x,
+html:not([lang="en"]) .brand .dt, html:not([lang="en"]) .qp, html:not([lang="en"]) .phase .a{
+  font-family:var(--body);text-transform:none;letter-spacing:0;
+}
+html:not([lang="en"]) .kicker{font-size:12px;letter-spacing:.02em}
+html:not([lang="en"]) .fld label{font-size:12.5px}
+html:not([lang="en"]) .blk-h .meta{font-size:12.5px}
+html:not([lang="en"]) .st .l, html:not([lang="en"]) .rs .wk,
+html:not([lang="en"]) .maplbl .t, html:not([lang="en"]) .sum .lab,
+html:not([lang="en"]) .legend, html:not([lang="en"]) .tbl th,
+html:not([lang="en"]) .streak .l, html:not([lang="en"]) .sheet h4{font-size:12px}
+html:not([lang="en"]) .brand .dt{font-size:11.5px}
+html:not([lang="en"]) .phase .a{font-size:12px}
+html:not([lang="en"]) .tbtn{font-size:12.5px}
 body{
   background:var(--paper);color:var(--ink);font-family:var(--body);
   font-size:16px;line-height:var(--lh);-webkit-font-smoothing:antialiased;
@@ -1384,16 +1600,16 @@ input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
 .brand{display:flex;align-items:baseline;gap:10px}
 .brand .mark{font-family:var(--arabic);font-size:23px;color:var(--brass);line-height:1}
 .brand .nm{font-family:var(--display);font-size:19px}
-.brand .dt{font-family:var(--mono);font-size:10.5px;color:#7D8798;letter-spacing:.08em;display:block;margin-top:1px}
+.brand .dt{font-family:var(--mono);font-size:10.5px;color:#8A939C;letter-spacing:.08em;display:block;margin-top:1px}
 .streak{text-align:end;flex:none}
 .streak .v{font-family:var(--display);font-size:24px;line-height:1;color:var(--brass)}
-.streak .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#7D8798;display:block;margin-top:3px}
+.streak .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#8A939C;display:block;margin-top:3px}
 
 .topbtns{display:flex;gap:8px;align-items:center;padding-bottom:12px;flex-wrap:wrap}
 .sync{
   display:none;align-items:center;gap:7px;padding:5px 11px;
   border:1px solid rgba(164,129,63,.4);font-family:var(--mono);
-  font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9BA5B5;
+  font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#AEB6BD;
 }
 .sync.show{display:inline-flex}
 .sync .dot{width:7px;height:7px;border-radius:50%;background:#69717F;flex:none;transition:background .3s}
@@ -1428,7 +1644,9 @@ h3{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.4}
 }
 .phase .a{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--brass)}
 .phase .b{font-family:var(--display);font-size:19px;margin-top:2px}
-.phase .c{font-size:13.5px;color:#9BA5B5;max-width:36ch}
+.phase .c{font-size:13.5px;color:#AEB6BD;max-width:36ch}
+.phase.tap{cursor:pointer}
+.phase.tap:hover{background:#2C3846}
 
 /* ---------- GATE ---------- */
 .gate{border:1px solid var(--rule);background:var(--card);padding:20px;margin-bottom:18px}
@@ -1472,7 +1690,7 @@ h3{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.4}
 .pgrow{display:flex;align-items:center;gap:10px;direction:rtl}
 .pgrow + .pgrow{margin-top:7px}
 .pgn{font-family:var(--mono);font-size:9.5px;color:var(--brass);opacity:.7;width:14px;flex:none;direction:ltr}
-.pgl{height:3px;background:#B6BDC9;border-radius:2px;transition:background .3s}
+.pgl{height:3px;background:#C6CBD0;border-radius:2px;transition:background .3s}
 .pgb{display:block;width:100%;padding:7px 6px;border-right:2px solid transparent;transition:background .22s,border-color .22s}
 .pgb + .pgb{margin-top:3px}
 .pgb:hover{background:rgba(44,106,94,.09)}
@@ -1522,7 +1740,7 @@ h3{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.4}
 
 .sum{background:var(--ink);color:var(--paper);padding:20px 18px;margin-top:22px}
 .sum-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
-.sum .lab{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7D8798}
+.sum .lab{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8A939C}
 .sum .big{font-family:var(--display);font-size:30px;color:var(--brass)}
 .bar{height:5px;background:rgba(255,255,255,.13);margin-top:14px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--brass);width:0;transition:width .5s cubic-bezier(.2,.7,.3,1)}
@@ -1555,7 +1773,9 @@ h3{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.4}
 .tbl{width:100%;border-collapse:collapse;font-size:14.5px}
 .tbl th{text-align:start;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:0 0 10px;padding-inline-end:12px;border-bottom:1px solid var(--ink)}
 .tbl td{text-align:start;padding:11px 0;padding-inline-end:12px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
-.tbl td:first-child{color:var(--ink);font-weight:500}
+.tbl td:first-child{color:var(--ink);font-weight:500;text-wrap:pretty}
+.tbl td:last-child{white-space:nowrap}
+.tbl td,.tbl th{word-break:keep-all;overflow-wrap:normal}
 .tbl .src{font-family:var(--mono);font-size:11px;color:var(--verdigris)}
 .tbl tr:last-child td{border-bottom:none}
 
@@ -1598,7 +1818,7 @@ h3{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.4}
   display:none;align-items:center;justify-content:space-between;gap:14px;border-top:1px solid var(--brass);
 }
 .tbar.on{display:flex}
-.tbar .nm{font-size:14px;color:#9BA5B5;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tbar .nm{font-size:14px;color:#AEB6BD;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tbar .cl{font-family:var(--mono);font-size:24px;color:var(--brass);flex:none;direction:ltr}
 .tbar .x{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(255,255,255,.3);padding:7px 12px;flex:none}
 .tbar .x:hover{background:var(--paper);color:var(--ink)}
@@ -1631,15 +1851,15 @@ h3{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.4}
 .ob-in{max-width:480px;margin:0 auto;padding:52px 24px calc(48px + env(safe-area-inset-bottom))}
 .ob h1{font-family:var(--display);font-weight:400;font-size:32px;line-height:1.35;margin:14px 0 12px}
 .ob h1 em{font-style:normal;color:var(--brass)}
-.ob p.lede{color:#9BA5B5;font-size:15px;margin-bottom:26px}
-.ob .fld label{color:#7D8798}
+.ob p.lede{color:#AEB6BD;font-size:15px;margin-bottom:26px}
+.ob .fld label{color:#8A939C}
 .ob .fld input,.ob .fld select{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.2);color:var(--paper)}
 .ob .fld option{background:#1B2942}
-.ob .hint{color:#7D8798}
+.ob .hint{color:#8A939C}
 
 footer{background:var(--ink);color:#69717F;padding:26px 0;font-size:12.5px}
 footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
-footer b{color:#9BA5B5;font-weight:500}
+footer b{color:#AEB6BD;font-weight:500}
 
 @media print{
   body{background:#fff}
@@ -1681,12 +1901,97 @@ footer b{color:#9BA5B5;font-weight:500}
   <nav class="tabs"><div class="wrap" id="tabs"></div></nav>
 </header>
 
+<style>
+.rdcard{border:1px solid var(--rule);background:var(--card);padding:13px 14px;margin-bottom:14px;
+  display:flex;flex-direction:column;gap:11px}
+.rdline{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.rdlbl{font-size:12px;color:var(--muted);flex:none}
+.rdgrp{display:flex;align-items:stretch;border:1px solid var(--rule);background:var(--paper)}
+.rdgrp>*{border:none;background:none;padding:8px 13px;font-size:13.5px;line-height:1.3;color:inherit;font-family:inherit}
+.rdgrp>*+*{border-inline-start:1px solid var(--rule)}
+.rdgrp button{cursor:pointer}
+.rdgrp button:hover{background:var(--paper-2)}
+.rdgrp input{width:62px;text-align:center}
+.rdgo{background:var(--verdigris);color:#fff}
+.rdgo:hover{background:var(--verdigris);opacity:.92}
+.rdmini{font-size:12.5px;padding:7px 13px;border:1px solid var(--rule);border-radius:999px;
+  background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap}
+.rdmini:hover{border-color:var(--brass);color:var(--ink)}
+.rdmini[aria-pressed="true"]{background:var(--brass);border-color:var(--brass);color:#fff}
+.rdsep{flex:1 1 0;min-width:0}
+.paper{background:#FFFFFF;color:#33414F;border-radius:10px;padding:22px 18px 16px;box-shadow:0 10px 30px rgba(0,0,0,.35);direction:rtl}
+.qline{display:flex;justify-content:space-between;align-items:center;gap:2px;
+  min-height:clamp(22px,5.4vw,34px);font-size:clamp(13px,4.3vw,26px);line-height:1.9;
+  transition:opacity .2s;white-space:nowrap}
+.qline.dim{opacity:.28}
+.qline .w.off{opacity:.2}
+.qline .w.cov{color:transparent;background:rgba(33,43,54,.07);border-radius:4px}
+.ayn{font-family:var(--mono);font-size:10px;color:var(--verdigris);vertical-align:super;padding:0 2px;direction:ltr}
+.qline .w.off .ayn{opacity:.5}
+.paper.picking .w{background:rgba(20,160,166,.08)}
+.paper.picking .w:hover{background:rgba(20,160,166,.3)}
+.pickmsg{margin:8px 0 0;font-size:12.5px;color:var(--verdigris);direction:ltr}
+.ovl{position:fixed;inset:0;background:rgba(46,51,47,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:60}
+.ovl.on{display:flex}
+.exsheet{background:var(--card);width:100%;max-width:580px;max-height:90vh;overflow:auto;padding:22px 20px 24px;border:1px solid var(--rule)}
+.exq{background:#FFFFFF;border:1px solid var(--rule);padding:16px 14px;margin:14px 0;direction:rtl;
+  font-size:clamp(15px,4.6vw,25px);line-height:2}
+.exq .gap{display:inline-block;min-width:64px;border-bottom:2px dashed var(--brass);vertical-align:middle}
+.exchips{display:flex;flex-wrap:wrap;gap:8px;direction:rtl}
+.exchip{border:1px solid var(--rule);background:var(--paper);padding:9px 13px;
+  font-size:clamp(15px,4.4vw,23px);line-height:1.6;cursor:pointer}
+.exchip:hover{border-color:var(--brass)}
+.exchip.used{opacity:.25;pointer-events:none}
+.exchip.bad{border-color:var(--maroon);background:var(--maroon-soft)}
+.exchip.good{border-color:var(--verdigris);background:var(--verd-soft)}
+.qline .w.mut{border-bottom:2px dotted var(--maroon)}
+.trbox{margin-top:14px;padding:14px 16px;border:1px solid var(--rule);background:var(--card)}
+.trbox h4{font-size:12.5px;color:var(--muted);margin-bottom:10px;font-weight:400}
+.trrow{padding:9px 0;border-top:1px solid var(--rule);display:flex;gap:11px;align-items:flex-start;font-size:15px;line-height:1.7}
+.trrow:first-of-type{border-top:none}
+.trk{flex:none;font-size:12px;color:var(--verdigris);padding-top:4px;min-width:42px}
+.mutbox{margin-top:14px;padding:13px 14px;border:1px solid var(--rule);background:var(--card);font-size:13.5px}
+.mutbox h4{font-size:13px;margin-bottom:8px;color:var(--maroon)}
+.mutrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--rule)}
+.mutar{direction:rtl;font-family:var(--arabic);font-size:19px}
+.recbox{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px;padding:13px 14px;border:1px solid var(--rule);background:var(--card)}
+.recbox audio{height:34px;max-width:230px}
+.recbox .lb{font-size:12px;color:var(--muted)}
+.recdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--maroon);animation:recpulse 1.1s infinite}
+@keyframes recpulse{0%,100%{opacity:1}50%{opacity:.25}}
+.exhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.exmodes{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.exfoot{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.exmsg{font-size:13.5px;min-height:20px}
+.exmsg.ok{color:var(--verdigris)}.exmsg.no{color:var(--maroon)}
+.rdtog{border:1px solid var(--rule);background:transparent;color:var(--muted);font:inherit;font-size:12.5px;
+  padding:7px 14px;border-radius:999px;cursor:pointer}
+.rdtog:hover{border-color:var(--brass);color:var(--ink)}
+.rdtog[aria-pressed="true"]{background:var(--brass);border-color:var(--brass);color:#fff}
+.rdsel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:-4px 0 12px;font-size:13px}
+.rdsel select{padding:6px 8px}
+.qline.tl{background:rgba(20,160,166,.13);border-radius:6px}
+.qline.covered .w{color:transparent;text-shadow:none;background:rgba(33,43,54,.07);border-radius:4px}
+.qline .w{cursor:pointer;padding:0 1px;border-radius:4px}
+.qline .w:hover{background:rgba(20,160,166,.22)}
+.qline .w.on{background:rgba(20,160,166,.22)}
+.qline .w.now{background:rgba(20,160,166,.42);box-shadow:0 0 0 2px rgba(20,160,166,.42)}
+.qline.covered .w.now{background:rgba(20,160,166,.28)}
+.qcen{justify-content:center;gap:10px}
+.rdfoot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:#77808A;padding-top:10px;margin-top:8px;border-top:1px solid rgba(33,43,54,.12);direction:ltr}
+.wmean{margin-top:12px;min-height:44px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.05);font-size:14px}
+.wmean b{font-size:19px}
+.rdnote{font-size:13px;opacity:.7;margin-bottom:12px}
+.rdprog{font-family:var(--mono);font-size:12px;opacity:.8}
+</style>
 <main class="wrap">
   <section class="view on" id="v-today"></section>
+  <section class="view" id="v-mushaf"></section>
   <section class="view" id="v-routine"></section>
   <section class="view" id="v-progress"></section>
   <section class="view" id="v-settings"></section>
 </main>
+<div class="ovl" id="exam"><div class="exsheet" id="exam-in"></div></div>
 
 <div class="rep" id="rep">
   <div class="sheet" id="sheet"></div>
@@ -1794,12 +2099,47 @@ function key(d){ return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(
 function parseKey(k){ var p = k.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
 function addDays(d, x){ var y = new Date(d.getTime()); y.setDate(y.getDate() + x); return y; }
 function daysBetween(a, b){ return Math.round((parseKey(b) - parseKey(a)) / 86400000); }
+function hijriDate(d){
+  var code = (L && L.code) || "en";
+  var loc = { bn:"bn", ur:"ur", zh:"zh", en:"en" }[code] || "en";
+  var suffix = { bn:"হিজরি", ur:"ھ", zh:"希吉来历", en:"AH" }[code] || "AH";
+  function build(l){
+    /* Intl appends an era designator ("যুগ" in Bengali) — drop it and use the
+       proper hijri label instead. */
+    var parts = new Intl.DateTimeFormat(l, { day:"numeric", month:"long", year:"numeric" }).formatToParts(d);
+    var out = parts.filter(function(p){ return p.type !== "era"; })
+                   .map(function(p){ return p.value; }).join("");
+    return out.replace(/[\s,·]+$/, "") + " " + suffix;
+  }
+  try { return build(loc + "-u-ca-islamic-umalqura"); }
+  catch(e){ try { return build("en-u-ca-islamic"); } catch(e2){ return ""; } }
+}
+function clockText(d){ return n(pad(d.getHours())) + ":" + n(pad(d.getMinutes())); }
 function longDate(d){ return n(d.getDate()) + " " + L.months[d.getMonth()] + " · " + L.weekdays[d.getDay()]; }
 function shortDate(d){ return n(d.getDate()) + " " + L.monthsShort[d.getMonth()]; }
 
 var TODAY = key(new Date());
+/* Mushaf editions — page count and lines per page differ by print, so every
+   page/line calculation reads these instead of a fixed 604/15. */
+var MUSHAFS = [
+  { id:"madani",     pages:604, lines:15, qcf:"v1", nm:{ en:"Madani (1405 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪০৫ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۰۵ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1405 年版）— 604 页 · 15 行" } },
+  { id:"madani1421", pages:604, lines:15, qcf:"v2", nm:{ en:"Madani (1421 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪২১ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۲۱ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1421 年版）— 604 页 · 15 行" } },
+  { id:"indopak15", pages:611, lines:15, nm:{ en:"Indo-Pak 15-line (Majidi / Hafizi) · 611 pages", bn:"ইন্দো-পাক ১৫ লাইন (মাজিদী · হাফেজি) · ৬১১ পৃষ্ঠা", ur:"انڈو پاک ۱۵ سطری (مجیدی · حافظی) · ۶۱۱ صفحے", zh:"印巴 15 行（马吉迪 · 哈菲兹版）— 611 页" } },
+  { id:"indopak16", pages:550, lines:16, nm:{ en:"Indo-Pak 16-line (Taj) · 550 pages", bn:"ইন্দো-পাক ১৬ লাইন (তাজ) · ৫৫০ পৃষ্ঠা", ur:"انڈو پاک ۱۶ سطری (تاج) · ۵۵۰ صفحے", zh:"印巴 16 行（Taj）— 550 页" } },
+  { id:"indopak13", pages:847, lines:13, nm:{ en:"Indo-Pak 13-line · 847 pages", bn:"ইন্দো-পাক ১৩ লাইন · ৮৪৭ পৃষ্ঠা", ur:"انڈو پاک ۱۳ سطری · ۸۴۷ صفحے", zh:"印巴 13 行 · 847 页" } }
+];
+function mushafDef(){
+  var id = S && S.settings ? S.settings.mushafId : "madani";
+  for (var i = 0; i < MUSHAFS.length; i++) if (MUSHAFS[i].id === id) return MUSHAFS[i];
+  return MUSHAFS[0];
+}
 var TOTAL_PAGES = 604;
+var LINES_PER_PAGE = 15;
 var PER_JUZ = TOTAL_PAGES / 30;
+function applyMushaf(){
+  var m = mushafDef();
+  TOTAL_PAGES = m.pages; LINES_PER_PAGE = m.lines; PER_JUZ = TOTAL_PAGES / 30;
+}
 function juzOf(p){ return Math.min(30, Math.max(1, Math.ceil(p / PER_JUZ))); }
 function juzRange(j){ return [Math.round((j-1) * PER_JUZ) + 1, Math.min(TOTAL_PAGES, Math.round(j * PER_JUZ))]; }
 
@@ -1825,7 +2165,7 @@ var Store = {
 /* ---------- state ---------- */
 var S = null;
 function blankDay(){
-  return { sabaq:{ pages:[], blocks:[false,false,false], done:false },
+  return { sabaq:{ pages:[], from:0, to:0, blocks:[false,false,false], done:false },
            gate:null, listen:false, sabaqi:[], salah:0,
            manzil:{ juz:0, done:false }, night:false,
            errors:0, minutes:0, note:"" };
@@ -1833,8 +2173,8 @@ function blankDay(){
 function defaults(){
   return { v:1,
     settings:{ lang:null, startDate:TODAY, startPage:1, restDay:5,
-               qari:"", mushaf:"", manualLines:0, drive:null },
-    days:{}, weak:{}, updatedAt:Date.now() };
+               qari:"", mushaf:"", mushafId:"madani", reciter:"Ayman_Sowaid_64kbps", manualLines:0, notifyAt:"", zikrEvery:0, drive:null },
+    days:{}, weak:{}, rev:{}, updatedAt:Date.now() };
 }
 function day(k){ if (!S.days[k]) S.days[k] = blankDay(); return S.days[k]; }
 var saveTimer = null;
@@ -1855,28 +2195,57 @@ function phaseIdx(){ var w = weekNo(); return w <= 2 ? 0 : w <= 4 ? 1 : w <= 6 ?
 function phaseNote(){ return S.settings.manualLines > 0 ? L.phase.manual : L.phase.notes[phaseIdx()]; }
 function isRestDay(k){ return parseKey(k).getDay() === S.settings.restDay; }
 
-function memorizedPages(){
-  var out = [], seen = {};
+/* highest line finished on each page */
+function pageDoneLines(){
+  var mx = {};
   Object.keys(S.days).sort().forEach(function(k){
     var d = S.days[k];
     if (!d.sabaq.done) return;
-    d.sabaq.pages.forEach(function(p){ if (!seen[p]){ seen[p] = true; out.push(p); } });
+    var ps = d.sabaq.pages || [], to = d.sabaq.to || LINES_PER_PAGE;
+    ps.forEach(function(p, i){
+      var v = (i < ps.length - 1) ? LINES_PER_PAGE : to;
+      if (!mx[p] || v > mx[p]) mx[p] = v;
+    });
   });
+  return mx;
+}
+/* only pages finished to the last line count as memorized */
+function memorizedPages(){
+  var mx = pageDoneLines(), out = [];
+  Object.keys(mx).forEach(function(p){ if (mx[p] >= LINES_PER_PAGE) out.push(+p); });
   return out.sort(function(a,b){ return a - b; });
 }
-function nextPage(){
-  var m = memorizedPages();
-  return m.length ? Math.min(TOTAL_PAGES, Math.max.apply(null, m) + 1) : S.settings.startPage;
+/* where today's lesson starts: stay on the same page until its last
+   line is done, only then move on to the next page */
+function nextSlot(){
+  var keys = Object.keys(S.days).filter(function(k){ return k <= TODAY && S.days[k].sabaq.done; }).sort();
+  if (!keys.length) return { page: S.settings.startPage, from: 1 };
+  var last = S.days[keys[keys.length - 1]].sabaq, ps = last.pages || [];
+  if (!ps.length) return { page: S.settings.startPage, from: 1 };
+  var p = ps[ps.length - 1], to = last.to || LINES_PER_PAGE;
+  if (to < LINES_PER_PAGE) return { page: p, from: to + 1 };
+  return { page: Math.min(TOTAL_PAGES, p + 1), from: 1 };
 }
+function nextPage(){ return nextSlot().page; }
 function sabaqiQueue(){
-  var out = [];
+  var out = [], seenP = {};
   var keys = Object.keys(S.days).filter(function(k){ return k < TODAY && S.days[k].sabaq.done; }).sort().reverse();
   for (var i = 0; i < keys.length && out.length < 9; i++){
     var d = S.days[keys[i]];
-    for (var j = 0; j < d.sabaq.pages.length; j++) out.push({ page:d.sabaq.pages[j], ago:daysBetween(keys[i], TODAY) });
+    for (var j = 0; j < d.sabaq.pages.length; j++){
+      var pg = d.sabaq.pages[j];
+      if (seenP[pg]) continue;
+      seenP[pg] = true;
+      out.push({ page:pg, ago:daysBetween(keys[i], TODAY) });
+    }
     if (out.length >= 7 && i >= 6) break;
   }
-  return out.slice(0, 9);
+  revDue().forEach(function(p){
+    if (out.length >= 12 || seenP[p]) return;
+    seenP[p] = true;
+    out.push({ page:p, ago:daysBetween(S.rev[p].last, TODAY) });
+  });
+  return out.slice(0, 12);
 }
 function manzilJuz(){
   var m = memorizedPages();
@@ -1916,6 +2285,11 @@ function streak(){
 function prevSabaqDay(){
   var keys = Object.keys(S.days).filter(function(k){ return k < TODAY && S.days[k].sabaq.done; }).sort();
   return keys.length ? keys[keys.length-1] : null;
+}
+function revFromGate(g){
+  var prev = prevSabaqDay();
+  if (!prev) return;
+  (S.days[prev].sabaq.pages || []).forEach(function(p){ revRecord(p, g === "pass" ? 1 : 0.2); });
 }
 function consecutiveFails(){
   var c = 0, d = addDays(new Date(), -1);
@@ -1965,9 +2339,18 @@ function stopTimer(silent){
 }
 
 /* ---------- chrome ---------- */
+var clockTimer = null;
+function writeHeaderDate(){
+  var el = document.getElementById("hdr-date");
+  if (!el) return;
+  var now = new Date(), hj = hijriDate(now);
+  el.textContent = clockText(now) + " · " + longDate(now) + (hj ? " · " + hj : "");
+}
 function renderChrome(){
   document.getElementById("hdr-name").textContent = L.app.name;
-  document.getElementById("hdr-date").textContent = longDate(new Date());
+  writeHeaderDate();
+  clearInterval(clockTimer);
+  clockTimer = setInterval(writeHeaderDate, 20000);
   document.getElementById("hdr-streak").textContent = n(streak());
   document.getElementById("hdr-streak-l").textContent = L.app.streak;
   document.getElementById("ft1").innerHTML = L.app.footer1;
@@ -1979,7 +2362,7 @@ function renderChrome(){
   var cur = qa(".tab").filter(function(t){ return t.getAttribute("aria-selected") === "true"; });
   var active = cur.length ? cur[0].dataset.v : "today";
   document.getElementById("tabs").innerHTML =
-    ["today","routine","progress","settings"].map(function(v){
+    ["today","mushaf","routine","progress","settings"].map(function(v){
       return '<button class="tab" data-v="' + v + '" aria-selected="' + (v === active) + '">' + L.nav[v] + '</button>';
     }).join("");
   qa(".tab").forEach(function(t){
@@ -2008,7 +2391,7 @@ function renderOnboard(){
     '<div class="fld"><label for="ob-date">' + o.date + '</label>' +
       '<input type="date" id="ob-date" value="' + TODAY + '"><div class="hint">' + o.dateHint + '</div></div>' +
     '<div class="fld"><label for="ob-page">' + o.page + '</label>' +
-      '<input type="number" id="ob-page" min="1" max="604" value="1"><div class="hint">' + o.pageHint + '</div></div>' +
+      '<input type="number" id="ob-page" min="1" max="' + TOTAL_PAGES + '" value="1"><div class="hint">' + o.pageHint + '</div></div>' +
     '<div class="fld"><label for="ob-rest">' + o.rest + '</label><select id="ob-rest">' +
       days.map(function(d){ return '<option value="' + d + '">' + L.weekdays[d] + '</option>'; }).join("") +
       '</select><div class="hint">' + o.restHint + '</div></div>' +
@@ -2022,7 +2405,7 @@ function renderOnboard(){
   };
   document.getElementById("ob-go").onclick = async function(){
     S.settings.startDate = document.getElementById("ob-date").value || TODAY;
-    S.settings.startPage = Math.max(1, Math.min(604, +document.getElementById("ob-page").value || 1));
+    S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +document.getElementById("ob-page").value || 1));
     S.settings.restDay   = +document.getElementById("ob-rest").value;
     await Store.set(S);
     document.getElementById("ob").classList.remove("on");
@@ -2039,15 +2422,16 @@ function card(i, ar, title, meta, done, k, body){
     '<button class="tog" data-tog="' + k + '" aria-pressed="' + done + '" aria-label="' + L.blk.doneLabel + '"></button></div>' +
     '<div class="blk-b">' + body + '</div></div>';
 }
-function pageGrid(lines, blocks){
+function pageGrid(lineFrom, lineTo, blocks){
   var w = [100,96,100,93,98,100,94,99,100,92,97,100,95,100,74];
-  var nb = Math.ceil(lines / 5), h = '<div class="pg">';
+  var count = Math.max(1, lineTo - lineFrom + 1);
+  var nb = Math.ceil(count / 5), h = '<div class="pg">';
   for (var b = 0; b < nb; b++){
-    var from = b * 5, to = Math.min(lines, from + 5);
+    var from = lineFrom + b * 5, to = Math.min(lineTo + 1, from + 5);
     h += '<button class="pgb" data-blk="' + b + '" aria-pressed="' + !!blocks[b] + '">';
     for (var i = from; i < to; i++){
-      h += '<div class="pgrow"><span class="pgn">' + n(i+1) + '</span>' +
-           '<div class="pgl" style="width:' + w[i % 15] + '%"></div></div>';
+      h += '<div class="pgrow"><span class="pgn">' + n(i) + '</span>' +
+           '<div class="pgl" style="width:' + w[(i - 1) % 15] + '%"></div></div>';
     }
     h += '</button>';
   }
@@ -2060,22 +2444,38 @@ function renderToday(){
   var prev = prevSabaqDay(), blocked = (d.gate === "fail");
   var prevPages = prev ? S.days[prev].sabaq.pages : [];
 
-  if (blocked && prevPages.length) d.sabaq.pages = prevPages.slice();
-  else if (!d.sabaq.pages.length && !rest) d.sabaq.pages = [nextPage()];
+  if (blocked && prevPages.length){
+    d.sabaq.pages = prevPages.slice();
+    d.sabaq.from  = S.days[prev].sabaq.from || 1;
+    d.sabaq.to    = S.days[prev].sabaq.to   || Math.min(LINES_PER_PAGE, (S.days[prev].sabaq.from || 1) + lines - 1);
+  } else if (!rest && (!d.sabaq.pages.length || !d.sabaq.from)){
+    var slot = nextSlot();
+    d.sabaq.pages = [slot.page];
+    d.sabaq.from  = slot.from;
+    d.sabaq.to    = Math.min(LINES_PER_PAGE, slot.from + lines - 1);
+  } else if (!rest && !d.sabaq.done){
+    d.sabaq.to    = Math.min(LINES_PER_PAGE, d.sabaq.from + lines - 1);
+  }
 
-  var pagesTxt = d.sabaq.pages.map(n).join(", ");
+  var lineFrom  = d.sabaq.from || 1;
+  var lineTo    = d.sabaq.to   || Math.min(LINES_PER_PAGE, lineFrom + lines - 1);
+  var lineCount = Math.max(1, lineTo - lineFrom + 1);
+  var lineTxt   = fmt(L.phase.lineRange, n(lineFrom), n(lineTo)) +
+                  (d.sabaq.ayahFrom ? ' · ' + L.rd.ay + ' ' + ayLabel(d.sabaq.ayahFrom) + '–' + ayLabel(d.sabaq.ayahTo) : '');
+  var pagesTxt  = d.sabaq.pages.map(n).join(", ");
   var h = "";
 
-  h += '<div class="phase"><div>' +
+  h += '<div class="phase' + (rest ? '' : ' tap') + '"' + (rest ? '' : ' data-openpage="' + (d.sabaq.pages[0] || 1) + '"') + '><div>' +
        '<div class="a">' + fmt(L.phase.week, n(weekNo())) + ' · ' +
          (rest ? L.phase.rest : fmt(L.phase.target, n(lines))) + '</div>' +
-       '<div class="b">' + (rest ? L.phase.noNew : fmt(L.phase.page, pagesTxt)) + '</div></div>' +
+       '<div class="b">' + (rest ? L.phase.noNew : fmt(L.phase.page, pagesTxt) + ' · ' + lineTxt) + '</div></div>' +
        '<div class="c">' + (rest ? L.phase.restNote : phaseNote()) + '</div></div>';
 
   if (prev){
     var cls = d.gate === "pass" ? " pass" : d.gate === "fail" ? " fail" : "";
     h += '<div class="gate' + cls + '">' +
-         '<div class="q">' + fmt(L.gate.q, S.days[prev].sabaq.pages.map(n).join(", ")) + '</div>' +
+         '<div class="q">' + fmt(L.gate.q, S.days[prev].sabaq.pages.map(n).join(", ") +
+           (S.days[prev].sabaq.from ? ' · ' + fmt(L.phase.lineRange, n(S.days[prev].sabaq.from), n(S.days[prev].sabaq.to || LINES_PER_PAGE)) : "")) + '</div>' +
          '<div class="btns">' +
          '<button class="gbtn' + (d.gate === "pass" ? " sel-y" : "") + '" data-gate="pass">' + L.gate.yes + '</button>' +
          '<button class="gbtn' + (d.gate === "fail" ? " sel-n" : "") + '" data-gate="fail">' + L.gate.no + '</button></div>';
@@ -2089,14 +2489,16 @@ function renderToday(){
   }
 
   if (!rest){
-    var nb = Math.ceil(lines / 5);
+    var nb = Math.ceil(lineCount / 5);
     var head = blocked ? '<p style="margin-bottom:12px">' + L.sabaq.blocked + '</p>'
       : '<div class="fld" style="margin-bottom:14px"><label for="sq-page">' + L.sabaq.pageLabel + '</label>' +
-        '<input type="number" id="sq-page" min="1" max="604" value="' + d.sabaq.pages[0] + '" style="max-width:150px">' +
+        '<input type="number" id="sq-page" min="1" max="' + TOTAL_PAGES + '" value="' + d.sabaq.pages[0] + '" style="max-width:150px">' +
         '<div class="hint">' + L.sabaq.pageHint + '</div></div>';
     h += card(1, "سَبَق", blocked ? L.blk.sabaqRepeat : L.blk.sabaq,
-      fmt(L.blk.sabaqMeta, pagesTxt, n(lines)), d.sabaq.done, "sabaq",
-      head + pageGrid(lines, d.sabaq.blocks) +
+      fmt(L.blk.sabaqMeta, pagesTxt + ' · ' + lineTxt, n(lineCount)), d.sabaq.done, "sabaq",
+      '<button class="abtn go" data-openpage="' + (d.sabaq.pages[0] || 1) + '" style="margin-bottom:14px">' +
+        L.rd.openPage + '</button>' +
+      head + pageGrid(lineFrom, lineTo, d.sabaq.blocks) +
       '<p style="margin-bottom:10px">' + L.sabaq.intro + '</p>' +
       '<ol class="steps">' + L.sabaq.drill.map(function(s){ return '<li>' + s + '</li>'; }).join("") + '</ol>' +
       '<p style="margin-top:10px">' + fmt(L.sabaq.after, n(nb)) + '</p>' +
@@ -2115,6 +2517,13 @@ function renderToday(){
     }).join("") + '</div>';
   } else {
     qh += '<p class="empty">' + L.sabaqi.empty + '</p>';
+  }
+  if (d.rateAsk){
+    qh += '<div class="queue" style="margin-top:2px">' +
+      '<span class="qp" style="border:none;background:none;padding-inline-start:0">' + fmt(L.rev.ask, n(d.rateAsk)) + '</span>' +
+      '<button class="qp" data-rate="' + d.rateAsk + '|1">' + L.rev.good + '</button>' +
+      '<button class="qp" data-rate="' + d.rateAsk + '|0.6">' + L.rev.ok + '</button>' +
+      '<button class="qp" data-rate="' + d.rateAsk + '|0.2">' + L.rev.bad + '</button></div>';
   }
   if (wk.length){
     qh += '<p style="margin-bottom:6px">' + L.sabaqi.weakLabel + '</p><div class="queue">' +
@@ -2157,7 +2566,7 @@ function renderToday(){
     '<div class="fld"><label for="lg-note">' + L.log.note + '</label>' +
       '<textarea id="lg-note" placeholder="' + L.log.notePh + '">' + esc(d.note) + '</textarea></div>' +
     '<div class="fld"><label for="lg-weak">' + L.log.weak + '</label>' +
-      '<div class="act"><input type="number" id="lg-weak" min="1" max="604" placeholder="' + L.log.weakPh + '" style="max-width:150px">' +
+      '<div class="act"><input type="number" id="lg-weak" min="1" max="' + TOTAL_PAGES + '" placeholder="' + L.log.weakPh + '" style="max-width:150px">' +
       '<button class="abtn" id="weak-add">' + L.log.weakAdd + '</button>' +
       (wk.length ? '<button class="abtn danger" id="weak-clr">' + L.log.weakClear + '</button>' : '') +
       '</div><div class="hint">' + L.log.weakHint + '</div></div></div>';
@@ -2167,7 +2576,7 @@ function renderToday(){
     '<span class="big">' + n(sc) + '%</span></div>' +
     '<div class="bar"><i style="width:' + sc + '%"></i></div>' +
     '<div class="sum-row" style="margin-top:16px"><span class="lab">' + L.sum.total + '</span>' +
-    '<span style="font-family:var(--mono);font-size:13px;color:#9BA5B5">' +
+    '<span style="font-family:var(--mono);font-size:13px;color:#AEB6BD">' +
     fmt(L.sum.stat, n(memorizedPages().length), n(d.minutes)) + '</span></div></div>';
 
   document.getElementById("v-today").innerHTML = h;
@@ -2177,7 +2586,11 @@ function renderToday(){
 function bindToday(){
   var d = day(TODAY);
   qa("[data-gate]").forEach(function(b){
-    b.onclick = function(){ d.gate = (d.gate === b.dataset.gate) ? null : b.dataset.gate; save(); renderToday(); };
+    b.onclick = function(){
+      var nextGate = (d.gate === b.dataset.gate) ? null : b.dataset.gate;
+      /* record once per day, and only when an answer is actually being set */
+      if (nextGate && !d.gateRated){ revFromGate(nextGate); d.gateRated = true; }
+      d.gate = nextGate; save(); renderToday(); };
   });
   qa("[data-tog]").forEach(function(b){
     b.onclick = function(){
@@ -2198,7 +2611,8 @@ function bindToday(){
     b.onclick = function(){
       var i = +b.dataset.blk;
       d.sabaq.blocks[i] = !d.sabaq.blocks[i];
-      var nb = Math.ceil(targetLines() / 5), all = true;
+      var cnt = Math.max(1, (d.sabaq.to || targetLines()) - (d.sabaq.from || 1) + 1);
+      var nb = Math.ceil(cnt / 5), all = true;
       for (var j = 0; j < nb; j++) if (!d.sabaq.blocks[j]) all = false;
       if (all) d.sabaq.done = true;
       save(); renderToday(); renderChrome();
@@ -2207,8 +2621,23 @@ function bindToday(){
   qa("[data-sq]").forEach(function(b){
     b.onclick = function(){
       var p = +b.dataset.sq, i = d.sabaqi.indexOf(p);
-      if (i > -1) d.sabaqi.splice(i, 1); else d.sabaqi.push(p);
+      if (i > -1){ d.sabaqi.splice(i, 1); d.rateAsk = 0; }
+      else { d.sabaqi.push(p); d.rateAsk = p; }
       save(); renderToday(); renderChrome();
+    };
+  });
+  qa("[data-openpage]").forEach(function(b){
+    b.onclick = function(e){
+      if (e.target.closest("input, select, .pgb")) return;
+      openMushaf(+b.dataset.openpage);
+    };
+  });
+  qa("[data-rate]").forEach(function(b){
+    b.onclick = function(){
+      var p = b.dataset.rate.split("|");
+      revRecord(+p[0], +p[1]);
+      d.rateAsk = 0;
+      save(); renderToday(); renderProgress();
     };
   });
   qa("[data-salah]").forEach(function(b){
@@ -2223,7 +2652,11 @@ function bindToday(){
   var g = function(id){ return document.getElementById(id); };
   var sp = g("sq-page");
   if (sp) sp.onchange = function(){
-    d.sabaq.pages = [Math.max(1, Math.min(604, +sp.value || 1))];
+    d.sabaq.pages  = [Math.max(1, Math.min(TOTAL_PAGES, +sp.value || 1))];
+    d.sabaq.from   = 1;
+    d.sabaq.to     = Math.min(LINES_PER_PAGE, targetLines());
+    d.sabaq.blocks = [false,false,false];
+    d.sabaq.done   = false;
     save(); renderToday(); renderProgress();
   };
   var e = g("lg-err");   if (e)  e.onchange  = function(){ d.errors = Math.max(0, +e.value || 0); save(); };
@@ -2232,7 +2665,7 @@ function bindToday(){
   var wa = g("weak-add");
   if (wa) wa.onclick = function(){
     var v = +g("lg-weak").value;
-    if (v >= 1 && v <= 604){ S.weak[v] = true; save(); renderToday(); renderProgress(); }
+    if (v >= 1 && v <= TOTAL_PAGES){ S.weak[v] = true; save(); renderToday(); renderProgress(); }
   };
   var wc = g("weak-clr");
   if (wc) wc.onclick = function(){ S.weak = {}; save(); renderToday(); renderProgress(); };
@@ -2296,6 +2729,8 @@ function renderProgress(){
   var wk = weakPages(), wkm = {}; wk.forEach(function(p){ wkm[p] = true; });
   var td = day(TODAY), tdm = {};
   if (!td.sabaq.done) td.sabaq.pages.forEach(function(p){ tdm[p] = true; });
+  var partial = pageDoneLines();
+  Object.keys(partial).forEach(function(p){ if (partial[p] < LINES_PER_PAGE) tdm[p] = true; });
 
   var juzDone = 0;
   for (var j = 1; j <= 30; j++){
@@ -2317,7 +2752,11 @@ function renderProgress(){
   var vals = [n(m.length), n(juzDone), n(Math.round(m.length / TOTAL_PAGES * 100)) + "%",
               n(streak()), n(Math.round(totMin / 60)), nErr ? n(Math.round(totErr / nErr)) : "—"];
 
+  var due = revDue();
   var h = '<div class="kicker">' + P.k + '</div><h2>' + P.h + '</h2>' +
+    '<p class="intro" style="margin-bottom:16px">' +
+      (due.length ? L.rev.due + ': ' + due.slice(0, 12).map(n).join(", ") : L.rev.dueNone) +
+      ' · ' + L.rev.note + '</p>' +
     '<div class="act" style="margin:0 0 22px"><button class="abtn go" id="pg-rep">' + P.report + '</button></div>' +
     '<div class="stats">' + vals.map(function(v, i){
       return '<div class="st"><span class="v">' + v + '</span><span class="l">' + P.stats[i] + '</span></div>';
@@ -2385,7 +2824,7 @@ function renderSettings(){
     '<div class="fld"><label for="s-lang">' + T.lang + '</label>' +
       '<select id="s-lang">' + langOptions(L.code) + '</select><div class="hint">' + T.langHint + '</div></div>' +
     '<div class="fld"><label for="s-date">' + T.date + '</label><input type="date" id="s-date" value="' + s.startDate + '"></div>' +
-    '<div class="fld"><label for="s-page">' + T.page + '</label><input type="number" id="s-page" min="1" max="604" value="' + s.startPage + '"></div>' +
+    '<div class="fld"><label for="s-page">' + T.page + '</label><input type="number" id="s-page" min="1" max="' + TOTAL_PAGES + '" value="' + s.startPage + '"></div>' +
     '<div class="fld"><label for="s-rest">' + T.rest + '</label><select id="s-rest">' +
       days.map(function(d){ return '<option value="' + d + '"' + (s.restDay === d ? " selected" : "") + '>' + L.weekdays[d] + '</option>'; }).join("") +
       '</select></div>' +
@@ -2394,8 +2833,37 @@ function renderSettings(){
       [3,5,8,11,15].map(function(v){
         return '<option value="' + v + '"' + (s.manualLines === v ? " selected" : "") + '>' + fmt(T.linesN, n(v)) + '</option>';
       }).join("") + '</select><div class="hint">' + T.linesHint + '</div></div>' +
+    '<div class="fld"><label>' + L.ins.h + '</label>' +
+      (insStandalone() ? '<div class="hint">' + L.ins.done + '</div>'
+       : (INS.evt ? '<button class="abtn go" id="s-install" style="margin-bottom:8px">' + L.ins.btn + '</button>' +
+                    '<div class="hint">' + L.ins.hint + '</div>'
+                  : '<div class="hint">' + L.ins.ios + '<br>' + L.ins.hint + '</div>')) +
+      '</div>' +
+    '<div class="fld"><label>' + L.nt.h + '</label>' +
+      (ntOn() ? '<div class="hint" style="margin-bottom:10px">' + L.nt.allowed + '</div>'
+       : (ntCan() && Notification.permission === "denied"
+          ? '<div class="hint" style="margin-bottom:10px">' + L.nt.denied + '</div>'
+          : '<button class="abtn" id="s-ntask" style="margin-bottom:10px">' + L.nt.allow + '</button>')) +
+      '<div class="hint">' + L.nt.note + '</div></div>' +
+    '<div class="fld"><label for="s-ntat">' + L.nt.daily + '</label>' +
+      '<input type="time" id="s-ntat" value="' + esc(s.notifyAt || "") + '">' +
+      '<div class="hint">' + L.nt.dailyHint + '</div></div>' +
+    '<div class="fld"><label for="s-zikr">' + L.nt.zikr + '</label><select id="s-zikr">' +
+      '<option value="0"' + (!s.zikrEvery ? " selected" : "") + '>' + L.nt.zikrOff + '</option>' +
+      [15,30,60,120].map(function(v){
+        return '<option value="' + v + '"' + (+s.zikrEvery === v ? " selected" : "") + '>' + fmt(L.nt.zikrN, n(v)) + '</option>';
+      }).join("") + '</select><div class="hint">' + L.nt.zikrHint + '</div></div>' +
+    '<div class="fld"><label for="s-reciter">' + L.rd.reciter + '</label><select id="s-reciter">' +
+      RECITERS.map(function(r){
+        return '<option value="' + r.id + '"' + (s.reciter === r.id ? " selected" : "") + '>' + (r.nm[L.code] || r.nm.en) + '</option>';
+      }).join("") + '</select></div>' +
     '<div class="fld"><label for="s-qari">' + T.qari + '</label><input type="text" id="s-qari" value="' + esc(s.qari) + '" placeholder="' + T.qariPh + '"></div>' +
-    '<div class="fld"><label for="s-mushaf">' + T.mushaf + '</label><input type="text" id="s-mushaf" value="' + esc(s.mushaf) + '"></div>' +
+    '<div class="fld"><label for="s-mushafid">' + T.mushaf + '</label><select id="s-mushafid">' +
+      MUSHAFS.map(function(mu){
+        return '<option value="' + mu.id + '"' + (s.mushafId === mu.id ? " selected" : "") + '>' +
+          (mu.nm[L.code] || mu.nm.en) + '</option>';
+      }).join("") + '</select><div class="hint">' + T.mushafHint + '</div></div>' +
+    '<div class="fld"><label for="s-mushaf">' + T.mushafEd + '</label><input type="text" id="s-mushaf" value="' + esc(s.mushaf) + '" placeholder="' + T.mushafEdPh + '"></div>' +
     '</div>';
 
   var wk = weakPages();
@@ -2429,11 +2897,23 @@ function renderSettings(){
   var g = function(id){ return document.getElementById(id); };
   g("s-lang").onchange   = function(){ setLang(this.value, true); };
   g("s-date").onchange   = function(){ S.settings.startDate = this.value || TODAY; save(); renderAll(); };
-  g("s-page").onchange   = function(){ S.settings.startPage = Math.max(1, Math.min(604, +this.value || 1)); save(); renderAll(); };
+  g("s-page").onchange   = function(){ S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); save(); renderAll(); };
   g("s-rest").onchange   = function(){ S.settings.restDay = +this.value; save(); renderAll(); };
   g("s-lines").onchange  = function(){ S.settings.manualLines = +this.value; save(); renderAll(); };
   g("s-qari").onchange   = function(){ S.settings.qari = this.value; save(); };
+  g("s-reciter").onchange = function(){ S.settings.reciter = this.value; save(); };
+  var ins = g("s-install"); if (ins) ins.onclick = insPrompt;
+  var ask = g("s-ntask"); if (ask) ask.onclick = ntAsk;
+  g("s-ntat").onchange = function(){ S.settings.notifyAt = this.value || ""; save(); ntSchedule(); };
+  g("s-zikr").onchange = function(){ S.settings.zikrEvery = +this.value; save(); ntSchedule(); };
   g("s-mushaf").onchange = function(){ S.settings.mushaf = this.value; save(); };
+  g("s-mushafid").onchange = function(){
+    S.settings.mushafId = this.value;
+    applyMushaf();
+    RD.pages = {}; RD.fonts = {}; rdStop();
+    S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, S.settings.startPage));
+    save(); renderAll();
+  };
 
   var on = g("sy-on");   if (on) on.onclick = function(){ Sync.connect(); };
   var pu = g("sy-push"); if (pu) pu.onclick = function(){ Sync.pushNow(true); };
@@ -2740,9 +3220,875 @@ function openReport(){
   document.getElementById("rep").classList.add("on");
 }
 
+/* ---------- mushaf reader ---------- */
+/* Page layout + glyphs come from the Quran.com API (QCF v2 page fonts), audio
+   from everyayah.com. Everything is put through the Cache API, so a page you
+   have opened once — or a juz you downloaded — works with no network. */
+var RECITERS = [
+  { id:"Ayman_Sowaid_64kbps",        nm:{ en:"Ayman Suwayd", bn:"আয়মান সুওয়াইদ", ur:"ایمن سوید", zh:"艾曼·苏韦德" } },
+  { id:"Husary_128kbps",             nm:{ en:"Mahmoud Khalil Al-Husary", bn:"মাহমুদ খলিল আল-হুসারি", ur:"محمود خلیل الحصری", zh:"侯赛里" } },
+  { id:"Minshawy_Murattal_128kbps",  nm:{ en:"Al-Minshawi (murattal)", bn:"আল-মিনশাবি (মুরাত্তাল)", ur:"المنشاوی (مرتل)", zh:"敏沙威（慢诵）" } },
+  { id:"Abdul_Basit_Murattal_64kbps",nm:{ en:"Abdul Basit (murattal)", bn:"আব্দুল বাসিত (মুরাত্তাল)", ur:"عبد الباسط (مرتل)", zh:"阿卜杜勒·巴西特（慢诵）" } },
+  { id:"Alafasy_128kbps",            nm:{ en:"Mishary Alafasy", bn:"মিশারি আল-আফাসি", ur:"مشاری العفاسی", zh:"阿法西" } }
+];
+var RD_CACHE = "hifz-mushaf-v1";
+var QCF_BASE = "https://cdn.jsdelivr.net/gh/quran/quran.com-frontend-next@master/public/fonts/quran/hafs/";
+function qcfVer(){ return mushafDef().qcf || "v2"; }
+var AUDIO_BASE = "https://everyayah.com/data/";
+var RD = { page:0, hide:false, loops:1, speed:1, pages:{}, fonts:{}, busy:false, queue:[], qi:0, left:0 };
+var rdAudio = null;
+
+async function rdCache(){ try { return await caches.open(RD_CACHE); } catch(e){ return null; } }
+async function rdFetch(url, kind){
+  var c = await rdCache(), hit = c ? await c.match(url) : null;
+  if (!hit){
+    var r = await fetch(url, { mode:"cors" });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    if (c){ try { await c.put(url, r.clone()); } catch(e){} }
+    hit = r;
+  }
+  return kind === "json" ? hit.json() : hit.blob();
+}
+function ayLabel(k){ var p = String(k || "").split(":"); return p.length < 2 ? "" : n(p[0]) + ":" + n(p[1]); }
+function pad3(v){ return ("00" + v).slice(-3); }
+function ayahFile(vk){ var p = vk.split(":"); return pad3(p[0]) + pad3(p[1]) + ".mp3"; }
+
+async function rdLoadFont(p){
+  if (RD.fonts["v-" + p] === qcfVer()) return RD.fonts[p];
+  var v = qcfVer(), fam = "QCF" + v + "P" + pad3(p);
+  if (RD.fonts[fam]) return fam;
+  var blob = await rdFetch(QCF_BASE + v + "/woff2/p" + p + ".woff2");
+  var face = new FontFace(fam, "url(" + URL.createObjectURL(blob) + ")");
+  await face.load(); document.fonts.add(face);
+  RD.fonts[p] = fam; RD.fonts[fam] = fam; RD.fonts["v-" + p] = v;
+  return fam;
+}
+function trId(){ return { bn:161, en:85, ur:234, zh:56 }[L.code] || 85; }
+async function rdLoadPage(p){
+  var v = qcfVer();
+  if (RD.pages[p] && RD.pages[p].v === v) return RD.pages[p];
+  var url = "https://api.quran.com/api/v4/verses/by_page/" + p +
+            "?words=true&per_page=all&mushaf=" + (v === "v1" ? 1 : 2) +
+            "&translations=" + trId() +
+            "&word_fields=code_" + v + ",line_number,char_type_name,text_uthmani&language=" +
+            (L.code === "zh" ? "zh" : L.code === "ur" ? "ur" : L.code === "en" ? "en" : "bn");
+  var j = await rdFetch(url, "json"), lines = {}, keys = [], tr = {};
+  (j.verses || []).forEach(function(v){
+    keys.push(v.verse_key);
+    if (v.translations && v.translations[0])
+      tr[v.verse_key] = String(v.translations[0].text || "").replace(/<[^>]*>/g, "");
+    (v.words || []).forEach(function(w){
+      var ln = w.line_number || 1;
+      (lines[ln] = lines[ln] || []).push({
+        g: (qcfVer() === "v1" ? w.code_v1 : w.code_v2), vk: v.verse_key, end: w.char_type_name === "end",
+        t: w.text_uthmani || "",
+        m: (w.translation && w.translation.text) || ""
+      });
+    });
+  });
+  RD.pages[p] = { lines:lines, keys:keys, tr:tr, v:v };
+  return RD.pages[p];
+}
+
+var rdRaf = null;
+function rdClear(cls){ qa(".qline .w." + cls).forEach(function(e){ e.classList.remove(cls); }); }
+function rdStop(){
+  if (rdAudio){ rdAudio.pause(); rdAudio = null; }
+  if (rdRaf){ cancelAnimationFrame(rdRaf); rdRaf = null; }
+  RD.queue = []; RD.left = 0; RD.words = null; RD.wi = -1;
+  rdClear("on"); rdClear("now");
+  rdSyncBtns();
+}
+function rdSyncBtns(){
+  var p = document.getElementById("rd-pause");
+  if (p) p.textContent = (rdAudio && !rdAudio.paused) ? L.rd.pause : L.rd.resume;
+}
+function rdTogglePause(){
+  if (!rdAudio) return;
+  if (rdAudio.paused) rdAudio.play().catch(function(){}); else rdAudio.pause();
+  rdSyncBtns();
+}
+/* No public word-timing data exists for every reciter, so the moving highlight
+   is estimated: each word gets a share of the ayah proportional to its length,
+   with the ayah-number glyph counted lightly. */
+function rdTrack(){
+  rdRaf = requestAnimationFrame(rdTrack);
+  var els = RD.words;
+  if (!rdAudio || rdAudio.paused || !els || !els.length || !rdAudio.duration) return;
+  var frac = Math.min(1, rdAudio.currentTime / rdAudio.duration), acc = 0, i = 0;
+  for (; i < els.length - 1; i++){ acc += RD.wts[i]; if (acc / RD.wtot >= frac) break; }
+  if (RD.wi !== i){
+    rdClear("now");
+    els[i].classList.add("now");
+    RD.wi = i;
+  }
+}
+function rdPlay(keys, loops){
+  rdStop();
+  RD.queue = keys.slice(); RD.qi = 0; RD.left = Math.max(1, loops || 1);
+  rdNext();
+}
+function rdNext(){
+  if (RD.qi >= RD.queue.length){
+    RD.left--; RD.qi = 0;
+    if (RD.left <= 0){ rdStop(); return; }
+  }
+  var vk = RD.queue[RD.qi++];
+  rdClear("on"); rdClear("now");
+  var els = qa('.qline .w[data-vk="' + vk + '"]');
+  els.forEach(function(e){ e.classList.add("on"); });
+  RD.words = els; RD.wi = -1;
+  RD.wts = els.map(function(e){ return e.dataset.end === "1" ? 0.4 : Math.max(1, e.textContent.length); });
+  RD.wtot = RD.wts.reduce(function(a, b){ return a + b; }, 0) || 1;
+  rdAudio = new Audio(AUDIO_BASE + S.settings.reciter + "/" + ayahFile(vk));
+  rdAudio.playbackRate = RD.speed;
+  rdAudio.onended = rdNext;
+  rdAudio.onerror = rdNext;
+  rdAudio.onplay = rdSyncBtns;
+  rdAudio.onpause = rdSyncBtns;
+  rdAudio.play().catch(function(){});
+  if (!rdRaf) rdTrack();
+}
+
+function rdKeyIdx(pg, k){ for (var i = 0; i < pg.keys.length; i++) if (pg.keys[i] === k) return i; return -1; }
+function rdLinesOf(pg, vk){
+  var lo = 99, hi = 0;
+  Object.keys(pg.lines).forEach(function(ln){
+    pg.lines[ln].forEach(function(w){ if (w.vk === vk){ lo = Math.min(lo, +ln); hi = Math.max(hi, +ln); } });
+  });
+  return hi ? [lo, hi] : null;
+}
+/* The daily block starts at the target number of lines and is then rounded out
+   to a whole ayah — half an ayah cannot be memorized. */
+function rdAutoSel(pg, startIdx){
+  var N = targetLines(), a = Math.max(0, startIdx || 0);
+  var r0 = rdLinesOf(pg, pg.keys[a]);
+  if (!r0) return { a:a, b:a };
+  var lastLine = r0[0] + N - 1, b = a;
+  for (var i = a; i < pg.keys.length; i++){
+    var r = rdLinesOf(pg, pg.keys[i]);
+    if (!r) continue;
+    if (r[1] <= lastLine) b = i; else break;
+  }
+  return { a:a, b:Math.max(a, b) };
+}
+function rdSelKeys(pg){
+  if (!RD.sel) return [];
+  return pg.keys.slice(RD.sel.a, RD.sel.b + 1);
+}
+
+function openMushaf(p){
+  if (p) { RD.page = Math.max(1, Math.min(TOTAL_PAGES, p)); RD.sel = null; }
+  qa(".tab").forEach(function(t){ t.setAttribute("aria-selected", t.dataset.v === "mushaf" ? "true" : "false"); });
+  qa(".view").forEach(function(v){ v.classList.remove("on"); });
+  var el = document.getElementById("v-mushaf");
+  if (el) el.classList.add("on");
+  renderMushaf();
+  window.scrollTo({ top:0, behavior:"smooth" });
+}
+function renderMushaf(){
+  var Rd = L.rd, el = document.getElementById("v-mushaf");
+  if (!el) return;
+  var d = day(TODAY), tp = (d.sabaq.pages && d.sabaq.pages[0]) || S.settings.startPage;
+  if (!RD.page) RD.page = tp;
+
+  var h = '<div class="kicker">' + Rd.title + '</div><h2>' + fmt(L.phase.page, n(RD.page)) + '</h2>';
+  if (!mushafDef().qcf){
+    el.innerHTML = h + '<p class="empty">' + Rd.notMadani + '</p>';
+    return;
+  }
+  h += '<div class="rdcard">' +
+       '<div class="rdline">' +
+         '<div class="rdgrp">' +
+           '<button data-rd="prev">‹</button>' +
+           '<input type="number" id="rd-page" min="1" max="' + TOTAL_PAGES + '" value="' + RD.page + '">' +
+           '<button data-rd="next">›</button>' +
+         '</div>' +
+         '<div class="rdgrp">' +
+           '<button class="rdgo" data-rd="play">' + Rd.playAll + '</button>' +
+           '<button id="rd-pause" data-rd="pause">' + Rd.pause + '</button>' +
+           '<button data-rd="stop">' + Rd.stop + '</button>' +
+           '<select id="rd-loop">' + [1,3,5,7].map(function(v){
+              return '<option value="' + v + '"' + (RD.loops === v ? " selected" : "") + '>' + Rd.loop + ' ×' + n(v) + '</option>'; }).join("") + '</select>' +
+           '<select id="rd-speed">' + [0.7,0.85,1].map(function(v){
+              return '<option value="' + v + '"' + (RD.speed === v ? " selected" : "") + '>' + Rd.speed + ' ' + n(v) + '×</option>'; }).join("") + '</select>' +
+         '</div>' +
+         '<span class="rdsep"></span>' +
+         '<span class="rdprog" id="rd-prog"></span>' +
+       '</div>' +
+       '<div class="rdline" id="rd-selbar"></div>' +
+       '<div class="rdline">' +
+         '<button class="rdmini" data-rd="hide" aria-pressed="' + (RD.hide ? "true" : "false") + '">' + Rd.cover + '</button>' +
+         '<button class="rdmini" data-rd="pick" aria-pressed="' + (RD.pick ? "true" : "false") + '">' + Rd.pick + '</button>' +
+         '<button class="rdmini" data-rd="phrase" aria-pressed="' + (RD.phrase ? "true" : "false") + '">' + L.rec.phrase + '</button>' +
+         '<button class="rdmini" data-rd="tr" aria-pressed="' + (RD.tr === false ? "false" : "true") + '">' + Rd.tr + '</button>' +
+         '<button class="rdmini" data-rd="exam">' + L.ex.open + '</button>' +
+         '<button class="rdmini" data-rd="mut">' + L.mut.find + '</button>' +
+         '<button class="rdmini" data-rd="dl">' + Rd.dl + '</button>' +
+       '</div></div>';
+
+  if (RD.pick) h += '<p class="pickmsg">' + (RD.pickA ? Rd.pickB : Rd.pickA) + '</p>';
+  if (RD.phrase) h += '<p class="pickmsg">' + L.rec.phraseHint + '</p>';
+  h += '<p class="rdnote">' + fmt(Rd.selNote, n(targetLines())) + ' ' + Rd.tap + '</p>';
+  h += '<div class="paper" id="rd-paper"><p style="text-align:center;color:#77808A">' + Rd.loading + '</p></div>';
+  h += '<div class="wmean" id="rd-mean"></div>';
+  h += '<div class="trbox" id="rd-tr"></div>';
+  h += '<div class="recbox" id="rd-rec"></div>';
+  h += '<div class="mutbox" id="rd-mut" style="display:none"></div>';
+  el.innerHTML = h;
+
+  var g = function(id){ return document.getElementById(id); };
+  qa("[data-rd]").forEach(function(b){
+    b.onclick = function(){
+      var k = b.dataset.rd, pg = RD.pages[RD.page];
+      if (k === "prev"){ rdStop(); RD.page = Math.max(1, RD.page - 1); RD.sel = null; renderMushaf(); }
+      else if (k === "next"){ rdStop(); RD.page = Math.min(TOTAL_PAGES, RD.page + 1); RD.sel = null; renderMushaf(); }
+      else if (k === "hide"){ RD.hide = !RD.hide; renderMushaf(); }
+      else if (k === "pick"){ RD.pick = !RD.pick; RD.phrase = false; RD.pickA = null; rdStop(); renderMushaf(); }
+      else if (k === "phrase"){ RD.phrase = !RD.phrase; RD.pick = false; RD.phraseA = null; rdStop(); renderMushaf(); }
+      else if (k === "play"){ if (pg) rdPlay(rdSelKeys(pg), RD.loops); }
+      else if (k === "auto"){ if (pg){ RD.sel = rdAutoSel(pg, RD.sel ? RD.sel.a : 0); renderMushaf(); } }
+      else if (k === "setday"){ if (pg) rdSetToday(pg); }
+      else if (k === "pause") rdTogglePause();
+      else if (k === "stop") rdStop();
+      else if (k === "tr"){ RD.tr = (RD.tr === false); renderMushaf(); }
+      else if (k === "exam"){ rdStop(); exOpen("order"); }
+      else if (k === "mut"){ var mb = document.getElementById("rd-mut"); if (mb) mb.style.display = "block"; mutScan(); }
+      else if (k === "dl") rdDownloadJuz();
+    };
+  });
+  g("rd-page").onchange  = function(){ rdStop(); RD.page = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); RD.sel = null; renderMushaf(); };
+  g("rd-loop").onchange  = function(){ RD.loops = +this.value; };
+  g("rd-speed").onchange = function(){ RD.speed = +this.value; if (rdAudio) rdAudio.playbackRate = RD.speed; };
+
+  rdPaint(RD.page, RD.page === tp);
+  recBox();
+}
+
+function rdSetToday(pg){
+  var d = day(TODAY), keys = rdSelKeys(pg);
+  if (!keys.length) return;
+  var r0 = rdLinesOf(pg, keys[0]), r1 = rdLinesOf(pg, keys[keys.length - 1]);
+  d.sabaq.pages    = [RD.page];
+  d.sabaq.from     = r0 ? r0[0] : 1;
+  d.sabaq.to       = r1 ? r1[1] : LINES_PER_PAGE;
+  d.sabaq.ayahFrom = keys[0];
+  d.sabaq.ayahTo   = keys[keys.length - 1];
+  d.sabaq.blocks   = [false,false,false];
+  save(); renderToday(); renderProgress();
+  var bar = document.getElementById("rd-prog");
+  if (bar) bar.textContent = L.rd.setDone;
+}
+
+function rdSelBar(pg){
+  var bar = document.getElementById("rd-selbar");
+  if (!bar || !RD.sel) return;
+  var opts = function(sel){
+    return pg.keys.map(function(k, i){
+      return '<option value="' + i + '"' + (i === sel ? " selected" : "") + '>' + n(k.split(":")[1]) + '</option>';
+    }).join("");
+  };
+  bar.innerHTML = '<span class="rdlbl">' + L.rd.ay + '</span>' +
+    '<div class="rdgrp">' +
+      '<select id="rd-a">' + opts(RD.sel.a) + '</select>' +
+      '<select id="rd-b">' + opts(RD.sel.b) + '</select>' +
+    '</div>' +
+    '<button class="rdmini" data-rd="auto">' + L.rd.auto + '</button>' +
+    '<button class="rdmini" data-rd="setday">' + L.rd.setDay + '</button>';
+  document.getElementById("rd-a").onchange = function(){
+    RD.sel.a = +this.value; if (RD.sel.b < RD.sel.a) RD.sel.b = RD.sel.a; renderMushaf();
+  };
+  document.getElementById("rd-b").onchange = function(){
+    RD.sel.b = +this.value; if (RD.sel.b < RD.sel.a) RD.sel.a = RD.sel.b; renderMushaf();
+  };
+  qa("#rd-selbar [data-rd]").forEach(function(b){
+    b.onclick = function(){
+      if (b.dataset.rd === "auto"){ RD.sel = rdAutoSel(pg, RD.sel.a); renderMushaf(); }
+      else rdSetToday(pg);
+    };
+  });
+}
+
+async function rdPaint(p, isTodayPage){
+  var paper = document.getElementById("rd-paper");
+  try {
+    var fam = await rdLoadFont(p), pg = await rdLoadPage(p);
+    if (RD.page !== p || !document.getElementById("rd-paper")) return;
+    if (!RD.sel || RD.sel.page !== p){
+      var d = day(TODAY), start = 0;
+      if (isTodayPage && d.sabaq.ayahFrom){
+        var ix = rdKeyIdx(pg, d.sabaq.ayahFrom);
+        if (ix > -1) start = ix;
+      } else if (isTodayPage && d.sabaq.from > 1){
+        for (var i = 0; i < pg.keys.length; i++){
+          var rr = rdLinesOf(pg, pg.keys[i]);
+          if (rr && rr[1] >= d.sabaq.from){ start = i; break; }
+        }
+      }
+      RD.sel = rdAutoSel(pg, start);
+      RD.sel.page = p;
+      if (isTodayPage && d.sabaq.ayahTo){
+        var ib = rdKeyIdx(pg, d.sabaq.ayahTo);
+        if (ib > -1) RD.sel.b = Math.max(RD.sel.a, ib);
+      }
+    }
+    var sel = {};
+    if (RD.pick && RD.pickA != null) sel[pg.keys[RD.pickA]] = true;
+    else rdSelKeys(pg).forEach(function(k){ sel[k] = true; });
+
+    var h = "";
+    for (var ln = 1; ln <= LINES_PER_PAGE; ln++){
+      var ws = pg.lines[ln];
+      if (!ws){ h += '<div class="qline"></div>'; continue; }
+      var any = ws.some(function(w){ return sel[w.vk]; });
+      h += '<div class="qline' + (any ? " tl" : "") + (ws.length < 4 ? " qcen" : "") +
+           '" style="font-family:\'' + fam + '\'">' +
+        ws.map(function(w){
+          var on = !!sel[w.vk];
+          return '<span class="w' + (on ? "" : " off") + (on && RD.hide ? " cov" : "") +
+                 '" data-vk="' + w.vk + '"' + (w.end ? ' data-end="1"' : '') +
+                 ' data-t="' + esc(w.t || "") + '" data-m="' + esc(w.m) + '">' + w.g +
+                 (w.end ? '<sup class="ayn">' + n(w.vk.split(":")[1]) + '</sup>' : '') + '</span>';
+        }).join("") + '</div>';
+    }
+    h += '<div class="rdfoot"><span>' + fmt(L.rd.juz, n(juzOf(p))) + '</span>' +
+         '<span>' + n(p) + ' / ' + n(TOTAL_PAGES) + '</span></div>';
+    paper.innerHTML = h;
+    paper.classList.toggle("picking", !!RD.pick);
+    var tb = document.getElementById("rd-tr");
+    if (tb){
+      if (RD.tr === false) tb.style.display = "none";
+      else {
+        tb.style.display = "block";
+        tb.innerHTML = '<h4>' + L.rd.tr + ' · ' + L.rd.trBy + '</h4>' +
+          rdSelKeys(pg).map(function(k){
+            return '<div class="trrow"><span class="trk">' + ayLabel(k) + '</span><span>' +
+              esc((pg.tr && pg.tr[k]) || "…") + '</span></div>';
+          }).join("");
+      }
+    }
+    rdSelBar(pg);
+    qa("#rd-paper .w").forEach(function(w){
+      w.onclick = function(){
+        var ix = rdKeyIdx(pg, w.dataset.vk);
+        if (RD.phrase){
+          var ws = exWordsOf(pg, w.dataset.vk), wi = 0;
+          for (var q = 0; q < ws.length; q++) if (ws[q].g === w.firstChild.textContent){ wi = q; break; }
+          if (!RD.phraseA){ RD.phraseA = { vk:w.dataset.vk, i:wi }; w.classList.add("on"); return; }
+          var a0 = RD.phraseA;
+          if (a0.vk === w.dataset.vk) rdPlayPhrase(pg, a0.vk, Math.min(a0.i, wi), Math.max(a0.i, wi));
+          else rdPlay([a0.vk, w.dataset.vk], RD.loops);
+          RD.phraseA = null; RD.phrase = false;
+          renderMushaf();
+          return;
+        }
+        if (RD.pick){
+          if (RD.pickA == null){ RD.pickA = ix; }
+          else {
+            RD.sel = { a:Math.min(RD.pickA, ix), b:Math.max(RD.pickA, ix), page:RD.page };
+            RD.pickA = null; RD.pick = false;
+          }
+          renderMushaf();
+          return;
+        }
+        var mn = document.getElementById("rd-mean");
+        if (mn) mn.innerHTML = '<b>' + (w.dataset.m || "…") + '</b> · ' +
+          L.rd.ay + ' ' + ayLabel(w.dataset.vk) +
+          ((pg.tr && pg.tr[w.dataset.vk]) ? '<div style="margin-top:6px;font-size:14px;line-height:1.7">' +
+            esc(pg.tr[w.dataset.vk]) + '</div>' : '');
+        rdPlay([w.dataset.vk], 1);
+      };
+    });
+  } catch(e){
+    if (paper) paper.innerHTML = '<p style="text-align:center;color:#77808A">' + L.rd.err + '</p>';
+  }
+}
+
+async function rdDownloadJuz(){
+  if (RD.busy) return;
+  RD.busy = true;
+  var prog = document.getElementById("rd-prog");
+  var j = juzOf(RD.page), r = juzRange(j), total = (r[1] - r[0] + 1), done = 0;
+  try {
+    for (var p = r[0]; p <= r[1]; p++){
+      try { await rdLoadFont(p); var pg = await rdLoadPage(p);
+        for (var i = 0; i < pg.keys.length; i++){
+          try { await rdFetch(AUDIO_BASE + S.settings.reciter + "/" + ayahFile(pg.keys[i])); } catch(e){}
+        }
+      } catch(e){}
+      done++;
+      if (prog) prog.textContent = fmt(L.rd.dling, n(Math.round(done / total * 100)));
+    }
+    if (prog) prog.textContent = L.rd.dlDone;
+  } finally { RD.busy = false; }
+}
+
+/* ---------- look-alike ayahs (mutashabihat) ----------
+   Adults confuse near-identical passages more than they forget them. Every
+   page already on the device is scanned for runs of four or more identical
+   words shared with the open page; nothing is fetched over the network. */
+function mutNorm(t){
+  return String(t || "")
+    .replace(/[\u064B-\u0652\u0670\u06D6-\u06ED\u0640]/g, "")
+    .replace(/[\u0622\u0623\u0625\u0671]/g, "\u0627")
+    .replace(/\u0629/g, "\u0647")
+    .replace(/\u0649/g, "\u064A")
+    .trim();
+}
+function mutSeq(pg){
+  var out = [];
+  for (var ln = 1; ln <= LINES_PER_PAGE; ln++){
+    (pg.lines[ln] || []).forEach(function(w){
+      if (!w.end && w.t) out.push({ n:mutNorm(w.t), vk:w.vk, ln:ln });
+    });
+  }
+  return out;
+}
+async function mutCachedPage(p){
+  if (RD.pages[p] && RD.pages[p].v === qcfVer()) return RD.pages[p];
+  var v = qcfVer();
+  var url = "https://api.quran.com/api/v4/verses/by_page/" + p +
+            "?words=true&per_page=all&mushaf=" + (v === "v1" ? 1 : 2) +
+            "&word_fields=code_" + v + ",line_number,char_type_name,text_uthmani&language=" +
+            (L.code === "zh" ? "zh" : L.code === "ur" ? "ur" : L.code === "en" ? "en" : "bn");
+  var c = await rdCache(), hit = c ? await c.match(url) : null;
+  if (!hit) return null;                     /* not on the device · skip it */
+  var j = await hit.json(), lines = {}, keys = [];
+  (j.verses || []).forEach(function(vv){
+    keys.push(vv.verse_key);
+    (vv.words || []).forEach(function(w){
+      var ln = w.line_number || 1;
+      (lines[ln] = lines[ln] || []).push({
+        g:(v === "v1" ? w.code_v1 : w.code_v2), vk:vv.verse_key,
+        end:w.char_type_name === "end", t:w.text_uthmani || "",
+        m:(w.translation && w.translation.text) || ""
+      });
+    });
+  });
+  return { lines:lines, keys:keys, v:v };
+}
+async function mutScan(){
+  var box = document.getElementById("rd-mut"), pg = RD.pages[RD.page];
+  if (!box || !pg) return;
+  box.innerHTML = '<h4>' + L.mut.h + '</h4><p>' + L.mut.busy + '</p>';
+  var mine = mutSeq(pg), N = 4, index = {}, i;
+  for (i = 0; i + N <= mine.length; i++){
+    index[mine.slice(i, i + N).map(function(w){ return w.n; }).join(" ")] = mine[i];
+  }
+  var pages = memorizedPages().filter(function(p){ return p !== RD.page; }), hits = [], seen = {};
+  for (var k = 0; k < pages.length && hits.length < 12; k++){
+    var other = await mutCachedPage(pages[k]);
+    if (!other) continue;
+    var seq = mutSeq(other);
+    for (i = 0; i + N <= seq.length; i++){
+      var gram = seq.slice(i, i + N).map(function(w){ return w.n; }).join(" ");
+      var here = index[gram];
+      if (!here || seen[gram]) continue;
+      seen[gram] = true;
+      hits.push({ page:pages[k], vk:seq[i].vk, mineVk:here.vk,
+                  txt:seq.slice(i, i + N).map(function(w){ return w.n; }).join(" ") });
+      if (hits.length >= 12) break;
+    }
+  }
+  if (!hits.length){
+    box.innerHTML = '<h4>' + L.mut.h + '</h4><p>' + L.mut.none + '</p><p class="hint">' + L.mut.only + '</p>';
+    return;
+  }
+  var words = {};
+  hits.forEach(function(x){ x.txt.split(" ").forEach(function(w){ words[w] = true; }); });
+  qa("#rd-paper .w").forEach(function(el){
+    if (words[mutNorm(el.dataset.t || "")]) el.classList.add("mut");
+  });
+  box.innerHTML = '<h4>' + L.mut.h + '</h4><p class="hint" style="margin-bottom:6px">' + L.mut.hint + '</p>' +
+    hits.map(function(x){
+      return '<div class="mutrow"><span class="mutar">' + esc(x.txt) + '</span>' +
+        '<button class="qp" data-mut="' + x.page + '">' + fmt(L.mut.at, n(x.page), ayLabel(x.vk)) + '</button>' +
+        '<span class="lb" style="font-size:12px;color:var(--muted)">' + ayLabel(x.mineVk) + '</span></div>';
+    }).join("");
+  qa("#rd-mut [data-mut]").forEach(function(b){
+    b.onclick = function(){ rdStop(); RD.page = +b.dataset.mut; RD.sel = null; renderMushaf(); };
+  });
+}
+
+/* ---------- revision engine ----------
+   Each memorized page carries a strength and a due date. A clean recall pushes
+   the page further away (spacing · Ebbinghaus 1885, Cepeda 2006); a shaky one
+   brings it back tomorrow. The gate and the retrieval test feed the same
+   number, so the queue follows real recall instead of a fixed calendar. */
+function revOf(p){
+  if (!S.rev) S.rev = {};
+  if (!S.rev[p]) S.rev[p] = { str:0.5, ivl:1, due:TODAY, reps:0, lapses:0, last:TODAY };
+  return S.rev[p];
+}
+function revRecord(p, q){
+  var r = revOf(p);
+  r.reps++;
+  if (q >= 0.8){
+    r.str = Math.min(1, r.str + 0.12);
+    r.ivl = Math.max(1, Math.round(r.ivl * (1.6 + r.str)));
+  } else if (q >= 0.5){
+    r.str = Math.max(0.15, r.str - 0.05);
+    r.ivl = Math.max(1, Math.round(r.ivl * 0.8));
+  } else {
+    r.str = Math.max(0.1, r.str - 0.25);
+    r.ivl = 1; r.lapses++;
+  }
+  r.ivl = Math.min(120, r.ivl);
+  r.last = TODAY;
+  r.due = key(addDays(new Date(), r.ivl));
+  if (r.str < 0.4) S.weak[p] = true;
+  else if (r.str > 0.75) delete S.weak[p];
+  save();
+}
+function revDue(){
+  if (!S.rev) return [];
+  var m = {}; memorizedPages().forEach(function(p){ m[p] = true; });
+  return Object.keys(S.rev).map(Number)
+    .filter(function(p){ return m[p] && S.rev[p].due <= TODAY; })
+    .sort(function(a, b){ return S.rev[a].str - S.rev[b].str; });
+}
+
+/* ---------- install ---------- */
+var INS = { evt:null };
+window.addEventListener("beforeinstallprompt", function(e){
+  e.preventDefault(); INS.evt = e;
+  if (typeof renderSettings === "function" && S) renderSettings();
+});
+window.addEventListener("appinstalled", function(){ INS.evt = null; if (S) renderSettings(); });
+function insStandalone(){
+  return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+}
+async function insPrompt(){
+  if (!INS.evt) return;
+  INS.evt.prompt();
+  try { await INS.evt.userChoice; } catch(e){}
+  INS.evt = null;
+  renderSettings();
+}
+
+/* ---------- reminders ----------
+   No server and no push: the app schedules its own notifications while it is
+   open or in the background, and remembers the last one it fired so a reload
+   does not repeat it. */
+var ZIKR = [
+  { ar:"سُبْحَانَ اللّٰه",              nm:{ en:"Glory be to Allah", bn:"আল্লাহ পবিত্র", ur:"اللہ پاک ہے", zh:"赞主清净" } },
+  { ar:"اَلْحَمْدُ لِلّٰه",              nm:{ en:"All praise is for Allah", bn:"সব প্রশংসা আল্লাহর", ur:"سب تعریف اللہ کے لیے", zh:"一切赞颂全归主" } },
+  { ar:"لَا إِلٰهَ إِلَّا اللّٰه",        nm:{ en:"There is no god but Allah", bn:"আল্লাহ ছাড়া কোনো ইলাহ নেই", ur:"اللہ کے سوا کوئی معبود نہیں", zh:"万物非主，唯有真主" } },
+  { ar:"اَللّٰهُ أَكْبَر",               nm:{ en:"Allah is the greatest", bn:"আল্লাহ সবচেয়ে মহান", ur:"اللہ سب سے بڑا ہے", zh:"真主至大" } },
+  { ar:"أَسْتَغْفِرُ اللّٰه",            nm:{ en:"I seek Allah's forgiveness", bn:"আমি আল্লাহর ক্ষমা চাই", ur:"میں اللہ سے بخشش مانگتا ہوں", zh:"我向主求恕" } },
+  { ar:"لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰه", nm:{ en:"There is no power except with Allah", bn:"আল্লাহ ছাড়া কোনো শক্তি নেই", ur:"اللہ کے سوا کوئی طاقت نہیں", zh:"无能无力，全凭真主" } },
+  { ar:"سُبْحَانَ اللّٰهِ وَبِحَمْدِهِ",   nm:{ en:"Glory be to Allah and praise be to Him", bn:"আল্লাহ পবিত্র, সব প্রশংসা তাঁরই", ur:"اللہ پاک ہے اور اسی کی حمد ہے", zh:"赞主清净，赞主超绝" } },
+  { ar:"اَللّٰهُمَّ صَلِّ عَلٰى مُحَمَّد", nm:{ en:"O Allah, send blessings upon Muhammad", bn:"হে আল্লাহ, মুহাম্মদের উপর রহমত পাঠান", ur:"اے اللہ، محمد پر رحمت بھیج", zh:"主啊，赐福于穆罕默德" } },
+  { ar:"حَسْبُنَا اللّٰهُ وَنِعْمَ الْوَكِيل", nm:{ en:"Allah is enough for us, the best guardian", bn:"আল্লাহই আমাদের জন্য যথেষ্ট, তিনি উত্তম অভিভাবক", ur:"ہمیں اللہ کافی ہے، وہی بہترین کارساز", zh:"真主是我们的至优护佑者" } }
+];
+var NT = { timer:null };
+function ntCan(){ return typeof Notification !== "undefined"; }
+function ntOn(){ return ntCan() && Notification.permission === "granted"; }
+async function ntAsk(){
+  if (!ntCan()) return;
+  try { await Notification.requestPermission(); } catch(e){}
+  renderSettings(); ntSchedule();
+}
+function ntShow(title, body){
+  if (!ntOn()) return;
+  try {
+    if (navigator.serviceWorker && navigator.serviceWorker.ready){
+      navigator.serviceWorker.ready.then(function(r){
+        r.showNotification(title, { body:body, icon:"icon.svg", badge:"icon.svg", tag:"hifz" });
+      }).catch(function(){ new Notification(title, { body:body, icon:"icon.svg" }); });
+    } else new Notification(title, { body:body, icon:"icon.svg" });
+  } catch(e){}
+}
+function ntMark(k){ try { localStorage.setItem("hifz-nt-" + k, String(Date.now())); } catch(e){} }
+function ntLast(k){ try { return +(localStorage.getItem("hifz-nt-" + k) || 0); } catch(e){ return 0; } }
+function ntTick(){
+  if (!ntOn() || !S) return;
+  var now = new Date(), hh = now.getHours();
+
+  var at = S.settings.notifyAt;
+  if (at && /^\d\d:\d\d$/.test(at)){
+    var p = at.split(":"), due = new Date(now); due.setHours(+p[0], +p[1], 0, 0);
+    var d = day(TODAY);
+    if (now >= due && ntLast("daily") < due.getTime() && !isRestDay(TODAY) && !d.sabaq.done){
+      ntShow(L.nt.dailyTitle, fmt(L.nt.dailyBody, n(d.sabaq.pages[0] || S.settings.startPage),
+             n(d.sabaq.from || 1), n(d.sabaq.to || LINES_PER_PAGE)));
+      ntMark("daily");
+    }
+  }
+
+  var every = +S.settings.zikrEvery || 0;
+  if (every && hh >= 5 && hh < 22){
+    if (Date.now() - ntLast("zikr") >= every * 60000){
+      var i = Math.floor(Date.now() / (every * 60000)) % ZIKR.length, z = ZIKR[i];
+      ntShow(z.ar, z.nm[L.code] || z.nm.en);
+      ntMark("zikr");
+    }
+  }
+}
+function ntSchedule(){ clearInterval(NT.timer); NT.timer = setInterval(ntTick, 30000); ntTick(); }
+
+/* ---------- recording + phrase loop ----------
+   Memorization has to be verified out loud: the cover-and-recite test is
+   recorded, kept with the day's page, and played back against the reciter. */
+var REC = { mr:null, chunks:[], url:null, key:null };
+function recKey(){ return "rec/" + TODAY + "/p" + RD.page; }
+async function recStart(){
+  try {
+    var stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    REC.chunks = [];
+    REC.mr = new MediaRecorder(stream);
+    REC.mr.ondataavailable = function(e){ if (e.data.size) REC.chunks.push(e.data); };
+    REC.mr.onstop = async function(){
+      stream.getTracks().forEach(function(t){ t.stop(); });
+      var blob = new Blob(REC.chunks, { type:"audio/webm" });
+      if (REC.url) URL.revokeObjectURL(REC.url);
+      REC.url = URL.createObjectURL(blob);
+      REC.key = recKey();
+      try { var c = await rdCache(); if (c) await c.put(recKey(), new Response(blob)); } catch(e){}
+      REC.mr = null;
+      renderMushaf();
+    };
+    REC.mr.start();
+    renderMushaf();
+  } catch(e){
+    var p = document.getElementById("rd-prog");
+    if (p) p.textContent = L.rec.denied;
+  }
+}
+function recStop(){ if (REC.mr && REC.mr.state !== "inactive") REC.mr.stop(); }
+async function recLoad(){
+  if (REC.key === recKey() && REC.url) return REC.url;
+  try {
+    var c = await rdCache(), hit = c ? await c.match(recKey()) : null;
+    if (!hit) return null;
+    if (REC.url) URL.revokeObjectURL(REC.url);
+    REC.url = URL.createObjectURL(await hit.blob());
+    REC.key = recKey();
+    return REC.url;
+  } catch(e){ return null; }
+}
+function recCompare(){
+  var pg = RD.pages[RD.page], keys = pg ? rdSelKeys(pg) : [];
+  if (!keys.length) return;
+  rdPlay(keys, 1);
+  var wait = setInterval(function(){
+    if (!rdAudio){
+      clearInterval(wait);
+      var a = document.getElementById("rec-mine");
+      if (a){ a.currentTime = 0; a.play().catch(function(){}); }
+    }
+  }, 400);
+}
+function recBox(){
+  var box = document.getElementById("rd-rec");
+  if (!box) return;
+  var rec = !!(REC.mr && REC.mr.state === "recording");
+  var head = '<button class="abtn' + (rec ? "" : " go") + '" data-rec="t">' +
+      (rec ? '<span class="recdot"></span> ' + L.rec.stop : L.rec.start) + '</button>';
+  var wire = function(){
+    qa("#rd-rec [data-rec]").forEach(function(b){
+      b.onclick = function(){ b.dataset.rec === "t" ? (REC.mr ? recStop() : recStart()) : recCompare(); };
+    });
+  };
+  box.innerHTML = head + '<span class="lb">' + L.rec.none + '</span>';
+  wire();
+  recLoad().then(function(url){
+    var b2 = document.getElementById("rd-rec");
+    if (!url || !b2) return;
+    b2.innerHTML = head + '<span class="lb">' + L.rec.mine + '</span>' +
+      '<audio id="rec-mine" controls src="' + url + '"></audio>' +
+      '<button class="abtn" data-rec="c">' + L.rec.compare + '</button>' +
+      '<a class="abtn" href="' + url + '" download="hifz-' + TODAY + '-p' + RD.page + '.webm">' + L.rec.dl + '</a>';
+    wire();
+  });
+}
+
+/* A stubborn phrase inside one ayah: the word weights give its slice of the
+   recitation, so it can be looped slowly without cutting any audio files. */
+function rdPlayPhrase(pg, vk, i0, i1){
+  rdStop();
+  var ws = exWordsOf(pg, vk);
+  if (!ws.length) return;
+  var wt = ws.map(function(w){ return Math.max(1, w.g.length); });
+  var tot = wt.reduce(function(a, b){ return a + b; }, 0), s0 = 0, s1 = 0, i;
+  for (i = 0; i < i0; i++) s0 += wt[i];
+  for (i = 0; i <= i1; i++) s1 += wt[i];
+  var f0 = s0 / tot, f1 = Math.min(1, s1 / tot), left = Math.max(1, RD.loops);
+  var a = new Audio(AUDIO_BASE + S.settings.reciter + "/" + ayahFile(vk));
+  a.playbackRate = Math.min(RD.speed, 0.85);
+  rdAudio = a;
+  a.onloadedmetadata = function(){ a.currentTime = f0 * a.duration; a.play().catch(function(){}); };
+  a.ontimeupdate = function(){
+    if (a.duration && a.currentTime >= f1 * a.duration){
+      left--;
+      if (left <= 0){ rdStop(); return; }
+      a.pause();
+      setTimeout(function(){ if (rdAudio === a){ a.currentTime = f0 * a.duration; a.play().catch(function(){}); } }, 800);
+    }
+  };
+  a.onplay = rdSyncBtns; a.onpause = rdSyncBtns;
+}
+
+/* ---------- retrieval test ----------
+   Three formats, all built from the page data already on the device:
+   reorder the pieces, fill the gap, choose the continuation. Every wrong
+   answer is counted into the day's error log; a poor run marks the page weak. */
+var EX = null;
+function exShuffle(a){ for (var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function exWordsOf(pg, vk){
+  var out = [];
+  for (var ln = 1; ln <= LINES_PER_PAGE; ln++){
+    (pg.lines[ln] || []).forEach(function(w){ if (w.vk === vk && !w.end) out.push(w); });
+  }
+  return out;
+}
+function exChunks(ws, size){
+  var out = [];
+  for (var i = 0; i < ws.length; i += size) out.push(ws.slice(i, i + size).map(function(w){ return w.g; }).join(" "));
+  return out;
+}
+function exPool(pg, notVk){
+  var out = [];
+  for (var ln = 1; ln <= LINES_PER_PAGE; ln++){
+    (pg.lines[ln] || []).forEach(function(w){ if (w.vk !== notVk && !w.end) out.push(w.g); });
+  }
+  return out;
+}
+function exBuild(mode){
+  var pg = RD.pages[RD.page], keys = pg ? rdSelKeys(pg) : [];
+  if (!pg || !keys.length) return null;
+  var items = [];
+  if (mode === "order"){
+    keys.forEach(function(vk){
+      var ws = exWordsOf(pg, vk);
+      if (ws.length < 3) return;
+      var ch = exChunks(ws, ws.length > 9 ? 3 : 2);
+      if (ch.length < 2) return;
+      items.push({ kind:"order", vk:vk, right:ch, pool:exShuffle(ch.slice()) });
+    });
+  } else if (mode === "cloze"){
+    keys.forEach(function(vk){
+      var ws = exWordsOf(pg, vk);
+      if (ws.length < 4) return;
+      var hide = 1 + Math.floor(Math.random() * (ws.length - 2));
+      var opts = [ws[hide].g], pool = exShuffle(exPool(pg, vk));
+      for (var i = 0; i < pool.length && opts.length < 4; i++) if (opts.indexOf(pool[i]) < 0) opts.push(pool[i]);
+      items.push({ kind:"cloze", vk:vk, hide:hide,
+        text:ws.map(function(w, i){ return i === hide ? '<span class="gap"></span>' : w.g; }).join(" "),
+        opts:exShuffle(opts), ans:ws[hide].g });
+    });
+  } else {
+    keys.forEach(function(vk){
+      var ws = exWordsOf(pg, vk);
+      if (ws.length < 5) return;
+      var cut = Math.max(2, Math.floor(ws.length / 2));
+      var ans = ws.slice(cut, cut + 2).map(function(w){ return w.g; }).join(" ");
+      var opts = [ans], pool = exShuffle(exPool(pg, vk));
+      for (var i = 0; i + 1 < pool.length && opts.length < 4; i += 2){
+        var cand = pool[i] + " " + pool[i+1];
+        if (opts.indexOf(cand) < 0) opts.push(cand);
+      }
+      items.push({ kind:"next", vk:vk, text:ws.slice(0, cut).map(function(w){ return w.g; }).join(" "),
+        opts:exShuffle(opts), ans:ans });
+    });
+  }
+  if (!items.length) return null;
+  return { mode:mode, items:items, i:0, right:0, wrong:0, picked:[], done:false };
+}
+function exOpen(mode){
+  var built = exBuild(mode || "order");
+  var box = document.getElementById("exam");
+  if (!built){
+    box.classList.add("on");
+    document.getElementById("exam-in").innerHTML =
+      '<h3>' + L.ex.title + '</h3><p class="intro">' + L.ex.need + '</p>' +
+      '<div class="exfoot"><button class="abtn" data-ex="close">' + L.ex.close + '</button></div>';
+    exWire();
+    return;
+  }
+  EX = built;
+  box.classList.add("on");
+  exRender();
+}
+function exRender(msg, cls){
+  var E = L.ex, it = EX.items[EX.i], fam = RD.fonts[RD.page] || "";
+  var h = '<div class="exhead"><div><div class="kicker">' + E.title + '</div>' +
+          '<h3>' + E[EX.mode === "order" ? "order" : EX.mode === "cloze" ? "cloze" : "next"] + '</h3></div>' +
+          '<span class="rdprog">' + fmt(E.q, n(EX.i + 1), n(EX.items.length)) + '</span></div>';
+  h += '<div class="exmodes">' + ["order","cloze","next"].map(function(m){
+        return '<button class="rdtog" data-exmode="' + m + '" aria-pressed="' + (EX.mode === m) + '"><i></i>' + E[m] + '</button>';
+      }).join("") + '</div>';
+  if (EX.done){
+    h += '<p class="intro" style="margin-top:14px">' + E.done + ' · ' + fmt(E.score, n(EX.right), n(EX.wrong)) + '</p>';
+    if (EX.wrong > EX.right) h += '<p class="exmsg no">' + E.weakAdd + '</p>';
+    h += '<div class="exfoot"><button class="abtn go" data-ex="again">' + E.again + '</button>' +
+         '<button class="abtn" data-ex="close">' + E.close + '</button></div>';
+  } else if (it.kind === "order"){
+    h += '<p class="intro">' + E.orderHint + '</p>' +
+         '<div class="exq" style="font-family:\'' + fam + '\'">' +
+           (EX.picked.length ? EX.picked.join(" ") : "&nbsp;") + '</div>' +
+         '<div class="exchips" style="font-family:\'' + fam + '\'">' +
+         it.pool.map(function(c, i){
+           return '<button class="exchip' + (EX.picked.indexOf(c) > -1 ? " used" : "") +
+                  '" data-exchip="' + i + '">' + c + '</button>';
+         }).join("") + '</div>';
+  } else {
+    h += '<p class="intro">' + (it.kind === "cloze" ? E.clozeHint : E.nextHint) + '</p>' +
+         '<div class="exq" style="font-family:\'' + fam + '\'">' +
+           (it.kind === "cloze" ? it.text : it.text + ' <span class="gap"></span>') + '</div>' +
+         '<div class="exchips" style="font-family:\'' + fam + '\'">' +
+         it.opts.map(function(o, i){ return '<button class="exchip" data-exopt="' + i + '">' + o + '</button>'; }).join("") +
+         '</div>';
+  }
+  if (!EX.done) h += '<p class="exmsg ' + (cls || "") + '">' + (msg || "") + '</p>' +
+                     '<div class="exfoot"><button class="abtn" data-ex="close">' + E.close + '</button></div>';
+  document.getElementById("exam-in").innerHTML = h;
+  exWire();
+}
+function exFinish(){
+  EX.done = true;
+  var d = day(TODAY);
+  d.errors = (d.errors || 0) + EX.wrong;
+  revRecord(RD.page, EX.right + EX.wrong ? EX.right / (EX.right + EX.wrong) : 0);
+  save(); renderToday(); renderProgress();
+  exRender();
+}
+function exNext(){
+  if (EX.i + 1 >= EX.items.length) return exFinish();
+  EX.i++; EX.picked = [];
+  exRender();
+}
+function exWire(){
+  qa("[data-ex]").forEach(function(b){
+    b.onclick = function(){
+      if (b.dataset.ex === "close"){ document.getElementById("exam").classList.remove("on"); }
+      else exOpen(EX ? EX.mode : "order");
+    };
+  });
+  qa("[data-exmode]").forEach(function(b){ b.onclick = function(){ exOpen(b.dataset.exmode); }; });
+  qa("[data-exchip]").forEach(function(b){
+    b.onclick = function(){
+      var it = EX.items[EX.i], c = it.pool[+b.dataset.exchip];
+      if (c === it.right[EX.picked.length]){
+        EX.picked.push(c);
+        if (EX.picked.length === it.right.length){ EX.right++; rdPlay([it.vk], 1); setTimeout(exNext, 700); }
+        else exRender(L.ex.right, "ok");
+      } else { EX.wrong++; b.classList.add("bad"); exRender(L.ex.wrong, "no"); }
+    };
+  });
+  qa("[data-exopt]").forEach(function(b){
+    b.onclick = function(){
+      var it = EX.items[EX.i];
+      if (it.opts[+b.dataset.exopt] === it.ans){ EX.right++; b.classList.add("good"); rdPlay([it.vk], 1); setTimeout(exNext, 700); }
+      else { EX.wrong++; b.classList.add("bad"); exRender(L.ex.wrong, "no"); }
+    };
+  });
+}
+
 /* ---------- render all ---------- */
 function renderAll(){
-  renderChrome(); renderToday(); renderRoutine(); renderProgress(); renderSettings();
+  ntSchedule();
+  renderChrome(); renderToday(); renderMushaf(); renderRoutine(); renderProgress(); renderSettings();
 }
 
 document.getElementById("tbar-x").onclick    = function(){ stopTimer(false); renderToday(); };
@@ -2772,6 +4118,12 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     S = loaded;
     if (!S.weak) S.weak = {};
     if (S.settings.manualLines == null) S.settings.manualLines = 0;
+    if (!S.settings.mushafId) S.settings.mushafId = "madani";
+    if (!S.settings.reciter) S.settings.reciter = "Ayman_Sowaid_64kbps";
+    if (S.settings.notifyAt == null) S.settings.notifyAt = "";
+    if (S.settings.zikrEvery == null) S.settings.zikrEvery = 0;
+    if (!S.rev) S.rev = {};
+    applyMushaf();
     if (S.settings.drive === undefined) S.settings.drive = null;
   }
 

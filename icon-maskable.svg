@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" fill="#131F35"/>
+  <rect width="512" height="512" fill="#131F35"></rect>
   <g stroke="#A4813F" stroke-width="11" stroke-linecap="round" opacity=".85">
-    <line x1="164" y1="190" x2="352" y2="190"/>
-    <line x1="188" y1="226" x2="352" y2="226"/>
+    <line x1="164" y1="190" x2="352" y2="190"></line>
+    <line x1="188" y1="226" x2="352" y2="226"></line>
   </g>
   <g stroke="#2C6A5E" stroke-width="11" stroke-linecap="round">
-    <line x1="164" y1="286" x2="352" y2="286"/>
-    <line x1="216" y1="322" x2="352" y2="322"/>
+    <line x1="164" y1="286" x2="352" y2="286"></line>
+    <line x1="216" y1="322" x2="352" y2="322"></line>
   </g>
 </svg>
