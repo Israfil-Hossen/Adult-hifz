@@ -1586,13 +1586,35 @@ html{-webkit-text-size-adjust:100%}
 @media (max-width:560px){
   .wrap{padding:0 13px}
   .rdcard{padding:11px 11px}
-  .rdgrp{width:100%}
-  .rdgrp>*{flex:1 1 auto;padding:9px 8px;font-size:13px}
-  .rdgrp input{flex:0 0 56px}
+  .rdgrp{width:auto}
+  .rdgrp>*{flex:0 0 auto;padding:8px 7px;font-size:13px}
+  .rdgrp input{flex:0 0 44px}
   .rdplay .rdic{padding:9px 6px;justify-content:center}
   .rdline{gap:7px}
   .rdmini{font-size:12px;padding:6px 11px}
-  .paper{padding:16px 11px 12px}
+  .rdcard{padding:6px 8px;gap:5px 6px}
+  .rdhead .rdpg input{width:40px;font-size:17px}
+  .rdmeta{font-size:11.5px}
+  .rdsabaq{padding:3px 8px;gap:4px}
+  .rdsabaq .sbrange select{font-size:15px}
+  .sblbl{font-size:11.5px}
+  .rdcard .rdset{margin-inline-start:0;flex-wrap:nowrap;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;max-width:100%}
+  .rdcard .rdset::-webkit-scrollbar{display:none}
+  .rdhead .rdic.t{min-width:34px;height:32px;font-size:15px;flex:0 0 auto}
+  .paper{box-shadow:0 4px 14px rgba(0,0,0,.18);border-radius:12px;padding:12px 8px 10px}
+  .qline{font-size:clamp(16px,5.9vw,30px);min-height:clamp(24px,6.4vw,36px);line-height:1.75}
+  .qline:empty{display:none}
+  .rdcard{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .rdcard::-webkit-scrollbar{display:none}
+  .rdcard>*{flex:0 0 auto}
+  html{font-size:16.5px}
+  body{font-size:15.5px}
+  .top-in .dt{font-size:12.5px}
+  .tab{font-size:12.5px}
+  .trrow{font-size:15px}
+  .trbox h4{font-size:14px}
+  .hint{font-size:12.5px}
   .recbox audio{max-width:100%;width:100%}
   .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .tab{flex:0 0 auto;padding-inline:14px}
@@ -1962,6 +1984,31 @@ footer b{color:#AEB6BD;font-weight:500}
   .brand .nm{font-size:17px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* the mushaf header adapts to the SPACE IT HAS, not to a device guess */
+main.wrap{width:100%}
+.view{width:100%}
+#v-mushaf{container-type:inline-size;width:100%}
+@container (max-width:640px){
+  .rdcard{flex-wrap:nowrap!important;padding:7px 9px!important;gap:7px!important;align-items:center}
+  .rdcard>*,.rdcard .rdgrp,.rdcard .rdsabaq{flex:0 0 auto!important;min-width:0}
+  .rdcard .rdset{order:9;margin-inline-start:auto!important;flex-wrap:nowrap!important}
+  .rdhead .rdic.t{min-width:33px;height:31px;font-size:14px;padding:0}
+  .qline:empty{display:none!important}
+}
+@container (max-width:480px){
+  .rdcard .rdmeta,.rdcard .sblbl,.rdcard .rdprog{display:none!important}
+  .rdcard .rdsabaq [data-rd="auto"]{display:none}
+  .rdsabaq{padding:2px 7px!important}
+  #rd-selbar.rdsabaq .sbrange select{width:34px!important;min-width:0;padding:0;font-size:15px}
+  .rdsabaq .sbdash{display:none}
+  .rdhead .rdpg button{padding:3px 5px}
+  .rdhead .rdpg input{flex:0 0 38px!important;width:38px}
+  .rdcard .rdset [data-rd="mut"]{display:none}
+}
+@container (max-width:400px){
+  .rdcard .rdset [data-rd="pick"],.rdcard .rdset [data-rd="phrase"]{display:none}
+  .rdhead .rdic.t{min-width:30px;height:29px;font-size:13.5px}
+}
 </style>
 </head>
 <body>
@@ -2265,7 +2312,7 @@ body.focus .fab{bottom:calc(20px + env(safe-area-inset-bottom))}
 .rdhead .rdic.t{min-width:32px;height:30px;font-size:14px}
 .rdcard .rdline{gap:8px;margin:0}
 .rdtools{gap:8px}
-.rdsabaq{padding:9px 10px;gap:8px}
+
 .rdprog{margin-inline-start:2px}
 
 /* ---------- NATIVE SKIN: app bar, icon tabs, sheets ---------- */
@@ -4124,6 +4171,9 @@ function fabRender(){
     ["loopc","↻<i>" + (RD.loops === Infinity ? "∞" : n(RD.loops)) + "</i>"],
     ["speedc","⏱<i>" + n(RD.speed) + "×</i>"]
   ];
+  var card = document.querySelector(".rdcard"), cw = card ? card.clientWidth : 999;
+  if (cw <= 480) items.push(["rd:mut","≈"]);
+  if (cw <= 400) items = items.concat([["rd:pick","⌖"], ["rd:phrase","↔"]]);
   m.innerHTML = items.map(function(it, i){
     return '<button class="fabb" data-fab="' + it[0] + '" style="animation-delay:' + (i * 28) + 'ms">' + it[1] + '</button>';
   }).join("");
