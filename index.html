@@ -92,7 +92,7 @@ window.HIFZ_LANG_en = {
          hint:"It then opens from the home screen, with no address bar, and works offline." },
   nt: { h:"Reminders", allow:"Turn on notifications", allowed:"Notifications are on", denied:"The browser has blocked notifications. Allow them in site settings.",
         daily:"Daily reminder", dailyOff:"Off", dailyHint:"A nudge at this time if today's lesson is not done yet.",
-        zikr:"Dhikr reminder", zikrOff:"Off", zikrN:"Every {0} minutes", zikrHint:"A short dhikr, one after another. Silent between 10 pm and 5 am.",
+        voice:"Say the dhikr aloud (Arabic)", voiceTest:"Hear it", voiceNone:"No Arabic voice on this device", voiceHint:"The reminder speaks the dhikr in Arabic instead of a plain chime. Tap ‘Hear it’ once so the browser allows sound.", zikr:"Dhikr reminder", zikrOff:"Off", zikrN:"Every {0} minutes", zikrHint:"A short dhikr, one after another. Silent between 10 pm and 5 am.",
         dailyTitle:"Today's lesson is waiting", dailyBody:"Page {0} · lines {1}–{2}. Open and read.",
         note:"Reminders work while the app is open or sitting in the background. Install it on your home screen and leave it there." },
   rev: { ask:"Page {0} · how did it go?", good:"Clean", ok:"Shaky", bad:"Forgotten",
@@ -111,7 +111,7 @@ window.HIFZ_LANG_en = {
         notMadani:"The page view needs a Madani print (604 pages, 15 lines), 1405 or 1421. Switch your mushaf in Settings to use it.",
         reciter:"Recitation", playAll:"Play the selection", juz:"Juz {0}", openPage:"Open this page in the mushaf",
         tr:"Translation", trBy:"M.A.S. Abdel Haleem", trOff:"Hide translation", pause:"Pause", resume:"Resume", stop:"Stop",
-        ay:"Ayah", auto:"Auto", cover:"Cover", pick:"Pick on the page",
+        ay:"Ayah", auto:"Auto", cover:"Cover", pick:"Pick on the page", more:"More", less:"Fewer", focus:"Quiet reading", focusOut:"Back",
         pickA:"Tap the first word of the block", pickB:"Now tap the last word", setDay:"Make this today's lesson", setDone:"Set as today's lesson",
         selNote:"The block starts from your daily target ({0} lines) and is rounded to whole ayahs, adjust it if you want." },
 
@@ -429,7 +429,7 @@ window.HIFZ_LANG_bn = {
   locale: "bn-BD",
   fonts: {
     google: "Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@300;400;500;600;700",
-    display: '"SolaimanLipi","Tiro Bangla","Noto Serif Bengali","Nirmala UI",Georgia,serif',
+    display: '"SolaimanLipi","Hind Siliguri","Noto Sans Bengali","Nirmala UI",system-ui,sans-serif',
     body: '"SolaimanLipi","Hind Siliguri","Noto Sans Bengali","Nirmala UI",system-ui,sans-serif',
     lineHeight: "1.72"
   },
@@ -466,7 +466,7 @@ window.HIFZ_LANG_bn = {
          hint:"এরপর হোম স্ক্রিন থেকেই খুলবে, অ্যাড্রেস বার থাকবে না, ইন্টারনেট ছাড়াও চলবে।" },
   nt: { h:"স্মরণ করিয়ে দেওয়া", allow:"বিজ্ঞপ্তি চালু করুন", allowed:"বিজ্ঞপ্তি চালু আছে", denied:"ব্রাউজার বিজ্ঞপ্তি আটকে রেখেছে। সাইট সেটিংস থেকে অনুমতি দিন।",
         daily:"দৈনিক স্মরণ", dailyOff:"বন্ধ", dailyHint:"এই সময়ে আজকের সবক বাকি থাকলে মনে করিয়ে দেবে।",
-        zikr:"যিকিরের স্মরণ", zikrOff:"বন্ধ", zikrN:"প্রতি {0} মিনিটে", zikrHint:"একটার পর একটা ছোট যিকির। রাত ১০টা থেকে ভোর ৫টা পর্যন্ত চুপ থাকবে।",
+        voice:"যিকিরটি আরবিতে পড়ে শোনাবে", voiceTest:"শুনে দেখুন", voiceNone:"এই ডিভাইসে আরবি কণ্ঠ নেই", voiceHint:"সাধারণ শব্দের বদলে যিকিরটাই আরবিতে উচ্চারণ করে শোনাবে। একবার ‘শুনে দেখুন’ চাপুন — তাতে ব্রাউজার শব্দ ছাড়ার অনুমতি পায়।", zikr:"যিকিরের স্মরণ", zikrOff:"বন্ধ", zikrN:"প্রতি {0} মিনিটে", zikrHint:"একটার পর একটা ছোট যিকির। রাত ১০টা থেকে ভোর ৫টা পর্যন্ত চুপ থাকবে।",
         dailyTitle:"আজকের সবক বাকি আছে", dailyBody:"পৃষ্ঠা {0} · লাইন {1}–{2}। খুলে পড়ে নিন।",
         note:"অ্যাপটা খোলা থাকলে বা পিছনে চালু থাকলে স্মরণ কাজ করে। হোম স্ক্রিনে বসিয়ে রাখলে সবচেয়ে ভালো চলে।" },
   rev: { ask:"পৃষ্ঠা {0} · কেমন হলো?", good:"নির্ভুল", ok:"একটু আটকেছে", bad:"ভুলে গেছি",
@@ -485,7 +485,7 @@ window.HIFZ_LANG_bn = {
         notMadani:"পৃষ্ঠা-দৃশ্যের জন্য মাদানী ছাপা লাগে (৬০৪ পৃষ্ঠা, ১৫ লাইন), ১৪০৫ বা ১৪২১। সেটিংস থেকে মুসহাফ বদলে নিন।",
         reciter:"তিলাওয়াত", playAll:"নির্বাচিত অংশ বাজান", juz:"পারা {0}", openPage:"মুসহাফে পৃষ্ঠাটা খুলুন",
         tr:"অনুবাদ", trBy:"তাইসিরুল কুরআন", trOff:"অনুবাদ লুকান", pause:"বিরতি", resume:"আবার চালু", stop:"থামান",
-        ay:"আয়াত", auto:"স্বয়ংক্রিয়", cover:"ঢাকা", pick:"পৃষ্ঠা থেকে বাছুন",
+        ay:"আয়াত", auto:"স্বয়ংক্রিয়", cover:"ঢাকা", pick:"পৃষ্ঠা থেকে বাছুন", more:"আরও", less:"কম", focus:"নিরিবিলি পড়া", focusOut:"ফিরে যান",
         pickA:"যেখান থেকে শুরু, সেই শব্দে ট্যাপ করুন", pickB:"এবার যেখানে শেষ, সেই শব্দে ট্যাপ করুন", setDay:"আজকের সবক করুন", setDone:"আজকের সবক সেট হয়েছে",
         selNote:"আপনার দৈনিক লক্ষ্য ({0} লাইন) থেকে ব্লক শুরু হয়, তারপর পূর্ণ আয়াতে গিয়ে শেষ হয়, দরকারে বদলে নিন।" },
 
@@ -842,7 +842,7 @@ window.HIFZ_LANG_ur = {
          hint:"پھر یہ ہوم اسکرین سے کھلے گا، ایڈریس بار کے بغیر، اور آف لائن بھی چلے گا۔" },
   nt: { h:"یاد دہانی", allow:"اطلاعات آن کریں", allowed:"اطلاعات آن ہیں", denied:"براؤزر نے اطلاعات روک رکھی ہیں۔ سائٹ کی ترتیبات سے اجازت دیں۔",
         daily:"روزانہ یاد دہانی", dailyOff:"بند", dailyHint:"اس وقت اگر آج کا سبق باقی ہو تو یاد دلائے گا۔",
-        zikr:"ذکر کی یاد دہانی", zikrOff:"بند", zikrN:"ہر {0} منٹ بعد", zikrHint:"ایک کے بعد ایک مختصر ذکر۔ رات ۱۰ سے صبح ۵ بجے تک خاموش۔",
+        voice:"ذکر عربی میں سنائے", voiceTest:"سن کر دیکھیں", voiceNone:"اس ڈیوائس میں عربی آواز نہیں", voiceHint:"عام گھنٹی کے بجائے ذکر عربی میں پڑھ کر سنائے گا۔ ایک بار ‘سن کر دیکھیں’ دبائیں تاکہ براؤزر آواز کی اجازت دے۔", zikr:"ذکر کی یاد دہانی", zikrOff:"بند", zikrN:"ہر {0} منٹ بعد", zikrHint:"ایک کے بعد ایک مختصر ذکر۔ رات ۱۰ سے صبح ۵ بجے تک خاموش۔",
         dailyTitle:"آج کا سبق باقی ہے", dailyBody:"صفحہ {0} · سطریں {1}–{2}۔ کھول کر پڑھ لیں۔",
         note:"ایپ کھلی ہو یا پس منظر میں چل رہی ہو تو یاد دہانی کام کرتی ہے۔ ہوم اسکرین پر رکھیں تو بہتر۔" },
   rev: { ask:"صفحہ {0} · کیسا رہا؟", good:"بے عیب", ok:"کچھ اٹکا", bad:"بھول گیا",
@@ -861,7 +861,7 @@ window.HIFZ_LANG_ur = {
         notMadani:"صفحہ منظر مدنی چھپائی کے مطابق ہے (۶۰۴ صفحے، ۱۵ سطریں)۔ ترتیبات سے مصحف بدلیں۔",
         reciter:"تلاوت", playAll:"منتخب حصہ چلائیں", juz:"پارہ {0}", openPage:"مصحف میں یہ صفحہ کھولیں",
         tr:"ترجمہ", trBy:"فتح محمد جالندھری", trOff:"ترجمہ چھپائیں", pause:"وقفہ", resume:"دوبارہ چلائیں", stop:"بند کریں",
-        ay:"آیت", auto:"خودکار", cover:"ڈھانپیں", pick:"صفحے سے منتخب کریں",
+        ay:"آیت", auto:"خودکار", cover:"ڈھانپیں", pick:"صفحے سے منتخب کریں", more:"مزید", less:"کم", focus:"سکون سے پڑھیں", focusOut:"واپس",
         pickA:"جہاں سے شروع، اس لفظ پر ٹیپ کریں", pickB:"اب جہاں ختم، اس لفظ پر ٹیپ کریں", setDay:"آج کا سبق بنائیں", setDone:"آج کا سبق مقرر ہو گیا",
         selNote:"بلاک آپ کے روزانہ ہدف ({0} سطریں) سے شروع ہو کر پوری آیت پر ختم ہوتا ہے، چاہیں تو بدل لیں۔" },
 
@@ -1218,7 +1218,7 @@ window.HIFZ_LANG_zh = {
          hint:"之后可从主屏幕直接打开，没有地址栏，离线也能用。" },
   nt: { h:"提醒", allow:"开启通知", allowed:"通知已开启", denied:"浏览器已屏蔽通知，请在站点设置中允许。",
         daily:"每日提醒", dailyOff:"关闭", dailyHint:"到这个时间，若今天的功课还没完成就提醒你。",
-        zikr:"记主提醒", zikrOff:"关闭", zikrN:"每 {0} 分钟", zikrHint:"一句接一句的简短记主词。夜里 10 点到早 5 点静默。",
+        voice:"用阿拉伯语念出记主词", voiceTest:"试听", voiceNone:"本设备没有阿拉伯语语音", voiceHint:"提醒时不再只响一声，而是用阿拉伯语念出该记主词。请先点一次“试听”，让浏览器允许发声。", zikr:"记主提醒", zikrOff:"关闭", zikrN:"每 {0} 分钟", zikrHint:"一句接一句的简短记主词。夜里 10 点到早 5 点静默。",
         dailyTitle:"今天的功课还没做", dailyBody:"第 {0} 页 · 第 {1}–{2} 行。打开读吧。",
         note:"应用打开或在后台运行时提醒有效。装到主屏幕上效果最好。" },
   rev: { ask:"第 {0} 页 · 背得如何？", good:"顺畅", ok:"有些卡", bad:"忘了",
@@ -1237,7 +1237,7 @@ window.HIFZ_LANG_zh = {
         notMadani:"页面视图按麦地那版排版（604 页、15 行）。请在设置中切换经本。",
         reciter:"诵读", playAll:"播放所选段落", juz:"第 {0} 卷", openPage:"在经本中打开这一页",
         tr:"译文", trBy:"马坚", trOff:"隐藏译文", pause:"暂停", resume:"继续", stop:"停止",
-        ay:"节", auto:"自动", cover:"遮住", pick:"在页面上选取",
+        ay:"节", auto:"自动", cover:"遮住", pick:"在页面上选取", more:"更多", less:"收起", focus:"静读", focusOut:"返回",
         pickA:"点选起始的那个词", pickB:"再点选结束的那个词", setDay:"设为今天的功课", setDone:"已设为今天的功课",
         selNote:"段落按每日目标（{0} 行）起算，并向整节取齐，可自行调整。" },
 
@@ -1643,6 +1643,7 @@ input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
 .streak .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#8A939C;display:block;margin-top:3px}
 
 .topbtns{display:flex;gap:8px;align-items:center;padding-bottom:12px;flex-wrap:wrap}
+.topbtns:empty,.topbtns:not(:has(.sync[style*="flex"])){padding-bottom:0}
 .sync{
   display:none;align-items:center;gap:7px;padding:5px 11px;
   border:1px solid rgba(164,129,63,.4);font-family:var(--mono);
@@ -1851,6 +1852,33 @@ h3{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.4}
 .syncline{font-size:13.5px;color:var(--muted);margin-bottom:12px}
 .syncline b{color:var(--ink)}
 
+/* collapsible day cards */
+.blk-b{display:none}
+.blk.open .blk-b{display:block}
+.blk-h{cursor:pointer}
+.blk-h .chev{flex:none;width:26px;text-align:center;color:var(--muted);font-size:15px;transition:transform .18s}
+.blk.open .blk-h .chev{transform:rotate(90deg)}
+.blk.done .blk-h .chev{opacity:.45}
+
+/* hero start button on the phase card */
+.phase .start{
+  margin-top:12px;display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--paper);
+  border:none;padding:13px 22px;border-radius:var(--r-sm);font-family:var(--body);font-size:16px;cursor:pointer;white-space:nowrap;
+}
+.phase .start:hover{background:var(--brass);color:var(--ink)}
+
+/* extra reading tools hide behind ⋯ */
+.rdtools.tight .xtra{display:none}
+
+/* quiet reading mode */
+body.focus .top,body.focus .tabs,body.focus footer,body.focus .rdtools,
+body.focus .rdnote,body.focus #v-mushaf h2,body.focus .trbox,body.focus .recbox{display:none!important}
+body.focus main.wrap{padding-top:10px}
+.fexit{position:fixed;inset-inline-end:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:70;
+  background:var(--ink);color:var(--paper);border:none;border-radius:999px;padding:12px 20px;font-family:var(--body);
+  font-size:15px;cursor:pointer;display:none;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+body.focus .fexit{display:block}
+
 /* ---------- TIMER ---------- */
 .tbar{
   position:fixed;inset-inline:0;bottom:0;z-index:60;background:var(--ink);color:var(--paper);
@@ -1935,7 +1963,6 @@ footer b{color:#AEB6BD;font-weight:500}
     </div>
   </div>
   <div class="wrap topbtns">
-    <select class="langpick" id="langpick" aria-label="Language"></select>
     <button class="sync" id="sync-chip"><span class="dot"></span><span id="sync-txt"></span></button>
   </div>
   <nav class="tabs"><div class="wrap" id="tabs"></div></nav>
@@ -2043,6 +2070,114 @@ footer b{color:#AEB6BD;font-weight:500}
   .rdmini .ic{font-size:16px}
 }
 .rdprog{font-family:var(--mono);font-size:12px;opacity:.8}
+
+/* ================= 1a · উষ্ণ খাতা — warm-notebook skin =================
+   Light paper everywhere, soft rounded cards, pill controls, bottom tab bar. */
+:root{
+  --r-lg:18px; --r-md:14px; --r-sm:10px;
+  --sh:0 1px 2px rgba(51,65,79,.06), 0 6px 18px rgba(51,65,79,.07);
+  --sh-sm:0 1px 2px rgba(51,65,79,.07);
+}
+body{background:var(--paper);padding-bottom:calc(66px + env(safe-area-inset-bottom))}
+
+/* top bar — paper, not ink */
+.top{background:var(--paper);color:var(--ink);border-bottom:none}
+.top-in{padding:18px 0 4px}
+.brand .mark{color:var(--verdigris);font-size:21px}
+.brand .nm{font-size:17px;color:var(--ink)}
+.brand .dt{color:var(--ink-3)}
+.streak{display:inline-flex;align-items:baseline;gap:5px;background:var(--verd-soft);
+  color:#0B6F74;border-radius:999px;padding:6px 13px;white-space:nowrap;text-align:start}
+.streak .v{font-size:15px;color:#0B6F74}
+.streak .l{display:inline;margin:0;color:#0B6F74;font-size:10px}
+.langpick{border-color:var(--rule);color:var(--ink-2);border-radius:999px}
+.langpick option{background:#fff;color:var(--ink)}
+.sync{border-color:var(--rule);color:var(--ink-3);border-radius:999px}
+.sync.ok{color:#0B6F74;border-color:rgba(20,160,166,.45)}
+.sync.err{color:var(--maroon);border-color:rgba(176,74,60,.45)}
+.topbtns{padding-bottom:10px}
+
+/* tab bar — pinned to the bottom, like 1a */
+.tabs{position:fixed;inset-inline:0;bottom:0;z-index:55;background:var(--card);
+  border-top:1px solid var(--rule);border-bottom:none;
+  padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 14px rgba(51,65,79,.06)}
+.tab{color:var(--ink-3);border-bottom:none;padding:14px 4px;font-size:13.5px}
+.tab[aria-selected="true"]{color:var(--verdigris);font-weight:700;border-bottom:none}
+.view{padding-top:18px;padding-bottom:34px}
+
+/* today hero */
+.phase{display:block;background:transparent;color:var(--ink);border:none;
+  padding:2px 2px 0;margin-bottom:18px}
+.phase .a{color:var(--verdigris);letter-spacing:.09em}
+.phase .b{font-size:34px;line-height:1.2;margin-top:3px}
+.phase .c{color:var(--ink-3);font-size:14px;max-width:44ch;margin-top:4px}
+.phase.tap:hover{background:transparent;opacity:.82}
+
+/* cards — soft, rounded, shadowed */
+.gate,.blk,.log,.pg,.sheet,.rs,.st,.exsheet,.rdcard,.recbox{
+  border-radius:var(--r-lg);border-color:transparent;box-shadow:var(--sh)}
+.gate,.blk,.log{background:var(--card);border:1px solid rgba(51,65,79,.06)}
+.blk.done{border-color:rgba(20,160,166,.45)}
+.blk-b,.gate{border-radius:var(--r-lg)}
+.blk-b{border-top-color:var(--rule)}
+.pg{background:#fff;border:1px solid rgba(224,168,46,.28);border-radius:var(--r-md);box-shadow:var(--sh-sm)}
+.stats{background:transparent;border:none;gap:10px}
+.st{background:var(--card);border-radius:var(--r-md);box-shadow:var(--sh-sm)}
+.rs{border-radius:var(--r-md)}
+.rs.now{background:var(--verd-soft)}
+.rs.now .wk{color:#0B6F74}
+.rs.now .big{color:var(--ink)}
+.rs.now .big span,.rs.now .note{color:var(--ink-3)}
+
+/* pill controls */
+.gbtn,.abtn,.qp,.tbtn,.cbtn,.rdmini,.langpick,.sync{border-radius:999px}
+.gbtn{padding:11px 22px;border-color:var(--ink-3);font-weight:600}
+.abtn{padding:11px 20px;font-weight:600}
+.gbtn.sel-y{background:var(--verdigris);border-color:var(--verdigris)}
+/* ---- এক ফন্ট সব জায়গায় (ইংরেজি ছাড়া) ----
+   মনোস্পেস লেবেলগুলোও বাংলা/উর্দু/চীনা লিপিতে মূল ফন্টেই দেখাবে */
+html:not([lang="en"]){--mono:var(--body)}
+html:not([lang="en"]) .st .l,html:not([lang="en"]) .sheet .g4 .l,
+html:not([lang="en"]) .jz .n,html:not([lang="en"]) .pgn,
+html:not([lang="en"]) .tbl .src,html:not([lang="en"]) .blk-h .idx,
+html:not([lang="en"]) .steps li::before,html:not([lang="en"]) .tbar .cl,
+html:not([lang="en"]) .sum .lab,html:not([lang="en"]) .legend,
+html:not([lang="en"]) .maplbl .t,html:not([lang="en"]) .rs .wk,
+html:not([lang="en"]) .streak .l,html:not([lang="en"]) .brand .dt,
+html:not([lang="en"]) .sheet-h .su,html:not([lang="en"]) .tbl th{
+  letter-spacing:normal;text-transform:none;
+}
+html[lang="ar"] .brand .nm,html[lang="ar"] h2,html[lang="ar"] h3,
+html[lang="ar"] .phase .b,html[lang="ar"] .blk-h .ttl,html[lang="ar"] .gate .q{
+  font-family:var(--arabic);
+}
+
+.blk-h .ttl,.blk-h .meta{display:block}
+.tog{border-width:2px}
+.blk-h .idx{border-radius:50%}
+.fld input[type=text],.fld input[type=number],.fld input[type=date],.fld select,.fld textarea{
+  border-radius:var(--r-sm);background:#fff}
+.fld textarea{border-radius:var(--r-md)}
+
+/* day summary — soft accent instead of a second dark block */
+.sum{background:var(--verd-soft);color:var(--ink);border-radius:var(--r-lg);box-shadow:var(--sh-sm)}
+.sum .lab{color:#0B6F74}
+.sum .big{color:#0B6F74}
+.bar{background:rgba(11,111,116,.14);border-radius:999px}
+.bar i{background:var(--verdigris)}
+
+/* timer sits above the tab bar */
+.tbar{bottom:calc(62px + env(safe-area-inset-bottom));border-radius:var(--r-lg) var(--r-lg) 0 0;
+  inset-inline:8px;padding-bottom:13px}
+
+footer{background:transparent;color:var(--ink-3);border-top:1px solid var(--rule);
+  margin-bottom:6px}
+footer b{color:var(--ink-2)}
+
+@media (max-width:560px){
+  .phase .b{font-size:29px}
+  .top-in{padding:14px 0 2px}
+}
 </style>
 <main class="wrap">
   <section class="view on" id="v-today"></section>
@@ -2061,6 +2196,7 @@ footer b{color:#AEB6BD;font-weight:500}
   </div>
 </div>
 
+<button class="fexit" id="fexit"></button>
 <div class="tbar" id="tbar">
   <span class="nm" id="tbar-nm"></span>
   <span class="cl" id="tbar-cl">00:00</span>
@@ -2127,7 +2263,7 @@ window.HIFZ_LANG_ar = {
          hint:"يفتح بعدها من الشاشة الرئيسية بلا شريط عنوان، ويعمل دون إنترنت." },
   nt: { h:"التذكيرات", allow:"فعّل الإشعارات", allowed:"الإشعارات مفعّلة", denied:"المتصفح يحجب الإشعارات. اسمح بها من إعدادات الموقع.",
         daily:"تذكير يومي", dailyOff:"مغلق", dailyHint:"تنبيه في هذا الوقت إن لم يتم درس اليوم.",
-        zikr:"تذكير بالذكر", zikrOff:"مغلق", zikrN:"كل {0} دقيقة", zikrHint:"ذكر قصير، واحدًا تلو الآخر. صامت من العاشرة ليلًا حتى الخامسة فجرًا.",
+        voice:"نطق الذكر بالعربية", voiceTest:"استمع", voiceNone:"لا يوجد صوت عربي على هذا الجهاز", voiceHint:"يَنطق التذكيرُ الذكرَ بالعربية بدل الرنين المجرّد. اضغط «استمع» مرة ليأذن المتصفح بالصوت.", zikr:"تذكير بالذكر", zikrOff:"مغلق", zikrN:"كل {0} دقيقة", zikrHint:"ذكر قصير، واحدًا تلو الآخر. صامت من العاشرة ليلًا حتى الخامسة فجرًا.",
         dailyTitle:"درس اليوم في انتظارك", dailyBody:"صفحة {0} · الأسطر {1}–{2}. افتح واقرأ.",
         note:"تعمل التذكيرات ما دام التطبيق مفتوحًا أو يعمل في الخلفية. ثبّته على شاشتك الرئيسية واتركه." },
   rev: { ask:"صفحة {0} · كيف كانت؟", good:"متقنة", ok:"مهتزّة", bad:"منسيّة",
@@ -2146,7 +2282,7 @@ window.HIFZ_LANG_ar = {
         notMadani:"يحتاج عرض الصفحة إلى مصحف المدينة (٦٠٤ صفحات، ١٥ سطرًا)، طبعة ١٤٠٥ أو ١٤٢١. غيّر مصحفك من الإعدادات.",
         reciter:"التلاوة", playAll:"شغّل المحدَّد", juz:"الجزء {0}", openPage:"افتح هذه الصفحة في المصحف",
         tr:"التفسير", trBy:"التفسير الميسّر", trOff:"أخفِ التفسير", pause:"إيقاف مؤقت", resume:"متابعة", stop:"إيقاف",
-        ay:"آية", auto:"تلقائي", cover:"استر", pick:"اختر من الصفحة",
+        ay:"آية", auto:"تلقائي", cover:"استر", pick:"اختر من الصفحة", more:"المزيد", less:"أقل", focus:"قراءة هادئة", focusOut:"رجوع",
         pickA:"انقر أول كلمة في المقطع", pickB:"الآن انقر آخر كلمة", setDay:"اجعله درس اليوم", setDone:"جُعل درس اليوم",
         selNote:"يبدأ المقطع من هدفك اليومي ({0} أسطر) ويُقرَّب إلى آيات كاملة، وتستطيع تعديله." },
 
@@ -2606,7 +2742,7 @@ function blankDay(){
 function defaults(){
   return { v:1,
     settings:{ lang:null, startDate:TODAY, startPage:1, restDay:5,
-               qari:"", mushaf:"", mushafId:"madani", reciter:"Ayman_Sowaid_64kbps", manualLines:0, notifyAt:"", zikrEvery:0, drive:null },
+               qari:"", mushaf:"", mushafId:"madani", reciter:"Ayman_Sowaid_64kbps", manualLines:0, notifyAt:"", zikrEvery:0, zikrVoice:true, drive:null },
     days:{}, weak:{}, rev:{}, updatedAt:Date.now() };
 }
 function day(k){ if (!S.days[k]) S.days[k] = blankDay(); return S.days[k]; }
@@ -2789,6 +2925,7 @@ function renderChrome(){
   document.getElementById("ft1").innerHTML = L.app.footer1;
   document.getElementById("ft2").textContent = L.app.footer2;
   document.getElementById("tbar-x").textContent = L.timer.stop;
+  document.getElementById("fexit").textContent = "✕ " + L.rd.focusOut;
   document.getElementById("rep-print").textContent = L.rep.print;
   document.getElementById("rep-close").textContent = L.rep.close;
 
@@ -2808,8 +2945,10 @@ function renderChrome(){
   });
 
   var lp = document.getElementById("langpick");
-  lp.innerHTML = langOptions(L.code);
-  lp.onchange = function(){ setLang(this.value, true); };
+  if (lp){
+    lp.innerHTML = langOptions(L.code);
+    lp.onchange = function(){ setLang(this.value, true); };
+  }
 }
 
 /* ---------- onboarding ---------- */
@@ -2847,11 +2986,13 @@ function renderOnboard(){
 }
 
 /* ---------- TODAY ---------- */
+var OPEN = {};
 function card(i, ar, title, meta, done, k, body){
-  return '<div class="blk' + (done ? " done" : "") + '">' +
+  return '<div class="blk' + (done ? " done" : "") + (OPEN[k] ? " open" : "") + '" data-blkk="' + k + '">' +
     '<div class="blk-h"><span class="idx">' + n(i) + '</span>' +
     '<span class="txt"><span class="ttl">' + (ar ? '<span class="ar">' + ar + '</span>' : '') + title + '</span>' +
     '<span class="meta">' + meta + '</span></span>' +
+    '<span class="chev">›</span>' +
     '<button class="tog" data-tog="' + k + '" aria-pressed="' + done + '" aria-label="' + L.blk.doneLabel + '"></button></div>' +
     '<div class="blk-b">' + body + '</div></div>';
 }
@@ -2896,13 +3037,19 @@ function renderToday(){
   var lineTxt   = fmt(L.phase.lineRange, n(lineFrom), n(lineTo)) +
                   (d.sabaq.ayahFrom ? ' · ' + L.rd.ay + ' ' + ayLabel(d.sabaq.ayahFrom) + '–' + ayLabel(d.sabaq.ayahTo) : '');
   var pagesTxt  = d.sabaq.pages.map(n).join(", ");
+  if (!OPEN.$init){
+    OPEN.$init = 1;
+    OPEN[!rest && !d.sabaq.done ? "sabaq" : (!d.listen ? "listen" : "sabaqi")] = true;
+  }
   var h = "";
 
   h += '<div class="phase' + (rest ? '' : ' tap') + '"' + (rest ? '' : ' data-openpage="' + (d.sabaq.pages[0] || 1) + '"') + '><div>' +
        '<div class="a">' + fmt(L.phase.week, n(weekNo())) + ' · ' +
          (rest ? L.phase.rest : fmt(L.phase.target, n(lines))) + '</div>' +
        '<div class="b">' + (rest ? L.phase.noNew : fmt(L.phase.page, pagesTxt) + ' · ' + lineTxt) + '</div></div>' +
-       '<div class="c">' + (rest ? L.phase.restNote : phaseNote()) + '</div></div>';
+       '<div class="c">' + (rest ? L.phase.restNote : phaseNote()) + '</div>' +
+       (rest ? "" : '<button class="start" data-openpage="' + (d.sabaq.pages[0] || 1) + '">' + L.rd.openPage + ' ›</button>') +
+       '</div>';
 
   if (prev){
     var cls = d.gate === "pass" ? " pass" : d.gate === "fail" ? " fail" : "";
@@ -3024,6 +3171,14 @@ function bindToday(){
       /* record once per day, and only when an answer is actually being set */
       if (nextGate && !d.gateRated){ revFromGate(nextGate); d.gateRated = true; }
       d.gate = nextGate; save(); renderToday(); };
+  });
+  qa(".blk-h").forEach(function(hd){
+    hd.onclick = function(e){
+      if (e.target.closest("[data-tog]")) return;
+      var w = hd.parentNode, k = w.dataset.blkk;
+      OPEN[k] = !w.classList.contains("open");
+      w.classList.toggle("open", !!OPEN[k]);
+    };
   });
   qa("[data-tog]").forEach(function(b){
     b.onclick = function(){
@@ -3289,6 +3444,10 @@ function renderSettings(){
       [15,30,60,120].map(function(v){
         return '<option value="' + v + '"' + (+s.zikrEvery === v ? " selected" : "") + '>' + fmt(L.nt.zikrN, n(v)) + '</option>';
       }).join("") + '</select><div class="hint">' + L.nt.zikrHint + '</div></div>' +
+    '<div class="fld"><label class="chk"><input type="checkbox" id="s-zkvoice"' +
+      (s.zikrVoice !== false ? " checked" : "") + '>' + L.nt.voice + '</label>' +
+      '<div class="act"><button class="abtn" id="s-zktest">' + L.nt.voiceTest + '</button></div>' +
+      '<div class="hint">' + L.nt.voiceHint + '</div></div>' +
     '<div class="fld"><label for="s-reciter">' + L.rd.reciter + '</label><select id="s-reciter">' +
       RECITERS.map(function(r){
         return '<option value="' + r.id + '"' + (s.reciter === r.id ? " selected" : "") + '>' + (r.nm[L.code] || r.nm.en) + '</option>';
@@ -3347,6 +3506,17 @@ function renderSettings(){
   var ask = g("s-ntask"); if (ask) ask.onclick = ntAsk;
   g("s-ntat").onchange = function(){ S.settings.notifyAt = this.value || ""; save(); ntSchedule(); };
   g("s-zikr").onchange = function(){ S.settings.zikrEvery = +this.value; save(); ntSchedule(); };
+  var zv = g("s-zkvoice");
+  if (zv) zv.onchange = function(){ S.settings.zikrVoice = this.checked; save(); };
+  var zt = g("s-zktest");
+  if (zt) zt.onclick = function(){
+    NT.unlocked = true;
+    var pool = ZIKR.concat(DUROOD), z = pool[Math.floor(Math.random() * pool.length)];
+    var ok = ntSpeak(z.say || z.ar);
+    this.textContent = ok ? z.ar : L.nt.voiceNone;
+    var b = this;
+    setTimeout(function(){ b.textContent = L.nt.voiceTest; }, 4000);
+  };
   g("s-mushaf").onchange = function(){ S.settings.mushaf = this.value; save(); };
   g("s-mushafid").onchange = function(){
     S.settings.mushafId = this.value;
@@ -3876,14 +4046,18 @@ function renderMushaf(){
          '<span class="rdprog" id="rd-prog"></span>' +
        '</div>' +
        '<div class="rdline" id="rd-selbar"></div>' +
-       '<div class="rdtools">' +
+       '<div class="rdtools' + (RD.more ? "" : " tight") + '">' +
          chip("hide",   "▨", Rd.cover,        RD.hide) +
          chip("pick",   "⌖", Rd.pick,         RD.pick) +
-         chip("phrase", "↔", L.rec.phrase,    RD.phrase) +
-         chip("tr",     "文", Rd.tr,           RD.tr !== false) +
-         chip("exam",   "？", L.ex.open) +
-         chip("mut",    "≈", L.mut.find) +
-         chip("dl",     "↓", Rd.dl) +
+         chip("focus",  "⤢", Rd.focus) +
+         '<span class="xtra">' +
+           chip("phrase", "↔", L.rec.phrase,  RD.phrase) +
+           chip("tr",     "文", Rd.tr,         RD.tr !== false) +
+           chip("exam",   "？", L.ex.open) +
+           chip("mut",    "≈", L.mut.find) +
+           chip("dl",     "↓", Rd.dl) +
+         '</span>' +
+         chip("more",   RD.more ? "×" : "⋯", RD.more ? Rd.less : Rd.more) +
        '</div></div>';
 
   if (RD.pick) h += '<p class="pickmsg">' + (RD.pickA ? Rd.pickB : Rd.pickA) + '</p>';
@@ -3903,6 +4077,8 @@ function renderMushaf(){
       if (k === "prev"){ rdStop(); RD.page = Math.max(1, RD.page - 1); RD.sel = null; renderMushaf(); }
       else if (k === "next"){ rdStop(); RD.page = Math.min(TOTAL_PAGES, RD.page + 1); RD.sel = null; renderMushaf(); }
       else if (k === "hide"){ RD.hide = !RD.hide; renderMushaf(); }
+      else if (k === "more"){ RD.more = !RD.more; renderMushaf(); }
+      else if (k === "focus"){ document.body.classList.add("focus"); window.scrollTo({top:0}); }
       else if (k === "pick"){ RD.pick = !RD.pick; RD.phrase = false; RD.pickA = null; rdStop(); renderMushaf(); }
       else if (k === "phrase"){ RD.phrase = !RD.phrase; RD.pick = false; RD.phraseA = null; rdStop(); renderMushaf(); }
       else if (k === "play"){ if (pg) rdPlay(rdSelKeys(pg), RD.loops); }
@@ -4248,7 +4424,41 @@ var ZIKR = [
   { ar:"اَللّٰهُمَّ صَلِّ عَلٰى مُحَمَّد", nm:{ en:"O Allah, send blessings upon Muhammad", bn:"হে আল্লাহ, মুহাম্মদের উপর রহমত পাঠান", ur:"اے اللہ، محمد پر رحمت بھیج", zh:"主啊，赐福于穆罕默德" } },
   { ar:"حَسْبُنَا اللّٰهُ وَنِعْمَ الْوَكِيل", nm:{ en:"Allah is enough for us, the best guardian", bn:"আল্লাহই আমাদের জন্য যথেষ্ট, তিনি উত্তম অভিভাবক", ur:"ہمیں اللہ کافی ہے، وہی بہترین کارساز", zh:"真主是我们的至优护佑者" } }
 ];
-var NT = { timer:null };
+/* durood — its own pool: one of these on every other reminder, and on Friday every time */
+var DUROOD = [
+  { ar:"اَللّٰهُمَّ صَلِّ عَلٰى مُحَمَّدٍ وَعَلٰى آلِ مُحَمَّد", nm:{ en:"O Allah, send blessings upon Muhammad and his family", bn:"হে আল্লাহ, মুহাম্মদ ও তাঁর পরিবারের উপর রহমত পাঠান", ur:"اے اللہ، محمد اور آلِ محمد پر رحمت بھیج", zh:"主啊，赐福于穆罕默德及其后裔" } },
+  { ar:"صَلَّى اللّٰهُ عَلَيْهِ وَسَلَّم", nm:{ en:"May Allah's peace and blessings be upon him", bn:"তাঁর উপর আল্লাহর রহমত ও শান্তি বর্ষিত হোক", ur:"اللہ کی رحمت و سلامتی ہو ان پر", zh:"愿主赐他慈悯与平安" } },
+  { ar:"اَللّٰهُمَّ صَلِّ وَسَلِّمْ عَلٰى نَبِيِّنَا مُحَمَّد", nm:{ en:"O Allah, send blessings and peace upon our Prophet Muhammad", bn:"হে আল্লাহ, আমাদের নবী মুহাম্মদের উপর রহমত ও শান্তি পাঠান", ur:"اے اللہ، ہمارے نبی محمد پر درود و سلام بھیج", zh:"主啊，赐福我们的先知穆罕默德并使其平安" } }
+];
+DUROOD.forEach(function(z){ z.say = z.ar.replace(/[\u064B-\u0652\u0670\u06D6-\u06ED]/g, ""); });
+ZIKR.forEach(function(z){ z.say = z.ar.replace(/[\u064B-\u0652\u0670\u06D6-\u06ED]/g, ""); });
+var NT = { timer:null, voices:[], unlocked:false };
+
+/* ---- speaks the dhikr aloud in Arabic ---- */
+function ntVoiceAr(){
+  try {
+    var v = speechSynthesis.getVoices() || [];
+    var ar = v.filter(function(x){ return /^ar/i.test(x.lang || ""); });
+    if (!ar.length) return null;
+    var pref = ar.filter(function(x){ return /sa|SA|Saudi|Majed|Maged|Tarik|Laila/i.test((x.name||"") + (x.lang||"")); });
+    return (pref[0] || ar[0]);
+  } catch(e){ return null; }
+}
+function ntSpeak(text){
+  if (!("speechSynthesis" in window) || !text) return false;
+  try {
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = "ar-SA"; u.rate = 0.82; u.pitch = 1;
+    var v = ntVoiceAr(); if (v) u.voice = v;
+    speechSynthesis.speak(u);
+    return true;
+  } catch(e){ return false; }
+}
+if ("speechSynthesis" in window){
+  try { speechSynthesis.onvoiceschanged = function(){ NT.voices = speechSynthesis.getVoices(); }; } catch(e){}
+}
+function ntVoiceOn(){ return S && S.settings.zikrVoice !== false; }
 function ntCan(){ return typeof Notification !== "undefined"; }
 function ntOn(){ return ntCan() && Notification.permission === "granted"; }
 async function ntAsk(){
@@ -4256,14 +4466,15 @@ async function ntAsk(){
   try { await Notification.requestPermission(); } catch(e){}
   renderSettings(); ntSchedule();
 }
-function ntShow(title, body){
+function ntShow(title, body, silent){
   if (!ntOn()) return;
+  var o = { body:body, icon:"icon.svg", badge:"icon.svg", tag:"hifz", silent:!!silent };
   try {
     if (navigator.serviceWorker && navigator.serviceWorker.ready){
       navigator.serviceWorker.ready.then(function(r){
-        r.showNotification(title, { body:body, icon:"icon.svg", badge:"icon.svg", tag:"hifz" });
-      }).catch(function(){ new Notification(title, { body:body, icon:"icon.svg" }); });
-    } else new Notification(title, { body:body, icon:"icon.svg" });
+        r.showNotification(title, o);
+      }).catch(function(){ new Notification(title, o); });
+    } else new Notification(title, o);
   } catch(e){}
 }
 function ntMark(k){ try { localStorage.setItem("hifz-nt-" + k, String(Date.now())); } catch(e){} }
@@ -4286,8 +4497,11 @@ function ntTick(){
   var every = +S.settings.zikrEvery || 0;
   if (every && hh >= 5 && hh < 22){
     if (Date.now() - ntLast("zikr") >= every * 60000){
-      var i = Math.floor(Date.now() / (every * 60000)) % ZIKR.length, z = ZIKR[i];
-      ntShow(z.ar, L.code === "ar" ? "" : (z.nm[L.code] || z.nm.en));
+      var slot = Math.floor(Date.now() / (every * 60000));
+      var friday = now.getDay() === 5;
+      var z = (friday || slot % 2 === 1) ? DUROOD[slot % DUROOD.length] : ZIKR[Math.floor(slot / 2) % ZIKR.length];
+      var spoke = ntVoiceOn() && ntSpeak(z.say || z.ar);
+      ntShow(z.ar, L.code === "ar" ? "" : (z.nm[L.code] || z.nm.en), spoke);
       ntMark("zikr");
     }
   }
@@ -4558,6 +4772,8 @@ function renderAll(){
   renderChrome(); renderToday(); renderMushaf(); renderRoutine(); renderProgress(); renderSettings();
 }
 
+document.getElementById("fexit").onclick     = function(){ document.body.classList.remove("focus"); };
+document.addEventListener("keydown", function(e){ if (e.key === "Escape") document.body.classList.remove("focus"); });
 document.getElementById("tbar-x").onclick    = function(){ stopTimer(false); renderToday(); };
 document.getElementById("rep-close").onclick = function(){ document.getElementById("rep").classList.remove("on"); };
 document.getElementById("rep-print").onclick = function(){ window.print(); };
@@ -4589,6 +4805,7 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     if (!S.settings.reciter) S.settings.reciter = "Ayman_Sowaid_64kbps";
     if (S.settings.notifyAt == null) S.settings.notifyAt = "";
     if (S.settings.zikrEvery == null) S.settings.zikrEvery = 0;
+    if (S.settings.zikrVoice == null) S.settings.zikrVoice = true;
     if (!S.rev) S.rev = {};
     applyMushaf();
     if (S.settings.drive === undefined) S.settings.drive = null;
