@@ -2202,6 +2202,7 @@ main.wrap{width:100%}
     <div class="drawer-sub" id="drawer-sub"></div>
   </div>
   <div class="drawer-bd">
+    <nav class="drawer-nav" id="drawer-nav"></nav>
     <div class="drawer-lang">
       <div class="drawer-lbl" id="drawer-lang-l">ভাষা</div>
       <div class="langrow" id="drawer-langrow"></div>
@@ -2423,6 +2424,17 @@ main.wrap{width:100%}
   --sh-sm:0 1px 2px rgba(51,65,79,.07);
 }
 body{background:var(--paper);padding-bottom:calc(66px + env(safe-area-inset-bottom))}
+/* in the mushaf the page itself is the point: the bottom tab bar steps aside and
+   the same six destinations live in the ⋮ menu instead */
+body.mushaf{padding-bottom:env(safe-area-inset-bottom)}
+body.mushaf .tabs{display:none}
+.drawer-nav{display:flex;flex-direction:column;gap:2px;margin-bottom:14px}
+.drawer-nav .dwnav{display:flex;align-items:center;gap:12px;width:100%;min-height:46px;
+  padding:10px 12px;border:none;border-radius:12px;background:none;cursor:pointer;
+  font-family:inherit;font-size:14.5px;color:inherit;text-align:start}
+.drawer-nav .dwnav i{font-style:normal;font-size:17px;width:22px;text-align:center;opacity:.75}
+.drawer-nav .dwnav:hover{background:var(--paper-2)}
+.drawer-nav .dwnav[aria-current="true"]{background:var(--paper-2);font-weight:600}
 
 /* top bar — paper, not ink */
 .top{background:var(--paper);color:var(--ink);border-bottom:none}
@@ -2552,9 +2564,12 @@ body.mushaf .fab{display:flex}
 /* ===== পাতাই পর্দা: টুলবার নিচে, বাকিটা পাতার ===== */
 body.mushaf #v-mushaf h2,body.mushaf .rdlegend,body.mushaf .rdnote,
 body.mushaf #rd-tr,body.mushaf #rd-rec{display:none!important}
-body.mushaf #v-mushaf{padding-top:6px;padding-bottom:calc(150px + env(safe-area-inset-bottom))}
+/* with the tab bar gone the only thing to leave room for is the floating control
+   row, so the page claims everything else */
+body.mushaf #v-mushaf{padding-top:6px;padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+body.mushaf main.wrap{padding-bottom:env(safe-area-inset-bottom)}
 body.mushaf .rdcard{position:fixed;inset-inline:0;z-index:57;margin:0;display:block;
-  bottom:calc(60px + env(safe-area-inset-bottom));border-radius:16px 16px 0 0;
+  bottom:env(safe-area-inset-bottom);border-radius:16px 16px 0 0;
   padding:3px 8px 4px;box-shadow:0 -6px 18px rgba(51,65,79,.10);overflow:visible}
 /* the row stays one line and small — the page keeps the screen */
 body.mushaf .rdcard .rdhead{flex-wrap:nowrap;gap:2px;justify-content:space-between}
@@ -2578,8 +2593,10 @@ body.mushaf .rdhead{display:flex;flex-wrap:wrap;align-items:center;justify-conte
 body.mushaf .rdcard .rdset{order:0;margin-inline-start:0;flex-wrap:nowrap;justify-content:center;gap:2px}
 body.mushaf .rdcard .rdsabaq{margin:0;padding:0;background:none;border:none;box-shadow:none;gap:6px}
 body.mushaf .rdsep{display:none}
-body.mushaf .fab{bottom:calc(160px + env(safe-area-inset-bottom));width:52px;height:52px;font-size:21px}
-body.mushaf .fabm{bottom:calc(220px + env(safe-area-inset-bottom))}
+body.mushaf .fab{bottom:calc(100px + env(safe-area-inset-bottom));width:52px;height:52px;font-size:21px}
+body.mushaf .fabm{bottom:calc(160px + env(safe-area-inset-bottom))}
+body.mushaf .fabhint{bottom:calc(158px + env(safe-area-inset-bottom))}
+body.mushaf .tbar{bottom:calc(100px + env(safe-area-inset-bottom))}
 /* the sheet takes the full page height it now has */
 body.mushaf .paper{min-height:0}
 body.mushaf .top-in,body.mushaf .topbtns{display:none}
@@ -3653,9 +3670,22 @@ function renderChrome(){
       qa(".tab").forEach(function(x){ x.setAttribute("aria-selected", x === t ? "true" : "false"); });
       qa(".view").forEach(function(x){ x.classList.remove("on"); });
       document.getElementById("v-" + t.dataset.v).classList.add("on");
+      document.body.classList.toggle("mushaf", t.dataset.v === "mushaf");
+      syncDrawerNav();
       window.scrollTo({ top:0, behavior:"smooth" });
     };
   });
+  var NAV_IC = { today:"✳", mushaf:"▢", drill:"◎", routine:"↻", progress:"▤", settings:"⚙" };
+  var dn = document.getElementById("drawer-nav");
+  if (dn){
+    dn.innerHTML = ["today","mushaf","drill","routine","progress","settings"].map(function(v){
+      return '<button class="dwnav" data-go="' + v + '"><i>' + NAV_IC[v] + '</i>' + L.nav[v] + '</button>';
+    }).join("");
+    qa("#drawer-nav .dwnav").forEach(function(b){
+      b.onclick = function(){ goView(b.dataset.go); };
+    });
+    syncDrawerNav();
+  }
 
   var lp = document.getElementById("langpick");
   if (lp){
@@ -4692,36 +4722,48 @@ var SURAH_AR = ["الفاتحة","البقرة","آل عمران","النساء"
 var IP = { chunks:{}, info:null };
 var TRP = { data:{}, meta:null };
 var WBW = { data:{} };
+/* GitHub Pages serves the app from a sub-folder (/repo/), and a URL without the
+   trailing slash makes a bare "data/…" resolve one level too high. Always resolve
+   the pack files against the document's own base URL. */
+function dataUrl(path){
+  try { return new URL(path, document.baseURI).href; } catch(e){ return path; }
+}
+/* a 404 on Pages answers with an HTML page, not JSON — parsing that as JSON
+   throws deep inside the reader, so refuse it here with a readable message */
+async function getJSON(path){
+  var url = dataUrl(path);
+  var r = await fetch(url, { cache:"force-cache" });
+  if (!r.ok) throw new Error("HTTP " + r.status + " · " + path);
+  var txt = await r.text();
+  var t0 = txt.replace(/^\uFEFF/, "").trimStart();
+  if (t0.charAt(0) !== "{" && t0.charAt(0) !== "[")
+    throw new Error("not JSON · " + path);
+  return JSON.parse(t0);
+}
 async function wbwPack(code){
   if (WBW.data[code] !== undefined) return WBW.data[code];
-  try {
-    var r = await fetch("data/wbw/" + code + ".json");
-    if (!r.ok) throw 0;
-    WBW.data[code] = await r.json();
-  } catch(e){ WBW.data[code] = null; }
+  try { WBW.data[code] = await getJSON("data/wbw/" + code + ".json"); }
+  catch(e){ WBW.data[code] = null; }
   return WBW.data[code];
 }
 async function trPack(code){
   if (TRP.data[code] !== undefined) return TRP.data[code];
-  try {
-    var r = await fetch("data/tr/" + code + ".json");
-    if (!r.ok) throw 0;
-    TRP.data[code] = await r.json();
-  } catch(e){ TRP.data[code] = null; }
+  try { TRP.data[code] = await getJSON("data/tr/" + code + ".json"); }
+  catch(e){ TRP.data[code] = null; }
   return TRP.data[code];
 }
 async function ipInfo(def){
   if (IP.info && IP.info._for === def.id) return IP.info;
-  var r = await fetch(def.local + "/info.json");
-  IP.info = await r.json(); IP.info._for = def.id;
+  IP.info = await getJSON(def.local + "/info.json");
+  IP.info._for = def.id;
   return IP.info;
 }
 async function ipPage(p, def){
   var info = await ipInfo(def), k = Math.floor((p - 1) / info.chunk);
-  if (!IP.chunks[k]){
-    var r = await fetch(def.local + "/c" + k + ".json");
-    IP.chunks[k] = await r.json();
-  }
+  /* the chunk cache must know which mushaf it belongs to, or switching mushaf
+     shows the old pack's pages */
+  if (IP.chunkFor !== def.id){ IP.chunks = {}; IP.chunkFor = def.id; }
+  if (!IP.chunks[k]) IP.chunks[k] = await getJSON(def.local + "/c" + k + ".json");
   return IP.chunks[k][p] || null;
 }
 async function rdLoadLocal(p, def){
@@ -5067,6 +5109,7 @@ function renderMushaf(){
                o += '<option value="' + j + '"' + (j === cur ? " selected" : "") + '>' + fmt(Rd.juz, n(j)) + '</option>';
              return o; })() + '</select>' +
          '<span class="rdprog" id="rd-prog"></span>' +
+         '<button class="rdic t" data-rd="menu" title="' + (L.nav.menu || "মেনু") + '" aria-label="' + (L.nav.menu || "মেনু") + '">⋮</button>' +
          '<div class="rdgrp rdset">' +
            '<button class="rdic t" data-rd="paper" title="' + L.mu.paper + '" aria-label="' + L.mu.paper + '">◐</button>' +
            '<button class="rdic t" data-rd="curtain" title="' + L.mu.curtain + '" aria-label="' + L.mu.curtain + '" aria-pressed="' + (RD.curtainOn ? "true" : "false") + '">▤</button>' +
@@ -5138,7 +5181,8 @@ function renderMushaf(){
   qa("[data-rd]").forEach(function(b){
     b.onclick = function(){
       var k = b.dataset.rd, pg = RD.pages[RD.page];
-      if (k === "prev"){ rdStop(); RD.page = Math.max(1, RD.page - 1); RD.sel = null; renderMushaf(); }
+      if (k === "menu"){ drawerOpen(); }
+      else if (k === "prev"){ rdStop(); RD.page = Math.max(1, RD.page - 1); RD.sel = null; renderMushaf(); }
       else if (k === "next"){ rdStop(); RD.page = Math.min(TOTAL_PAGES, RD.page + 1); RD.sel = null; renderMushaf(); }
       else if (k === "hide"){ RD.hide = ((+RD.hide || 0) + 1) % 4; renderMushaf(); }
       else if (k === "paper"){ rdPaperCycle(); }
@@ -5398,7 +5442,12 @@ function rdFit(){
   var card = document.querySelector(".rdcard");
   var barH = 0;
   if (card && getComputedStyle(card).position === "fixed") barH += card.getBoundingClientRect().height;
-  var chromeH = document.body.classList.contains("focus") ? 10 : 82 + barH;
+  /* the tab bar is hidden in the mushaf view — measure it instead of assuming it,
+     so the height it used to take goes back to the page */
+  var tabsEl = document.querySelector(".tabs");
+  var tabsH = (tabsEl && getComputedStyle(tabsEl).display !== "none")
+    ? tabsEl.getBoundingClientRect().height : 0;
+  var chromeH = document.body.classList.contains("focus") ? 10 : 22 + tabsH + barH;
   var avail = vh - pt - chromeH;
   if (avail < 260) avail = 260;
   var target = Math.max(160, avail - 40 - footH);
@@ -5444,7 +5493,7 @@ function rdFit(){
     var over = 0;
     for (var li = 0; li < lines.length; li++) over += lines[li].getBoundingClientRect().height;
     over = Math.max(0, Math.ceil(over - target));
-    view.style.paddingBottom = "calc(" + (150 + over) + "px + env(safe-area-inset-bottom))";
+    view.style.paddingBottom = "calc(" + (Math.round(barH + tabsH + 2) + over) + "px + env(safe-area-inset-bottom))";
   }
 
   /* a real mushaf justifies full lines only — a surah's last line is centred,
@@ -5666,7 +5715,8 @@ async function rdPaint(p, isTodayPage){
       };
     });
   } catch(e){
-    if (paper) paper.innerHTML = '<p style="text-align:center;color:#77808A">' + L.rd.err + '</p>';
+    if (paper) paper.innerHTML = '<p style="text-align:center;color:#77808A">' + L.rd.err +
+      '<br><small style="opacity:.7">' + esc(String((e && e.message) || e)) + '</small></p>';
   }
 }
 
@@ -6684,9 +6734,17 @@ function drawerFill(){
   var pv = g("dw-paper-v");
   if (pv && L.mu) pv.textContent = { pcream:L.mu.pCream, pday:L.mu.pDay, pnight:L.mu.pNight }[S.settings.paper || "pcream"] || "";
 }
+function syncDrawerNav(){
+  var cur = document.querySelector('#tabs .tab[aria-selected="true"]');
+  var v = cur ? cur.dataset.v : "today";
+  qa("#drawer-nav .dwnav").forEach(function(b){
+    b.setAttribute("aria-current", b.dataset.go === v ? "true" : "false");
+  });
+}
 function drawerOpen(){
   var d = document.getElementById("drawer"), s = document.getElementById("drawer-scrim");
   if (!d) return;
+  syncDrawerNav();
   drawerFill(); d.hidden = false; s.hidden = false;
 }
 function drawerClose(){
@@ -6853,6 +6911,7 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     var now=document.querySelector('.view.on');
     if(now&&now!==last){ if(last) pos[last.id]=main.scrollTop; last=now; main.scrollTop=pos[now.id]||0; }
     document.body.classList.toggle('mushaf', !!(now&&now.id==='v-mushaf'));
+    try{ if(typeof syncDrawerNav==='function') syncDrawerNav(); }catch(e){}
     if(now&&now.id==='v-mushaf'&&typeof rdFitSoon==='function') rdFitSoon();
     try{ if(typeof fabWire==='function') fabWire(); }catch(e){}
     if(!(now&&now.id==='v-mushaf')&&typeof fabMicStop==='function'&&window.FAB&&FAB.rec) fabMicStop();
@@ -6877,6 +6936,7 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     document.body.classList.toggle('scrolled', main.scrollTop > 4);
   },{passive:true});
   try{ document.body.classList.toggle('mushaf', !!document.querySelector('#v-mushaf.on'));
+       try{ if(typeof syncDrawerNav==='function') syncDrawerNav(); }catch(e){}
        try{ if(typeof fabWire==='function') fabWire(); }catch(e){} }catch(e){}
 })();
 </script>
