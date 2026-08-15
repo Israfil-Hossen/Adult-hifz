@@ -4799,13 +4799,25 @@ async function rdLoadLocal(p, def){
   RD.pages[p] = { lines:lines, keys:Object.keys(keys), tr:tr, v:def.id, lang:L.code, local:true };
   return RD.pages[p];
 }
+/* true when this mushaf has an online source at api.quran.com — every mushaf
+   except the two 13-line Indo-Pak packs, which exist only in the local data */
+function hasOnline(def){ return !!(def.qcf || def.api); }
 async function rdLoadPage(p){
   var d0 = mushafDef();
   if (d0.local){
     if (RD.pages[p] && RD.pages[p].v === d0.id && RD.pages[p].lang === L.code) return RD.pages[p];
-    return rdLoadLocal(p, d0);
+    try { return await rdLoadLocal(p, d0); }
+    catch(e){
+      /* no local pack on this host (e.g. a GitHub deploy without the data
+         folder) — fall back to the online api so the page still renders */
+      if (hasOnline(d0)) return rdLoadOnline(p, d0);
+      throw e;
+    }
   }
-  var def = mushafDef(), v = def.nast ? def.id : qcfVer();
+  return rdLoadOnline(p, mushafDef());
+}
+async function rdLoadOnline(p, def){
+  var v = def.nast ? def.id : qcfVer();
   if (RD.pages[p] && RD.pages[p].v === v && RD.pages[p].lang === L.code) return RD.pages[p];
   var url = rdPageUrl(p, def);
   var j = await rdFetch(url, "json"), lines = {}, keys = [], tr = {};
