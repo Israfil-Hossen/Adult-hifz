@@ -2208,6 +2208,7 @@ main.wrap{width:100%}
   min-height:0;font-size:var(--qf,20px);line-height:var(--ql,1.85);
   transition:opacity .2s;white-space:nowrap;padding-inline:12px}
 .paper{--qf:20px;--ql:1.85}
+.paper.nast .qline{line-height:2.15}
 .qhm,.qrib{position:absolute;top:14%;bottom:14%;width:3px;border-radius:3px;opacity:.85}
 .qhm{inset-inline-start:2px;background:transparent}
 .qhm.ok{background:var(--verdigris)}
@@ -3155,9 +3156,9 @@ var TODAY = key(new Date());
 var MUSHAFS = [
   { id:"madani",     pages:604, lines:15, qcf:"v1", nm:{ ar:"مصحف المدينة (طبعة ١٤٠٥) · ٦٠٤ صفحات، ١٥ سطرًا", en:"Madani (1405 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪০৫ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۰۵ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1405 年版）— 604 页 · 15 行" } },
   { id:"madani1421", pages:604, lines:15, qcf:"v2", nm:{ ar:"مصحف المدينة (طبعة ١٤٢١) · ٦٠٤ صفحات، ١٥ سطرًا", en:"Madani (1421 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪২১ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۲۱ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1421 年版）— 604 页 · 15 行" } },
-  { id:"indopak15", pages:611, lines:15, nm:{ ar:"الهندي الباكستاني ١٥ سطرًا (المجيدي · الحافظي) · ٦١١ صفحة", en:"Indo-Pak 15-line (Majidi / Hafizi) · 611 pages", bn:"ইন্দো-পাক ১৫ লাইন (মাজিদী · হাফেজি) · ৬১১ পৃষ্ঠা", ur:"انڈو پاک ۱۵ سطری (مجیدی · حافظی) · ۶۱۱ صفحے", zh:"印巴 15 行（马吉迪 · 哈菲兹版）— 611 页" } },
-  { id:"indopak16", pages:550, lines:16, nm:{ ar:"الهندي الباكستاني ١٦ سطرًا (تاج) · ٥٥٠ صفحة", en:"Indo-Pak 16-line (Taj) · 550 pages", bn:"ইন্দো-পাক ১৬ লাইন (তাজ) · ৫৫০ পৃষ্ঠা", ur:"انڈو پاک ۱۶ سطری (تاج) · ۵۵۰ صفحے", zh:"印巴 16 行（Taj）— 550 页" } },
-  { id:"indopak13", pages:847, lines:13, nm:{ ar:"الهندي الباكستاني ١٣ سطرًا · ٨٤٧ صفحة", en:"Indo-Pak 13-line · 847 pages", bn:"ইন্দো-পাক ১৩ লাইন · ৮৪৭ পৃষ্ঠা", ur:"انڈو پاک ۱۳ سطری · ۸۴۷ صفحے", zh:"印巴 13 行 · 847 页" } }
+  { id:"indopak15", pages:610, lines:15, api:6, nast:true, nm:{ ar:"الهندي الباكستاني ١٥ سطرًا (المجيدي · الحافظي) · ٦١٠ صفحات، ١٥ سطرًا", en:"Indo-Pak 15-line (Majidi / Hafizi) · 610 pages, 15 lines", bn:"ইন্দো-পাক ১৫ লাইন (মাজিদী · হাফেজি) · ৬১০ পৃষ্ঠা, ১৫ লাইন", ur:"انڈو پاک ۱۵ سطری (مجیدی · حافظی) · ۶۱۰ صفحے، ۱۵ سطریں", zh:"印巴 15 行（马吉迪 · 哈菲兹版）— 610 页 · 15 行" } },
+  { id:"indopak16", pages:548, lines:16, api:7, nast:true, nm:{ ar:"الهندي الباكستاني ١٦ سطرًا (تاج) · ٥٤٨ صفحة، ١٦ سطرًا", en:"Indo-Pak 16-line (Taj) · 548 pages, 16 lines", bn:"ইন্দো-পাক ১৬ লাইন (তাজ) · ৫৪৮ পৃষ্ঠা, ১৬ লাইন", ur:"انڈو پاک ۱۶ سطری (تاج) · ۵۴۸ صفحے، ۱۶ سطریں", zh:"印巴 16 行（Taj）— 548 页 · 16 行" } },
+  { id:"indopak13", pages:847, lines:13, nm:{ ar:"الهندي الباكستاني ١٣ سطرًا · ٨٤٧ صفحة (بلا صفحات بعد)", en:"Indo-Pak 13-line · 847 pages (no page view yet)", bn:"ইন্দো-পাক ১৩ লাইন · ৮৪৭ পৃষ্ঠা (পাতা-দৃশ্য এখনো নেই)", ur:"انڈو پاک ۱۳ سطری · ۸۴۷ صفحے (صفحہ منظر ابھی نہیں)", zh:"印巴 13 行 · 847 页（暫无页面视图）" } }
 ];
 function mushafDef(){
   var id = S && S.settings ? S.settings.mushafId : "madani";
@@ -4029,8 +4030,10 @@ function renderSettings(){
   g("s-mushafid").onchange = function(){
     S.settings.mushafId = this.value;
     applyMushaf();
-    RD.pages = {}; RD.fonts = {}; rdStop();
+    RD.pages = {}; RD.fonts = {}; RD.sel = null; rdStop();
     S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, S.settings.startPage));
+    S.settings.lastPage = Math.max(1, Math.min(TOTAL_PAGES, S.settings.lastPage || 1));
+    RD.page = Math.max(1, Math.min(TOTAL_PAGES, RD.page || 1));
     save(); renderAll();
   };
 
@@ -4372,7 +4375,19 @@ function ayLabel(k){ var p = String(k || "").split(":"); return p.length < 2 ? "
 function pad3(v){ return ("00" + v).slice(-3); }
 function ayahFile(vk){ var p = vk.split(":"); return pad3(p[0]) + pad3(p[1]) + ".mp3"; }
 
+var NAST_URL = "https://verses.quran.foundation/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.woff2";
+async function rdLoadNast(){
+  var fam = "IndopakNast";
+  if (RD.fonts[fam]) return fam;
+  var blob = await rdFetch(NAST_URL);
+  var face = new FontFace(fam, "url(" + URL.createObjectURL(blob) + ")");
+  await face.load(); document.fonts.add(face);
+  RD.fonts[fam] = fam;
+  return fam;
+}
 async function rdLoadFont(p){
+  var def = mushafDef();
+  if (def.nast){ var f = await rdLoadNast(); RD.fonts[p] = f; RD.fonts["v-" + p] = def.id; return f; }
   if (RD.fonts["v-" + p] === qcfVer()) return RD.fonts[p];
   var v = qcfVer(), fam = "QCF" + v + "P" + pad3(p);
   if (RD.fonts[fam]) return fam;
@@ -4393,14 +4408,23 @@ async function arTafsir(keys, tr){
     } catch(e){}
   }));
 }
+function rdLang(){
+  return L.code === "zh" ? "zh" : L.code === "ur" ? "ur" : L.code === "en" ? "en" : L.code === "ar" ? "ar" : "bn";
+}
+/* the reader and the downloader must ask for the very same URL, or a downloaded
+   page is never found in the cache when the phone goes offline */
+function rdPageUrl(p, def){
+  var qv = def.qcf || "v2";
+  return "https://api.quran.com/api/v4/verses/by_page/" + p +
+    "?words=true&per_page=all&mushaf=" + (def.nast ? def.api : (qv === "v1" ? 1 : 2)) +
+    (L.code === "ar" ? "" : "&translations=" + trId()) +
+    "&word_fields=" + (def.nast ? "text_indopak" : "code_" + qv) +
+    ",line_number,char_type_name,text_uthmani&language=" + rdLang();
+}
 async function rdLoadPage(p){
-  var v = qcfVer();
+  var def = mushafDef(), v = def.nast ? def.id : qcfVer();
   if (RD.pages[p] && RD.pages[p].v === v && RD.pages[p].lang === L.code) return RD.pages[p];
-  var url = "https://api.quran.com/api/v4/verses/by_page/" + p +
-            "?words=true&per_page=all&mushaf=" + (v === "v1" ? 1 : 2) +
-            (L.code === "ar" ? "" : "&translations=" + trId()) +
-            "&word_fields=code_" + v + ",line_number,char_type_name,text_uthmani&language=" +
-            (L.code === "zh" ? "zh" : L.code === "ur" ? "ur" : L.code === "en" ? "en" : L.code === "ar" ? "ar" : "bn");
+  var url = rdPageUrl(p, def);
   var j = await rdFetch(url, "json"), lines = {}, keys = [], tr = {};
   (j.verses || []).forEach(function(v){
     keys.push(v.verse_key);
@@ -4409,7 +4433,8 @@ async function rdLoadPage(p){
     (v.words || []).forEach(function(w){
       var ln = w.line_number || 1;
       (lines[ln] = lines[ln] || []).push({
-        g: (qcfVer() === "v1" ? w.code_v1 : w.code_v2), vk: v.verse_key, end: w.char_type_name === "end",
+        g: (def.nast ? (w.text_indopak || w.text || "") : (qcfVer() === "v1" ? w.code_v1 : w.code_v2)),
+        vk: v.verse_key, end: w.char_type_name === "end",
         t: w.text_uthmani || "",
         m: (w.translation && w.translation.text) || ""
       });
@@ -4666,7 +4691,7 @@ function renderMushaf(){
   rdRemember();
 
   var h = "";
-  if (!mushafDef().qcf){
+  if (!mushafDef().qcf && !mushafDef().nast){
     el.innerHTML = '<h2 style="margin-bottom:12px">' + fmt(L.phase.page, n(RD.page)) + '</h2><p class="empty">' + Rd.notMadani + '</p>';
     return;
   }
@@ -4864,6 +4889,7 @@ function rdPaperSkin(){
   qa(".paper").forEach(function(p){
     PAPERS.forEach(function(c){ p.classList.remove(c); });
     p.classList.add(skin);
+    p.classList.toggle("nast", !!mushafDef().nast);
     p.classList.toggle("blind", !!RD.blind);
     p.classList.toggle("curtain", !!RD.curtainOn);
   });
@@ -5284,19 +5310,18 @@ async function dlRange(p0, p1, mushafId, withAudio){
   RD.busy = true; RD.dlStop = false;
   var def = null;
   MUSHAFS.forEach(function(mu){ if (mu.id === mushafId) def = mu; });
-  var v = (def && def.qcf) || "v2";
-  var lang = (L.code === "zh" ? "zh" : L.code === "ur" ? "ur" : L.code === "en" ? "en" : L.code === "ar" ? "ar" : "bn");
+  var v = (def && def.qcf) || (def && def.nast ? "nast" : "v2");
+  if (!def){ RD.busy = false; return; }
   var total = p1 - p0 + 1, done = 0;
   try {
     for (var p = p0; p <= p1; p++){
       if (RD.dlStop){ dlProg(L.dlg.stopped); return; }
-      try { await rdFetch(QCF_BASE + v + "/woff2/p" + p + ".woff2"); } catch(e){}
       try {
-        var url = "https://api.quran.com/api/v4/verses/by_page/" + p +
-          "?words=true&per_page=all&mushaf=" + (v === "v1" ? 1 : 2) +
-          (L.code === "ar" ? "" : "&translations=" + trId()) +
-          "&word_fields=code_" + v + ",line_number,char_type_name,text_uthmani&language=" + lang;
-        var j = await rdFetch(url, "json");
+        if (v === "nast"){ if (p === p0) await rdFetch(NAST_URL); }
+        else await rdFetch(QCF_BASE + v + "/woff2/p" + p + ".woff2");
+      } catch(e){}
+      try {
+        var j = await rdFetch(rdPageUrl(p, def), "json");
         if (withAudio && j && j.verses){
           for (var i = 0; i < j.verses.length; i++){
             if (RD.dlStop){ dlProg(L.dlg.stopped); return; }
@@ -5901,8 +5926,8 @@ function drKeys(){
   return pg.keys.slice(0, 6);
 }
 async function drEnsure(){
-  if (DR.loading) return;
-  DR.loading = true;
+  if (DR.loading || DR.tried) return;
+  DR.loading = true; DR.tried = true;
   var p = drPage();
   try { await rdLoadFont(p); DR.pg = await rdLoadPage(p); DR.page = p; }
   catch(e){ DR.pg = null; }
@@ -5949,6 +5974,7 @@ function drBuild(kind){
   return q;
 }
 function drStart(kind){
+  DR.tried = false;
   var q = drBuild(kind);
   if (!q.length){                       /* nothing to ask — never invent a score */
     DR.msg = (kind === "mut") ? L.dr.empty : L.dr.none;
@@ -5975,7 +6001,7 @@ function drSpans(ws, shown){
 function renderDrill(){
   var D = L.dr, el = document.getElementById("v-drill");
   if (!el || !D) return;
-  if (!DR.pg && !DR.loading){ el.innerHTML = '<div class="kicker">' + D.k + '</div><h2>' + D.h + '</h2><p class="empty">' + L.rd.loading + '</p>'; drEnsure(); return; }
+  if (!DR.pg && !DR.loading && !DR.tried){ el.innerHTML = '<div class="kicker">' + D.k + '</div><h2>' + D.h + '</h2><p class="empty">' + L.rd.loading + '</p>'; drEnsure(); return; }
   if (!DR.pg){ el.innerHTML = '<div class="kicker">' + D.k + '</div><h2>' + D.h + '</h2><p class="empty">' + D.empty + '</p>'; return; }
   var fam = RD.fonts[DR.page] || "";
   if (!DR.kind) return drHome(el, D);
