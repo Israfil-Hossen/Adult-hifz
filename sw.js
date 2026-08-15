@@ -1,6 +1,6 @@
 /* হিফজ · দৈনিক সঙ্গী — অফলাইন ক্যাশ
    অ্যাপ আপডেট করলে নিচের সংখ্যাটা বাড়িয়ে দিন: hifz-v45, hifz-v45 … */
-const CACHE = "hifz-v45";
+const CACHE = "hifz-v46";
 const SHELL = [
   "./",
   "./index.html",
@@ -48,6 +48,21 @@ self.addEventListener("fetch", (e) => {
           caches.open(CACHE).then((c) => c.put(req, copy));
           return res;
         }).catch(() => hit)
+      )
+    );
+    return;
+  }
+
+  // মুসহাফের পাতা (data/): ক্যাশ আগে, না পেলে নেটওয়ার্ক। index.html কখনো
+  // ফেরত দেওয়া যাবে না — JSON-এর জায়গায় HTML এলে পাতা ভেঙে যায়।
+  if (url.pathname.indexOf("/data/") >= 0) {
+    e.respondWith(
+      caches.match(req).then((hit) =>
+        hit || fetch(req).then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy));
+          return res;
+        })
       )
     );
     return;

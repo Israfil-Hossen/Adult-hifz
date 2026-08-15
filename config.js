@@ -15,6 +15,11 @@ window.HIFZ_CONFIG = {
   googleClientId: "",
 
   // আপনার ড্রাইভে ফাইলটার নাম কী হবে
-  driveFileName: "hifz-backup.json"
+  driveFileName: "hifz-backup.json",
+
+  /* নিজের হোস্টিংয়ে সেভ করতে — sync.php যেখানে আপলোড করেছেন সেই ঠিকানা।
+     একই ফোল্ডারে থাকলে শুধু "sync.php" রাখলেই হবে।
+     ফাঁকা রাখলে ডেটা শুধু ফোনেই থাকবে। */
+  syncUrl: "sync.php"
 
 };

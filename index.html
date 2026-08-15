@@ -23,7 +23,7 @@
       url('https://fonts.maateen.me/solaiman-lipi/solaimanlipi-bold-v1.0.woff2') format('woff2'),
       url('https://fonts.maateen.me/solaiman-lipi/solaimanlipi-bold-v1.0.ttf') format('truetype')}
 </style>
-<script>window.HIFZ_CONFIG = { googleClientId: "", driveFileName: "hifz-backup.json" };
+<script>window.HIFZ_CONFIG = { googleClientId: "", driveFileName: "hifz-backup.json", syncUrl: "sync.php" };
 /* সীমিত ইন্টারনেটের দেশে (চীন) গুগলের ঠিকানা বন্ধ — আয়না ব্যবহার করি */
 window.cnMode = function(){
   try {
@@ -118,7 +118,7 @@ window.HIFZ_LANG_en = {
          warn:"The whole Qur'an with audio is large (2–3 GB) — use Wi-Fi." },
   hj: { am:"AM", pm:"PM", lbl:"Hijri date adjustment", hint:"If your local moon sighting is a day ahead or behind, shift it here.",
         d0:"No change", plus:"+{0} day", minus:"−{0} day" },
-  wm: { approx:"approximate", read:"A single word's gloss is a hint, not a translation — read it inside the ayah below.",
+  wm: { approx:"approximate", wbw:"Word for word", wbwHint:"Tap any word to know more", read:"A single word's gloss is a hint, not a translation — read it inside the ayah below.",
         ay:"In the ayah", tr:"What the ayah says", same:"The same word elsewhere on your device",
         none:"No other place on the device yet — download more pages and they appear here.", pg:"p. {0}" },
   dr: { k:"Practice", h:"Retrieval practice", p:"Reading again feels like learning. Pulling it out of memory is learning.",
@@ -421,6 +421,18 @@ window.HIFZ_LANG_en = {
     badFile: "Couldn't read that file. Pick a valid backup."
   },
 
+  cloud: {
+    h: "Backup and sync",
+    p: "This code is your key — no account, no password. Enter the same code on another phone and everything comes across. Write it down; lose it and the data cannot be recovered.",
+    copy: "Copy code", push: "Send now", pull: "Fetch from server",
+    other: "Enter another phone's code", use: "Link",
+    sending: "Sending…", fetching: "Fetching…", saved: "Saved on the server",
+    restored: "Data restored", merged: "Took the newer data from the server",
+    none: "Nothing on the server for this code", failed: "Could not reach the server — will retry",
+    copied: "Copied", badCode: "That code isn't valid",
+    noUrl: "Set syncUrl in config.js to switch server saving on"
+  },
+
   sync: {
     off: "Sync off", connecting: "Connecting", ok: "Synced", failed: "Sync failed",
     pushing: "Sending", pulling: "Fetching", reconciling: "Reconciling", cancelled: "Cancelled",
@@ -525,7 +537,7 @@ window.HIFZ_LANG_bn = {
          warn:"অডিও সহ পূর্ণ কুরআন অনেক বড় (২–৩ জিবি) — ওয়াই-ফাই ব্যবহার করুন।" },
   hj: { am:"AM", pm:"PM", lbl:"হিজরি তারিখ মেলান", hint:"আপনার এলাকার চাঁদ দেখা এক-দুই দিন আগে-পিছে হলে এখানে মিলিয়ে নিন।",
         d0:"পরিবর্তন নেই", plus:"+{0} দিন", minus:"−{0} দিন" },
-  wm: { approx:"আনুমানিক", read:"একটি শব্দের অর্থ কেবল ইশারা, অনুবাদ নয় — নিচের আয়াতের ভেতরে রেখে পড়ুন।",
+  wm: { approx:"আনুমানিক", wbw:"শব্দে-শব্দে অর্থ", wbwHint:"আরও জানতে যেকোনো শব্দে চাপ দিন", read:"একটি শব্দের অর্থ কেবল ইশারা, অনুবাদ নয় — নিচের আয়াতের ভেতরে রেখে পড়ুন।",
         ay:"আয়াতের ভেতরে", tr:"আয়াত যা বলছে", same:"একই শব্দ আপনার ডিভাইসের অন্য জায়গায়",
         none:"ডিভাইসে আর কোথাও পাওয়া যায়নি — আরও পৃষ্ঠা নামালে এখানে দেখাবে।", pg:"পৃ. {0}" },
   dr: { k:"অভ্যাস", h:"স্মৃতি থেকে বের করার অভ্যাস", p:"আবার পড়লে শেখা মনে হয়। স্মৃতি থেকে বের করলে শেখা হয়।",
@@ -828,6 +840,18 @@ window.HIFZ_LANG_bn = {
     badFile: "ফাইলটা পড়া গেল না। সঠিক ব্যাকআপ ফাইল বেছে নিন।"
   },
 
+  cloud: {
+    h: "ব্যাকআপ ও সিংক",
+    p: "এই কোডটাই আপনার চাবি — অ্যাকাউন্ট বা পাসওয়ার্ড লাগে না। অন্য ফোনে একই কোড বসালে সব ডেটা সেখানে চলে আসবে। কোডটা লিখে রাখুন, হারালে ফেরানো যায় না।",
+    copy: "কোড কপি", push: "এখনই পাঠান", pull: "সার্ভার থেকে আনুন",
+    other: "অন্য ফোনের কোড বসান", use: "যুক্ত করুন",
+    sending: "পাঠাচ্ছে…", fetching: "আনছে…", saved: "সার্ভারে সেভ হয়েছে",
+    restored: "ডেটা ফিরে এসেছে", merged: "সার্ভারের নতুন ডেটা নেওয়া হয়েছে",
+    none: "এই কোডে সার্ভারে কিছু নেই", failed: "সার্ভারে পৌঁছায়নি — পরে আবার চেষ্টা হবে",
+    copied: "কপি হয়েছে", badCode: "কোডটা ঠিক নয়",
+    noUrl: "config.js-এ syncUrl বসালে সার্ভার সেভ চালু হবে"
+  },
+
   sync: {
     off: "সিঙ্ক বন্ধ", connecting: "যুক্ত হচ্ছে", ok: "সিঙ্ক হয়েছে", failed: "সিঙ্ক ব্যর্থ",
     pushing: "পাঠাচ্ছে", pulling: "নামাচ্ছে", reconciling: "মিলিয়ে নিচ্ছে", cancelled: "সংযোগ বাতিল",
@@ -934,7 +958,7 @@ window.HIFZ_LANG_ur = {
          warn:"آواز کے ساتھ مکمل قرآن بہت بڑا ہے (۲–۳ جی بی) — وائی فائی استعمال کریں۔" },
   hj: { am:"صبح", pm:"شام", lbl:"ہجری تاریخ کی درستی", hint:"اگر آپ کے علاقے کی رویتِ ہلال ایک دو دن آگے پیچھے ہو تو یہاں سے درست کریں۔",
         d0:"کوئی تبدیلی نہیں", plus:"+{0} دن", minus:"−{0} دن" },
-  wm: { approx:"تقریبی", read:"ایک لفظ کا مفہوم صرف اشارہ ہے، ترجمہ نہیں — اسے نیچے آیت کے اندر پڑھیں۔",
+  wm: { approx:"تقریبی", wbw:"لفظ بلفظ", wbwHint:"مزید جاننے کے لیے کسی بھی لفظ پر ٹیپ کریں", read:"ایک لفظ کا مفہوم صرف اشارہ ہے، ترجمہ نہیں — اسے نیچے آیت کے اندر پڑھیں۔",
         ay:"آیت کے اندر", tr:"آیت کیا کہتی ہے", same:"یہی لفظ آپ کے آلے میں کہیں اور",
         none:"آلے میں فی الحال کوئی دوسری جگہ نہیں — مزید صفحات ڈاؤن لوڈ کریں تو یہاں آئیں گے۔", pg:"ص {0}" },
   dr: { k:"مشق", h:"یادداشت سے نکالنے کی مشق", p:"دوبارہ پڑھنا سیکھنا لگتا ہے۔ یاد سے نکالنا سیکھنا ہے۔",
@@ -1343,7 +1367,7 @@ window.HIFZ_LANG_zh = {
          warn:"含音频的全本较大（2–3 GB），建议使用 Wi-Fi。" },
   hj: { am:"上午", pm:"下午", lbl:"回历日期校正", hint:"若当地的观月比这里早一天或晚一天，可在此校正。",
         d0:"不校正", plus:"+{0} 天", minus:"−{0} 天" },
-  wm: { approx:"近似", read:"单个词的释义只是提示，不是翻译 —— 请放到下面的整节里读。",
+  wm: { approx:"近似", wbw:"逐词释义", wbwHint:"点按任意词以了解更多", read:"单个词的释义只是提示，不是翻译 —— 请放到下面的整节里读。",
         ay:"在这一节中", tr:"这一节的意思", same:"设备上其他出现同一词的地方",
         none:"设备上暂无其他出处 —— 下载更多页面后会显示在这里。", pg:"第 {0} 页" },
   dr: { k:"练习", h:"提取练习", p:"重读像在学，从记忆里取出来才是学。",
@@ -1702,7 +1726,7 @@ window.HIFZ_LANG_zh = {
      desaturated, so long reading at fajr does not glare. */
   --ink:#33414F; --ink-2:#4A5C6E; --ink-3:#6E7F8F;
   --paper:#EFEDEA; --paper-2:#E2E0DC; --card:#FFFFFF;
-  --verdigris:#14A0A6; --verd-soft:#DDF2F3;
+  --verdigris:#5F7F52; --verd-soft:#E6EFDF;
   --brass:#E0A82E; --brass-soft:#FBF0D5;
   --maroon:#B04A3C; --maroon-soft:#F6E2DE;
   --muted:#6C757D; --rule:#DCDAD6;
@@ -1725,7 +1749,7 @@ html{-webkit-text-size-adjust:100%}
   .rdline{gap:7px}
   .rdmini{font-size:12px;padding:6px 11px}
   .rdcard{padding:6px 8px;gap:5px 6px}
-  .rdhead .rdpg input{width:40px;font-size:17px}
+  .rdhead .rdpg input{width:58px;font-size:17px}
   .rdmeta{font-size:11.5px}
   .rdsabaq{padding:3px 8px;gap:4px}
   .rdsabaq .sbrange select{font-size:15px}
@@ -2134,7 +2158,7 @@ main.wrap{width:100%}
 @container (max-width:560px){
   .rdcard .sblbl{display:none!important}
   .rdhead .rdpg button{padding:3px 5px}
-  .rdhead .rdpg input{flex:0 0 42px!important;width:42px;font-size:18px}
+  .rdhead .rdpg input{flex:0 0 58px!important;width:58px;font-size:18px}
   .rdcard .rdset [data-rd="mut"]{display:none}
 }
 @container (max-width:460px){
@@ -2144,7 +2168,7 @@ main.wrap{width:100%}
 }
 @container (max-width:380px){
   .rdcard .rdset [data-rd="glimpse"],.rdcard .rdset [data-rd="pick"]{display:none}
-  .rdhead .rdpg input{flex:0 0 36px!important;width:36px;font-size:17px}
+  .rdhead .rdpg input{flex:0 0 52px!important;width:52px;font-size:17px}
 }
 </style>
 </head>
@@ -2154,6 +2178,7 @@ main.wrap{width:100%}
 
 <header class="top">
   <div class="wrap top-in">
+    <button class="appbtn" id="drawer-open" aria-label="মেনু"><span class="bars"></span></button>
     <div class="brand">
       <span class="mark">حفظ</span>
       <span><span class="nm" id="hdr-name"></span><span class="dt" id="hdr-date"></span></span>
@@ -2162,12 +2187,30 @@ main.wrap{width:100%}
       <span class="v" id="hdr-streak">0</span>
       <span class="l" id="hdr-streak-l"></span>
     </div>
+    <button class="appbtn" id="hdr-search" aria-label="খুঁজুন">⌕</button>
   </div>
   <div class="wrap topbtns">
     <button class="sync" id="sync-chip"><span class="dot"></span><span id="sync-txt"></span></button>
   </div>
   <nav class="tabs"><div class="wrap" id="tabs"></div></nav>
 </header>
+<div class="drawer-scrim" id="drawer-scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden>
+  <div class="drawer-hd">
+    <span class="drawer-mark">حِفْظ</span>
+    <div class="drawer-nm" id="drawer-nm"></div>
+    <div class="drawer-sub" id="drawer-sub"></div>
+  </div>
+  <div class="drawer-bd">
+    <div class="drawer-lang">
+      <div class="drawer-lbl" id="drawer-lang-l">ভাষা</div>
+      <div class="langrow" id="drawer-langrow"></div>
+    </div>
+    <button class="drawer-it" id="dw-paper"><i>☀</i><span id="dw-paper-l">কাগজের রঙ</span><span class="dwval" id="dw-paper-v"></span></button>
+    <button class="drawer-it" id="dw-cloud"><i>↥</i><span id="dw-cloud-l">ব্যাকআপ ও সিংক</span></button>
+    
+  </div>
+</aside>
 
 <style>
 .rdcard{border:1px solid var(--rule);background:var(--card);padding:13px 14px;margin-bottom:14px;
@@ -2189,7 +2232,9 @@ main.wrap{width:100%}
 .rdmini[aria-pressed="true"]{background:var(--brass);border-color:var(--brass);color:#fff}
 .rdsep{flex:1 1 0;min-width:0}
 /* the page is the hero: warm stock, generous margins, controls kept quiet */
-.rdpapers{display:flex;gap:14px;align-items:stretch}
+.rdpapers{display:flex;gap:14px;align-items:stretch;justify-content:center}
+.paper{margin-inline:auto}
+.qline{max-width:var(--tw,none);margin-inline:auto}
 .paper{padding-inline:max(18px, env(safe-area-inset-left), env(safe-area-inset-right))}
 .paper{position:relative;flex:1 1 0;min-width:0;--pap:#F7F1E3;--pink:#2B3440;
   background:var(--pap);color:var(--pink);border-radius:14px;padding:26px 30px 14px;
@@ -2198,17 +2243,17 @@ main.wrap{width:100%}
 .paper.pday{--pap:#FFFFFF;--pink:#2B3440}
 .paper.pcream{--pap:#F7F1E3;--pink:#2B3440}
 .paper.pnight{--pap:#141A19;--pink:#E8DFC6;box-shadow:0 14px 40px rgba(0,0,0,.5)}
-.paper.pnight .qline .w.sw,.paper.pnight .swband{background:rgba(20,160,166,.24)}
+.paper.pnight .qline .w.sw,.paper.pnight .swband{background:rgba(95,127,82,.24)}
 .paper.turnl{transform:translateX(-8%);opacity:.25}
 .paper.turnr{transform:translateX(8%);opacity:.25}
-#rd-paper2{display:none}
-@media (orientation:landscape) and (min-width:900px){ #rd-paper2{display:block} }
+#rd-paper2{display:none!important}
 /* one line of the print, never wrapped; its size is measured, not guessed */
 .qline{position:relative;display:flex;justify-content:space-between;align-items:center;gap:2px;
   min-height:0;font-size:var(--qf,20px);line-height:var(--ql,1.85);
   transition:opacity .2s;white-space:nowrap;padding-inline:12px}
 .paper{--qf:20px;--ql:1.85}
-.paper.nast .qline{line-height:2.15}
+.paper.nast .qline{padding-inline:8px}
+.paper.nast .qline.qcen{gap:14px}
 .qhm,.qrib{position:absolute;top:14%;bottom:14%;width:3px;border-radius:3px;opacity:.85}
 .qhm{inset-inline-start:2px;background:transparent}
 .qhm.ok{background:var(--verdigris)}
@@ -2231,10 +2276,10 @@ main.wrap{width:100%}
 .rdcurtain .grab{position:absolute;inset-inline-start:50%;transform:translateX(-50%);bottom:-13px;
   width:74px;height:26px;border-radius:999px;background:var(--verdigris);color:#fff;
   display:flex;align-items:center;justify-content:center;font-size:13px;cursor:grab;touch-action:none;
-  box-shadow:0 4px 12px rgba(20,160,166,.4)}
+  box-shadow:0 4px 12px rgba(95,127,82,.4)}
 .glbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 0;font-size:13px}
 .glbar button{border:1px solid var(--rule);border-radius:999px;padding:8px 14px;font-size:22px;direction:rtl}
-.glbar button:hover{background:rgba(20,160,166,.14)}
+.glbar button:hover{background:rgba(95,127,82,.14)}
 .qline.dim{opacity:.28}
 .qline .w.off{opacity:.2}
 .qline .w.cov1{opacity:.5}
@@ -2242,8 +2287,8 @@ main.wrap{width:100%}
 .qline .w.cov3,.qline .w.cov{color:transparent;background:rgba(33,43,54,.07);border-radius:4px}
 .ayn{font-family:var(--mono);font-size:10px;color:var(--verdigris);vertical-align:super;padding:0 2px;direction:ltr}
 .qline .w.off .ayn{opacity:.5}
-.paper.picking .w{background:rgba(20,160,166,.08)}
-.paper.picking .w:hover{background:rgba(20,160,166,.3)}
+.paper.picking .w{background:rgba(95,127,82,.08)}
+.paper.picking .w:hover{background:rgba(95,127,82,.3)}
 .pickmsg{margin:8px 0 0;font-size:12.5px;color:var(--verdigris);direction:ltr}
 .ovl{position:fixed;inset:0;background:rgba(46,51,47,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:60}
 .ovl.on{display:flex}
@@ -2284,33 +2329,69 @@ main.wrap{width:100%}
 .rdtog[aria-pressed="true"]{background:var(--brass);border-color:var(--brass);color:#fff}
 .rdsel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:-4px 0 12px;font-size:13px}
 .rdsel select{padding:6px 8px}
-.qline.tl{background:rgba(20,160,166,.13);border-radius:6px}
-.swband{position:absolute;top:1px;bottom:1px;background:rgba(20,160,166,.13);border-radius:6px;pointer-events:none;z-index:0}
+.qline.tl{background:rgba(95,127,82,.13);border-radius:6px}
+.swband{position:absolute;top:1px;bottom:1px;background:rgba(95,127,82,.13);border-radius:6px;pointer-events:none;z-index:0}
 .qline .w{position:relative;z-index:1}
 .qline.covered .w{color:transparent;text-shadow:none;background:rgba(33,43,54,.07);border-radius:4px}
 .qline .w{cursor:pointer;padding:0 1px;border-radius:4px}
-.qline .w:hover{background:rgba(20,160,166,.22)}
-.qline .w.on{background:rgba(20,160,166,.34);box-shadow:0 0 0 1px rgba(20,160,166,.34);font-weight:inherit}
+.qline .w:hover{background:rgba(95,127,82,.22)}
+.qline .w.on{background:rgba(95,127,82,.34);box-shadow:0 0 0 1px rgba(95,127,82,.34);font-weight:inherit}
 .qline .w.now{background:none;box-shadow:inset 0 -3px 0 0 var(--verdigris);border-radius:2px}
-.qline.covered .w.now{background:rgba(20,160,166,.28)}
+.qline.covered .w.now{background:rgba(95,127,82,.28)}
 .qcen{justify-content:center;gap:10px}
+/* the printed surah header: a ruled band, the way a mushaf sets it */
+.qline.qhead{margin-block:2px 4px;margin-inline:auto;padding:4px 14px;border-radius:8px;
+  border:1.5px solid var(--verdigris);background:rgba(95,127,82,.09)}
+.qline.qhead .pw,.qline.qhead .w{font-size:.9em;color:var(--verdigris);opacity:1;cursor:default}
+.qline.qbism .pw,.qline.qbism .w{font-size:.95em;opacity:1;cursor:default}
+.qline.qhead .pw:hover,.qline.qbism .pw:hover{background:none}
+.paper.pnight .qline.qhead{background:rgba(95,127,82,.16)}
 .rdfoot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:#77808A;padding-top:10px;margin-top:8px;border-top:1px solid rgba(33,43,54,.12);direction:ltr}
-.wmean{margin-top:12px;min-height:44px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.05);font-size:14px}
-.wmnhd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
-.wmnw{font-size:30px;line-height:1.5;direction:rtl}
+.wmean{display:none}
+.wmean.on{display:block;position:fixed;inset-inline:0;bottom:0;z-index:59;
+  max-height:38dvh;overflow-y:auto;overscroll-behavior:contain;
+  padding:0 18px calc(14px + env(safe-area-inset-bottom));
+  background:var(--card);border-radius:20px 20px 0 0;font-size:14px;
+  box-shadow:0 -10px 34px rgba(51,65,79,.22);
+  animation:wmup .22s cubic-bezier(.2,.7,.3,1) both}
+@keyframes wmup{from{transform:translateY(14px);opacity:.6}to{transform:none;opacity:1}}
+.wmbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:6px 0 4px;background:var(--card)}
+.wmbar{cursor:ns-resize;touch-action:none}
+.wmbar button{touch-action:manipulation;cursor:pointer}
+.wmbar .gr{flex:1;height:5px;max-width:64px;margin:0 auto;border-radius:999px;background:var(--ink-3);opacity:.45}
+.wmbar button{width:32px;height:30px;border:0;background:transparent;color:var(--ink-3);
+  font-size:17px;border-radius:999px;cursor:pointer}
+.wmbar button:active{background:rgba(95,127,82,.14)}
+.wmnhd{display:flex;flex-direction:column;align-items:center;gap:3px;margin-bottom:8px;text-align:center}
+.wmnw{font-size:38px;line-height:1.45;direction:rtl}
 .wmnk{font-family:var(--mono);font-size:11px;color:var(--verdigris);direction:ltr}
-.wmngl{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.wmngl{display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap;text-align:center}
 .wmntag{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
-  padding:2px 7px;border-radius:999px;background:rgba(20,160,166,.16);color:var(--verdigris);white-space:nowrap}
+  padding:2px 7px;border-radius:999px;background:rgba(95,127,82,.16);color:var(--verdigris);white-space:nowrap}
 .wmnnote{font-size:12px;opacity:.6;margin:6px 0 10px;text-wrap:pretty}
 .wmnlbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.5;margin:10px 0 4px}
 .wmnay{direction:rtl;display:flex;flex-wrap:wrap;gap:2px 8px;font-size:24px;line-height:1.9}
-.wmnay .m{background:rgba(20,160,166,.3);border-radius:5px}
+.wmnay .m{background:rgba(95,127,82,.3);border-radius:5px}
 .wmntr{font-size:14px;line-height:1.7}
 .wmnsame{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .wmnsame button{border:1px solid var(--rule);border-radius:999px;padding:5px 11px;font-size:12.5px;direction:ltr}
-.wmnsame button:hover{background:rgba(20,160,166,.14)}
-.wmean b{font-size:19px}
+.wmnsame button:hover{background:rgba(95,127,82,.14)}
+.wmean b{font-size:21px}
+.wmnlbl{text-align:center}
+.wmnvk{font-family:var(--mono);font-size:11.5px;color:var(--verdigris);direction:ltr;display:inline-block}
+.wmnhint{text-align:center;font-size:11.5px;opacity:.55;margin:-2px 0 8px}
+/* word-for-word grid — right to left, meaning under each word */
+.wmgrid{direction:rtl;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 10px;padding-top:4px}
+.wmgrid.few{gap:6px 22px}
+.wmgrid.few .wmca{font-size:28px}
+.wmgrid.few .wmcb{font-size:13px;max-width:14ch}
+.wmcell{display:flex;flex-direction:column;align-items:center;gap:0;cursor:pointer;
+  padding:3px 5px;border-radius:9px}
+.wmcell:hover{background:rgba(95,127,82,.12)}
+.wmcell[data-on="1"]{background:var(--verd-soft)}
+.wmca{font-size:19px;line-height:1.5;color:var(--maroon)}
+.wmcb{font-size:11px;line-height:1.3;color:var(--ink-2);direction:ltr;text-align:center;max-width:10ch}
 .rdnote{font-size:12px;opacity:.55;margin:0 0 9px}
 
 /* কম জায়গায় বেশি কাজ — চিহ্নের টুলবার */
@@ -2350,13 +2431,13 @@ body{background:var(--paper);padding-bottom:calc(66px + env(safe-area-inset-bott
 .brand .nm{font-size:17px;color:var(--ink)}
 .brand .dt{color:var(--ink-3)}
 .streak{display:inline-flex;align-items:baseline;gap:5px;background:var(--verd-soft);
-  color:#0B6F74;border-radius:999px;padding:6px 13px;white-space:nowrap;text-align:start}
-.streak .v{font-size:15px;color:#0B6F74}
-.streak .l{display:inline;margin:0;color:#0B6F74;font-size:10px}
+  color:#33482A;border-radius:999px;padding:6px 13px;white-space:nowrap;text-align:start}
+.streak .v{font-size:15px;color:#33482A}
+.streak .l{display:inline;margin:0;color:#33482A;font-size:10px}
 .langpick{border-color:var(--rule);color:var(--ink-2);border-radius:999px}
 .langpick option{background:#fff;color:var(--ink)}
 .sync{border-color:var(--rule);color:var(--ink-3);border-radius:999px}
-.sync.ok{color:#0B6F74;border-color:rgba(20,160,166,.45)}
+.sync.ok{color:#33482A;border-color:rgba(95,127,82,.45)}
 .sync.err{color:var(--maroon);border-color:rgba(176,74,60,.45)}
 .topbtns{padding-bottom:10px}
 
@@ -2380,7 +2461,7 @@ body{background:var(--paper);padding-bottom:calc(66px + env(safe-area-inset-bott
 .gate,.blk,.log,.pg,.sheet,.rs,.st,.exsheet,.rdcard,.recbox{
   border-radius:var(--r-lg);border-color:transparent;box-shadow:var(--sh)}
 .gate,.blk,.log{background:var(--card);border:1px solid rgba(51,65,79,.06)}
-.blk.done{border-color:rgba(20,160,166,.45)}
+.blk.done{border-color:rgba(95,127,82,.45)}
 .blk-b,.gate{border-radius:var(--r-lg)}
 .blk-b{border-top-color:var(--rule)}
 .pg{background:#fff;border:1px solid rgba(224,168,46,.28);border-radius:var(--r-md);box-shadow:var(--sh-sm)}
@@ -2388,7 +2469,7 @@ body{background:var(--paper);padding-bottom:calc(66px + env(safe-area-inset-bott
 .st{background:var(--card);border-radius:var(--r-md);box-shadow:var(--sh-sm)}
 .rs{border-radius:var(--r-md)}
 .rs.now{background:var(--verd-soft)}
-.rs.now .wk{color:#0B6F74}
+.rs.now .wk{color:#33482A}
 .rs.now .big{color:var(--ink)}
 .rs.now .big span,.rs.now .note{color:var(--ink-3)}
 
@@ -2424,8 +2505,8 @@ html[lang="ar"] .phase .b,html[lang="ar"] .blk-h .ttl,html[lang="ar"] .gate .q{
 
 /* day summary — soft accent instead of a second dark block */
 .sum{background:var(--verd-soft);color:var(--ink);border-radius:var(--r-lg);box-shadow:var(--sh-sm)}
-.sum .lab{color:#0B6F74}
-.sum .big{color:#0B6F74}
+.sum .lab{color:#33482A}
+.sum .big{color:#33482A}
 .bar{background:rgba(11,111,116,.14);border-radius:999px}
 .bar i{background:var(--verdigris)}
 
@@ -2460,14 +2541,47 @@ footer b{color:var(--ink-2)}
 .drwarn{font-size:12.5px;line-height:1.6;padding:11px 13px;border-radius:12px;background:rgba(164,129,63,.12);margin:12px 0}
 .dropt{display:grid;gap:8px;margin-top:12px}
 .dropt button{border:1px solid var(--rule);border-radius:999px;padding:11px 16px;font-size:14px;background:var(--card);text-align:start}
-.dropt button:hover{background:rgba(20,160,166,.12)}
+.dropt button:hover{background:rgba(95,127,82,.12)}
 .drrange{width:100%;margin:10px 0 4px}
 /* ---------- FLOATING RECITATION BUTTON (Tartil-style) ---------- */
 .fab{position:fixed;inset-inline-end:18px;bottom:calc(74px + env(safe-area-inset-bottom));z-index:58;
   width:60px;height:60px;border-radius:50%;border:none;background:var(--verdigris);color:#fff;
   font-size:24px;line-height:1;display:none;align-items:center;justify-content:center;cursor:pointer;
-  box-shadow:0 8px 22px rgba(20,160,166,.42);transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s}
+  box-shadow:0 8px 22px rgba(95,127,82,.42);transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s}
 body.mushaf .fab{display:flex}
+/* ===== পাতাই পর্দা: টুলবার নিচে, বাকিটা পাতার ===== */
+body.mushaf #v-mushaf h2,body.mushaf .rdlegend,body.mushaf .rdnote,
+body.mushaf #rd-tr,body.mushaf #rd-rec{display:none!important}
+body.mushaf #v-mushaf{padding-top:6px;padding-bottom:calc(150px + env(safe-area-inset-bottom))}
+body.mushaf .rdcard{position:fixed;inset-inline:0;z-index:57;margin:0;display:block;
+  bottom:calc(60px + env(safe-area-inset-bottom));border-radius:16px 16px 0 0;
+  padding:3px 8px 4px;box-shadow:0 -6px 18px rgba(51,65,79,.10);overflow:visible}
+/* the row stays one line and small — the page keeps the screen */
+body.mushaf .rdcard .rdhead{flex-wrap:nowrap;gap:2px;justify-content:space-between}
+body.mushaf .rdcard .rdmeta{font-size:11.5px}
+body.mushaf .rdcard .rdpg button{padding:2px 5px;font-size:16px}
+body.mushaf .rdcard .rdpg input{width:52px;min-width:52px;font-size:17px;padding-inline:2px}
+body.mushaf .rdcard .rdmini{width:32px;height:32px}
+.rdjuz{border:1px solid var(--rule);background:transparent;border-radius:999px;padding:4px 8px;
+  font:inherit;font-size:12px;color:var(--ink-2);cursor:pointer;appearance:none}
+.rdstop{display:none;width:34px;height:34px;border:0;border-radius:999px;cursor:pointer;
+  background:var(--maroon);color:#fff;font-size:12px;line-height:1}
+body.playing .rdstop{display:inline-flex;align-items:center;justify-content:center}
+.rdrangebtn{border:1px solid var(--rule);background:transparent;border-radius:999px;
+  padding:4px 11px;font:inherit;font-size:12px;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.rdcard.open .rdrangebtn{background:var(--verd-soft);border-color:transparent;color:#33482A}
+body.mushaf .rdcard .rdsabaq{display:none}
+body.mushaf .rdcard.open .rdsabaq{display:flex;justify-content:center;gap:6px;
+  margin:4px 0 2px;padding:5px 0 0;border-top:1px solid var(--rule);background:none;box-shadow:none}
+/* every control gets a place on the row instead of being pushed off the edge */
+body.mushaf .rdhead{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px}
+body.mushaf .rdcard .rdset{order:0;margin-inline-start:0;flex-wrap:nowrap;justify-content:center;gap:2px}
+body.mushaf .rdcard .rdsabaq{margin:0;padding:0;background:none;border:none;box-shadow:none;gap:6px}
+body.mushaf .rdsep{display:none}
+body.mushaf .fab{bottom:calc(160px + env(safe-area-inset-bottom));width:52px;height:52px;font-size:21px}
+body.mushaf .fabm{bottom:calc(220px + env(safe-area-inset-bottom))}
+/* the sheet takes the full page height it now has */
+body.mushaf .paper{min-height:0}
 body.mushaf .top-in,body.mushaf .topbtns{display:none}
 body.focus .fab{bottom:calc(20px + env(safe-area-inset-bottom))}
 .fab:active{transform:scale(.92)}
@@ -2488,7 +2602,7 @@ body.focus .fab{bottom:calc(20px + env(safe-area-inset-bottom))}
   background:var(--ink);color:var(--paper);padding:7px 12px;border-radius:999px;font-size:12.5px;display:none;
   box-shadow:0 6px 18px rgba(0,0,0,.2)}
 .fabhint.on{display:block}
-.w.said{background:rgba(20,160,166,.26);border-radius:3px}
+.w.said{background:rgba(95,127,82,.26);border-radius:3px}
 
 /* the crowded toolbar: playback now lives on the floating button, so the card
    shrinks to one slim row — page, ayah range, and the two actions */
@@ -2497,12 +2611,12 @@ body.focus .fab{bottom:calc(20px + env(safe-area-inset-bottom))}
 .rdhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .rdhead .rdpg{border:none;background:none;padding:0;gap:1px;box-shadow:none}
 .rdhead .rdpg button{padding:4px 7px;font-size:17px;line-height:1;border-radius:9px}
-.rdhead .rdpg input{width:52px;border:none;background:none;font-weight:700;font-size:19px;
+.rdhead .rdpg input{width:58px;min-width:58px;border:none;background:none;font-weight:700;font-size:19px;
   color:inherit;text-align:center;appearance:none;-moz-appearance:textfield;font-family:inherit}
 .rdhead .rdpg input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .rdmeta{font-size:12.5px;opacity:.6}
 .rdsabaq{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 2px;
-  padding:9px 12px;border-radius:14px;background:rgba(20,160,166,.09)}
+  padding:9px 12px;border-radius:14px;background:rgba(95,127,82,.09)}
 .sblbl{font-size:12.5px;opacity:.7;letter-spacing:.02em}
 .sbrange{display:flex;align-items:center;gap:3px}
 .sbrange select{border:none;background:none;font:600 19px/1 inherit;color:var(--verdigris);
@@ -2510,7 +2624,7 @@ body.focus .fab{bottom:calc(20px + env(safe-area-inset-bottom))}
 .sbdash{opacity:.45}
 .sbn{font-size:12.5px;opacity:.65;margin-inline-start:2px}
 .sbbtn{margin-inline-start:auto;min-width:36px;height:32px;border-radius:10px;border:none;
-  background:rgba(20,160,166,.14);color:inherit;font-size:15px;cursor:pointer;font-family:inherit}
+  background:rgba(95,127,82,.14);color:inherit;font-size:15px;cursor:pointer;font-family:inherit}
 .sbbtn+.sbbtn{margin-inline-start:0}
 .sbbtn.go{background:var(--verdigris);color:#fff}
 .sbbtn:active{opacity:.75}
@@ -2564,7 +2678,7 @@ body.scrolled .top{box-shadow:0 2px 14px rgba(51,65,79,.10);border-bottom-color:
 .tab[data-v="drill"]::before{content:"◎"}
 .tab[data-v="progress"]::before{content:"▤"}
 .tab[data-v="settings"]::before{content:"⚙"}
-.tab[aria-selected="true"]::before{background:rgba(20,160,166,.14)}
+.tab[aria-selected="true"]::before{background:rgba(95,127,82,.14)}
 
 /* bottom sheets instead of web modals */
 .ovl{align-items:flex-end;padding:0}
@@ -2593,6 +2707,62 @@ main.wrap{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;
   padding-bottom:calc(78px + env(safe-area-inset-bottom))}
 main.wrap::-webkit-scrollbar{width:0;height:0}
 input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet{-webkit-user-select:text;user-select:text}
+/* ===== 2a · সবুজ-ক্রিম হাব ===== */
+:root{
+  --sg-bar:#E6EFDF; --sg-card:#EEF3E8; --sg-line:#D6E3CB;
+  --sg-pattern:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cg fill='none' stroke='%237a8a5e' stroke-opacity='.26' stroke-width='.9'%3E%3Cpath d='M28 1l27 27-27 27L1 28z'/%3E%3Cpath d='M1 1l54 54M55 1L1 55'/%3E%3C/g%3E%3C/svg%3E");
+}
+.top{background:var(--sg-bar)}
+.top-in{display:grid;grid-template-columns:38px 1fr auto 38px;align-items:center;gap:8px;padding:14px 0 6px}
+.appbtn{width:38px;height:38px;display:grid;place-items:center;border:0;background:transparent;
+  color:var(--ink);font-size:20px;border-radius:999px;cursor:pointer}
+.appbtn:active{background:rgba(95,127,82,.14)}
+.bars{display:block;width:20px;height:2px;border-radius:2px;background:currentColor;
+  box-shadow:0 6px 0 currentColor,0 -6px 0 currentColor}
+.tabs{background:var(--sg-bar);border-top:1px solid var(--sg-line)}
+/* হোমের মাটি — শান্ত ক্রিম, উপরে একটুখানি সবুজ আলো */
+#v-today{margin-inline:-16px;padding-inline:16px;
+  background:radial-gradient(120% 40% at 50% -8%, rgba(95,127,82,.14), rgba(95,127,82,0) 70%), #FBFAF5}
+.clcode{font-family:var(--mono);font-size:19px;letter-spacing:.06em;text-align:center;
+  padding:14px 12px;border-radius:var(--r-md);background:var(--sg-card);color:var(--ink);word-break:break-all}
+.clstate{font-size:12.5px;min-height:18px;margin-top:4px;color:var(--ink-3)}
+.clstate.ok{color:#33482A}
+.clstate.err{color:var(--maroon)}
+.clstate.busy{color:var(--verdigris)}
+
+/* drawer */
+.drawer[hidden],.drawer-scrim[hidden]{display:none!important}
+.drawer-scrim{position:fixed;inset:0;z-index:80;background:rgba(32,38,28,.44)}
+.drawer{position:fixed;top:0;bottom:0;inset-inline-start:0;z-index:81;width:min(302px,84vw);
+  background:#FBFAF5;display:flex;flex-direction:column;
+  overflow-y:auto;box-shadow:0 0 34px rgba(32,38,28,.3);animation:dwin .2s cubic-bezier(.2,.7,.3,1) both}
+@keyframes dwin{from{transform:translateX(-102%)}to{transform:none}}
+[dir="rtl"] .drawer{animation-name:dwinr}
+@keyframes dwinr{from{transform:translateX(102%)}to{transform:none}}
+.drawer-hd{background:var(--verdigris);color:#fff;padding:calc(26px + env(safe-area-inset-top)) 20px 18px}
+.drawer-mark{display:grid;place-items:center;width:60px;height:60px;border-radius:999px;
+  background:#FBFDF7;color:#33482A;font-size:24px}
+.drawer-nm{font-size:19px;font-weight:700;margin-top:11px}
+.drawer-sub{font-size:12.5px;opacity:.92}
+.drawer-bd{padding:16px 14px 30px;display:flex;flex-direction:column;gap:4px}
+.drawer-lbl{font-size:12px;color:var(--ink-3);padding:0 8px 7px}
+.langrow{display:flex;flex-wrap:wrap;gap:6px;padding:0 8px 12px}
+.langrow button{border:0;border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;
+  background:var(--sg-card);color:var(--ink-2);cursor:pointer}
+.langrow button[aria-pressed="true"]{background:var(--verdigris);color:#fff;font-weight:700}
+.drawer-it{display:flex;align-items:center;gap:12px;width:100%;padding:12px 8px;border:0;
+  background:transparent;font:inherit;font-size:15px;color:var(--ink);text-align:start;cursor:pointer;border-radius:12px}
+.drawer-it:active{background:rgba(95,127,82,.12)}
+.drawer-it i{font-style:normal;font-size:16px;color:var(--verdigris);width:20px;text-align:center}
+.drawer-it .sw{margin-inline-start:auto;width:38px;height:22px;border-radius:999px;background:var(--sg-line);
+  display:inline-flex;align-items:center;padding:0 3px;transition:background .15s}
+.drawer-it .sw::after{content:"";width:16px;height:16px;border-radius:999px;background:#fff;transition:transform .15s}
+.drawer-it[aria-pressed="true"] .sw{background:var(--verdigris)}
+.drawer-it[aria-pressed="true"] .sw::after{transform:translateX(16px)}
+[dir="rtl"] .drawer-it[aria-pressed="true"] .sw::after{transform:translateX(-16px)}
+.drawer-rule{height:1px;background:var(--sg-line);margin:8px}
+.dwval{margin-inline-start:auto;font-size:12.5px;color:var(--ink-3)}
+
 button,.tab,.tbtn,label,.chip{touch-action:manipulation}
 button:active,.tab:active,.tbtn:active{opacity:.72;transition:opacity .06s}
 .view.on{animation:vin .19s cubic-bezier(.2,.7,.3,1) both}
@@ -2611,6 +2781,9 @@ button:active,.tab:active,.tbtn:active{opacity:.72;transition:opacity .06s}
 <div class="fabm" id="fabm"></div>
 <div class="fabhint" id="fabhint"></div>
 <div class="ovl" id="exam"><div class="exsheet" id="exam-in"></div></div>
+<div class="ovl" id="cloud"><div class="exsheet" id="cloud-in"></div></div>
+<div class="wmean" id="rd-mean"></div>
+<div id="rd-bar"></div>
 
 <div class="rep" id="rep">
   <div class="sheet" id="sheet"></div>
@@ -2703,7 +2876,7 @@ window.HIFZ_LANG_ar = {
          warn:"المصحف كامل مع الصوت حجمه كبير (٢–٣ غيغابايت) — يُفضّل شبكة واي فاي." },
   hj: { am:"ص", pm:"م", lbl:"تعديل التاريخ الهجري", hint:"إن كان ثبوت الهلال عندكم يومًا قبل أو بعد، فعدِّله من هنا.",
         d0:"بلا تعديل", plus:"+{0} يوم", minus:"−{0} يوم" },
-  wm: { approx:"تقريبي", read:"معنى الكلمة وحدها إشارة لا ترجمة — اقرأها داخل الآية أدناه.",
+  wm: { approx:"تقريبي", wbw:"كلمة بكلمة", wbwHint:"انقر أي كلمة لمعرفة المزيد", read:"معنى الكلمة وحدها إشارة لا ترجمة — اقرأها داخل الآية أدناه.",
         ay:"داخل الآية", tr:"معنى الآية", same:"الكلمة نفسها في موضع آخر على جهازك",
         none:"لا موضع آخر على الجهاز بعد — نزّل صفحات أخرى فتظهر هنا.", pg:"ص {0}" },
   dr: { k:"التمرين", h:"تمرين الاستدعاء", p:"إعادة القراءة تُشبه التعلّم، والاستدعاء من الذاكرة هو التعلّم.",
@@ -3154,11 +3327,12 @@ var TODAY = key(new Date());
 /* Mushaf editions — page count and lines per page differ by print, so every
    page/line calculation reads these instead of a fixed 604/15. */
 var MUSHAFS = [
-  { id:"madani",     pages:604, lines:15, qcf:"v1", nm:{ ar:"مصحف المدينة (طبعة ١٤٠٥) · ٦٠٤ صفحات، ١٥ سطرًا", en:"Madani (1405 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪০৫ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۰۵ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1405 年版）— 604 页 · 15 行" } },
-  { id:"madani1421", pages:604, lines:15, qcf:"v2", nm:{ ar:"مصحف المدينة (طبعة ١٤٢١) · ٦٠٤ صفحات، ١٥ سطرًا", en:"Madani (1421 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪২১ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۲۱ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1421 年版）— 604 页 · 15 行" } },
-  { id:"indopak15", pages:610, lines:15, api:6, nast:true, nm:{ ar:"الهندي الباكستاني ١٥ سطرًا (المجيدي · الحافظي) · ٦١٠ صفحات، ١٥ سطرًا", en:"Indo-Pak 15-line (Majidi / Hafizi) · 610 pages, 15 lines", bn:"ইন্দো-পাক ১৫ লাইন (মাজিদী · হাফেজি) · ৬১০ পৃষ্ঠা, ১৫ লাইন", ur:"انڈو پاک ۱۵ سطری (مجیدی · حافظی) · ۶۱۰ صفحے، ۱۵ سطریں", zh:"印巴 15 行（马吉迪 · 哈菲兹版）— 610 页 · 15 行" } },
-  { id:"indopak16", pages:548, lines:16, api:7, nast:true, nm:{ ar:"الهندي الباكستاني ١٦ سطرًا (تاج) · ٥٤٨ صفحة، ١٦ سطرًا", en:"Indo-Pak 16-line (Taj) · 548 pages, 16 lines", bn:"ইন্দো-পাক ১৬ লাইন (তাজ) · ৫৪৮ পৃষ্ঠা, ১৬ লাইন", ur:"انڈو پاک ۱۶ سطری (تاج) · ۵۴۸ صفحے، ۱۶ سطریں", zh:"印巴 16 行（Taj）— 548 页 · 16 行" } },
-  { id:"indopak13", pages:847, lines:13, nm:{ ar:"الهندي الباكستاني ١٣ سطرًا · ٨٤٧ صفحة (بلا صفحات بعد)", en:"Indo-Pak 13-line · 847 pages (no page view yet)", bn:"ইন্দো-পাক ১৩ লাইন · ৮৪৭ পৃষ্ঠা (পাতা-দৃশ্য এখনো নেই)", ur:"انڈو پاک ۱۳ سطری · ۸۴۷ صفحے (صفحہ منظر ابھی نہیں)", zh:"印巴 13 行 · 847 页（暫无页面视图）" } }
+  { id:"madani",     pages:604, lines:15, qcf:"v1", local:"data/madani", nm:{ ar:"مصحف المدينة (طبعة ١٤٠٥) · ٦٠٤ صفحات، ١٥ سطرًا", en:"Madani (1405 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪০৫ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۰۵ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1405 年版）— 604 页 · 15 行" } },
+  { id:"madani1421", pages:604, lines:15, qcf:"v2", local:"data/madani1421", nm:{ ar:"مصحف المدينة (طبعة ١٤٢١) · ٦٠٤ صفحات، ١٥ سطرًا", en:"Madani (1421 print) · 604 pages, 15 lines", bn:"মাদানী মুসহাফ (১৪২১ ছাপা) · ৬০৪ পৃষ্ঠা, ১৫ লাইন", ur:"مدنی مصحف (۱۴۲۱ چھپائی) · ۶۰۴ صفحے، ۱۵ سطریں", zh:"麦地那版（1421 年版）— 604 页 · 15 行" } },
+  { id:"indopak15", pages:610, lines:15, api:6, nast:true, local:"data/indopak15", nm:{ ar:"الهندي الباكستاني ١٥ سطرًا (المجيدي · الحافظي) · ٦١٠ صفحات، ١٥ سطرًا", en:"Indo-Pak 15-line (Majidi / Hafizi) · 610 pages, 15 lines", bn:"ইন্দো-পাক ১৫ লাইন (মাজিদী · হাফেজি) · ৬১০ পৃষ্ঠা, ১৫ লাইন", ur:"انڈو پاک ۱۵ سطری (مجیدی · حافظی) · ۶۱۰ صفحے، ۱۵ سطریں", zh:"印巴 15 行（马吉迪 · 哈菲兹版）— 610 页 · 15 行" } },
+  { id:"indopak16", pages:548, lines:16, api:7, nast:true, local:"data/indopak16", nm:{ ar:"الهندي الباكستاني ١٦ سطرًا (تاج) · ٥٤٨ صفحة، ١٦ سطرًا", en:"Indo-Pak 16-line (Taj) · 548 pages, 16 lines", bn:"ইন্দো-পাক ১৬ লাইন (তাজ) · ৫৪৮ পৃষ্ঠা, ১৬ লাইন", ur:"انڈو پاک ۱۶ سطری (تاج) · ۵۴۸ صفحے، ۱۶ سطریں", zh:"印巴 16 行（Taj）— 548 页 · 16 行" } },
+  { id:"indopak13", pages:849, lines:13, nast:true, local:"data/ip13", nm:{ ar:"الهندي الباكستاني ١٣ سطرًا (قدرة الله) · ٨٤٩ صفحة", en:"Indo-Pak 13-line (Qudratullah) · 849 pages", bn:"ইন্দোপাক ১৩ লাইন (কুদরতুল্লাহ) · ৮৪৯ পৃষ্ঠা", ur:"انڈوپاک ۱۳ سطری (قدرت اللہ) · ۸۴۹ صفحے", zh:"印巴 13 行（Qudratullah）· 849 页" } },
+  { id:"indopak13taj", pages:847, lines:13, nast:true, local:"data/indopak13taj", nm:{ ar:"الهندي الباكستاني ١٣ سطرًا (تاج) · ٨٤٧ صفحة", en:"Indo-Pak 13-line (Taj) · 847 pages", bn:"ইন্দোপাক ১৩ লাইন (তাজ) · ৮৪৭ পৃষ্ঠা", ur:"انڈوپاک ١٣ سطری (تاج) · ٨٤٧ صفحات", zh:"印巴 13 行（Taj）· 847 页" } },
 ];
 function mushafDef(){
   var id = S && S.settings ? S.settings.mushafId : "madani";
@@ -3213,8 +3387,84 @@ var saveTimer = null;
 function save(){
   S.updatedAt = Date.now();
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(function(){ Store.set(S); Sync.queue(); }, 220);
+  saveTimer = setTimeout(function(){ Store.set(S); Sync.queue(); Cloud.queue(); }, 220);
 }
+
+/* ---------- সার্ভার সেভ · কোড দিয়ে, অ্যাকাউন্ট ছাড়া ---------- */
+var Cloud = {
+  t:null, busy:false, lastAt:0,
+  url:function(){
+    var u = (window.HIFZ_CONFIG && window.HIFZ_CONFIG.syncUrl) || "";
+    return u ? u : "";
+  },
+  code:function(){ return (S.settings && S.settings.cloudCode) || ""; },
+  on:function(){ return !!(this.url() && this.code()); },
+  /* ছয়টা করে তিন গুচ্ছ — মুখে বলা ও লিখে দেওয়া সহজ */
+  makeCode:function(){
+    var abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", out = [];
+    for (var g = 0; g < 3; g++){
+      var s = "";
+      for (var i = 0; i < 6; i++) s += abc[Math.floor(Math.random() * abc.length)];
+      out.push(s);
+    }
+    return out.join("-");
+  },
+  status:function(txt, cls){
+    var el = document.getElementById("cl-state");
+    if (el){ el.textContent = txt; el.className = "clstate " + (cls || ""); }
+  },
+  queue:function(){
+    if (!this.on()) return;
+    clearTimeout(this.t);
+    var self = this;
+    this.t = setTimeout(function(){ self.push(); }, 1200);
+  },
+  async push(){
+    if (!this.on() || this.busy) return;
+    this.busy = true; this.status(L.cloud ? L.cloud.sending : "পাঠাচ্ছে…", "busy");
+    try {
+      var r = await fetch(this.url() + "?code=" + encodeURIComponent(this.code()), {
+        method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(S)
+      });
+      var j = await r.json();
+      if (!j.ok) throw new Error(j.error || "fail");
+      if (j.stale && j.data){ await this.adopt(j.data); this.status(L.cloud ? L.cloud.merged : "সার্ভারের নতুন ডেটা নেওয়া হয়েছে", "ok"); }
+      else { this.lastAt = j.at || Date.now(); this.status(L.cloud ? L.cloud.saved : "সার্ভারে সেভ হয়েছে", "ok"); }
+    } catch(e){
+      this.status(L.cloud ? L.cloud.failed : "সার্ভারে পৌঁছায়নি — পরে আবার চেষ্টা হবে", "err");
+    }
+    this.busy = false;
+  },
+  async pull(silent){
+    if (!this.on()) return false;
+    this.status(L.cloud ? L.cloud.fetching : "আনছে…", "busy");
+    try {
+      var r = await fetch(this.url() + "?code=" + encodeURIComponent(this.code()) + "&_=" + Date.now());
+      var j = await r.json();
+      if (!j.ok) throw new Error("fail");
+      if (j.empty){ this.status(L.cloud ? L.cloud.none : "এই কোডে সার্ভারে কিছু নেই", ""); return false; }
+      if (!silent || (j.data && (j.data.updatedAt || 0) > (S.updatedAt || 0))){
+        await this.adopt(j.data);
+        this.status(L.cloud ? L.cloud.restored : "ডেটা ফিরে এসেছে", "ok");
+        return true;
+      }
+      this.status(L.cloud ? L.cloud.saved : "সার্ভারে সেভ আছে", "ok");
+      return false;
+    } catch(e){
+      this.status(L.cloud ? L.cloud.failed : "সার্ভারে পৌঁছায়নি", "err");
+      return false;
+    }
+  },
+  async adopt(data){
+    if (!data || typeof data !== "object") return;
+    var codeKeep = S.settings && S.settings.cloudCode;
+    S = data;
+    if (!S.settings) S.settings = blankState().settings;
+    S.settings.cloudCode = codeKeep;
+    await Store.set(S);
+    renderAll();
+  }
+};
 
 /* ---------- derived ---------- */
 function weekNo(){ return Math.max(1, Math.floor(daysBetween(S.settings.startDate, TODAY) / 7) + 1); }
@@ -4379,7 +4629,22 @@ var NAST_URL = "https://verses.quran.foundation/fonts/quran/hafs/nastaleeq/indop
 async function rdLoadNast(){
   var fam = "IndopakNast";
   if (RD.fonts[fam]) return fam;
-  var blob = await rdFetch(NAST_URL);
+  /* the packaged app cannot always read the file as a blob (CORS); then we let
+     the browser load it itself rather than showing empty boxes */
+  var blob = null;
+  try { blob = await rdFetch(NAST_URL); }
+  catch(e){
+    if (!document.getElementById("nast-face")){
+      var st = document.createElement("style");
+      st.id = "nast-face";
+      st.textContent = "@font-face{font-family:" + fam + ";src:url(" + NAST_URL +
+        ") format('woff2');font-display:swap}";
+      document.head.appendChild(st);
+    }
+    try { await document.fonts.load('16px "' + fam + '"'); } catch(e2){}
+    RD.fonts[fam] = fam;
+    return fam;
+  }
   var face = new FontFace(fam, "url(" + URL.createObjectURL(blob) + ")");
   await face.load(); document.fonts.add(face);
   RD.fonts[fam] = fam;
@@ -4421,7 +4686,83 @@ function rdPageUrl(p, def){
     "&word_fields=" + (def.nast ? "text_indopak" : "code_" + qv) +
     ",line_number,char_type_name,text_uthmani&language=" + rdLang();
 }
+/* the offline pack: layout and word text shipped with the app, so the page
+   view works with no network and no api quirks */
+var SURAH_AR = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
+var IP = { chunks:{}, info:null };
+var TRP = { data:{}, meta:null };
+var WBW = { data:{} };
+async function wbwPack(code){
+  if (WBW.data[code] !== undefined) return WBW.data[code];
+  try {
+    var r = await fetch("data/wbw/" + code + ".json");
+    if (!r.ok) throw 0;
+    WBW.data[code] = await r.json();
+  } catch(e){ WBW.data[code] = null; }
+  return WBW.data[code];
+}
+async function trPack(code){
+  if (TRP.data[code] !== undefined) return TRP.data[code];
+  try {
+    var r = await fetch("data/tr/" + code + ".json");
+    if (!r.ok) throw 0;
+    TRP.data[code] = await r.json();
+  } catch(e){ TRP.data[code] = null; }
+  return TRP.data[code];
+}
+async function ipInfo(def){
+  if (IP.info && IP.info._for === def.id) return IP.info;
+  var r = await fetch(def.local + "/info.json");
+  IP.info = await r.json(); IP.info._for = def.id;
+  return IP.info;
+}
+async function ipPage(p, def){
+  var info = await ipInfo(def), k = Math.floor((p - 1) / info.chunk);
+  if (!IP.chunks[k]){
+    var r = await fetch(def.local + "/c" + k + ".json");
+    IP.chunks[k] = await r.json();
+  }
+  return IP.chunks[k][p] || null;
+}
+async function rdLoadLocal(p, def){
+  var rows = await ipPage(p, def);
+  if (!rows) throw new Error("page " + p + " missing from the pack");
+  var lines = {}, keys = {}, tr = {};
+  rows.forEach(function(ln){
+    var out = [];
+    if (ln.k === "surah_name"){
+      var sn = SURAH_AR[(ln.s || 1) - 1] || "";
+      out.push({ g:"سُورَةُ " + sn, vk:"", end:false, t:sn, m:"", head:1 });
+    } else if (ln.k === "basmallah"){
+      out.push({ g:"بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ", vk:"", end:false, t:"", m:"", bism:1 });
+    } else {
+      (ln.w || []).forEach(function(w){
+        keys[w[1]] = 1;
+        out.push({ id:w[0], g:w[2], vk:w[1], end:w[3] === 1, t:w[4] || w[2], m:"" });
+      });
+    }
+    lines[ln.n] = out;
+    if (ln.c) out.centered = true;
+  });
+  var wb = await wbwPack(L.code === "bn" ? "bn" : L.code);   /* বাংলা ছাড়া এখনো নেই */
+  if (wb) Object.keys(lines).forEach(function(k){
+    (lines[k] || []).forEach(function(w){
+      if (!w.vk || w.end) return;
+      var g = wb[w.id];
+      if (g) w.m = g;
+    });
+  });
+  var pack = await trPack(L.code === "ar" ? "en" : L.code);
+  if (pack) Object.keys(keys).forEach(function(k){ if (pack[k]) tr[k] = pack[k]; });
+  RD.pages[p] = { lines:lines, keys:Object.keys(keys), tr:tr, v:def.id, lang:L.code, local:true };
+  return RD.pages[p];
+}
 async function rdLoadPage(p){
+  var d0 = mushafDef();
+  if (d0.local){
+    if (RD.pages[p] && RD.pages[p].v === d0.id && RD.pages[p].lang === L.code) return RD.pages[p];
+    return rdLoadLocal(p, d0);
+  }
   var def = mushafDef(), v = def.nast ? def.id : qcfVer();
   if (RD.pages[p] && RD.pages[p].v === v && RD.pages[p].lang === L.code) return RD.pages[p];
   var url = rdPageUrl(p, def);
@@ -4455,6 +4796,7 @@ function rdStop(){
   rdSyncBtns();
 }
 function rdSyncBtns(){
+  document.body.classList.toggle("playing", !!(rdAudio && !rdAudio.paused));
   var p = document.getElementById("rd-pause");
   if (p){
     var on = rdAudio && !rdAudio.paused;
@@ -4537,9 +4879,16 @@ function fabRender(){
     };
   });
 }
+/* Android's WebView ships the speech API but has no speech service behind it —
+   calling start() there kills the whole renderer, so it is refused outright. */
+function inWebView(){
+  if (window.Capacitor || window.cordova) return true;
+  return /Android/.test(navigator.userAgent) && / wv\)/.test(navigator.userAgent);
+}
 /* highlight each word as it is recited (needs the phone's speech engine) */
 function fabListenStart(){
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (inWebView()) return false;
   var pg = RD.pages[RD.page]; if (!SR || !pg || !RD.sel) return false;
   FAB.words = qa("#rd-paper .w").filter(function(el){
     return !el.dataset.end && el.dataset.t && !el.classList.contains("off");
@@ -4571,8 +4920,10 @@ function fabListenStop(){
 }
 function fabMic(){
   FAB.rec = true; FAB.open = false; fabRender();
-  recStart();
-  fabHint(fabListenStart() ? (L.fab ? L.fab.listen : "শুনছি — পড়তে থাকুন") : (L.fab ? L.fab.recOn : "রেকর্ড হচ্ছে"));
+  /* never hold the mic twice at once: listening and recording contend for it */
+  var listening = fabListenStart();
+  if (!listening) recStart();
+  fabHint(listening ? (L.fab ? L.fab.listen : "শুনছি — পড়তে থাকুন") : (L.fab ? L.fab.recOn : "রেকর্ড হচ্ছে"));
 }
 function fabMicStop(){
   FAB.rec = false; fabListenStop(); recStop(); fabRender();
@@ -4709,7 +5060,12 @@ function renderMushaf(){
            '<input type="number" id="rd-page" min="1" max="' + TOTAL_PAGES + '" value="' + RD.page + '">' +
            '<button data-rd="next" aria-label="' + Rd.next + '">›</button>' +
          '</div>' +
-         '<span class="rdmeta">' + fmt(Rd.juz, n(juzOf(RD.page))) + '</span>' +
+         '<button class="rdstop" data-rd="stop" title="' + Rd.stop + '" aria-label="' + Rd.stop + '">■</button>' +
+         '<select class="rdjuz" id="rd-juz" aria-label="' + fmt(Rd.juz, "") + '">' +
+           (function(){ var o = "", cur = juzOf(RD.page);
+             for (var j = 1; j <= 30; j++)
+               o += '<option value="' + j + '"' + (j === cur ? " selected" : "") + '>' + fmt(Rd.juz, n(j)) + '</option>';
+             return o; })() + '</select>' +
          '<span class="rdprog" id="rd-prog"></span>' +
          '<div class="rdgrp rdset">' +
            '<button class="rdic t" data-rd="paper" title="' + L.mu.paper + '" aria-label="' + L.mu.paper + '">◐</button>' +
@@ -4752,11 +5108,31 @@ function renderMushaf(){
        '<span><i style="background:rgba(120,130,140,.5)"></i>' + L.mu.manzil + '</span>' +
        '<span><i style="background:var(--verdigris)"></i>' + L.mu.firm + '</span>' +
        '<span><i style="background:var(--brass)"></i>' + L.mu.weak + '</span></div>';
-  h += '<div class="wmean" id="rd-mean"></div>';
+
   h += '<div class="trbox" id="rd-tr"></div>';
   h += '<div class="recbox" id="rd-rec"></div>';
   h += '<div class="mutbox" id="rd-mut" style="display:none"></div>';
   el.innerHTML = h;
+  var barHost = document.getElementById("rd-bar");
+  if (barHost){
+    barHost.innerHTML = "";
+    var cardEl = el.querySelector(".rdcard");
+    if (cardEl) barHost.appendChild(cardEl);
+    var head = cardEl && cardEl.querySelector(".rdhead");
+    if (head){
+      var range = cardEl.querySelector(".rdsabaq");
+      if (range){
+        cardEl.appendChild(range);                       /* opens only on demand */
+        var tg = document.createElement("button");
+        tg.className = "rdrangebtn";
+        tg.type = "button";
+        tg.textContent = (L.rd && L.rd.ay) ? L.rd.ay : "আয়াত";
+        tg.onclick = function(){ cardEl.classList.toggle("open"); rdFitSoon(); };
+        head.appendChild(tg);
+      }
+    }
+    if (typeof rdFitSoon === "function") rdFitSoon();
+  }
 
   var g = function(id){ return document.getElementById(id); };
   qa("[data-rd]").forEach(function(b){
@@ -4793,6 +5169,13 @@ function renderMushaf(){
       }
     };
   });
+  var jz = g("rd-juz");
+  if (jz) jz.onchange = function(){
+    rdStop();
+    RD.page = juzRange(+this.value || 1)[0];
+    RD.sel = null;
+    renderMushaf();
+  };
   g("rd-page").onchange  = function(){ rdStop(); RD.page = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); RD.sel = null; renderMushaf(); };
 
   rdPaint(RD.page, RD.page === tp);
@@ -4993,41 +5376,109 @@ var RDFIT = { t:null };
 function rdFit(){
   var paper = document.getElementById("rd-paper");
   if (!paper) return;
+  var paper2 = document.getElementById("rd-paper2");
+  if (paper2 && !paper2.offsetParent) paper2 = null;      /* hidden in portrait */
+  /* both sheets share one height (the row stretches), so both must be measured
+     or the fuller page overflows while the emptier one looks fitted */
   var lines = Array.prototype.slice.call(paper.querySelectorAll(".qline"));
+  var lines2 = paper2 ? Array.prototype.slice.call(paper2.querySelectorAll(".qline")) : [];
   if (!lines.length) return;
+  /* clear last run's centring first — its gaps would be measured as content
+     width and the search would spiral down to the floor */
+  lines.concat(lines2).forEach(function(ln){ ln.classList.remove("qcen"); });
+  paper.style.removeProperty("--tw");
+  if (paper2) paper2.style.removeProperty("--tw");
+
   var foot = paper.querySelector(".rdfoot");
+  var footH = foot ? foot.getBoundingClientRect().height : 0;
+  /* the paper fills the screen from where it starts down to the tab bar;
+     anything below it (translation, recording) stays scrollable extras */
+  var vh = window.innerHeight || 700;
+  var pt = paper.getBoundingClientRect().top;
   var card = document.querySelector(".rdcard");
-  var chrome = (card ? card.getBoundingClientRect().height : 0) +
-               (foot ? foot.getBoundingClientRect().height : 0);
-  var mean = document.getElementById("rd-mean");
-  if (mean && !document.body.classList.contains("focus")) chrome += mean.getBoundingClientRect().height;
-  var avail = (window.innerHeight || 700) - chrome - 46;   /* tab bar + breathing room */
-  if (avail < 180) avail = 180;
-  var pad = 40;                                            /* paper's own vertical padding */
-  var target = Math.max(120, avail - pad);
+  var barH = 0;
+  if (card && getComputedStyle(card).position === "fixed") barH += card.getBoundingClientRect().height;
+  var chromeH = document.body.classList.contains("focus") ? 10 : 82 + barH;
+  var avail = vh - pt - chromeH;
+  if (avail < 260) avail = 260;
+  var target = Math.max(160, avail - 40 - footH);
+  var nast = paper.classList.contains("nast");
+
   function set(px){
+    /* nastaliq hangs below the baseline, so it needs more leading — but when
+       the font is already at the floor, tight leading is what saves the page */
+    var lh = nast ? (px >= 24 ? 2.15 : px >= 19 ? 1.95 : 1.7)
+                  : (px > 26 ? 1.75 : 1.9);
     paper.style.setProperty("--qf", px + "px");
-    paper.style.setProperty("--ql", (px > 26 ? 1.75 : 1.9));
+    paper.style.setProperty("--ql", lh);
+    if (paper2){
+      paper2.style.setProperty("--qf", px + "px");
+      paper2.style.setProperty("--ql", lh);
+    }
   }
   function tooWide(){
-    for (var i = 0; i < lines.length; i++)
-      if (lines[i].scrollWidth > lines[i].clientWidth + 1) return true;
+    var all = lines.concat(lines2);
+    for (var i = 0; i < all.length; i++)
+      if (all[i].scrollWidth > all[i].clientWidth + 1) return true;
     return false;
   }
   function tooTall(){
-    var sum = 0;
-    for (var i = 0; i < lines.length; i++) sum += lines[i].getBoundingClientRect().height;
-    return sum > target;
+    function sum(ls){ var s = 0; for (var i = 0; i < ls.length; i++) s += ls[i].getBoundingClientRect().height; return s; }
+    return Math.max(sum(lines), sum(lines2)) > target;
   }
-  var lo = 9, hi = 46, best = lo;
-  for (var step = 0; step < 7; step++){                    /* binary search, ~7 measures */
-    var mid = (lo + hi) / 2;
-    set(mid);
-    if (tooWide() || tooTall()) hi = mid; else { best = mid; lo = mid; }
+  /* never below reading size: if the room truly isn't there the paper scrolls,
+     it does not turn into specks */
+  var lo = nast ? 14 : 15, hi = nast ? 40 : 46, best = lo;
+  set(lo);
+  if (!tooWide() && !tooTall()){
+    for (var step = 0; step < 7; step++){
+      var mid = (lo + hi) / 2;
+      set(mid);
+      if (tooWide() || tooTall()) hi = mid; else { best = mid; lo = mid; }
+    }
   }
+  /* the reader's own −/+ wins over the fit; the page may then scroll */
   set(Math.round(best * 10) / 10);
-  var p2 = document.getElementById("rd-paper2");
-  if (p2){ p2.style.setProperty("--qf", paper.style.getPropertyValue("--qf")); }
+  var view = document.getElementById("v-mushaf");
+  if (view){
+    var over = 0;
+    for (var li = 0; li < lines.length; li++) over += lines[li].getBoundingClientRect().height;
+    over = Math.max(0, Math.ceil(over - target));
+    view.style.paddingBottom = "calc(" + (150 + over) + "px + env(safe-area-inset-bottom))";
+  }
+
+  /* a real mushaf justifies full lines only — a surah's last line is centred,
+     not pulled apart, so the word gaps stay honest */
+  /* When the fit is bound by height, the glyphs no longer span the sheet, and
+     justification would fabricate huge word gaps. A printed mushaf never does
+     that: the text block itself is narrower. So the sheet takes the width of its
+     longest line, and full lines then run edge to edge at normal spacing. */
+  var all = lines.concat(lines2), nat = [], widest = 0;
+  all.forEach(function(ln){
+    var w = 0, kids = ln.children, gaps = 0;
+    for (var i = 0; i < kids.length; i++){
+      var c = kids[i];
+      if (c.classList && (c.classList.contains("qhm") || c.classList.contains("qrib") ||
+          c.classList.contains("swband") || c.classList.contains("qnum"))) continue;
+      w += c.getBoundingClientRect().width; gaps++;
+    }
+    w += Math.max(0, gaps - 1) * (nast ? 7 : 5);        /* ordinary word spaces */
+    nat.push(w);
+    if (w > widest) widest = w;
+  });
+  var lineBox = lines[0] ? lines[0].clientWidth : 0;
+  var frame = paper.getBoundingClientRect().width - lineBox;   /* paddings */
+  if (widest > 0 && lineBox > 0 && widest < lineBox){
+    var col = Math.ceil(widest + 24);
+    paper.style.setProperty("--tw", col + "px");
+    if (paper2) paper2.style.setProperty("--tw", col + "px");
+    lineBox = col;
+  }
+  all.forEach(function(ln, i){
+    if (ln.classList.contains("qhead") || ln.classList.contains("qbism")) return;
+    ln.classList.toggle("qcen", lineBox > 0 && nat[i] < lineBox * 0.82);
+  });
+
 }
 function rdFitSoon(){
   clearTimeout(RDFIT.t);
@@ -5041,7 +5492,7 @@ if (!window.__rdFitBound){
 async function rdSidePaint(p2){
   var el = document.getElementById("rd-paper2");
   if (!el) return;
-  if (p2 > TOTAL_PAGES || !window.matchMedia("(orientation:landscape) and (min-width:900px)").matches){
+  if (true){                            /* single-page reading; the side sheet stays off */
     el.innerHTML = ""; return;
   }
   try {
@@ -5051,8 +5502,9 @@ async function rdSidePaint(p2){
     for (var ln = 1; ln <= LINES_PER_PAGE; ln++){
       var ws = pg.lines[ln];
       if (!ws){ h2 += '<div class="qline"></div>'; continue; }
-      h2 += '<div class="qline' + (ws.length < 4 ? " qcen" : "") + '" style="font-family:\'' + fam + '\'">' +
-        ws.map(function(w){ return '<span class="w off">' + w.g + '</span>'; }).join(" ") + '</div>';
+      var kind2 = ws[0] && ws[0].head ? " qhead qcen" : (ws[0] && ws[0].bism ? " qbism qcen" : "");
+      h2 += '<div class="qline' + kind2 + (ws.length < 4 && !kind2 ? " qcen" : "") + '" style="font-family:\'' + fam + '\'">' +
+        ws.map(function(w){ return '<span class="' + (w.head || w.bism ? "pw" : "w off") + '">' + w.g + '</span>'; }).join(" ") + '</div>';
     }
     h2 += '<div class="rdfoot"><span>' + fmt(L.rd.juz, n(juzOf(p2))) + '</span><span>' + n(p2) + '</span></div>';
     el.innerHTML = h2;
@@ -5142,11 +5594,15 @@ async function rdPaint(p, isTodayPage){
       if (!ws){ h += '<div class="qline"></div>'; continue; }
       var any = byWord ? ws.some(function(w){ return sel[w.vk]; }) : lnOn(ln);
       var cov = (+RD.hide || 0);
-      h += '<div class="qline' + (any && !byWord ? " tl" : "") + (ws.length < 4 ? " qcen" : "") +
+      var kind = ws[0] && ws[0].head ? " qhead qcen" : (ws[0] && ws[0].bism ? " qbism qcen" : "");
+      h += '<div class="qline' + (any && !byWord ? " tl" : "") + kind + (ws.length < 4 && !kind ? " qcen" : "") +
            '" data-ln="' + ln + '" style="font-family:\'' + fam + '\'">' +
         '<i class="qhm ' + rdLineFirm(pg, ln) + '"></i><i class="qrib ' + rdLineRibbon(p, ln) + '"></i>' +
         '<span class="qnum">' + n(ln) + '</span>' +
         ws.map(function(w){
+          /* the printed chrome — surah header, basmallah — is not page text:
+             it is never selected, dimmed, masked or tracked by the audio */
+          if (w.head || w.bism) return '<span class="pw">' + w.g + '</span>';
           var on = byWord ? !!sel[w.vk] : any;
           return '<span class="w' + (on ? (byWord ? " sw" : "") : " off") + (on && cov ? " cov" + cov : "") +
                  '" data-vk="' + w.vk + '"' + (w.end ? ' data-end="1"' : '') +
@@ -5205,7 +5661,7 @@ async function rdPaint(p, isTodayPage){
           return;
         }
         var mn = document.getElementById("rd-mean");
-        if (mn){ mn.innerHTML = rdMeanPanel(pg, w); rdMeanWire(); }
+        if (mn){ mn.innerHTML = rdMeanPanel(pg, w); mn.classList.add("on"); mn.scrollTop = 0; rdMeanWire(); }
         rdPlay([w.dataset.vk], 1, true);
       };
     });
@@ -5236,27 +5692,19 @@ function rdSameWord(t, notVk){
   return out.slice(0, 8);
 }
 function rdMeanPanel(pg, el){
-  var W = L.wm, vk = el.dataset.vk, fam = RD.fonts[RD.page] || "";
-  var ws = exWordsOf(pg, vk), glyph = el.firstChild ? el.firstChild.textContent : "";
-  var h = '<div class="wmnhd"><span class="wmnw" style="font-family:\'' + fam + '\'">' + glyph + '</span>' +
-          '<span class="wmnk">' + L.rd.ay + ' ' + ayLabel(vk) + '</span></div>' +
-          '<div class="wmngl"><span class="wmntag">≈ ' + W.approx + '</span><b>' + esc(el.dataset.m || "…") + '</b></div>' +
-          '<p class="wmnnote">' + W.read + '</p>' +
-          '<div class="wmnlbl">' + W.ay + '</div>' +
-          '<div class="wmnay" style="font-family:\'' + fam + '\'">' +
-            ws.map(function(w){
-              return '<span' + (w.t === el.dataset.t ? ' class="m"' : '') + '>' + w.g + '</span>';
-            }).join("") + '</div>';
-  var tr = pg.tr && pg.tr[vk];
-  if (tr) h += '<div class="wmnlbl">' + W.tr + '</div><div class="wmntr">' + esc(tr) + '</div>';
-  var same = rdSameWord(el.dataset.t, vk);
-  h += '<div class="wmnlbl">' + W.same + '</div>';
-  h += same.length
-    ? '<div class="wmnsame">' + same.map(function(o){
-        return '<button data-wmgo="' + o.page + '|' + o.vk + '">' + ayLabel(o.vk) +
-               ' · ' + fmt(W.pg, n(o.page)) + '</button>';
-      }).join("") + '</div>'
-    : '<p class="wmnnote" style="margin:0">' + W.none + '</p>';
+  var vk = el.dataset.vk, fam = RD.fonts[RD.page] || "";
+  var ws = exWordsOf(pg, vk);
+  var h = '<div class="wmbar"><button class="wmx" aria-label="' + (L.rep ? L.rep.close : "বন্ধ") +
+          '">✕</button><i class="gr"></i><button class="wmbig" aria-label="বড়/ছোট">⤢</button></div>';
+  /* the ayah word by word — each meaning directly under its own word */
+  var gws = ws.filter(function(w){ return !w.end && (w.m || w.g); });
+  if (gws.length){
+    h += '<div class="wmgrid' + (gws.length <= 5 ? " few" : "") + '">' + gws.map(function(w){
+      return '<span class="wmcell"' + (w.t === el.dataset.t ? ' data-on="1"' : '') + '>' +
+        '<span class="wmca" style="font-family:\'' + fam + '\'">' + w.g + '</span>' +
+        '<span class="wmcb">' + esc(w.m || "—") + '</span></span>';
+    }).join("") + '</div>';
+  }
   return h;
 }
 /* while the recitation moves, the box below follows the word being recited */
@@ -5267,14 +5715,92 @@ function rdMeanLive(el){
   var glyph = el.firstChild ? el.firstChild.textContent : "";
   var gloss = el.dataset.m || "";
   var h = '<div class="wmnhd"><span class="wmnw" style="font-family:\'' + fam + '\'">' + glyph + '</span>' +
+          ((gloss && el.dataset.end !== "1")
+            ? '<span class="wmngl"><span class="wmntag">≈ ' + W.approx + '</span><b>' + esc(gloss) + '</b></span>' : '') +
           '<span class="wmnk">' + L.rd.ay + ' ' + ayLabel(vk) + '</span></div>';
-  if (gloss && el.dataset.end !== "1")
-    h += '<div class="wmngl"><span class="wmntag">≈ ' + W.approx + '</span><b>' + esc(gloss) + '</b></div>';
   var tr = pg.tr && pg.tr[vk];
-  if (tr) h += '<div class="wmnlbl">' + W.tr + '</div><div class="wmntr">' + esc(tr) + '</div>';
+  if (tr) h += '<div class="wmnlbl">' + W.tr + '</div><div class="wmntr">' +
+    '<span class="wmnvk">' + ayLabel(vk) + '</span> ' + esc(tr) + '</div>';
+  /* the whole ayah word by word, the way a printed word-for-word mushaf sets it:
+     each Arabic word with its meaning directly underneath */
+  var ws = exWordsOf(pg, vk).filter(function(w){ return !w.end && (w.m || w.g); });
+  if (ws.length){
+    h += '<div class="wmnlbl">' + (W.wbw || "শব্দে-শব্দে অর্থ") + '</div>' +
+      '<div class="wmnhint">' + (W.wbwHint || "আরও জানতে যেকোনো শব্দে চাপ দিন") + '</div>' +
+      '<div class="wmgrid">' + ws.map(function(w){
+        return '<span class="wmcell" data-wmw="' + esc(w.g) + '">' +
+          '<span class="wmca" style="font-family:\'' + fam + '\'">' + w.g + '</span>' +
+          '<span class="wmcb">' + esc(w.m || "—") + '</span></span>';
+      }).join("") + '</div>';
+  }
   mn.innerHTML = h;
+  mn.classList.add("on");
+  rdMeanWire();
+}
+function wmContentH(mn){
+  var h0 = mn.style.height;
+  mn.style.height = "auto";
+  var h = mn.scrollHeight + 6;
+  mn.style.height = h0;
+  return h;
+}
+function wmApplyH(px, remember){
+  var mn = document.getElementById("rd-mean");
+  if (!mn) return;
+  var min = 120, max = Math.min(Math.round(innerHeight * 0.88), wmContentH(mn));
+  px = Math.round(Math.max(min, Math.min(max, px)));
+  mn.style.height = px + "px";
+  mn.style.maxHeight = "88dvh";
+  if (remember !== false) S.settings.wmH = px;
+}
+function wmDragWire(){
+  var mn = document.getElementById("rd-mean");
+  var grip = mn && mn.querySelector(".wmbar");
+  if (!mn || !grip) return;
+  wmApplyH(Math.round(S.settings.wmH || innerHeight * 0.38), false);
+  var y0 = 0, h0 = 0, on = false;
+  grip.addEventListener("pointerdown", function(e){
+    if (e.target.closest("button")) return;      /* let the buttons have their clicks */
+    on = true; y0 = e.clientY; h0 = mn.getBoundingClientRect().height;
+    grip.setPointerCapture(e.pointerId);
+    mn.style.transition = "none";
+  });
+  grip.addEventListener("pointermove", function(e){
+    if (!on) return;
+    e.preventDefault();
+    wmApplyH(h0 + (y0 - e.clientY));
+  });
+  ["pointerup","pointercancel"].forEach(function(ev){
+    grip.addEventListener(ev, function(){ if (on){ on = false; save(); } });
+  });
+}
+function rdMeanClose(){
+  var mn = document.getElementById("rd-mean");
+  if (mn){ mn.classList.remove("on"); mn.innerHTML = ""; }
 }
 function rdMeanWire(){
+  qa("#rd-mean .wmx").forEach(function(b){ b.onclick = rdMeanClose; });
+  wmDragWire();
+  qa("#rd-mean .wmbig").forEach(function(b){
+    var mn0 = document.getElementById("rd-mean");
+    b.style.visibility = (wmContentH(mn0) <= mn0.getBoundingClientRect().height + 4) ? "hidden" : "visible";
+    b.onclick = function(){
+      var mn = document.getElementById("rd-mean");
+      var cur = parseFloat(mn.style.height) || S.settings.wmH || innerHeight * 0.38;
+      var tall = cur > innerHeight * 0.55;
+      wmApplyH(innerHeight * (tall ? 0.38 : 0.8));
+      save();
+    };
+  });
+  qa("#rd-mean .wmcell").forEach(function(c){
+    c.onclick = function(){
+      var g = c.querySelector(".wmca");
+      var w = qa("#rd-paper .qline .w").filter(function(x){
+        return x.firstChild && x.firstChild.textContent === (g ? g.textContent : "");
+      })[0];
+      if (w) w.click();
+    };
+  });
   qa("#rd-mean [data-wmgo]").forEach(function(b){
     b.onclick = function(){
       var parts = b.dataset.wmgo.split("|"), p = +parts[0], vk = parts[1];
@@ -5603,17 +6129,29 @@ function ntSchedule(){ clearInterval(NT.timer); NT.timer = setInterval(ntTick, 3
 /* ---------- recording + phrase loop ----------
    Memorization has to be verified out loud: the cover-and-recite test is
    recorded, kept with the day's page, and played back against the reciter. */
-var REC = { mr:null, chunks:[], url:null, key:null };
+var REC = { mr:null, chunks:[], url:null, key:null, mime:"" };
 function recKey(){ return "rec/" + TODAY + "/p" + RD.page; }
 async function recStart(){
   try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) throw 0;
+    /* on a packaged build ask the OS first, so the WebView never hits a
+       SecurityException it cannot recover from */
+    var MicP = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Microphone;
+    if (MicP && MicP.requestPermissions){
+      var st = await MicP.requestPermissions();
+      if (st && st.microphone && st.microphone !== "granted") throw 0;
+    }
     var stream = await navigator.mediaDevices.getUserMedia({ audio:true });
     REC.chunks = [];
-    REC.mr = new MediaRecorder(stream);
+    var mt = ["audio/webm", "audio/mp4", "audio/ogg"].filter(function(t){
+      return MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t);
+    })[0];
+    REC.mime = mt || "";
+    REC.mr = mt ? new MediaRecorder(stream, { mimeType:mt }) : new MediaRecorder(stream);
     REC.mr.ondataavailable = function(e){ if (e.data.size) REC.chunks.push(e.data); };
     REC.mr.onstop = async function(){
       stream.getTracks().forEach(function(t){ t.stop(); });
-      var blob = new Blob(REC.chunks, { type:"audio/webm" });
+      var blob = new Blob(REC.chunks, { type: REC.mime || "audio/webm" });
       if (REC.url) URL.revokeObjectURL(REC.url);
       REC.url = URL.createObjectURL(blob);
       REC.key = recKey();
@@ -5624,8 +6162,10 @@ async function recStart(){
     REC.mr.start();
     renderMushaf();
   } catch(e){
+    REC.mr = null; FAB.rec = false;
     var p = document.getElementById("rd-prog");
     if (p) p.textContent = L.rec.denied;
+    fabRender();
   }
 }
 function recStop(){ if (REC.mr && REC.mr.state !== "inactive") REC.mr.stop(); }
@@ -6127,9 +6667,99 @@ function drHome(el, D){
 }
 
 /* ---------- render all ---------- */
+/* ---------- 2a · drawer and hub ---------- */
+function drawerFill(){
+  var g = function(id){ return document.getElementById(id); };
+  var nm = g("drawer-nm"); if (!nm) return;
+  nm.textContent = L.app.name;
+  g("drawer-sub").textContent = L.app.tagline || L.app.footer2 || "";
+  g("drawer-lang-l").textContent = L.set ? L.set.lang || "ভাষা" : "ভাষা";
+  g("drawer-langrow").innerHTML = LANGS.map(function(c){
+    var name = (LANG_CACHE[c] && LANG_CACHE[c].name) || c.toUpperCase();
+    return '<button data-lang="' + c + '" aria-pressed="' + (c === L.code) + '">' + esc(name) + '</button>';
+  }).join("");
+  qa("#drawer-langrow button").forEach(function(b){
+    b.onclick = function(){ drawerClose(); setLang(b.dataset.lang, true); };
+  });
+  var pv = g("dw-paper-v");
+  if (pv && L.mu) pv.textContent = { pcream:L.mu.pCream, pday:L.mu.pDay, pnight:L.mu.pNight }[S.settings.paper || "pcream"] || "";
+}
+function drawerOpen(){
+  var d = document.getElementById("drawer"), s = document.getElementById("drawer-scrim");
+  if (!d) return;
+  drawerFill(); d.hidden = false; s.hidden = false;
+}
+function drawerClose(){
+  var d = document.getElementById("drawer"), s = document.getElementById("drawer-scrim");
+  if (d) d.hidden = true;
+  if (s) s.hidden = true;
+}
+function goView(v){
+  drawerClose();
+  var tab = document.querySelector('#tabs .tab[data-v="' + v + '"]');
+  if (tab) tab.click();
+}
+function cloudOpen(){
+  var el = document.getElementById("cloud-in");
+  if (!el) return;
+  drawerClose();
+  if (!S.settings.cloudCode) S.settings.cloudCode = Cloud.makeCode();
+  var C = L.cloud || {};
+  el.innerHTML =
+    '<div class="exhead"><h3 style="margin:0">' + (C.h || "ব্যাকআপ ও সিংক") + '</h3>' +
+      '<button class="tbtn" id="cl-x">' + (L.rep ? L.rep.close : "বন্ধ") + '</button></div>' +
+    '<p class="hint" style="margin:10px 0 14px">' +
+      (C.p || "এই কোডটাই আপনার চাবি। অন্য ফোনে একই কোড বসালে আপনার সব ডেটা সেখানে চলে আসবে। কোডটা লিখে রাখুন — হারালে ডেটা ফেরানো যায় না।") + '</p>' +
+    '<div class="clcode" id="cl-code">' + esc(S.settings.cloudCode) + '</div>' +
+    '<div class="drrow" style="margin:12px 0 4px">' +
+      '<button class="abtn go" id="cl-copy">' + (C.copy || "কোড কপি") + '</button>' +
+      '<button class="abtn" id="cl-push">' + (C.push || "এখনই পাঠান") + '</button>' +
+      '<button class="abtn" id="cl-pull">' + (C.pull || "সার্ভার থেকে আনুন") + '</button>' +
+    '</div>' +
+    '<div class="clstate" id="cl-state"></div>' +
+    '<div style="margin-top:18px">' +
+      '<div class="rdlbl" style="margin-bottom:6px">' + (C.other || "অন্য ফোনের কোড বসান") + '</div>' +
+      '<div class="drrow"><input class="input" id="cl-in" placeholder="XXXXXX-XXXXXX-XXXXXX" ' +
+        'style="flex:1;min-width:180px;padding:10px 12px;border:1px solid var(--rule);border-radius:999px;font:inherit">' +
+        '<button class="abtn" id="cl-use">' + (C.use || "যুক্ত করুন") + '</button></div>' +
+    '</div>';
+  document.getElementById("cloud").classList.add("on");
+  var g = function(id){ return document.getElementById(id); };
+  g("cl-x").onclick = function(){ document.getElementById("cloud").classList.remove("on"); };
+  g("cl-copy").onclick = function(){
+    try { navigator.clipboard.writeText(S.settings.cloudCode); Cloud.status(L.cloud ? L.cloud.copied : "কপি হয়েছে", "ok"); }
+    catch(e){ Cloud.status(S.settings.cloudCode, ""); }
+  };
+  g("cl-push").onclick = function(){ save(); Cloud.push(); };
+  g("cl-pull").onclick = function(){ Cloud.pull(false); };
+  g("cl-use").onclick = function(){
+    var v = (g("cl-in").value || "").trim().toUpperCase();
+    if (!/^[A-Z0-9\-]{8,64}$/.test(v)){ Cloud.status(L.cloud ? L.cloud.badCode : "কোডটা ঠিক নয়", "err"); return; }
+    S.settings.cloudCode = v; save();
+    g("cl-code").textContent = v;
+    Cloud.pull(false);
+  };
+  if (!Cloud.url()) Cloud.status(L.cloud ? L.cloud.noUrl : "config.js-এ syncUrl বসালে সার্ভার সেভ চালু হবে", "err");
+}
+
+function drawerWire(){
+  var ob = document.getElementById("drawer-open");
+  if (ob) ob.onclick = drawerOpen;
+  var sc = document.getElementById("drawer-scrim");
+  if (sc) sc.onclick = drawerClose;
+  var sb = document.getElementById("hdr-search");
+  if (sb) sb.onclick = function(){ goView("mushaf"); };
+  qa("#drawer [data-go]").forEach(function(b){ b.onclick = function(){ goView(b.dataset.go); }; });
+  var cb = document.getElementById("dw-cloud");
+  if (cb) cb.onclick = cloudOpen;
+  var pb = document.getElementById("dw-paper");
+  if (pb) pb.onclick = function(){ rdPaperCycle(); drawerFill(); };
+}
+
 function renderAll(){
   ntSchedule();
   renderChrome(); renderToday(); renderMushaf(); renderDrill(); renderRoutine(); renderProgress(); renderSettings();
+  drawerWire(); drawerFill();
 }
 
 function rdFocusIn(){
@@ -6201,11 +6831,12 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
   if (fresh){
     renderOnboard();
     document.getElementById("ob").classList.add("on");
-  } else if (S.settings.lastPage){
-    openMushaf(S.settings.lastPage);      /* resume where the reading stopped */
+  } else {
+    openMushaf(1);                        /* the mushaf always opens at page one */
   }
 
   Sync.init();
+  if (Cloud.on()) Cloud.pull(true);
 
   if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
     navigator.serviceWorker.register("sw.js").catch(function(){});
@@ -6222,6 +6853,7 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     var now=document.querySelector('.view.on');
     if(now&&now!==last){ if(last) pos[last.id]=main.scrollTop; last=now; main.scrollTop=pos[now.id]||0; }
     document.body.classList.toggle('mushaf', !!(now&&now.id==='v-mushaf'));
+    if(now&&now.id==='v-mushaf'&&typeof rdFitSoon==='function') rdFitSoon();
     try{ if(typeof fabWire==='function') fabWire(); }catch(e){}
     if(!(now&&now.id==='v-mushaf')&&typeof fabMicStop==='function'&&window.FAB&&FAB.rec) fabMicStop();
   }).observe(main,{subtree:true,attributes:true,attributeFilter:['class']});
