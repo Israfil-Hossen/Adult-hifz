@@ -389,7 +389,7 @@ window.HIFZ_LANG_en = {
 
   set: {
     k: "Settings", h: "Your setup",
-    p: "Everything is stored on this device, nothing goes to a server. Clearing your browser wipes it, so either turn on Drive sync below or download a backup once a month.",
+    p: "Everything is stored on this device, nothing goes to a server. Clearing your browser wipes it, so download a backup once a month and keep it somewhere safe.",
     lang: "Language",
     langHint: "The whole app switches, including the method tab.",
     date: "Start date",
@@ -808,7 +808,7 @@ window.HIFZ_LANG_bn = {
 
   set: {
     k: "সেটিংস", h: "আপনার হিসাব",
-    p: "সব ডেটা এই ডিভাইসেই থাকে, কোনো সার্ভারে যায় না। ব্রাউজার পরিষ্কার করলে মুছে যাবে, তাই নিচের ড্রাইভ সিঙ্ক চালু করুন অথবা মাসে একবার ব্যাকআপ নামিয়ে রাখুন।",
+    p: "সব ডেটা এই ডিভাইসেই থাকে, কোনো সার্ভারে যায় না। ব্রাউজার পরিষ্কার করলে মুছে যাবে, তাই মাসে একবার ব্যাকআপ নামিয়ে নিরাপদ জায়গায় রাখুন।",
     lang: "ভাষা",
     langHint: "পুরো অ্যাপ বদলে যাবে, রুটিন ট্যাবসহ।",
     date: "শুরুর তারিখ",
@@ -1229,7 +1229,7 @@ window.HIFZ_LANG_ur = {
 
   set: {
     k: "ترتیبات", h: "آپ کا حساب",
-    p: "سارا ڈیٹا اسی آلے میں رہتا ہے، کسی سرور پر نہیں جاتا۔ براؤزر صاف کریں تو مٹ جائے گا، اس لیے نیچے ڈرائیو سنک چالو کریں یا مہینے میں ایک بار بیک اپ اتار رکھیں۔",
+    p: "سارا ڈیٹا اسی آلے میں رہتا ہے، کسی سرور پر نہیں جاتا۔ براؤزر صاف کریں تو مٹ جائے گا، اس لیے مہینے میں ایک بار بیک اپ اتار کر محفوظ جگہ رکھیں۔",
     lang: "زبان",
     langHint: "پوری ایپ بدل جائے گی، طریقہ والا ٹیب بھی۔",
     date: "آغاز کی تاریخ",
@@ -1638,7 +1638,7 @@ window.HIFZ_LANG_zh = {
 
   set: {
     k: "设置", h: "你的设定",
-    p: "所有数据都存在这台设备上，不会上传到任何服务器。清理浏览器就会丢失，所以请打开下面的云端同步，或者每月下载一次备份。",
+    p: "所有数据都存在这台设备上，不会上传到任何服务器。清理浏览器就会丢失，所以请每月下载一次备份并妥善保存。",
     lang: "语言",
     langHint: "整个应用都会切换，包括方法那一页。",
     date: "起始日期",
@@ -1724,17 +1724,39 @@ window.HIFZ_LANG_zh = {
 :root{
   /* Warm, low-contrast palette — nothing pure black or pure white, accents
      desaturated, so long reading at fajr does not glare. */
-  --ink:#33414F; --ink-2:#4A5C6E; --ink-3:#6E7F8F;
-  --paper:#EFEDEA; --paper-2:#E2E0DC; --card:#FFFFFF;
-  --verdigris:#5F7F52; --verd-soft:#E6EFDF;
-  --brass:#E0A82E; --brass-soft:#FBF0D5;
-  --maroon:#B04A3C; --maroon-soft:#F6E2DE;
-  --muted:#6C757D; --rule:#DCDAD6;
+  --ink:#2E2A25; --ink-2:#514840; --ink-3:#7C7369;
+  --paper:#E7E1D6; --paper-2:#DBD4C7; --card:#F1EDE5;
+  --bar:#3B4034;
+  --verdigris:#66784E; --verd-soft:#E3E9D8;
+  --brass:#B36A38; --brass-soft:#EFE2D2;
+  --maroon:#9C4530; --maroon-soft:#EFDED7;
+  --muted:#7C7369; --rule:#DCD4C6;
   --display:Georgia,serif; --body:system-ui,sans-serif;
   --arabic:"Amiri","Traditional Arabic",serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   --lh:1.72;
 }
+body.night{
+  --ink:#D8D2C6; --ink-2:#B4AEA2; --ink-3:#8A8479;
+  --paper:#191A17; --paper-2:#22241F; --card:#212320;
+  --bar:#151613;
+  --verdigris:#8FA678; --verd-soft:#2A3025;
+  --brass:#C08A5A; --brass-soft:#2E2721;
+  --maroon:#C4705C; --maroon-soft:#31241F;
+  --muted:#8A8479; --rule:#33352F;
+  --sg-bar:#1E211C; --sg-card:#23261F; --sg-line:#32362C;
+}
+body.night .top{background:var(--bar)!important;color:var(--ink)}
+body.night .drawer-hd{background:#1E231B}
+body.night .paper,body.night #rd-paper{background:var(--card)}
+/* these carry a hardcoded #fff rather than a token, so the theme cannot reach
+   them — they were the light patches left glowing on the dark page */
+body.night .pg,body.night input,body.night textarea,body.night select{
+  background:var(--paper-2)!important;color:var(--ink)!important;border-color:var(--rule)}
+body.night input::placeholder,body.night textarea::placeholder{color:var(--ink-3)}
+body.night .card,body.night .blk,body.night .log,body.night .sheet,
+body.night .recbox,body.night .trbox,body.night .exsheet{background:var(--card)}
+body.night img,body.night .washed{filter:brightness(.86)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
 
@@ -1820,10 +1842,14 @@ input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 
 /* ---------- TOP BAR ---------- */
-.top{background:var(--ink);color:var(--paper);padding-top:env(safe-area-inset-top)}
+.top{background:var(--bar);color:#EFEBE1;padding-top:env(safe-area-inset-top)}
 .top-in{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 0 14px}
 .brand{display:flex;align-items:baseline;gap:10px}
-.brand .mark{font-family:var(--arabic);font-size:23px;color:var(--brass);line-height:1}
+/* Arabic ascenders need more than a 1.0 line box — a line-height equal to the
+   font size cropped the mark's top and bottom. The overflow rule below must match
+   .top-in .brand > span, which clips every header span to keep the bar one line. */
+.brand .mark{font-family:var(--arabic);font-size:23px;color:var(--brass);line-height:1.45}
+.top-in .brand > span.mark{overflow:visible}
 .brand .nm{font-family:var(--display);font-size:19px}
 .brand .dt{font-family:var(--mono);font-size:10.5px;color:#8A939C;letter-spacing:.08em;display:block;margin-top:1px}
 .streak{text-align:end;flex:none}
@@ -2003,7 +2029,12 @@ h3{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.4}
 .tbl th{text-align:start;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:0 0 10px;padding-inline-end:12px;border-bottom:1px solid var(--ink)}
 .tbl td{text-align:start;padding:11px 0;padding-inline-end:12px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
 .tbl td:first-child{color:var(--ink);font-weight:500;text-wrap:pretty}
-.tbl td:last-child{white-space:nowrap}
+/* This was nowrap so short values (counts, dates) stayed on one line. But the
+   routine tables put whole sentences in the last column, and unbreakable prose
+   forced the table to ~518px — 158px off the side of a 360px phone. Prose wraps;
+   cells that genuinely need one line opt in with .nw. */
+.tbl td:last-child{white-space:normal}
+.tbl td.nw,.tbl th.nw{white-space:nowrap}
 .tbl td,.tbl th{word-break:keep-all;overflow-wrap:normal}
 .tbl .src{font-family:var(--mono);font-size:11px;color:var(--verdigris)}
 .tbl tr:last-child td{border-bottom:none}
@@ -2200,6 +2231,7 @@ main.wrap{width:100%}
     <span class="drawer-mark">حِفْظ</span>
     <div class="drawer-nm" id="drawer-nm"></div>
     <div class="drawer-sub" id="drawer-sub"></div>
+    <div class="dw-ver" id="dw-ver"></div>
   </div>
   <div class="drawer-bd">
     <nav class="drawer-nav" id="drawer-nav"></nav>
@@ -2207,8 +2239,11 @@ main.wrap{width:100%}
       <div class="drawer-lbl" id="drawer-lang-l">ভাষা</div>
       <div class="langrow" id="drawer-langrow"></div>
     </div>
+    <button class="drawer-it" id="dw-index"><i>☰</i><span id="dw-index-l">মুসহাফ-এর সূচী</span></button>
     <button class="drawer-it" id="dw-paper"><i>☀</i><span id="dw-paper-l">কাগজের রঙ</span><span class="dwval" id="dw-paper-v"></span></button>
     <button class="drawer-it" id="dw-cloud"><i>↥</i><span id="dw-cloud-l">ব্যাকআপ ও সিংক</span></button>
+    <button class="drawer-it" id="dw-aims"><i>◇</i><span id="dw-aims-l">এই অ্যাপ কী করে</span></button>
+    <button class="drawer-it" id="dw-night"><i>☾</i><span id="dw-night-l">রাতের রঙ</span><span class="dwval" id="dw-night-v"></span></button>
     
   </div>
 </aside>
@@ -2287,6 +2322,11 @@ main.wrap{width:100%}
 .qline .w.cov2{opacity:.16}
 .qline .w.cov3,.qline .w.cov{color:transparent;background:rgba(33,43,54,.07);border-radius:4px}
 .ayn{font-family:var(--mono);font-size:10px;color:var(--verdigris);vertical-align:super;padding:0 2px;direction:ltr}
+/* Indo-Pak pages draw their own ayah-end marker — a ring round the number — so
+   the page never depends on an ornament glyph the fallback font may not carry */
+.ayn.ring{vertical-align:baseline;font-size:.5em;padding:0;margin-inline:3px;
+  display:inline-grid;place-items:center;min-width:1.9em;height:1.9em;border-radius:999px;
+  border:1px solid var(--verdigris);line-height:1}
 .qline .w.off .ayn{opacity:.5}
 .paper.picking .w{background:rgba(95,127,82,.08)}
 .paper.picking .w:hover{background:rgba(95,127,82,.3)}
@@ -2343,6 +2383,9 @@ main.wrap{width:100%}
 /* the printed surah header: a ruled band, the way a mushaf sets it */
 .qline.qhead{margin-block:2px 4px;margin-inline:auto;padding:4px 14px;border-radius:8px;
   border:1.5px solid var(--verdigris);background:rgba(95,127,82,.09)}
+/* the banner and basmala are PLAIN Arabic text — the QCF page font (glyph-coded)
+   renders them as empty boxes, so force a real Arabic face for these two lines */
+.qline.qhead,.qline.qbism{font-family:"Noto Naskh Arabic","Amiri","Scheherazade New","Traditional Arabic",serif!important}
 .qline.qhead .pw,.qline.qhead .w{font-size:.9em;color:var(--verdigris);opacity:1;cursor:default}
 .qline.qbism .pw,.qline.qbism .w{font-size:.95em;opacity:1;cursor:default}
 .qline.qhead .pw:hover,.qline.qbism .pw:hover{background:none}
@@ -2364,6 +2407,9 @@ main.wrap{width:100%}
 .wmbar button{width:32px;height:30px;border:0;background:transparent;color:var(--ink-3);
   font-size:17px;border-radius:999px;cursor:pointer}
 .wmbar button:active{background:rgba(95,127,82,.14)}
+.wmbar button svg{width:19px;height:19px;display:block;margin:0 auto}
+.wmbar .wmsnd[aria-pressed="false"]{color:var(--maroon)}
+.wmbar .wmsnd[aria-pressed="true"]{color:var(--verdigris)}
 .wmnhd{display:flex;flex-direction:column;align-items:center;gap:3px;margin-bottom:8px;text-align:center}
 .wmnw{font-size:38px;line-height:1.45;direction:rtl}
 .wmnk{font-family:var(--mono);font-size:11px;color:var(--verdigris);direction:ltr}
@@ -2415,6 +2461,13 @@ main.wrap{width:100%}
   .rdmini .ic{font-size:16px}
 }
 .rdprog{font-family:var(--mono);font-size:12px;opacity:.8}
+/* it sits at order:6 in the reader row, so while empty it still claimed an even
+   spacing slot and pushed the row short of the edge — but it must keep its box
+   when it DOES hold text (audio errors, "saved" notices) */
+.rdprog:empty{display:none}
+body.mushaf .rdprog{position:absolute;inset-inline:0;bottom:100%;order:0;
+  text-align:center;font-size:12px;padding:4px 10px 6px;color:var(--maroon);
+  pointer-events:none;white-space:normal;opacity:1}
 
 /* ================= 1a · উষ্ণ খাতা — warm-notebook skin =================
    Light paper everywhere, soft rounded cards, pill controls, bottom tab bar. */
@@ -2423,23 +2476,34 @@ main.wrap{width:100%}
   --sh:0 1px 2px rgba(51,65,79,.06), 0 6px 18px rgba(51,65,79,.07);
   --sh-sm:0 1px 2px rgba(51,65,79,.07);
 }
-body{background:var(--paper);padding-bottom:calc(66px + env(safe-area-inset-bottom))}
-/* in the mushaf the page itself is the point: the bottom tab bar steps aside and
-   the same six destinations live in the ⋮ menu instead */
-body.mushaf{padding-bottom:env(safe-area-inset-bottom)}
-body.mushaf .tabs{display:none}
-.drawer-nav{display:flex;flex-direction:column;gap:2px;margin-bottom:14px}
-.drawer-nav .dwnav{display:flex;align-items:center;gap:12px;width:100%;min-height:46px;
-  padding:10px 12px;border:none;border-radius:12px;background:none;cursor:pointer;
-  font-family:inherit;font-size:14.5px;color:inherit;text-align:start}
-.drawer-nav .dwnav i{font-style:normal;font-size:17px;width:22px;text-align:center;opacity:.75}
-.drawer-nav .dwnav:hover{background:var(--paper-2)}
-.drawer-nav .dwnav[aria-current="true"]{background:var(--paper-2);font-weight:600}
+body{background:var(--paper);padding-bottom:env(safe-area-inset-bottom)}
+/* navigation lives in the ☰ menu, so the bottom tab bar is gone everywhere and
+   every screen keeps the height it used to take */
+.tabs{display:none!important}
+/* the reader control bar lives in a permanent host; keep it out of every other
+   screen so it can't linger on Today/Progress/etc after leaving the mushaf */
+#rd-bar{display:none}
+body.mushaf #rd-bar{display:block}
+.drawer-nav{display:flex;flex-direction:column;gap:3px;margin-bottom:16px}
+.drawer-nav .dwnav{display:flex;align-items:center;gap:13px;width:100%;min-height:48px;
+  padding:11px 14px;border:none;border-radius:14px;background:none;cursor:pointer;
+  font-family:inherit;font-size:15px;color:var(--ink-2);text-align:start;position:relative;
+  transition:background .14s,color .14s}
+.drawer-nav .dwnav i{font-style:normal;display:inline-flex;align-items:center;justify-content:center;
+  width:26px;height:26px;flex:none;color:var(--ink-3);transition:color .14s}
+.drawer-nav .dwnav i svg{width:22px;height:22px;display:block}
+.drawer-nav .dwnav:hover{background:var(--paper-2);color:var(--ink)}
+.drawer-nav .dwnav:hover i{color:var(--verdigris)}
+.drawer-nav .dwnav[aria-current="true"]{background:rgba(95,127,82,.13);color:var(--verdigris);font-weight:600}
+.drawer-nav .dwnav[aria-current="true"] i{color:var(--verdigris)}
+.drawer-nav .dwnav[aria-current="true"]::before{content:"";position:absolute;inset-inline-start:0;
+  top:50%;transform:translateY(-50%);width:4px;height:22px;border-radius:0 999px 999px 0;background:var(--verdigris)}
+[dir="rtl"] .drawer-nav .dwnav[aria-current="true"]::before{border-radius:999px 0 0 999px}
 
 /* top bar — paper, not ink */
 .top{background:var(--paper);color:var(--ink);border-bottom:none}
 .top-in{padding:18px 0 4px}
-.brand .mark{color:var(--verdigris);font-size:21px}
+.brand .mark{line-height:1.45;overflow:visible;color:var(--verdigris);font-size:21px}
 .brand .nm{font-size:17px;color:var(--ink)}
 .brand .dt{color:var(--ink-3)}
 .streak{display:inline-flex;align-items:baseline;gap:5px;background:var(--verd-soft);
@@ -2533,6 +2597,12 @@ footer b{color:var(--ink-2)}
 @media (max-width:560px){
   .phase .b{font-size:29px}
   .top-in{padding:14px 0 2px}
+  /* the header's width budget, not the string, is what clipped the date: the
+     two icon buttons and the streak pill left it ~154px. Drop the streak's
+     word on a phone (the number still shows) and the date fits whole. */
+  .streak .l{display:none}
+  .streak{padding:6px 11px}
+  .brand .dt{letter-spacing:normal}   /* headroom for longer month names */
 }
 /* ---------- PRACTICE ---------- */
 .drcards{display:grid;gap:12px;margin-top:18px}
@@ -2566,17 +2636,17 @@ body.mushaf #v-mushaf h2,body.mushaf .rdlegend,body.mushaf .rdnote,
 body.mushaf #rd-tr,body.mushaf #rd-rec{display:none!important}
 /* with the tab bar gone the only thing to leave room for is the floating control
    row, so the page claims everything else */
-body.mushaf #v-mushaf{padding-top:6px;padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+body.mushaf #v-mushaf{padding-top:6px;padding-bottom:calc(126px + env(safe-area-inset-bottom))}
 body.mushaf main.wrap{padding-bottom:env(safe-area-inset-bottom)}
 body.mushaf .rdcard{position:fixed;inset-inline:0;z-index:57;margin:0;display:block;
   bottom:env(safe-area-inset-bottom);border-radius:16px 16px 0 0;
   padding:3px 8px 4px;box-shadow:0 -6px 18px rgba(51,65,79,.10);overflow:visible}
-/* the row stays one line and small — the page keeps the screen */
-body.mushaf .rdcard .rdhead{flex-wrap:nowrap;gap:2px;justify-content:space-between}
+/* NB: row-1 layout is defined once, further down, on the SAME selector — two
+   rules on .rdhead at different specificity silently fought over justify-content */
 body.mushaf .rdcard .rdmeta{font-size:11.5px}
-body.mushaf .rdcard .rdpg button{padding:2px 5px;font-size:16px}
-body.mushaf .rdcard .rdpg input{width:52px;min-width:52px;font-size:17px;padding-inline:2px}
-body.mushaf .rdcard .rdmini{width:32px;height:32px}
+body.mushaf .rdcard .rdpg button{padding:2px 4px;font-size:15px}
+body.mushaf .rdcard .rdpg input{width:40px;min-width:40px;font-size:16px;padding-inline:2px}
+body.mushaf .rdcard .rdmini{width:30px;height:30px}
 .rdjuz{border:1px solid var(--rule);background:transparent;border-radius:999px;padding:4px 8px;
   font:inherit;font-size:12px;color:var(--ink-2);cursor:pointer;appearance:none}
 .rdstop{display:none;width:34px;height:34px;border:0;border-radius:999px;cursor:pointer;
@@ -2586,13 +2656,61 @@ body.playing .rdstop{display:inline-flex;align-items:center;justify-content:cent
   padding:4px 11px;font:inherit;font-size:12px;color:var(--ink-2);cursor:pointer;white-space:nowrap}
 .rdcard.open .rdrangebtn{background:var(--verd-soft);border-color:transparent;color:#33482A}
 body.mushaf .rdcard .rdsabaq{display:none}
-body.mushaf .rdcard.open .rdsabaq{display:flex;justify-content:center;gap:6px;
-  margin:4px 0 2px;padding:5px 0 0;border-top:1px solid var(--rule);background:none;box-shadow:none}
-/* every control gets a place on the row instead of being pushed off the edge */
-body.mushaf .rdhead{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px}
-body.mushaf .rdcard .rdset{order:0;margin-inline-start:0;flex-wrap:nowrap;justify-content:center;gap:2px}
+/* The ayah selection sits INSIDE the top row, right where আয়াত is — it is not a
+   floating strip and never becomes a third row. Opening it stands the view tools
+   and পারা down for the moment, so the row keeps its width. */
+body.mushaf .rdcard.open .rdset,
+body.mushaf .rdcard.open .rdjuz{display:none!important}
+body.mushaf .rdhead .rdsabaq{display:none}
+body.mushaf .rdcard.open .rdhead .rdsabaq{display:flex;align-items:center;gap:5px;
+  flex:0 0 auto;margin:0;padding:0;border:none;background:none;box-shadow:none}
+body.mushaf .rdcard.open .rdhead .rdsabaq .sblbl{display:none}
+body.mushaf .rdcard.open .rdrangebtn{background:var(--verd-soft);border-color:transparent;color:#33482A}
+/* both rows span the full width and space their controls evenly, so the panel
+   reads as two calm rows rather than one huddled and one stretched */
+body.mushaf .rdcard .rdhead{display:flex;flex-wrap:nowrap;align-items:center;
+  justify-content:space-evenly;gap:4px;width:100%;
+  overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+body.mushaf .rdhead::-webkit-scrollbar{display:none}
+body.mushaf .rdhead>*{flex:0 0 auto}
+/* a real reader panel: two calm rows instead of one crammed line — page + view
+   tools above, actions below, each row spread evenly so nothing can collide */
+body.mushaf .rdcard{display:flex!important;flex-direction:column;gap:2px}
+body.mushaf .rdplay{display:flex!important;align-items:center;justify-content:space-evenly;gap:4px;
+  border:none;background:none;box-shadow:none;padding:0;width:100%}
+body.mushaf .rdplay>*{flex:0 0 auto;border:none!important;background:none}
+body.mushaf .rdplay .rdic{padding:0;min-width:38px;height:36px;display:inline-flex;
+  align-items:center;justify-content:center;gap:3px;font-size:16px}
+body.mushaf .rdplay .rdic.go{background:var(--verd-soft);color:var(--verdigris);border-radius:999px;min-width:46px}
+body.mushaf .rdplay .rdic.num i{font-size:10.5px}
+/* line icons, sized like a real reader panel: row 1 view tools a touch smaller,
+   row 2 actions slightly larger, all on the same 1.8 stroke */
+body.mushaf .rdcard .rdic svg,body.mushaf .rdcard .rdpg button svg{
+  width:21px;height:21px;display:block;margin:0 auto}
+body.mushaf .rdplay .rdic svg{width:23px;height:23px}
+body.mushaf .rdplay .rdic.go svg{width:25px;height:25px}
+body.mushaf .rdcard .rdstop svg{width:17px;height:17px}
+/* the page stepper reads as one outlined pill — ‹ page › — like a stepper control */
+body.mushaf .rdcard .rdpg{border:1px solid var(--rule);border-radius:999px;background:transparent;
+  box-shadow:none;overflow:hidden;align-items:center}
+body.mushaf .rdcard .rdpg>*+*{border-inline-start:none}
+body.mushaf .rdcard .rdpg button{padding:4px 9px;color:var(--ink-2)}
+body.mushaf .rdcard .rdpg input{width:34px;min-width:34px;font-size:16px;font-weight:600;
+  text-align:center;background:transparent}
+body.mushaf .rdjuz{border-radius:999px}
+/* row 2 sits on a hairline so the two rows read as one panel, as in a real reader */
+body.mushaf .rdplay{border-top:1px solid var(--sg-line)!important;padding-top:3px!important}
+body.mushaf .rdcard .rdset{order:0;margin-inline-start:0;flex-wrap:nowrap;justify-content:center;gap:1px;flex:0 1 auto;min-width:0}
+/* the four view tools become direct items of the row, so they space out across
+   the full width like the reference panel instead of huddling in one cluster */
+body.mushaf .rdcard .rdset{display:contents}
+body.mushaf .rdhead .rdic.t{min-width:30px;height:30px;flex:0 0 auto;padding:0}
+body.mushaf .rdjuz{flex:0 1 auto;min-width:0;max-width:60px;font-size:11.5px;padding:4px 5px}
+body.mushaf .rdpg{flex:0 0 auto}
+body.mushaf .rdrangebtn{flex:0 0 auto;padding:4px 7px;font-size:11.5px}
 body.mushaf .rdcard .rdsabaq{margin:0;padding:0;background:none;border:none;box-shadow:none;gap:6px}
 body.mushaf .rdsep{display:none}
+body.mushaf .fab,body.mushaf .fabm,body.mushaf .fabhint{display:none!important}
 body.mushaf .fab{bottom:calc(100px + env(safe-area-inset-bottom));width:52px;height:52px;font-size:21px}
 body.mushaf .fabm{bottom:calc(160px + env(safe-area-inset-bottom))}
 body.mushaf .fabhint{bottom:calc(158px + env(safe-area-inset-bottom))}
@@ -2647,6 +2765,11 @@ body.focus .fab{bottom:calc(20px + env(safe-area-inset-bottom))}
 .sbbtn:active{opacity:.75}
 .rdhead .rdset{margin-inline-start:auto;gap:2px;border:none;background:none;padding:0;box-shadow:none}
 .rdhead .rdic.t{min-width:38px;height:34px;font-size:15px;border-radius:10px}
+.rdhead .rdic.t svg{width:19px;height:19px;display:block;margin:0 auto}
+/* the menu is the way out of the reader — mark it so it reads as navigation,
+   not just another page toggle */
+.rdhead .rdic.t.rdmenu{color:var(--verdigris);background:rgba(95,127,82,.12)}
+.rdhead .rdic.t.rdmenu:hover{background:rgba(95,127,82,.2)}
 .rdhead .rdic.t[aria-pressed="true"]{background:var(--verdigris);color:#fff}
 #rd-paper{min-height:0}
 .rdcard{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:7px 10px;
@@ -2675,7 +2798,7 @@ body.focus .fab{bottom:calc(20px + env(safe-area-inset-bottom))}
 .top{border-bottom:1px solid transparent;transition:box-shadow .18s,border-color .18s}
 body.scrolled .top{box-shadow:0 2px 14px rgba(51,65,79,.10);border-bottom-color:rgba(51,65,79,.06)}
 .top-in{padding:12px 0 8px}
-.brand .mark{font-size:21px}
+.brand .mark{line-height:1.45;overflow:visible;font-size:21px}
 .brand .nm{font-size:16.5px}
 .streak{display:flex;align-items:center;gap:6px;background:var(--verd-soft);color:var(--verdigris);
   padding:6px 13px;border-radius:999px}
@@ -2721,16 +2844,21 @@ body>header{flex:0 0 auto}
 body>footer{display:none}
 main.wrap{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;
-  padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+  padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 main.wrap::-webkit-scrollbar{width:0;height:0}
 input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet{-webkit-user-select:text;user-select:text}
 /* ===== 2a · সবুজ-ক্রিম হাব ===== */
 :root{
-  --sg-bar:#E6EFDF; --sg-card:#EEF3E8; --sg-line:#D6E3CB;
+  --sg-bar:#E2E8D8; --sg-card:#E9EDE0; --sg-line:#D3DBC6;
   --sg-pattern:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cg fill='none' stroke='%237a8a5e' stroke-opacity='.26' stroke-width='.9'%3E%3Cpath d='M28 1l27 27-27 27L1 28z'/%3E%3Cpath d='M1 1l54 54M55 1L1 55'/%3E%3C/g%3E%3C/svg%3E");
 }
 .top{background:var(--sg-bar)}
 .top-in{display:grid;grid-template-columns:38px 1fr auto 38px;align-items:center;gap:8px;padding:14px 0 6px}
+/* the brand column must be allowed to shrink, and its two lines must stay on
+   one line each — otherwise a long localized date wraps and wrecks the bar */
+.top-in .brand{min-width:0}
+.top-in .brand>span{min-width:0;overflow:hidden}
+.brand .nm,.brand .dt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
 .appbtn{width:38px;height:38px;display:grid;place-items:center;border:0;background:transparent;
   color:var(--ink);font-size:20px;border-radius:999px;cursor:pointer}
 .appbtn:active{background:rgba(95,127,82,.14)}
@@ -2779,6 +2907,90 @@ input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet
 [dir="rtl"] .drawer-it[aria-pressed="true"] .sw::after{transform:translateX(-16px)}
 .drawer-rule{height:1px;background:var(--sg-line);margin:8px}
 .dwval{margin-inline-start:auto;font-size:12.5px;color:var(--ink-3)}
+.fcline{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;
+  margin:0 0 14px;padding:11px 14px;border-radius:14px;
+  background:var(--verd-soft);color:var(--ink)}
+.fcline b{font-weight:600;font-size:14px}
+.fcline span{font-size:12.5px;color:var(--ink-2)}
+/* the build stamp sits in the drawer HEADER, not the scrolling body — on a phone
+   the body scrolls and a footer stamp lands below the fold, which is exactly the
+   "is it even rebuilt?" confusion it exists to end */
+.dw-ver{margin-top:8px;font-family:var(--mono);font-size:11px;
+  color:rgba(255,255,255,.72);letter-spacing:.06em}
+
+/* ---------- MUSHAF INDEX (সূচী) ---------- */
+/* NB: the class is deliberately not ".idx" — that already belongs to the numbered
+   badge on the Today cards, and a bare .idx rule would hijack every one of them */
+.mxidx[hidden]{display:none!important}
+.mxidx{position:fixed;inset:0;z-index:95;background:var(--paper);display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top)}
+.idx-hd{display:flex;align-items:center;gap:10px;padding:10px 14px 8px;background:var(--sg-bar)}
+.idx-back{width:40px;height:40px;flex:none;border:0;background:transparent;color:var(--ink);
+  font-size:21px;border-radius:999px;cursor:pointer;display:grid;place-items:center}
+.idx-back:hover{background:rgba(95,127,82,.12)}
+.idx-ttl{flex:1;font-family:var(--display);font-size:19px;font-weight:700;text-align:center}
+.idx-tabs{display:flex;background:var(--sg-bar);padding:0 8px}
+.idx-tab{flex:1;padding:11px 4px 13px;border:0;background:none;font:inherit;font-size:14.5px;
+  color:var(--ink-3);cursor:pointer;position:relative}
+.idx-tab[aria-selected="true"]{color:var(--verdigris);font-weight:700}
+.idx-tab[aria-selected="true"]::after{content:"";position:absolute;inset-inline:24%;bottom:4px;
+  height:4px;border-radius:999px;background:var(--verdigris)}
+.knq{display:flex;gap:8px;padding:12px 14px 4px}
+.knq button{flex:1;padding:9px 6px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);font:inherit;font-size:13.5px;color:var(--ink-2);cursor:pointer}
+.knq button[aria-pressed="true"]{border-color:var(--verdigris);background:rgba(95,127,82,.14);
+  color:var(--verdigris);font-weight:700}
+.knchips{display:flex;flex-wrap:wrap;gap:8px;padding:14px}
+.knchip{min-width:52px;padding:9px 10px;border:1px solid var(--rule);border-radius:14px;
+  background:var(--card);font:inherit;font-size:14px;color:var(--ink-2);cursor:pointer;text-align:center}
+.knchip.f{border-color:var(--verdigris);background:rgba(95,127,82,.16);color:var(--verdigris);font-weight:700}
+.knchip.w{border-color:var(--brass);background:rgba(164,129,63,.16);color:var(--brass);font-weight:700}
+.knrow{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--rule);
+  cursor:pointer;font-size:15px;color:var(--ink)}
+.knrow .pgs{margin-inline-start:auto;font-size:12.5px;color:var(--ink-3)}
+.knrow.f{background:rgba(95,127,82,.10)}
+.knrow.w{background:rgba(164,129,63,.10)}
+.knform{display:flex;flex-wrap:wrap;gap:10px;padding:14px;align-items:flex-end}
+.knform label{display:block;font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.knform input,.knform select{padding:10px 12px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);font:inherit;font-size:15px;color:var(--ink);min-width:90px}
+.knfoot{padding:12px 14px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--rule);
+  background:var(--card);display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}
+.knfoot .sum{flex:1;min-width:150px;color:var(--ink-2)}
+.idx-q{margin:8px 14px 0;padding:10px 14px;border:1px solid var(--rule);border-radius:999px;
+  font:inherit;font-size:14px;background:var(--card);color:var(--ink)}
+.idx-body{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.idx-tbl{width:100%;border-collapse:collapse}
+.idx-tbl th{position:sticky;top:0;z-index:1;background:var(--brass-soft);color:var(--ink);
+  font-size:13.5px;font-weight:700;padding:12px 10px;text-align:center}
+.idx-tbl td{padding:13px 10px;font-size:15px;border-bottom:1px solid var(--sg-line);text-align:center}
+.idx-tbl td.nm{text-align:start;padding-inline-start:16px}
+.idx-tbl tbody tr{cursor:pointer}
+.idx-tbl tbody tr:nth-child(odd){background:rgba(95,127,82,.05)}
+.idx-tbl tbody tr:hover{background:rgba(95,127,82,.14)}
+.idx-tbl tbody tr:active{background:rgba(95,127,82,.22)}
+.idx-tbl td.pg{color:var(--verdigris);font-weight:600}
+.idx-empty{padding:30px 16px;text-align:center;color:var(--ink-3);font-size:14px}
+
+/* ---------- ANDROID TOUCH TARGETS ----------
+   A finger needs ~48dp, but the reader toolbar must stay one slim line. So the
+   visual size barely changes and the HIT area is grown with a transparent
+   overlay — easy to tap without making the chrome any taller. */
+@media (pointer:coarse){
+  .tog{width:36px;height:36px}
+  /* NB: no width/height bump for the reader toolbar — it is width-bound already,
+     and growing the boxes pushed the row past the screen so controls overlapped.
+     The transparent ::after below gives fingers room at ZERO layout cost. */
+  .idx-tbl tbody td{padding-block:15px}
+  .fld input[type=checkbox],.fld input[type=radio]{width:22px;height:22px}
+  .tog,.rdic.t,.rdrangebtn,.rdpg button,.sbbtn,.idx-back,.appbtn,
+  .wmbar button,.langrow button{position:relative}
+  .tog::after,.rdic.t::after,.rdrangebtn::after,.rdpg button::after,.sbbtn::after,
+  .idx-back::after,.appbtn::after,.wmbar button::after,.langrow button::after{
+    content:"";position:absolute;inset:-7px;border-radius:inherit;
+  }
+}
 
 button,.tab,.tbtn,label,.chip{touch-action:manipulation}
 button:active,.tab:active,.tbtn:active{opacity:.72;transition:opacity .06s}
@@ -2799,6 +3011,35 @@ button:active,.tab:active,.tbtn:active{opacity:.72;transition:opacity .06s}
 <div class="fabhint" id="fabhint"></div>
 <div class="ovl" id="exam"><div class="exsheet" id="exam-in"></div></div>
 <div class="ovl" id="cloud"><div class="exsheet" id="cloud-in"></div></div>
+<div class="mxidx" id="diag" hidden>
+  <div class="idx-hd">
+    <button class="idx-back" id="diag-close" aria-label="ফিরে যান">←</button>
+    <span class="idx-ttl" id="diag-ttl">অডিও ও মাইক যাচাই</span>
+    <span style="width:40px"></span>
+  </div>
+  <div class="idx-body" id="diag-body" style="padding:16px 18px"></div>
+</div>
+<div class="mxidx" id="known" hidden>
+  <div class="idx-hd">
+    <button class="idx-back" id="kn-close" aria-label="Back">←</button>
+    <span class="idx-ttl" id="kn-ttl">আগে যা মুখস্থ</span>
+    <span style="width:40px"></span>
+  </div>
+  <div class="knq" id="kn-q"></div>
+  <div class="idx-tabs" id="kn-tabs"></div>
+  <div class="idx-body" id="kn-body"></div>
+  <div class="knfoot" id="kn-foot"></div>
+</div>
+<div class="mxidx" id="idx" hidden>
+  <div class="idx-hd">
+    <button class="idx-back" id="idx-close" aria-label="ফিরে যান">←</button>
+    <span class="idx-ttl" id="idx-ttl">মুসহাফ-এর সূচী</span>
+    <button class="idx-back" id="idx-search-btn" aria-label="খুঁজুন">⌕</button>
+  </div>
+  <div class="idx-tabs" id="idx-tabs"></div>
+  <input class="idx-q" id="idx-q" type="search" placeholder="" hidden>
+  <div class="idx-body" id="idx-body"></div>
+</div>
 <div class="wmean" id="rd-mean"></div>
 <div id="rd-bar"></div>
 
@@ -3164,7 +3405,7 @@ window.HIFZ_LANG_ar = {
 
   set: {
     k: "الإعدادات", h: "إعدادك",
-    p: "كل شيء محفوظ في هذا الجهاز، ولا يذهب إلى خادم. مسح المتصفح يمحوه، فإما أن تفعّل مزامنة درايف أدناه أو تنزّل نسخة احتياطية كل شهر.",
+    p: "كل شيء محفوظ في هذا الجهاز، ولا يذهب إلى خادم. مسح المتصفح يمحوه، فنزّل نسخة احتياطية مرة كل شهر واحفظها في مكان آمن.",
     lang: "اللغة",
     langHint: "يتغيّر التطبيق كله، بما في ذلك صفحة المنهج.",
     date: "تاريخ البداية",
@@ -3363,8 +3604,70 @@ function applyMushaf(){
   var m = mushafDef();
   TOTAL_PAGES = m.pages; LINES_PER_PAGE = m.lines; PER_JUZ = TOTAL_PAGES / 30;
 }
-function juzOf(p){ return Math.min(30, Math.max(1, Math.ceil(p / PER_JUZ))); }
-function juzRange(j){ return [Math.round((j-1) * PER_JUZ) + 1, Math.min(TOTAL_PAGES, Math.round(j * PER_JUZ))]; }
+/* A juz is a fixed span of ayat, not an equal slice of pages. Dividing the page
+   count by 30 lands An-Naba (juz 30, page 582 in the Madani print) inside juz 29,
+   so the boundaries are read from the real table instead. */
+var JUZ_KEY = [[1,1],[2,142],[2,253],[3,92],[4,24],[4,148],[5,82],[6,111],[7,88],[8,41],
+  [9,93],[11,6],[12,53],[15,1],[17,1],[18,75],[21,1],[23,1],[25,21],[27,56],
+  [29,46],[33,31],[36,28],[39,32],[41,47],[46,1],[51,31],[58,1],[67,1],[78,1]];
+/* the printed Madani mushaf's juz opening pages (604-page edition). Juz 7 and 11
+   open partway down the preceding page, so the mushaf's own index points at the
+   page where the juz proper begins — 122 and 202, not 121/201. */
+var JUZ_PAGE_604 = [1,22,42,62,82,102,122,142,162,182,202,222,242,262,282,302,322,342,
+  362,382,402,422,442,462,482,502,522,542,562,582];
+function juzTable(){ return TOTAL_PAGES === 604 ? JUZ_PAGE_604 : null; }
+function juzOfKey(vk){
+  var q = String(vk || "").split(":"), s = +q[0], a = +q[1];
+  if (!s) return 1;
+  var j = 1;
+  for (var i = 0; i < JUZ_KEY.length; i++){
+    var k = JUZ_KEY[i];
+    if (s > k[0] || (s === k[0] && a >= k[1])) j = i + 1; else break;
+  }
+  return j;
+}
+function juzOf(p){
+  var t = juzTable();
+  if (t){
+    var j = 1;
+    for (var i = 0; i < t.length; i++){ if (p >= t[i]) j = i + 1; else break; }
+    return j;
+  }
+  /* other prints have their own pagination — the loaded page knows its own ayat */
+  var pg = RD.pages[p];
+  if (pg && pg.keys && pg.keys.length) return juzOfKey(pg.keys[0]);
+  return Math.min(30, Math.max(1, Math.ceil(p / PER_JUZ)));
+}
+function juzRange(j){
+  var t = juzTable();
+  if (t) return [t[j - 1], (j < 30 ? t[j] - 1 : TOTAL_PAGES)];
+  var c = JUZP[mushafDef().id];
+  if (c && c[j]) return [c[j], (c[j + 1] ? c[j + 1] - 1 : TOTAL_PAGES)];
+  return [Math.round((j-1) * PER_JUZ) + 1, Math.min(TOTAL_PAGES, Math.round(j * PER_JUZ))];
+}
+/* Prints other than the 604-page Madani have their own pagination, so the juz
+   opening page is found in the pack itself — a binary search over the pages,
+   remembered per mushaf so the dropdown only pays for it once. */
+var JUZP = {};
+async function juzStartPage(j){
+  var t = juzTable();
+  if (t) return t[j - 1];
+  if (j <= 1) return 1;
+  var id = mushafDef().id;
+  JUZP[id] = JUZP[id] || {};
+  if (JUZP[id][j]) return JUZP[id][j];
+  var lo = 1, hi = TOTAL_PAGES, ans = 1;
+  while (lo <= hi){
+    var mid = (lo + hi) >> 1;
+    try {
+      var pg = await rdLoadPage(mid);
+      var jm = juzOfKey(pg.keys && pg.keys[0]);
+      if (jm >= j){ ans = mid; hi = mid - 1; } else lo = mid + 1;
+    } catch(e){ break; }
+  }
+  JUZP[id][j] = ans;
+  return ans;
+}
 
 /* ---------- storage ---------- */
 var KEY = "hifz-companion-v1";
@@ -3396,8 +3699,8 @@ function blankDay(){
 function defaults(){
   return { v:1,
     settings:{ lang:null, startDate:TODAY, startPage:1, restDay:5,
-               qari:"", mushaf:"", mushafId:"madani", reciter:"Ayman_Sowaid_64kbps", manualLines:0, lastPage:0, hijriAdj:0, retention:0.9, paper:"pcream", notifyAt:"", zikrEvery:0, zikrVoice:true, drive:null },
-    days:{}, weak:{}, rev:{}, drill:{ items:{}, salat:{}, sess:{} }, updatedAt:Date.now() };
+               wordSound:1, qari:"", mushaf:"", mushafId:"madani", reciter:"Husary_128kbps", manualLines:0, lastPage:0, hijriAdj:0, retention:0.9, paper:"pcream", notifyAt:"", zikrEvery:0, zikrVoice:true, drive:null },
+    known:{}, days:{}, weak:{}, rev:{}, drill:{ items:{}, salat:{}, sess:{} }, updatedAt:Date.now() };
 }
 function day(k){ if (!S.days[k]) S.days[k] = blankDay(); return S.days[k]; }
 var saveTimer = null;
@@ -3508,11 +3811,149 @@ function pageDoneLines(){
   });
   return mx;
 }
-/* only pages finished to the last line count as memorized */
+function fcTotalLines(){ return TOTAL_PAGES * LINES_PER_PAGE; }
+function fcDoneLines(){
+  var mx = pageDoneLines(), s = 0;
+  Object.keys(mx).forEach(function(p){ s += Math.min(LINES_PER_PAGE, mx[p] || 0); });
+  return s;
+}
+function fcForecast(){
+  var total = fcTotalLines();
+  var worked = Math.min(total, fcDoneLines());       /* lines earned in this app */
+  var done = Math.min(total, worked + knownLines()); /* everything memorized */
+  var left = Math.max(0, total - done);
+  var perDay = Math.max(1, targetLines());
+  /* one rest day a week carries no new lines but still spends a calendar day, so
+     the plan is lines-per-WEEK over seven days, not lines-per-day over six */
+  var studyDays = 7 - 1;
+  var planPerCalDay = (perDay * studyDays) / 7;
+  var planDays = left > 0 ? Math.ceil(left / planPerCalDay) : 0;
+
+  /* measured: lines finished across the calendar days actually elapsed. Revision
+     days are counted — they consume days without adding lines, which is exactly
+     why the measured pace is the slower and truer one. */
+  var elapsed = Math.max(1, daysBetween(S.settings.startDate, TODAY) + 1);
+  /* pages brought in from before were not memorized in these days: counting them
+     would show a beginner finishing the Qur'an in a month */
+  var realPerDay = worked / elapsed;
+  /* A pace measured over two days is noise, not a measurement — five lines in two
+     days extrapolates to a decade. Withhold the figure until the sample can carry
+     it, and say so, rather than printing a confident wrong number. */
+  var enough = elapsed >= 14 && worked >= 20;
+  var realDays = (enough && realPerDay > 0.01 && left > 0) ? Math.ceil(left / realPerDay) : null;
+
+  function span(d){
+    if (d === null) return null;
+    var y = Math.floor(d / 365.2425), mo = Math.round((d - y * 365.2425) / 30.44);
+    if (mo === 12){ y++; mo = 0; }
+    return { days:d, y:y, mo:mo, date:addDays(new Date(), d) };
+  }
+  return {
+    total:total, done:done, left:left,
+    pagesLeft:Math.max(0, TOTAL_PAGES - Math.floor(done / LINES_PER_PAGE)),
+    pct:total ? (done / total * 100) : 0,
+    perDay:perDay, realPerDay:realPerDay, elapsed:elapsed,
+    plan:span(planDays), real:span(realDays)
+  };
+}
+function fcSpanText(s){
+  if (!s) return null;
+  var Y = { bn:["বছর","মাস"], en:["yr","mo"], ur:["سال","ماہ"], zh:["年","月"], ar:["سنة","شهر"] }[L.code]
+       || { bn:["বছর","মাস"] }.bn;
+  var out = [];
+  if (s.y) out.push(n(s.y) + " " + Y[0]);
+  if (s.mo || !s.y) out.push(n(s.mo) + " " + Y[1]);
+  return out.join(" ");
+}
+function fcDateText(s){
+  if (!s) return "";
+  return s.date.toLocaleDateString(L.code === "bn" ? "bn-BD" : L.code === "ar" ? "ar" :
+    L.code === "ur" ? "ur" : L.code === "zh" ? "zh" : "en-GB",
+    { year:"numeric", month:"short", day:"numeric" });
+}
+var FCL = {
+  bn:{ t:"সম্পূর্ণ হতে", plan:"পরিকল্পিত গতিতে", real:"বর্তমান গতিতে", left:"পৃষ্ঠা বাকি",
+       pct:"সম্পন্ন", by:"শেষ হবে", none:"যথেষ্ট তথ্য নেই", perDay:"লাইন/দিন", done:"সম্পূর্ণ হয়েছে" },
+  en:{ t:"Time to finish", plan:"At the planned pace", real:"At your current pace", left:"pages left",
+       pct:"done", by:"finishes", none:"not enough history yet", perDay:"lines/day", done:"Completed" },
+  ur:{ t:"مکمل ہونے میں", plan:"مقررہ رفتار سے", real:"موجودہ رفتار سے", left:"صفحات باقی",
+       pct:"مکمل", by:"مکمل ہوگا", none:"ابھی کافی معلومات نہیں", perDay:"سطریں/دن", done:"مکمل" },
+  zh:{ t:"完成所需", plan:"按计划速度", real:"按当前速度", left:"页剩余",
+       pct:"已完成", by:"预计完成", none:"记录不足", perDay:"行/天", done:"已完成" },
+  ar:{ t:"حتى الإتمام", plan:"بالوتيرة المقررة", real:"بوتيرتك الحالية", left:"صفحة متبقية",
+       pct:"مكتمل", by:"يكتمل", none:"لا توجد بيانات كافية", perDay:"سطر/يوم", done:"مكتمل" }
+};
+function fcL(){ return FCL[L.code] || FCL.en; }
+/* one quiet line for the opening page */
+function fcLineHTML(){
+  var f = fcForecast(), T = fcL();
+  if (!f.left) return '<div class="fcline">' + T.done + ' · ' + n(Math.round(f.pct)) + '%</div>';
+  var head = fcSpanText(f.real || f.plan);
+  return '<div class="fcline">' +
+    '<b>' + T.t + ' ' + head + '</b>' +
+    '<span>' + n(f.pagesLeft) + ' ' + T.left + ' · ' + n(Math.round(f.pct)) + '% ' + T.pct + '</span>' +
+    '</div>';
+}
+/* the full card for Progress */
+function fcCardHTML(){
+  var f = fcForecast(), T = fcL();
+  function row(lab, s, per){
+    return '<div style="display:flex;align-items:baseline;gap:10px;padding:9px 0;border-bottom:1px solid var(--rule)">' +
+      '<span style="flex:1;font-size:13px;color:var(--ink-3)">' + lab +
+        (per ? ' <span style="opacity:.8">(' + n(Math.round(per * 10) / 10) + ' ' + T.perDay + ')</span>' : '') + '</span>' +
+      (s ? '<b style="font-family:var(--display);font-size:17px">' + fcSpanText(s) + '</b>' +
+           '<span style="font-size:12px;color:var(--ink-3);min-width:82px;text-align:end">' + T.by + ' ' + fcDateText(s) + '</span>'
+         : '<span style="font-size:12.5px;color:var(--ink-3)">' + T.none + '</span>') +
+      '</div>';
+  }
+  return '<div class="card" style="padding:16px">' +
+    '<div class="kicker">' + T.t + '</div>' +
+    '<div style="display:flex;align-items:baseline;gap:8px;margin:2px 0 10px">' +
+      '<b style="font-family:var(--display);font-size:26px">' + n(Math.round(f.pct)) + '%</b>' +
+      '<span style="font-size:13px;color:var(--ink-3)">' + T.pct + ' · ' + n(f.pagesLeft) + ' ' + T.left + '</span></div>' +
+    '<div style="height:7px;border-radius:999px;background:var(--paper-2);overflow:hidden;margin-bottom:12px">' +
+      '<div style="height:100%;width:' + Math.max(1.2, Math.min(100, f.pct)).toFixed(1) + '%;background:var(--verdigris)"></div></div>' +
+    row(T.plan, f.plan, f.perDay) +
+    row(T.real, f.real, f.realPerDay) +
+    '</div>';
+}
+/* ---------- what was already memorized before this app ---------- */
+/* Someone who arrives with ten juz cannot start at page one, and a forecast that
+   counts those pages as work still ahead is simply wrong. Prior memorization is
+   entered once and then behaves like anything else the app has seen finished —
+   except it never enters the measured pace, which must stay a record of days
+   actually worked here. */
+function knownMap(){ if (!S.known) S.known = {}; return S.known; }
+function knownPages(){
+  var k = knownMap();
+  return Object.keys(k).filter(function(p){ return k[p]; }).map(Number).sort(function(a,b){ return a-b; });
+}
+function knownLines(){ return knownPages().length * LINES_PER_PAGE; }
+function knownMark(pages, q){
+  var k = knownMap(), per = Math.max(1, +S.settings.oldPerDay || 2), i = 0;
+  if (!S.rev) S.rev = {};
+  pages.forEach(function(p){
+    p = +p;
+    if (!(p >= 1 && p <= TOTAL_PAGES)) return;
+    if (!q){ delete k[p]; delete S.weak[p]; delete S.rev[p]; return; }
+    k[p] = q;
+    if (q === "w") S.weak[p] = 1; else delete S.weak[p];
+    /* they join the rotation at once, but spread out — two hundred pages all due
+       tomorrow is not a plan, it is a wall */
+    S.rev[p] = { str:(q === "f" ? 0.7 : 0.35), ivl:(q === "f" ? 7 : 1),
+                 due:key(addDays(new Date(), Math.floor(i / per))),
+                 reps:(q === "f" ? 2 : 0), lapses:0, last:TODAY };
+    i++;
+  });
+  save();
+}
+/* only pages finished to the last line count as memorized — plus whatever was
+   already memorized before the first day here */
 function memorizedPages(){
-  var mx = pageDoneLines(), out = [];
-  Object.keys(mx).forEach(function(p){ if (mx[p] >= LINES_PER_PAGE) out.push(+p); });
-  return out.sort(function(a,b){ return a - b; });
+  var mx = pageDoneLines(), seen = {};
+  Object.keys(mx).forEach(function(p){ if (mx[p] >= LINES_PER_PAGE) seen[+p] = 1; });
+  knownPages().forEach(function(p){ seen[p] = 1; });
+  return Object.keys(seen).map(Number).sort(function(a,b){ return a - b; });
 }
 /* where today's lesson starts: stay on the same page until its last
    line is done, only then move on to the next page */
@@ -3643,7 +4084,12 @@ function writeHeaderDate(){
   var el = document.getElementById("hdr-date");
   if (!el) return;
   var now = new Date(), hj = hijriDate(now);
-  el.textContent = clockText(now) + " · " + longDate(now) + (hj ? " · " + hj : "");
+  /* a phone header has room for exactly one line. The clock and the weekday are
+     the first things to go, so the date can never wrap and break the bar. */
+  var narrow = (window.innerWidth || 999) < 560;
+  var d = longDate(now);
+  if (narrow) d = String(d).split(" · ")[0];
+  el.textContent = (narrow ? "" : clockText(now) + " · ") + d + (hj ? " · " + hj : "");
 }
 function renderChrome(){
   document.getElementById("hdr-name").textContent = L.app.name;
@@ -3669,13 +4115,23 @@ function renderChrome(){
     t.onclick = function(){
       qa(".tab").forEach(function(x){ x.setAttribute("aria-selected", x === t ? "true" : "false"); });
       qa(".view").forEach(function(x){ x.classList.remove("on"); });
+      /* leaving the mushaf silences it: the recitation kept running under the
+         other tabs with no visible way to stop it */
+      if (t.dataset.v !== "mushaf"){ if (typeof rdStop === "function") rdStop(); if (typeof rdMeanClose === "function") rdMeanClose(); }
       document.getElementById("v-" + t.dataset.v).classList.add("on");
       document.body.classList.toggle("mushaf", t.dataset.v === "mushaf");
       syncDrawerNav();
       window.scrollTo({ top:0, behavior:"smooth" });
     };
   });
-  var NAV_IC = { today:"✳", mushaf:"▢", drill:"◎", routine:"↻", progress:"▤", settings:"⚙" };
+  var NAV_IC = {
+    today:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M4.9 4.9l1.4 1.4M2 12h2M20 12h2M17.7 6.3l1.4-1.4"/><path d="M8 16a4 4 0 0 1 8 0"/><path d="M3 20h18"/></svg>',
+    mushaf:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-1.5-1.3-3.5-2-6-2-1 0-2 .1-2.8.3A1 1 0 0 0 3 5.2v12.3a1 1 0 0 0 1.3.9C5 18.2 5.9 18 7 18c2 0 3.7.6 5 1.7"/><path d="M12 6c1.5-1.3 3.5-2 6-2 1 0 2 .1 2.8.3a1 1 0 0 1 .7.9v12.3a1 1 0 0 1-1.3.9c-.7-.2-1.6-.4-2.7-.4-2 0-3.7.6-5 1.7"/><path d="M12 6v13.7"/></svg>',
+    drill:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>',
+    routine:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>',
+    progress: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="5" rx="1"/><rect x="12" y="8" width="3" height="9" rx="1"/><rect x="17" y="5" width="3" height="12" rx="1"/></svg>',
+    settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h6M14 18h6"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="18" r="2"/></svg>'
+  };
   var dn = document.getElementById("drawer-nav");
   if (dn){
     dn.innerHTML = ["today","mushaf","drill","routine","progress","settings"].map(function(v){
@@ -3710,6 +4166,7 @@ function renderOnboard(){
     '<div class="fld"><label for="ob-rest">' + o.rest + '</label><select id="ob-rest">' +
       days.map(function(d){ return '<option value="' + d + '">' + L.weekdays[d] + '</option>'; }).join("") +
       '</select><div class="hint">' + o.restHint + '</div></div>' +
+    '<button class="abtn" id="ob-known" style="margin-top:4px">' + knL().open + '</button>' +
     '<button class="abtn go" id="ob-go" style="margin-top:10px">' + o.go + '</button>';
 
   document.getElementById("ob-lang").onchange = function(){
@@ -3717,6 +4174,14 @@ function renderOnboard(){
       renderOnboard();
       document.getElementById("ob").classList.add("on");
     });
+  };
+  document.getElementById("ob-known").onclick = async function(){
+    /* keep what has been typed so far — reopening onboarding must not lose it */
+    S.settings.startDate = document.getElementById("ob-date").value || TODAY;
+    S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +document.getElementById("ob-page").value || 1));
+    S.settings.restDay   = +document.getElementById("ob-rest").value;
+    await Store.set(S);
+    knOpen();
   };
   document.getElementById("ob-go").onclick = async function(){
     S.settings.startDate = document.getElementById("ob-date").value || TODAY;
@@ -3903,7 +4368,40 @@ function renderToday(){
     '<span style="font-family:var(--mono);font-size:13px;color:#AEB6BD">' +
     fmt(L.sum.stat, n(memorizedPages().length), n(d.minutes)) + '</span></div></div>';
 
+  h = fcLineHTML() + h;
+  if (!S.settings.aimsHid){
+    var AIMS = {
+      bn:{ t:"এই অ্যাপ কী করে", x:"বুঝেছি",
+        a:[["প্রতিদিন সামান্য নতুন","পরিমাণ ছোট রাখা হয়, যাতে প্রতিদিন শেষ হয় — মুখস্থ ভাঙে বড় লক্ষ্যে।"],
+           ["ভুলে যাওয়ার আগে ফিরে দেখা","পুরোনো সবক নির্দিষ্ট দিনে ফিরে আসে, যেদিন ভোলার আশঙ্কা তৈরি হয়।"],
+           ["মুখে বলে যাচাই","মুসহাফ ঢেকে নিজে বলুন, রেকর্ড করে শুনুন — চোখে চেনা আর মুখস্থ এক নয়।"],
+           ["দুর্বল জায়গা আলাদা করা","যেখানে বারবার আটকান তা আলাদা করে বেশি ফিরে আসে।"]] },
+      en:{ t:"What this app does", x:"Got it",
+        a:[["A little new each day","The daily portion stays small enough to finish — memorisation breaks on ambitious targets."],
+           ["Review before you forget","Old lessons return on the day forgetting is likely, not at random."],
+           ["Verify out loud","Cover the mushaf, recite from memory, record and listen back — recognising is not knowing."],
+           ["Isolate the weak spots","Whatever you stumble on repeatedly is separated out and returns more often."]] }
+    };
+    var A = AIMS[L.code] || AIMS.en;
+    h = '<div class="card aims" style="margin-bottom:14px;padding:16px 16px 14px">' +
+      '<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px">' +
+        '<b style="font-family:var(--display);font-size:16.5px;flex:1">' + A.t + '</b>' +
+        '<button class="rdrangebtn" id="aims-x">' + A.x + '</button></div>' +
+      '<div style="display:grid;gap:10px">' +
+        A.a.map(function(o){
+          return '<div style="display:flex;gap:10px;align-items:flex-start">' +
+            '<span style="flex:0 0 6px;height:6px;margin-top:7px;border-radius:999px;background:var(--verdigris)"></span>' +
+            '<span style="flex:1;font-size:13.5px;line-height:1.55"><b style="font-weight:600;color:var(--ink)">' +
+            o[0] + '</b><br><span style="color:var(--ink-3)">' + o[1] + '</span></span></div>';
+        }).join("") +
+      '</div></div>' + h;
+  }
   document.getElementById("v-today").innerHTML = h;
+  var ax = document.getElementById("aims-x");
+  if (ax) ax.onclick = function(){
+    S.settings.aimsHid = 1; try { save(); } catch(e){}
+    renderToday();
+  };
   bindToday();
 }
 
@@ -4094,6 +4592,8 @@ function renderProgress(){
       return '<div class="st"><span class="v">' + v + '</span><span class="l">' + P.stats[i] + '</span></div>';
     }).join("") + '</div>';
 
+  h += '<div style="margin:18px 0 4px">' + fcCardHTML() + '</div>';
+
   h += '<div class="mapwrap"><div class="maplbl"><span class="t">' + P.map + '</span>' +
        '<span class="t">' + n(m.length) + ' / ' + n(TOTAL_PAGES) + '</span></div><div class="mushafmap">';
   for (var i = 1; i <= TOTAL_PAGES; i++){
@@ -4153,8 +4653,6 @@ function renderSettings(){
 
   var h = '<div class="kicker">' + T.k + '</div><h2>' + T.h + '</h2><p class="intro">' + T.p + '</p>' +
     '<div class="log" style="margin-top:22px">' +
-    '<div class="fld"><label for="s-lang">' + T.lang + '</label>' +
-      '<select id="s-lang">' + langOptions(L.code) + '</select><div class="hint">' + T.langHint + '</div></div>' +
     '<div class="fld"><label for="s-date">' + T.date + '</label><input type="date" id="s-date" value="' + s.startDate + '"></div>' +
     '<div class="fld"><label for="s-page">' + T.page + '</label><input type="number" id="s-page" min="1" max="' + TOTAL_PAGES + '" value="' + s.startPage + '"></div>' +
     '<div class="fld"><label for="s-rest">' + T.rest + '</label><select id="s-rest">' +
@@ -4243,23 +4741,24 @@ function renderSettings(){
       '<div class="hint">' + hijriDate(new Date()) + ' · ' + L.hj.hint + '</div></div>' +
     '</div>';
 
+  var KT = knL();
+  h += '<div class="log" style="margin-top:16px"><div class="fld"><label>' + KT.open + '</label>' +
+    '<div class="act"><button class="abtn go" id="s-known">' + fmt(KT.have, n(knownPages().length)) + '</button></div>' +
+    '<div class="hint">' + KT.ask + '</div></div>' +
+    '<div class="fld" style="margin-top:20px"><label for="s-oldday">' + KT.daily + '</label>' +
+    '<select id="s-oldday">' +
+      [0,1,2,3,5].map(function(v){
+        var sel2 = ((S.settings.oldPerDay === 0 || S.settings.oldPerDay) ? +S.settings.oldPerDay : 2) === v;
+        return '<option value="' + v + '"' + (sel2 ? " selected" : "") + '>' + n(v) + '</option>';
+      }).join("") +
+    '</select></div></div>';
+
   var wk = weakPages();
   if (wk.length){
     h += '<div class="log" style="margin-top:16px"><div class="fld"><label>' + T.weakLabel + '</label><div class="queue">' +
       wk.map(function(p){ return '<button class="qp weak" data-unweak="' + p + '">' + fmt(L.rep.page, n(p)) + ' ✕</button>'; }).join("") +
       '</div><div class="hint">' + T.weakHint + '</div></div></div>';
   }
-
-  h += '<div class="log" style="margin-top:16px"><div class="fld"><label>' + T.driveLabel + '</label>' +
-    '<div id="sync-state" class="syncline">' + Sync.line() + '</div><div class="act">' +
-    (Sync.cfg()
-      ? ((s.drive && s.drive.email)
-          ? '<button class="abtn go" id="sy-push">' + L.sync.push + '</button>' +
-            '<button class="abtn" id="sy-pull">' + L.sync.pull + '</button>' +
-            '<button class="abtn danger" id="sy-off">' + L.sync.unlink + '</button>'
-          : '<button class="abtn go" id="sy-on">' + L.sync.connect + '</button>')
-      : '<span class="hint" style="margin:0">' + T.driveNoConfig + '</span>') +
-    '</div><div class="hint">' + T.driveHint + '</div></div></div>';
 
   h += '<div class="log" style="margin-top:16px"><div class="fld"><label>' + T.backupLabel + '</label>' +
     '<div class="act"><button class="abtn go" id="s-exp">' + T.exp + '</button>' +
@@ -4272,11 +4771,12 @@ function renderSettings(){
   document.getElementById("v-settings").innerHTML = h;
 
   var g = function(id){ return document.getElementById(id); };
-  g("s-lang").onchange   = function(){ setLang(this.value, true); };
   g("s-date").onchange   = function(){ S.settings.startDate = this.value || TODAY; save(); renderAll(); };
   g("s-page").onchange   = function(){ S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); save(); renderAll(); };
   g("s-rest").onchange   = function(){ S.settings.restDay = +this.value; save(); renderAll(); };
   bindDlJuz();
+  var kb = g("s-known"); if (kb) kb.onclick = knOpen;
+  var od = g("s-oldday"); if (od) od.onchange = function(){ S.settings.oldPerDay = +this.value; save(); renderAll(); };
   g("s-lines").onchange  = function(){ S.settings.manualLines = +this.value; RD.sel = null; save(); renderAll(); };
   g("s-qari").onchange   = function(){ S.settings.qari = this.value; save(); };
   var pp = g("s-paper");
@@ -4311,16 +4811,13 @@ function renderSettings(){
     S.settings.mushafId = this.value;
     applyMushaf();
     RD.pages = {}; RD.fonts = {}; RD.sel = null; rdStop();
+    IP.chunks = {}; IP.info = null; IP.chunkFor = null;
+    DR.pg = null; DR.page = 0; DR.tried = false; DR.kind = null;   /* Practice reloads the new mushaf */
     S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, S.settings.startPage));
     S.settings.lastPage = Math.max(1, Math.min(TOTAL_PAGES, S.settings.lastPage || 1));
     RD.page = Math.max(1, Math.min(TOTAL_PAGES, RD.page || 1));
     save(); renderAll();
   };
-
-  var on = g("sy-on");   if (on) on.onclick = function(){ Sync.connect(); };
-  var pu = g("sy-push"); if (pu) pu.onclick = function(){ Sync.pushNow(true); };
-  var pl = g("sy-pull"); if (pl) pl.onclick = function(){ Sync.pullNow(); };
-  var of = g("sy-off");  if (of) of.onclick = function(){ if (confirm(L.sync.confirmOff)) Sync.disconnect(); };
 
   qa("[data-unweak]").forEach(function(b){
     b.onclick = function(){ delete S.weak[b.dataset.unweak]; save(); renderAll(); };
@@ -4637,10 +5134,122 @@ var RD_CACHE = "hifz-mushaf-v1";
 var QCF_BASE = "https://cdn.jsdelivr.net/gh/quran/quran.com-frontend-next@master/public/fonts/quran/hafs/";
 function qcfVer(){ return mushafDef().qcf || "v2"; }
 var AUDIO_BASE = "https://everyayah.com/data/";
-var RD = { page:0, hide:0, curtain:0, curtainOn:false, blind:false, loops:1, speed:1, pages:{}, fonts:{}, busy:false, queue:[], qi:0, left:0 };
+var AUDIO_ALT  = "https://cdn.islamic.network/quran/audio/128/ar.alafasy/";
+/* Three independent hosts, not one. Which of them answers depends on the
+   network, not on the app: the laptop that played fine was on a VPN, the phone
+   with the APK was not, and a single host made that look like "audio is
+   broken". Each reciter is mapped onto every host that carries him. */
+var AUDIO_NET = { Alafasy_128kbps:"ar.alafasy", Husary_128kbps:"ar.husary",
+  Minshawy_Murattal_128kbps:"ar.minshawi", Abdul_Basit_Murattal_64kbps:"ar.abdulbasitmurattal",
+  Ayman_Sowaid_64kbps:"ar.husary" };
+var AUDIO_QCDN = { Alafasy_128kbps:"Alafasy/mp3", Husary_128kbps:"Husary/mp3",
+  Minshawy_Murattal_128kbps:"Minshawy_Murattal/mp3", Abdul_Basit_Murattal_64kbps:"AbdulBaset/Murattal/mp3",
+  Ayman_Sowaid_64kbps:"Husary/mp3" };
+function ayahGlobal(vk){
+  var q = String(vk || "").split(":"), s = +q[0] || 1, a = +q[1] || 1, n2 = 0;
+  for (var i = 0; i < s - 1; i++) n2 += (AYAHS[i] || 0);
+  return n2 + a;
+}
+function audioCands(vk, rec){
+  var f = ayahFile(vk), out = [{ h:"everyayah", u:AUDIO_BASE + rec + "/" + f }];
+  if (AUDIO_QCDN[rec]) out.push({ h:"qurancdn", u:"https://audio.qurancdn.com/" + AUDIO_QCDN[rec] + "/" + f });
+  if (AUDIO_NET[rec]) out.push({ h:"islamic.network",
+    u:"https://cdn.islamic.network/quran/audio/128/" + AUDIO_NET[rec] + "/" + ayahGlobal(vk) + ".mp3" });
+  return out;
+}
+function audioSrcs(vk){
+  var rec = S.settings.reciter, cands = audioCands(vk, rec);
+  if (rec !== "Alafasy_128kbps") cands = cands.concat(audioCands(vk, "Alafasy_128kbps"));
+  /* the host that answered last time goes first, so after one success the app
+     stops spending the watchdog on a host this network blocks */
+  var pref = S.settings.audioHost;
+  if (pref) cands.sort(function(a, b){ return (a.h === pref ? 0 : 1) - (b.h === pref ? 0 : 1); });
+  var seen = {}, list = [];
+  cands.forEach(function(c){ if (!seen[c.u]){ seen[c.u] = 1; list.push(c); } });
+  return list;
+}
+var RD = { page:0, hide:0, curtain:0, curtainOn:false, blind:false, loops:1, speed:1, pages:{}, fonts:{}, blobs:{}, busy:false, queue:[], qi:0, left:0 };
 var rdAudio = null;
+/* ONE audio element for the whole session. A fresh install has no media
+   engagement, so Chrome (and the WebView the APK runs in) refuses play() on any
+   element the user did not personally start — a new Audio() per ayah meant the
+   second ayah onward was refused, and inside the wrapper often the first too.
+   The same element, unlocked once on the first touch, keeps that permission. */
+var rdEl = null, rdOK = false;
+var RD_SILENCE = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQQAAAAAAAAA";
+function rdEle(){
+  if (rdEl) return rdEl;
+  var a = document.createElement("audio");
+  a.preload = "auto";
+  a.setAttribute("playsinline", "");
+  a.setAttribute("webkit-playsinline", "");
+  a.style.display = "none";
+  (document.body || document.documentElement).appendChild(a);
+  rdEl = a;
+  return a;
+}
+function rdWipe(a){
+  ["onerror","onended","onplaying","onplay","onpause","oncanplay","onstalled","ontimeupdate","onloadedmetadata"]
+    .forEach(function(k){ a[k] = null; });
+}
+var rdUtok = 0;
+function rdUnlock(){
+  if (rdOK || rdAudio) return;
+  var a = rdEle(), u = ++rdUtok;
+  try {
+    rdWipe(a);
+    a.muted = true; a.src = RD_SILENCE;
+    /* the silent blip must never touch a recitation that started in the
+       meantime: on a slow WebView this promise can settle after the tap's own
+       click handler has already begun playing an ayah, and tearing the src out
+       from under it looked exactly like the bug this unlock exists to fix */
+    var fin = function(){
+      a.muted = false;
+      if (u !== rdUtok || rdAudio) return;
+      try { a.pause(); } catch(e){}
+      a.removeAttribute("src"); try { a.load(); } catch(e){}
+      rdOK = true;
+    };
+    var p = a.play();
+    if (p && p.then) p.then(fin).catch(function(){ a.muted = false; });
+    else fin();
+  } catch(e){}
+}
+document.addEventListener("pointerdown", rdUnlock, true);
+/* One sentence per failure, in the reader's own language: "nothing happened"
+   was the whole bug report before. */
+function rdMsg(kind, extra){
+  var M = {
+    fail: { bn:"তিলাওয়াত আনা গেল না", en:"Couldn't fetch the recitation", ar:"تعذّر جلب التلاوة", ur:"تلاوت نہیں آ سکی", zh:"无法获取诵读" },
+    off:  { bn:"তিলাওয়াতের জন্য ইন্টারনেট লাগে — একবার নামিয়ে রাখলে পরে নেট ছাড়াই চলবে", en:"The recitation needs the internet — download it once and it plays offline after", ar:"التلاوة تحتاج إلى إنترنت — نزّلها مرة فتعمل بدون شبكة", ur:"تلاوت کے لیے انٹرنیٹ چاہیے — ایک بار اتار لیں تو بعد میں آف لائن چلے گی", zh:"诵读需要联网 — 先下载一次，之后无网也能听" },
+    tap:  { bn:"আবার ▶ চাপুন — ফোন নিজে থেকে চালু হওয়া আওয়াজ আটকে দিয়েছে", en:"Tap ▶ again — the phone blocked sound it did not start", ar:"اضغط ▶ مرة أخرى — منع الهاتف تشغيلاً تلقائياً", ur:"دوبارہ ▶ دبائیں — فون نے خودکار آواز روک دی", zh:"请再按一次 ▶ — 手机拦截了自动播放" }
+  };
+  var m = M[kind] || M.fail;
+  var p = document.getElementById("rd-prog");
+  if (p) p.textContent = (m[(typeof L !== "undefined" && L.code) || "bn"] || m.bn) + (extra ? " · " + extra : "");
+}
 
 async function rdCache(){ try { return await caches.open(RD_CACHE); } catch(e){ return null; } }
+/* Recitations already downloaded are turned into blob URLs for the open page.
+   Without this the "include the recitation" download filled the cache and the
+   reader still went to the network every time — useless on a blocked network. */
+async function rdWarmAudio(pg){
+  var c = await rdCache();
+  Object.keys(RD.blobs || {}).forEach(function(k){ try { URL.revokeObjectURL(RD.blobs[k]); } catch(e){} });
+  RD.blobs = {};
+  if (!c || !pg || !pg.keys) return;
+  for (var i = 0; i < pg.keys.length; i++){
+    var vk = pg.keys[i], list = audioSrcs(vk);
+    for (var j = 0; j < list.length; j++){
+      var hit = await c.match(list[j].u);
+      if (hit){ try { RD.blobs[vk] = URL.createObjectURL(await hit.blob()); } catch(e){} break; }
+    }
+  }
+  if (Object.keys(RD.blobs).length){
+    var d = document.getElementById("rd-dl");
+    if (d) d.setAttribute("data-have", "1");
+  }
+}
 async function rdFetch(url, kind){
   var c = await rdCache(), hit = c ? await c.match(url) : null;
   if (!hit){
@@ -4651,29 +5260,40 @@ async function rdFetch(url, kind){
   }
   return kind === "json" ? hit.json() : hit.blob();
 }
+/* Word by word is often read, not listened to — in a quiet room, or when the
+   meaning is the point and the recitation only gets in the way. */
+function wordSound(){ return S.settings.wordSound !== 0; }
 function ayLabel(k){ var p = String(k || "").split(":"); return p.length < 2 ? "" : n(p[0]) + ":" + n(p[1]); }
 function pad3(v){ return ("00" + v).slice(-3); }
 function ayahFile(vk){ var p = vk.split(":"); return pad3(p[0]) + pad3(p[1]) + ".mp3"; }
 
 var NAST_URL = "https://verses.quran.foundation/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.woff2";
+/* Ship the face with the app when you can: an offline install that has to reach
+   a CDN for this font shows empty boxes wherever a waqf mark or an ornament
+   falls. The local copy is tried first and the CDN is only the safety net. */
+var NAST_LOCAL = "fonts/indopak-nastaleeq.woff2";
 async function rdLoadNast(){
   var fam = "IndopakNast";
   if (RD.fonts[fam]) return fam;
+  var blob = null;
+  try { blob = await rdFetch(dataUrl(NAST_LOCAL)); }
+  catch(e){ blob = null; }
   /* the packaged app cannot always read the file as a blob (CORS); then we let
      the browser load it itself rather than showing empty boxes */
-  var blob = null;
-  try { blob = await rdFetch(NAST_URL); }
-  catch(e){
-    if (!document.getElementById("nast-face")){
-      var st = document.createElement("style");
-      st.id = "nast-face";
-      st.textContent = "@font-face{font-family:" + fam + ";src:url(" + NAST_URL +
-        ") format('woff2');font-display:swap}";
-      document.head.appendChild(st);
+  if (!blob){
+    try { blob = await rdFetch(NAST_URL); }
+    catch(e){
+      if (!document.getElementById("nast-face")){
+        var st = document.createElement("style");
+        st.id = "nast-face";
+        st.textContent = "@font-face{font-family:" + fam + ";src:url(" + dataUrl(NAST_LOCAL) +
+          ") format('woff2'),url(" + NAST_URL + ") format('woff2');font-display:swap}";
+        document.head.appendChild(st);
+      }
+      try { await document.fonts.load('16px "' + fam + '"'); } catch(e2){}
+      RD.fonts[fam] = fam;
+      return fam;
     }
-    try { await document.fonts.load('16px "' + fam + '"'); } catch(e2){}
-    RD.fonts[fam] = fam;
-    return fam;
   }
   var face = new FontFace(fam, "url(" + URL.createObjectURL(blob) + ")");
   await face.load(); document.fonts.add(face);
@@ -4686,7 +5306,12 @@ async function rdLoadFont(p){
   if (RD.fonts["v-" + p] === qcfVer()) return RD.fonts[p];
   var v = qcfVer(), fam = "QCF" + v + "P" + pad3(p);
   if (RD.fonts[fam]) return fam;
-  var blob = await rdFetch(QCF_BASE + v + "/woff2/p" + p + ".woff2");
+  /* a bundled page font wins over the CDN — without it an offline Madani page
+     has no glyphs at all and every word turns into an empty box */
+  var blob = null;
+  try { blob = await rdFetch(dataUrl("fonts/qcf/" + v + "/p" + p + ".woff2")); }
+  catch(e){ blob = null; }
+  if (!blob) blob = await rdFetch(QCF_BASE + v + "/woff2/p" + p + ".woff2");
   var face = new FontFace(fam, "url(" + URL.createObjectURL(blob) + ")");
   await face.load(); document.fonts.add(face);
   RD.fonts[p] = fam; RD.fonts[fam] = fam; RD.fonts["v-" + p] = v;
@@ -4721,6 +5346,68 @@ function rdPageUrl(p, def){
 var SURAH_AR = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 var IP = { chunks:{}, info:null };
 var TRP = { data:{}, meta:null };
+/* ---------- surah table: names, ayah counts, and the index built from the pack ---------- */
+var SURAH_BN = ["আল-ফাতিহা","আল-বাকারা","আলে ইমরান","আন-নিসা","আল-মায়িদা","আল-আনআম","আল-আরাফ","আল-আনফাল","আত-তাওবা","ইউনুস","হুদ","ইউসুফ","আর-রাদ","ইবরাহীম","আল-হিজর","আন-নাহল","আল-ইসরা","আল-কাহফ","মারইয়াম","ত্বাহা","আল-আম্বিয়া","আল-হজ্জ","আল-মুমিনূন","আন-নূর","আল-ফুরকান","আশ-শুআরা","আন-নামল","আল-কাসাস","আল-আনকাবূত","আর-রূম","লুকমান","আস-সাজদা","আল-আহযাব","সাবা","ফাতির","ইয়াসীন","আস-সাফফাত","সোয়াদ","আয-যুমার","গাফির","ফুসসিলাত","আশ-শূরা","আয-যুখরুফ","আদ-দুখান","আল-জাসিয়া","আল-আহকাফ","মুহাম্মদ","আল-ফাতহ","আল-হুজুরাত","কাফ","আয-যারিয়াত","আত-তূর","আন-নাজম","আল-কামার","আর-রহমান","আল-ওয়াকিয়া","আল-হাদীদ","আল-মুজাদালা","আল-হাশর","আল-মুমতাহিনা","আস-সাফ","আল-জুমুআ","আল-মুনাফিকূন","আত-তাগাবুন","আত-তালাক","আত-তাহরীম","আল-মুলক","আল-কলম","আল-হাক্কাহ","আল-মাআরিজ","নূহ","আল-জিন","আল-মুযযাম্মিল","আল-মুদ্দাসসির","আল-কিয়ামাহ","আল-ইনসান","আল-মুরসালাত","আন-নাবা","আন-নাযিআত","আবাসা","আত-তাকভীর","আল-ইনফিতার","আল-মুতাফফিফীন","আল-ইনশিকাক","আল-বুরূজ","আত-তারিক","আল-আলা","আল-গাশিয়া","আল-ফাজর","আল-বালাদ","আশ-শামস","আল-লাইল","আদ-দুহা","আশ-শারহ","আত-তীন","আল-আলাক","আল-কদর","আল-বায়্যিনাহ","আয-যিলযাল","আল-আদিয়াত","আল-কারিআ","আত-তাকাসুর","আল-আসর","আল-হুমাযাহ","আল-ফীল","কুরাইশ","আল-মাউন","আল-কাউসার","আল-কাফিরূন","আন-নাসর","আল-মাসাদ","আল-ইখলাস","আল-ফালাক","আন-নাস"];
+var SURAH_EN = ["Al-Fatihah","Al-Baqarah","Ali 'Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus","Hud","Yusuf","Ar-Ra'd","Ibrahim","Al-Hijr","An-Nahl","Al-Isra","Al-Kahf","Maryam","Ta-Ha","Al-Anbiya","Al-Hajj","Al-Mu'minun","An-Nur","Al-Furqan","Ash-Shu'ara","An-Naml","Al-Qasas","Al-'Ankabut","Ar-Rum","Luqman","As-Sajdah","Al-Ahzab","Saba","Fatir","Ya-Sin","As-Saffat","Sad","Az-Zumar","Ghafir","Fussilat","Ash-Shura","Az-Zukhruf","Ad-Dukhan","Al-Jathiyah","Al-Ahqaf","Muhammad","Al-Fath","Al-Hujurat","Qaf","Adh-Dhariyat","At-Tur","An-Najm","Al-Qamar","Ar-Rahman","Al-Waqi'ah","Al-Hadid","Al-Mujadila","Al-Hashr","Al-Mumtahanah","As-Saff","Al-Jumu'ah","Al-Munafiqun","At-Taghabun","At-Talaq","At-Tahrim","Al-Mulk","Al-Qalam","Al-Haqqah","Al-Ma'arij","Nuh","Al-Jinn","Al-Muzzammil","Al-Muddaththir","Al-Qiyamah","Al-Insan","Al-Mursalat","An-Naba","An-Nazi'at","'Abasa","At-Takwir","Al-Infitar","Al-Mutaffifin","Al-Inshiqaq","Al-Buruj","At-Tariq","Al-A'la","Al-Ghashiyah","Al-Fajr","Al-Balad","Ash-Shams","Al-Layl","Ad-Duha","Ash-Sharh","At-Tin","Al-'Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-'Adiyat","Al-Qari'ah","At-Takathur","Al-'Asr","Al-Humazah","Al-Fil","Quraysh","Al-Ma'un","Al-Kawthar","Al-Kafirun","An-Nasr","Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"];
+var AYAHS = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
+function surahName(nn){
+  var i = nn - 1;
+  if (L.code === "ar") return SURAH_AR[i] || "";
+  if (L.code === "bn") return SURAH_BN[i] || SURAH_EN[i] || "";
+  return SURAH_EN[i] || "";
+}
+/* The index is read out of the pack itself — the surah header rows carry their
+   own page — so it always matches the print the reader is showing. */
+var IDX = { cache:{}, tab:"all" };
+var APP_VER = "v105";
+/* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
+   at whatever weight the system font decides and look crude next to real icons. */
+function ric(d, extra){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+    'stroke-linecap="round" stroke-linejoin="round">' + d + (extra || "") + '</svg>';
+}
+var RIC = {
+  prev:    ric('<path d="M15 5l-7 7 7 7"/>'),
+  next:    ric('<path d="M9 5l7 7-7 7"/>'),
+  paper:   ric('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/>'),
+  curtain: ric('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18"/>'),
+  blind:   ric('<path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6z"/><path d="M4 4l16 16"/>'),
+  glimpse: ric('<circle cx="12" cy="13" r="8"/><path d="M12 13V9M9 2h6"/>'),
+  play:    ric('<circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor"/>'),
+  pause:   ric('<path d="M9 5v14M15 5v14"/>'),
+  stop:    ric('<rect x="6" y="6" width="12" height="12" rx="2"/>'),
+  loop:    ric('<path d="M17 2l4 4-4 4"/><path d="M3 12V10a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 12v2a4 4 0 0 1-4 4H3"/>'),
+  speed:   ric('<circle cx="12" cy="12" r="9"/><path d="M12 12l4-3"/>'),
+  ayah:    ric('<path d="M8 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h2M16 4h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2"/><path d="M12 9v6"/>'),
+  menu:    ric('<path d="M3 6h18M3 12h18M3 18h18"/>'),
+  index:   ric('<path d="M4 6h16M4 12h16M4 18h10"/><circle cx="19" cy="18" r="2"/>'),
+  sound:   ric('<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/>'),
+  mute:    ric('<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 10l4 4M21 10l-4 4"/>'),
+  mic:     ric('<path d="M12 15a3.5 3.5 0 0 0 3.5-3.5V6a3.5 3.5 0 0 0-7 0v5.5A3.5 3.5 0 0 0 12 15z"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/>')
+};
+async function mushafIndex(){
+  var def = mushafDef();
+  if (IDX.cache[def.id]) return IDX.cache[def.id];
+  var info = await ipInfo(def);
+  var per = info.chunk || 25, n = Math.ceil(def.pages / per), sp = {}, st = {};
+  for (var k = 0; k < n; k++){
+    var c;
+    try { c = await getJSON(def.local + "/c" + k + ".json"); } catch(e){ continue; }
+    Object.keys(c).forEach(function(ps){
+      var p = +ps;
+      (c[ps] || []).forEach(function(ln){
+        if (ln.k === "surah_name" && ln.s && (!sp[ln.s] || p < sp[ln.s])) sp[ln.s] = p;
+        /* the first ayah printed on each page — enough to place any ayah range */
+        if (!st[p] && ln.w && ln.w.length){
+          var vk = String(ln.w[0][1] || "").split(":");
+          if (vk.length === 2) st[p] = [+vk[0], +vk[1]];
+        }
+      });
+    });
+  }
+  IDX.cache[def.id] = { surah:sp, start:st };
+  return IDX.cache[def.id];
+}
 var WBW = { data:{} };
 /* GitHub Pages serves the app from a sub-folder (/repo/), and a URL without the
    trailing slash makes a bare "data/…" resolve one level too high. Always resolve
@@ -4751,6 +5438,32 @@ async function trPack(code){
   try { TRP.data[code] = await getJSON("data/tr/" + code + ".json"); }
   catch(e){ TRP.data[code] = null; }
   return TRP.data[code];
+}
+/* the offline pack carries Bengali word meanings only. For the other languages
+   pull the word-by-word from the api once per ayah — it lands in the same cache
+   the downloader uses, so a page read once keeps its meanings offline after. */
+async function wbwFillOnline(lines, keys, code){
+  var lang = (code === "ar") ? "en" : code;
+  var map = {};
+  await Promise.all(keys.map(async function(vk){
+    try {
+      var j = await rdFetch("https://api.quran.com/api/v4/verses/by_key/" + vk +
+        "?words=true&word_fields=text_uthmani&language=" + lang, "json");
+      var ws = (j && j.verse && j.verse.words) || [];
+      map[vk] = ws.filter(function(w){ return w.char_type_name !== "end"; })
+                  .map(function(w){ return (w.translation && w.translation.text) || ""; });
+    } catch(e){}
+  }));
+  /* a verse runs across lines, so the word counter has to span the whole page */
+  var cnt = {};
+  Object.keys(lines).map(Number).sort(function(a, b){ return a - b; }).forEach(function(ln){
+    (lines[ln] || []).forEach(function(w){
+      if (!w.vk || w.end) return;
+      var arr = map[w.vk]; if (!arr) return;
+      var i = cnt[w.vk] || 0; cnt[w.vk] = i + 1;
+      if (arr[i]) w.m = arr[i];
+    });
+  });
 }
 async function ipInfo(def){
   if (IP.info && IP.info._for === def.id) return IP.info;
@@ -4786,7 +5499,7 @@ async function rdLoadLocal(p, def){
     lines[ln.n] = out;
     if (ln.c) out.centered = true;
   });
-  var wb = await wbwPack(L.code === "bn" ? "bn" : L.code);   /* বাংলা ছাড়া এখনো নেই */
+  var wb = await wbwPack(L.code === "bn" ? "bn" : L.code);
   if (wb) Object.keys(lines).forEach(function(k){
     (lines[k] || []).forEach(function(w){
       if (!w.vk || w.end) return;
@@ -4794,6 +5507,7 @@ async function rdLoadLocal(p, def){
       if (g) w.m = g;
     });
   });
+  else await wbwFillOnline(lines, Object.keys(keys), L.code);
   var pack = await trPack(L.code === "ar" ? "en" : L.code);
   if (pack) Object.keys(keys).forEach(function(k){ if (pack[k]) tr[k] = pack[k]; });
   RD.pages[p] = { lines:lines, keys:Object.keys(keys), tr:tr, v:def.id, lang:L.code, local:true };
@@ -4841,27 +5555,96 @@ async function rdLoadOnline(p, def){
 }
 
 var rdRaf = null;
+/* Memorising means listening with the phone untouched for minutes at a time, so
+   the screen must not sleep mid-ayah. Held only while audio actually plays. */
+var rdWake = null;
+async function wakeOn(){
+  try { if (!rdWake && navigator.wakeLock) rdWake = await navigator.wakeLock.request("screen"); }
+  catch(e){}
+}
+function wakeOff(){
+  try { if (rdWake){ rdWake.release(); rdWake = null; } } catch(e){}
+}
+document.addEventListener("visibilitychange", function(){
+  if (document.visibilityState === "visible" && rdAudio && !rdAudio.paused) wakeOn();
+});
 function rdClear(cls){ qa(".qline .w." + cls).forEach(function(e){ e.classList.remove(cls); }); }
 function rdStop(){
-  if (rdAudio){ rdAudio.pause(); rdAudio = null; }
+  RD.tok = (RD.tok || 0) + 1;              /* in-flight handlers become no-ops */
+  clearTimeout(RD.watch);
+  if (rdAudio){ try { rdAudio.pause(); } catch(e){} rdAudio = null; }
+  wakeOff();
   if (rdRaf){ cancelAnimationFrame(rdRaf); rdRaf = null; }
   RD.queue = []; RD.left = 0; RD.words = null; RD.wi = -1;
   rdClear("on"); rdClear("now");
   rdSyncBtns();
 }
+async function rdMicToggle(){
+  if (window.FAB && FAB.rec){ fabMicStop(); rdMicSync(); return; }
+  var p = document.getElementById("rd-prog");
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder){
+    if (p) p.textContent = "\u098f\u0987 \u09b8\u0982\u09b8\u09cd\u0995\u09b0\u09a3\u09c7 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1\u09bf\u0982 \u099a\u09b2\u09c7 \u09a8\u09be";
+    return;
+  }
+  /* say why before the system asks — a prompt with no context gets denied */
+  if (!S.settings.micAsked){
+    var ok = confirm(L.rec && L.rec.why ? L.rec.why :
+      "\u09a8\u09bf\u099c\u09c7\u09b0 \u09a4\u09bf\u09b2\u09be\u0993\u09df\u09be\u09a4 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1 \u0995\u09b0\u09c7 \u09b6\u09c1\u09a8\u09a4\u09c7 \u09ae\u09be\u0987\u0995\u09cd\u09b0\u09cb\u09ab\u09cb\u09a8 \u09b2\u09be\u0997\u09ac\u09c7\u0964 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1\u09bf\u0982 \u0995\u09c7\u09ac\u09b2 \u0986\u09aa\u09a8\u09be\u09b0 \u09ab\u09cb\u09a8\u09c7\u0987 \u09a5\u09be\u0995\u09c7\u0964 \u0985\u09a8\u09c1\u09ae\u09a4\u09bf \u09a6\u09c7\u09ac\u09c7\u09a8?");
+    if (!ok) return;
+    S.settings.micAsked = 1; try { save(); } catch(e){}
+  }
+  if (rdAudio) rdStop();
+  fabMic();
+  rdMicSync();
+}
+function rdMicSync(){
+  var b = document.querySelector('#rd-bar [data-rd="mic"]');
+  if (!b) return;
+  var on = !!(window.FAB && FAB.rec);
+  b.innerHTML = on ? RIC.stop : RIC.mic;
+  b.setAttribute("aria-pressed", on ? "true" : "false");
+}
+function rdMedia(vk){
+  if (!("mediaSession" in navigator) || typeof MediaMetadata === "undefined") return;
+  var q = String(vk || "").split(":"), s = +q[0] || 1;
+  var rec = (RECITERS.filter(function(r){ return r.id === S.settings.reciter; })[0] || {}).nm;
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title:  surahName(s) + " · " + (L.rd.ay || "") + " " + n(q[1] || 1),
+      artist: (rec && (rec[L.code] || rec.en)) || "",
+      album:  (mushafDef().name || ""),
+      artwork:[{ src:dataUrl("icon-512.png"), sizes:"512x512", type:"image/png" }]
+    });
+  } catch(e){}
+  if (rdMedia.wired) return;
+  rdMedia.wired = 1;
+  var set = function(a, fn){ try { navigator.mediaSession.setActionHandler(a, fn); } catch(e){} };
+  set("play",  function(){ if (rdAudio && rdAudio.paused) rdTogglePause(); });
+  set("pause", function(){ if (rdAudio && !rdAudio.paused) rdTogglePause(); });
+  set("stop",  function(){ rdStop(); });
+}
 function rdSyncBtns(){
-  document.body.classList.toggle("playing", !!(rdAudio && !rdAudio.paused));
+  var live = !!(rdAudio && !rdAudio.paused);
+  document.body.classList.toggle("playing", live);
+  if (live) wakeOn(); else wakeOff();
+  if ("mediaSession" in navigator)
+    try { navigator.mediaSession.playbackState = live ? "playing" : (rdAudio ? "paused" : "none"); } catch(e){}
   var p = document.getElementById("rd-pause");
   if (p){
     var on = rdAudio && !rdAudio.paused;
-    p.textContent = on ? "‖" : "▶";
-    p.title = p.setAttribute ? (on ? L.rd.pause : L.rd.resume) : p.title;
+    /* no audio means no pause: showing the play icon here put two identical ▶
+       buttons next to each other */
+    p.style.display = rdAudio ? "" : "none";
+    /* swap the ICON, not textContent — assigning text wiped the svg out of the
+       button and left a bare glyph among the line icons */
+    p.innerHTML = on ? RIC.pause : RIC.play;
+    p.title = on ? L.rd.pause : L.rd.resume;
     p.setAttribute("aria-label", on ? L.rd.pause : L.rd.resume);
   }
 }
 function rdTogglePause(){
   if (!rdAudio) return;
-  if (rdAudio.paused) rdAudio.play().catch(function(){}); else rdAudio.pause();
+  if (rdAudio.paused) rdAudio.play().catch(function(){ rdMsg("tap"); }); else rdAudio.pause();
   rdSyncBtns();
 }
 /* No public word-timing data exists for every reciter, so the moving highlight
@@ -4890,10 +5673,17 @@ function fabHint(t){
 }
 function fabRender(){
   var m = gid("fabm"), f = gid("fab"); if (!m || !f) return;
-  f.classList.toggle("open", FAB.open && !FAB.rec);
+  /* playback lives in the panel now, so this button is the microphone and nothing
+     else — no menu, and no second copy of play / pause / loop / speed */
+  FAB.open = false;
+  f.classList.remove("open");
   f.classList.toggle("rec", FAB.rec);
-  f.textContent = FAB.rec ? "●" : (FAB.open ? "✕" : "▶");
-  if (!FAB.open || FAB.rec){ m.classList.remove("on"); m.innerHTML = ""; return; }
+  f.innerHTML = FAB.rec
+    ? RIC.stop
+    : ric('<path d="M12 15a3.5 3.5 0 0 0 3.5-3.5V6a3.5 3.5 0 0 0-7 0v5.5A3.5 3.5 0 0 0 12 15z"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/>');
+  f.setAttribute("aria-label", FAB.rec ? (L.rd ? L.rd.stop : "থামান") : (L.rec ? L.rec.rec || "রেকর্ড" : "রেকর্ড"));
+  m.classList.remove("on"); m.innerHTML = "";
+  if (true) return;
   var items = [
     ["pause", rdAudio && !rdAudio.paused ? "‖" : "▶"],
     ["loopc","↻<i>" + (RD.loops === Infinity ? "∞" : n(RD.loops)) + "</i>"],
@@ -4981,24 +5771,24 @@ function fabMic(){
 }
 function fabMicStop(){
   FAB.rec = false; fabListenStop(); recStop(); fabRender();
+  if (typeof rdMicSync === "function") rdMicSync();
   qa("#rd-paper .w.said").forEach(function(el){ el.classList.remove("said"); });
 }
 function fabWire(){
   var f = gid("fab"); if (!f || f.dataset.w) return; f.dataset.w = "1";
-  function down(){
-    FAB.held = false;
-    FAB.timer = setTimeout(function(){ FAB.held = true; if (!FAB.rec) fabMic(); }, 550);
-  }
+  function down(){ FAB.held = false; }
   function up(){
-    clearTimeout(FAB.timer);
-    if (FAB.held) return;
-    if (FAB.rec){ fabMicStop(); return; }
-    FAB.open = !FAB.open; fabRender();
+    /* one tap starts or stops recording — a long-press-only control nobody finds */
+    if (FAB.rec) fabMicStop(); else fabMic();
   }
   f.addEventListener("pointerdown", down);
   f.addEventListener("pointerup", up);
   f.addEventListener("pointerleave", function(){ clearTimeout(FAB.timer); });
   f.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+  /* paint it once now: the static markup still says ▶ with a "recitation" label,
+     and until something changes state the button would LOOK like play while
+     ACTING as record */
+  fabRender();
 }
 function rdPlay(keys, loops, noFollow){
   rdStop();
@@ -5018,21 +5808,77 @@ function rdNext(){
   RD.words = els; RD.wi = -1;
   RD.wts = els.map(function(e){ return e.dataset.end === "1" ? 0.4 : Math.max(1, e.textContent.length); });
   RD.wtot = RD.wts.reduce(function(a, b){ return a + b; }, 0) || 1;
-  rdAudio = new Audio(AUDIO_BASE + S.settings.reciter + "/" + ayahFile(vk));
-  rdAudio.playbackRate = RD.speed;
+  var srcs = audioSrcs(vk), si = 0, att = 0, only404 = true;
+  /* a recitation already on the device plays with no network at all — this is
+     what makes "download the juz once over a VPN" worth anything */
+  if (RD.blobs && RD.blobs[vk]) srcs = [{ h:"device", u:RD.blobs[vk] }].concat(srcs);
+  var a = rdEle();
+  rdWipe(a);
+  rdAudio = a;
+  a.playbackRate = RD.speed;
+  rdMedia(vk);
   /* the strong highlight lands only when this ayah's own audio really starts,
      so it can never run ahead of what is being recited */
   function step(fn){ return function(){ if (tok === RD.tok) fn(); }; }
-  rdAudio.onended = step(rdNext);
-  rdAudio.onerror = step(rdNext);
-  rdAudio.onplaying = step(function(){
+  /* silence for nine seconds is a blocked host, not a slow one — a connection
+     the network swallows never fires error, and the play button just sat dead */
+  function watch(){
+    clearTimeout(RD.watch);
+    RD.watch = setTimeout(function(){ if (tok === RD.tok){ only404 = false; hop("timeout"); } }, 9000);
+  }
+  function hop(why){
+    if (tok !== RD.tok) return;
+    clearTimeout(RD.watch);
+    if (++si < srcs.length){ load(); return; }
+    if (!navigator.onLine){ rdMsg("off"); rdStop(); return; }
+    /* every host refused this one ayah with "no such file" — that is a gap in
+       the reciter's set, so carry on with the next ayah instead of stopping */
+    if (only404 && RD.queue.length > 1){ rdMsg("fail", ayLabel(vk)); rdNext(); return; }
+    rdMsg("fail", (srcs[srcs.length - 1] || {}).h + " · " + why);
+    rdStop();
+  }
+  function load(){
+    var mine = ++att;
+    rdUtok++;                 /* any pending silent blip stops here */
+    a.muted = false; a.volume = 1;
+    /* set src and play — no load() in between: load() aborts the play we are
+       about to make, and that rejection came back as AbortError, which the old
+       code blamed on the host and used to burn through the whole list */
+    a.src = srcs[si].u;
+    if (si > 0){ var pr = document.getElementById("rd-prog"); if (pr) pr.textContent = "⋯ " + srcs[si].h; }
+    watch();
+    var p = a.play();
+    if (p && p.catch) p.catch(function(err){
+      if (tok !== RD.tok || mine !== att) return;   /* a newer attempt owns the element */
+      var nm = (err && err.name) || "play";
+      /* AbortError only ever means "we changed the src or paused it ourselves" —
+         never a bad host, and never worth a message */
+      if (nm === "AbortError" || nm === "NotSupportedError") return;
+      /* the phone refusing to make a sound it did not start is not a network
+         problem, and telling the reader to check the internet sent them chasing
+         the wrong thing for a whole build */
+      if (nm === "NotAllowedError"){ clearTimeout(RD.watch); rdMsg("tap"); rdStop(); return; }
+      only404 = false; hop(nm);
+    });
+  }
+  a.onerror = step(function(){
+    var c = (a.error && a.error.code) || 0;
+    if (c !== 4) only404 = false;
+    hop(c === 4 ? "404" : "net");
+  });
+  a.onstalled = step(watch);
+  a.oncanplay = step(function(){ clearTimeout(RD.watch); });
+  a.onended = step(rdNext);
+  a.onplaying = step(function(){
+    clearTimeout(RD.watch);
+    if (S.settings.audioHost !== srcs[si].h){ S.settings.audioHost = srcs[si].h; try { save(); } catch(e){} }
     rdClear("on");
     els.forEach(function(e){ e.classList.add("on"); });
     rdSyncBtns();
   });
-  rdAudio.onplay = step(rdSyncBtns);
-  rdAudio.onpause = step(rdSyncBtns);
-  rdAudio.play().catch(function(){});
+  a.onplay = step(rdSyncBtns);
+  a.onpause = step(rdSyncBtns);
+  load();
   if (!rdRaf) rdTrack();
 }
 
@@ -5110,31 +5956,32 @@ function renderMushaf(){
   h += '<div class="rdcard">' +
        '<div class="rdhead">' +
          '<div class="rdgrp rdpg">' +
-           '<button data-rd="prev" aria-label="' + Rd.prev + '">‹</button>' +
+           '<button data-rd="prev" aria-label="' + Rd.prev + '">' + RIC.prev + '</button>' +
            '<input type="number" id="rd-page" min="1" max="' + TOTAL_PAGES + '" value="' + RD.page + '">' +
-           '<button data-rd="next" aria-label="' + Rd.next + '">›</button>' +
+           '<button data-rd="next" aria-label="' + Rd.next + '">' + RIC.next + '</button>' +
          '</div>' +
-         '<button class="rdstop" data-rd="stop" title="' + Rd.stop + '" aria-label="' + Rd.stop + '">■</button>' +
          '<select class="rdjuz" id="rd-juz" aria-label="' + fmt(Rd.juz, "") + '">' +
            (function(){ var o = "", cur = juzOf(RD.page);
              for (var j = 1; j <= 30; j++)
                o += '<option value="' + j + '"' + (j === cur ? " selected" : "") + '>' + fmt(Rd.juz, n(j)) + '</option>';
              return o; })() + '</select>' +
          '<span class="rdprog" id="rd-prog"></span>' +
-         '<button class="rdic t" data-rd="menu" title="' + (L.nav.menu || "মেনু") + '" aria-label="' + (L.nav.menu || "মেনু") + '">⋮</button>' +
          '<div class="rdgrp rdset">' +
-           '<button class="rdic t" data-rd="paper" title="' + L.mu.paper + '" aria-label="' + L.mu.paper + '">◐</button>' +
-           '<button class="rdic t" data-rd="curtain" title="' + L.mu.curtain + '" aria-label="' + L.mu.curtain + '" aria-pressed="' + (RD.curtainOn ? "true" : "false") + '">▤</button>' +
-           '<button class="rdic t" data-rd="blind" title="' + L.mu.blind + '" aria-label="' + L.mu.blind + '" aria-pressed="' + (RD.blind ? "true" : "false") + '">◍</button>' +
-           '<button class="rdic t" data-rd="glimpse" title="' + L.mu.glimpse + '" aria-label="' + L.mu.glimpse + '">◔</button>' +
+           '<button class="rdic t" data-rd="paper" title="' + L.mu.paper + '" aria-label="' + L.mu.paper + '">' + RIC.paper + '</button>' +
+           '<button class="rdic t" data-rd="curtain" title="' + L.mu.curtain + '" aria-label="' + L.mu.curtain + '" aria-pressed="' + (RD.curtainOn ? "true" : "false") + '">' + RIC.curtain + '</button>' +
+           '<button class="rdic t" data-rd="blind" title="' + L.mu.blind + '" aria-label="' + L.mu.blind + '" aria-pressed="' + (RD.blind ? "true" : "false") + '">' + RIC.blind + '</button>' +
+           '<button class="rdic t" data-rd="glimpse" title="' + L.mu.glimpse + '" aria-label="' + L.mu.glimpse + '">' + RIC.glimpse + '</button>' +
          '</div>' +
        '</div>' +
        '<div class="rdgrp rdplay">' +
-         '<button class="rdic go" data-rd="play" title="' + Rd.playAll + '" aria-label="' + Rd.playAll + '">▶</button>' +
-         '<button class="rdic" id="rd-pause" data-rd="pause" title="' + Rd.pause + '" aria-label="' + Rd.pause + '">‖</button>' +
-         '<button class="rdic" data-rd="stop" title="' + Rd.stop + '" aria-label="' + Rd.stop + '">■</button>' +
-         '<button class="rdic num" id="rd-loop" data-rd="loopc" title="' + Rd.loop + '" aria-label="' + Rd.loop + '">↻<i>' + (RD.loops === Infinity ? "∞" : n(RD.loops)) + '</i></button>' +
-         '<button class="rdic num" id="rd-speed" data-rd="speedc" title="' + Rd.speed + '" aria-label="' + Rd.speed + '">⏱<i>' + n(RD.speed) + '×</i></button>' +
+         '<button class="rdic t rdmenu" data-rd="menu" title="' + (L.nav.menu || "মেনু") + '" aria-label="' + (L.nav.menu || "মেনু") + '">' + RIC.menu + '</button>' +
+         '<button class="rdic t" data-rd="index" title="' + idxL().ttl + '" aria-label="' + idxL().ttl + '">' + RIC.index + '</button>' +
+         '<button class="rdic go" data-rd="play" title="' + Rd.playAll + '" aria-label="' + Rd.playAll + '">' + RIC.play + '</button>' +
+         '<button class="rdic" id="rd-pause" data-rd="pause" title="' + Rd.pause + '" aria-label="' + Rd.pause + '">' + RIC.pause + '</button>' +
+         '<button class="rdic" data-rd="stop" title="' + Rd.stop + '" aria-label="' + Rd.stop + '">' + RIC.stop + '</button>' +
+         '<button class="rdic num" id="rd-loop" data-rd="loopc" title="' + Rd.loop + '" aria-label="' + Rd.loop + '">' + RIC.loop + '<i>' + (RD.loops === Infinity ? "∞" : n(RD.loops)) + '</i></button>' +
+         '<button class="rdic num" id="rd-speed" data-rd="speedc" title="' + Rd.speed + '" aria-label="' + Rd.speed + '">' + RIC.speed + '<i>' + n(RD.speed) + '×</i></button>' +
+       '<button class="rdic t rdmic" data-rd="mic" title="' + (L.rec && L.rec.rec ? L.rec.rec : "\u09b0\u09c7\u0995\u09b0\u09cd\u09a1") + '" aria-label="' + (L.rec && L.rec.rec ? L.rec.rec : "\u09b0\u09c7\u0995\u09b0\u09cd\u09a1") + '">' + RIC.mic + '</button>' +
        '</div>' +
        '<div class="rdtools' + (RD.more ? "" : " tight") + '">' +
          chip("hide",   "▨", Rd.cover,        RD.hide) +
@@ -5183,9 +6030,21 @@ function renderMushaf(){
         tg.type = "button";
         tg.textContent = (L.rd && L.rd.ay) ? L.rd.ay : "আয়াত";
         tg.onclick = function(){ cardEl.classList.toggle("open"); rdFitSoon(); };
-        head.appendChild(tg);
+        var row2 = cardEl.querySelector(".rdplay");
+        /* the ayah range is the most-used control, and it belongs beside পারা —
+           both choose WHERE you are, so they sit together on the top row */
+        var juz = head.querySelector(".rdjuz");
+        if (juz && juz.nextSibling) head.insertBefore(tg, juz.nextSibling);
+        else if (juz) head.appendChild(tg);
+        else (row2 || head).appendChild(tg);
+        head.insertBefore(range, tg.nextSibling);   /* selection lives beside its own button */
       }
     }
+    /* the bar was just rebuilt, so every stateful control still shows its markup
+       default: sync them to the real state or they lie until something changes
+       (the pause button in particular shipped visible but inert) */
+    rdSyncBtns();
+    if (typeof rdMicSync === "function") rdMicSync();
     if (typeof rdFitSoon === "function") rdFitSoon();
   }
 
@@ -5194,6 +6053,8 @@ function renderMushaf(){
     b.onclick = function(){
       var k = b.dataset.rd, pg = RD.pages[RD.page];
       if (k === "menu"){ drawerOpen(); }
+      else if (k === "index"){ idxOpen(); }
+      else if (k === "mic"){ rdMicToggle(); }
       else if (k === "prev"){ rdStop(); RD.page = Math.max(1, RD.page - 1); RD.sel = null; renderMushaf(); }
       else if (k === "next"){ rdStop(); RD.page = Math.min(TOTAL_PAGES, RD.page + 1); RD.sel = null; renderMushaf(); }
       else if (k === "hide"){ RD.hide = ((+RD.hide || 0) + 1) % 4; renderMushaf(); }
@@ -5228,9 +6089,12 @@ function renderMushaf(){
   var jz = g("rd-juz");
   if (jz) jz.onchange = function(){
     rdStop();
-    RD.page = juzRange(+this.value || 1)[0];
-    RD.sel = null;
-    renderMushaf();
+    var want = +this.value || 1;
+    juzStartPage(want).then(function(p){
+      RD.page = Math.max(1, Math.min(TOTAL_PAGES, p));
+      RD.sel = null;
+      renderMushaf();
+    });
   };
   g("rd-page").onchange  = function(){ rdStop(); RD.page = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); RD.sel = null; renderMushaf(); };
 
@@ -5500,6 +6364,22 @@ function rdFit(){
   }
   /* the reader's own −/+ wins over the fit; the page may then scroll */
   set(Math.round(best * 10) / 10);
+  /* On a narrow phone the fit is bound by WIDTH — the glyphs cannot grow any
+     further, so the text block ends high up and leaves the sheet half empty.
+     A printed mushaf never does that: it spreads its lines down the whole page.
+     So when the content is shorter than the room, open the leading to fill it. */
+  (function(){
+    var sum = 0;
+    for (var i = 0; i < lines.length; i++) sum += lines[i].getBoundingClientRect().height;
+    if (!sum || sum >= target) return;
+    var lh = parseFloat(paper.style.getPropertyValue("--ql")) || 1.9;
+    var k = Math.min(target / sum, 3.6 / lh);        /* never absurd leading */
+    if (k > 1.02){
+      var nl = Math.round(lh * k * 100) / 100;
+      paper.style.setProperty("--ql", nl);
+      if (paper2) paper2.style.setProperty("--ql", nl);
+    }
+  })();
   var view = document.getElementById("v-mushaf");
   if (view){
     var over = 0;
@@ -5647,6 +6527,7 @@ async function rdPaint(p, isTodayPage){
     /* ayah-picked blocks highlight word by word (exactly the chosen ayat);
        line-based blocks highlight whole lines */
     var byWord = pickOne || !!RD.sel.exact;
+    var nastNow = !!mushafDef().nast;
     function lnOn(ln){ return byWord ? false : (ln >= RD.sel.ln0 && ln <= RD.sel.ln1); }
 
     var h = "";
@@ -5665,10 +6546,14 @@ async function rdPaint(p, isTodayPage){
              it is never selected, dimmed, masked or tracked by the audio */
           if (w.head || w.bism) return '<span class="pw">' + w.g + '</span>';
           var on = byWord ? !!sel[w.vk] : any;
+          /* the Indo-Pak packs end an ayah with U+FDAB, an ornament that lives only
+             in the Nastaliq font — with any fallback face it is an empty box, and
+             the number is already drawn beside it. Drop it and draw our own. */
+          var gl = (w.end && nastNow) ? "" : w.g;
           return '<span class="w' + (on ? (byWord ? " sw" : "") : " off") + (on && cov ? " cov" + cov : "") +
                  '" data-vk="' + w.vk + '"' + (w.end ? ' data-end="1"' : '') +
-                 ' data-t="' + esc(w.t || "") + '" data-m="' + esc(w.m) + '">' + w.g +
-                 (w.end ? '<sup class="ayn">' + n(w.vk.split(":")[1]) + '</sup>' : '') + '</span>';
+                 ' data-t="' + esc(w.t || "") + '" data-m="' + esc(w.m) + '">' + gl +
+                 (w.end ? '<sup class="ayn' + (nastNow ? " ring" : "") + '">' + n(w.vk.split(":")[1]) + '</sup>' : '') + '</span>';
         }).join(" ") + '</div>';
     }
     h += '<div class="rdfoot"><span>' + fmt(L.rd.juz, n(juzOf(p))) + '</span>' +
@@ -5682,6 +6567,7 @@ async function rdPaint(p, isTodayPage){
     rdBlindWire();
     rdSwipeWire();
     rdSidePaint(p + 1);
+    rdWarmAudio(pg);
     var tb = document.getElementById("rd-tr");
     if (tb){
       if (RD.tr === false) tb.style.display = "none";
@@ -5723,12 +6609,29 @@ async function rdPaint(p, isTodayPage){
         }
         var mn = document.getElementById("rd-mean");
         if (mn){ mn.innerHTML = rdMeanPanel(pg, w); mn.classList.add("on"); mn.scrollTop = 0; rdMeanWire(); }
-        rdPlay([w.dataset.vk], 1, true);
+        /* silent word-by-word: the panel opens, nothing is recited */
+        if (wordSound()) rdPlay([w.dataset.vk], 1, true); else rdStop();
       };
     });
   } catch(e){
-    if (paper) paper.innerHTML = '<p style="text-align:center;color:#77808A">' + L.rd.err +
-      '<br><small style="opacity:.7">' + esc(String((e && e.message) || e)) + '</small></p>';
+    if (!paper) return;
+    var msg = String((e && e.message) || e);
+    var fontGone = /woff2|font/i.test(msg) && !mushafDef().nast;
+    paper.innerHTML =
+      '<div style="text-align:center;padding:26px 18px;color:var(--ink-3)">' +
+        '<p style="color:var(--ink-2)">' + (fontGone
+          ? "\u098f\u0987 \u09ae\u09c1\u09b8\u09b9\u09be\u09ab\u09c7\u09b0 \u09aa\u09be\u09a4\u09be\u09b0 \u09ab\u09a8\u09cd\u099f \u0985\u09cd\u09af\u09be\u09aa\u09c7 \u09a8\u09c7\u0987"
+          : L.rd.err) + '</p>' +
+        '<p style="font-size:12.5px;opacity:.75;margin-top:6px">' + esc(msg) + '</p>' +
+        (fontGone ? '<button id="rd-swap" class="rdrangebtn" style="margin-top:16px">' +
+          "\u0987\u09a8\u09cd\u09a6\u09cb\u09aa\u09be\u0995 \u09ae\u09c1\u09b8\u09b9\u09be\u09ab\u09c7 \u09af\u09be\u09a8" + '</button>' : '') +
+      '</div>';
+    var sw2 = document.getElementById("rd-swap");
+    if (sw2) sw2.onclick = function(){
+      S.settings.mushafId = "indopak15"; save(); applyMushaf();
+      RD.pages = {}; RD.fonts = {}; IP.chunks = {}; IP.info = null; IP.chunkFor = null;
+      renderMushaf();
+    };
   }
 }
 
@@ -5756,8 +6659,11 @@ function rdSameWord(t, notVk){
 function rdMeanPanel(pg, el){
   var vk = el.dataset.vk, fam = RD.fonts[RD.page] || "";
   var ws = exWordsOf(pg, vk);
-  var h = '<div class="wmbar"><button class="wmx" aria-label="' + (L.rep ? L.rep.close : "বন্ধ") +
-          '">✕</button><i class="gr"></i><button class="wmbig" aria-label="বড়/ছোট">⤢</button></div>';
+  var h = '<div class="wmbar"><button class="wmx" aria-label="' + uit("close") +
+          '">✕</button><i class="gr"></i>' +
+          '<button class="wmsnd" aria-pressed="' + (wordSound() ? "true" : "false") +
+          '" aria-label="' + uit("sound") + '">' + (wordSound() ? RIC.sound : RIC.mute) + '</button>' +
+          '<button class="wmbig" aria-label="' + uit("resize") + '">⤢</button></div>';
   /* the ayah word by word — each meaning directly under its own word */
   var gws = ws.filter(function(w){ return !w.end && (w.m || w.g); });
   if (gws.length){
@@ -5776,7 +6682,12 @@ function rdMeanLive(el){
   var W = L.wm, vk = el.dataset.vk, fam = RD.fonts[RD.page] || "";
   var glyph = el.firstChild ? el.firstChild.textContent : "";
   var gloss = el.dataset.m || "";
-  var h = '<div class="wmnhd"><span class="wmnw" style="font-family:\'' + fam + '\'">' + glyph + '</span>' +
+  var h = '<div class="wmbar"><button class="wmx" aria-label="' + uit("close") +
+          '">✕</button><i class="gr"></i>' +
+          '<button class="wmsnd" aria-pressed="' + (wordSound() ? "true" : "false") +
+          '" aria-label="' + uit("sound") + '">' + (wordSound() ? RIC.sound : RIC.mute) + '</button>' +
+          '<button class="wmbig" aria-label="' + uit("resize") + '">⤢</button></div>';
+  h += '<div class="wmnhd"><span class="wmnw" style="font-family:\'' + fam + '\'">' + glyph + '</span>' +
           ((gloss && el.dataset.end !== "1")
             ? '<span class="wmngl"><span class="wmntag">≈ ' + W.approx + '</span><b>' + esc(gloss) + '</b></span>' : '') +
           '<span class="wmnk">' + L.rd.ay + ' ' + ayLabel(vk) + '</span></div>';
@@ -5839,9 +6750,24 @@ function wmDragWire(){
 function rdMeanClose(){
   var mn = document.getElementById("rd-mean");
   if (mn){ mn.classList.remove("on"); mn.innerHTML = ""; }
+  /* the panel and the word it plays are one thing: closing it used to leave the
+     ayah playing, and the next word tap then fought the old audio */
+  if (rdAudio && typeof rdStop === "function") rdStop();
+  rdClear("on"); rdClear("now");
 }
 function rdMeanWire(){
   qa("#rd-mean .wmx").forEach(function(b){ b.onclick = rdMeanClose; });
+  qa("#rd-mean .wmsnd").forEach(function(b){
+    b.onclick = function(){
+      S.settings.wordSound = wordSound() ? 0 : 1;
+      save();
+      var on = wordSound();
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.innerHTML = on ? RIC.sound : RIC.mute;
+      if (!on) rdStop();
+      fabHint(uit("sound") + " · " + (on ? uit("on") : uit("off")));
+    };
+  });
   wmDragWire();
   qa("#rd-mean .wmbig").forEach(function(b){
     var mn0 = document.getElementById("rd-mean");
@@ -5913,7 +6839,12 @@ async function dlRange(p0, p1, mushafId, withAudio){
         if (withAudio && j && j.verses){
           for (var i = 0; i < j.verses.length; i++){
             if (RD.dlStop){ dlProg(L.dlg.stopped); return; }
-            try { await rdFetch(AUDIO_BASE + S.settings.reciter + "/" + ayahFile(j.verses[i].verse_key)); } catch(e){}
+            /* try every host that allows a real download, not just the first —
+               one blocked host used to make the whole audio download a no-op */
+            var cs = audioSrcs(j.verses[i].verse_key);
+            for (var k2 = 0; k2 < cs.length; k2++){
+              try { await rdFetch(cs[k2].u); break; } catch(e){}
+            }
           }
         }
       } catch(e){}
@@ -5921,6 +6852,7 @@ async function dlRange(p0, p1, mushafId, withAudio){
       dlProg(fmt(L.dlg.ing, n(Math.round(done / total * 100)), n(done), n(total)));
     }
     dlProg(L.dlg.done);
+    rdWarmAudio(RD.pages[RD.page]);
   } finally { RD.busy = false; RD.dlStop = false; }
 }
 async function rdDownloadJuz(){
@@ -6066,9 +6998,19 @@ function revRecord(p, q){
 function revDue(){
   if (!S.rev) return [];
   var m = {}; memorizedPages().forEach(function(p){ m[p] = true; });
-  return Object.keys(S.rev).map(Number)
+  var due = Object.keys(S.rev).map(Number)
     .filter(function(p){ return m[p] && S.rev[p].due <= TODAY; })
     .sort(function(a, b){ return S.rev[a].str - S.rev[b].str; });
+  /* Pages earned here all come back on the day they fall due. The pile carried in
+     from before is the one that needs a ceiling — ten juz is two hundred pages,
+     and the setting says how many of those may return in a day. */
+  var k = knownMap(), cap = (S.settings.oldPerDay === 0 || S.settings.oldPerDay) ? +S.settings.oldPerDay : 2;
+  var out = [], old = 0;
+  due.forEach(function(p){
+    if (k[p]){ if (old >= cap) return; old++; }
+    out.push(p);
+  });
+  return out;
 }
 
 /* ---------- install ---------- */
@@ -6205,7 +7147,7 @@ async function recStart(){
     }
     var stream = await navigator.mediaDevices.getUserMedia({ audio:true });
     REC.chunks = [];
-    var mt = ["audio/webm", "audio/mp4", "audio/ogg"].filter(function(t){
+    var mt = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/aac", "audio/ogg"].filter(function(t){
       return MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t);
     })[0];
     REC.mime = mt || "";
@@ -6226,7 +7168,21 @@ async function recStart(){
   } catch(e){
     REC.mr = null; FAB.rec = false;
     var p = document.getElementById("rd-prog");
-    if (p) p.textContent = L.rec.denied;
+    /* name the real cause: a packaged build with no RECORD_AUDIO in its manifest
+       never even shows a prompt, which looks identical to "denied" */
+    var RE = {
+      denied: { bn:"মাইক্রোফোনের অনুমতি দেওয়া হয়নি", en:"Microphone permission was refused", ur:"مائیکروفون کی اجازت نہیں ملی", zh:"未获得麦克风权限", ar:"لم يُسمح باستخدام الميكروفون" },
+      none:   { bn:"মাইক্রোফোন পাওয়া যায়নি", en:"No microphone found", ur:"مائیکروفون نہیں ملا", zh:"未找到麦克风", ar:"لا يوجد ميكروفون" },
+      unsup:  { bn:"এই সংস্করণে রেকর্ডিং চলে না", en:"Recording does not work in this build", ur:"اس ورژن میں ریکارڈنگ نہیں چلتی", zh:"此版本无法录音", ar:"التسجيل لا يعمل في هذه النسخة" },
+      busy:   { bn:"মাইক অন্য অ্যাপ ব্যবহার করছে", en:"Another app is using the microphone", ur:"مائیک کوئی اور ایپ استعمال کر رہی ہے", zh:"麦克风被其他应用占用", ar:"تطبيق آخر يستخدم الميكروفون" },
+      other:  { bn:"মাইক্রোফোন চালু করা গেল না", en:"Couldn't start the microphone", ur:"مائیکروفون شروع نہیں ہو سکا", zh:"无法启动麦克风", ar:"تعذّر تشغيل الميكروفون" }
+    };
+    var pick = (e && e.name === "NotAllowedError") ? "denied"
+             : (e && e.name === "NotFoundError") ? "none"
+             : (e && e.name === "NotReadableError") ? "busy"
+             : (!navigator.mediaDevices || !window.MediaRecorder) ? "unsup" : "other";
+    var why = RE[pick][(typeof L !== "undefined" && L.code) || "bn"] || RE[pick].en;
+    if (p) p.textContent = why;
     fabRender();
   }
 }
@@ -6250,7 +7206,8 @@ function recCompare(){
     if (!rdAudio){
       clearInterval(wait);
       var a = document.getElementById("rec-mine");
-      if (a){ a.currentTime = 0; a.play().catch(function(){}); }
+      if (a){ a.muted = false; a.volume = 1; a.currentTime = 0;
+        var pr = a.play(); if (pr && pr.catch) pr.catch(function(err){ if (!err || err.name !== "AbortError") rdMsg("tap"); }); }
     }
   }, 400);
 }
@@ -6289,16 +7246,22 @@ function rdPlayPhrase(pg, vk, i0, i1){
   for (i = 0; i < i0; i++) s0 += wt[i];
   for (i = 0; i <= i1; i++) s1 += wt[i];
   var f0 = s0 / tot, f1 = Math.min(1, s1 / tot), left = Math.max(1, RD.loops);
-  var a = new Audio(AUDIO_BASE + S.settings.reciter + "/" + ayahFile(vk));
+  var a = rdEle(), cands = audioSrcs(vk), ci = 0;
+  rdWipe(a);
+  rdUtok++;
+  a.muted = false; a.volume = 1;
+  a.src = cands[0].u;
+  try { a.load(); } catch(e){}
   a.playbackRate = Math.min(RD.speed, 0.85);
   rdAudio = a;
+  a.onerror = function(){ if (rdAudio === a && ++ci < cands.length){ a.src = cands[ci].u; try { a.load(); } catch(e){} } };
   a.onloadedmetadata = function(){ a.currentTime = f0 * a.duration; a.play().catch(function(){}); };
   a.ontimeupdate = function(){
     if (a.duration && a.currentTime >= f1 * a.duration){
       left--;
       if (left <= 0){ rdStop(); return; }
       a.pause();
-      setTimeout(function(){ if (rdAudio === a){ a.currentTime = f0 * a.duration; a.play().catch(function(){}); } }, 800);
+      setTimeout(function(){ if (rdAudio === a){ a.currentTime = f0 * a.duration; a.play().catch(function(){ rdMsg("tap"); }); } }, 800);
     }
   };
   a.onplay = rdSyncBtns; a.onpause = rdSyncBtns;
@@ -6730,6 +7693,42 @@ function drHome(el, D){
 
 /* ---------- render all ---------- */
 /* ---------- 2a · drawer and hub ---------- */
+/* Labels that sit in the static markup instead of a language pack — they stayed
+   Bengali in every other language until now. */
+var UIT = {
+  menu:   { bn:"মেনু", en:"Menu", ur:"مینو", zh:"菜单", ar:"القائمة" },
+  search: { bn:"খুঁজুন", en:"Search", ur:"تلاش", zh:"搜索", ar:"بحث" },
+  back:   { bn:"ফিরে যান", en:"Back", ur:"واپس", zh:"返回", ar:"رجوع" },
+  close:  { bn:"বন্ধ", en:"Close", ur:"بند", zh:"关闭", ar:"إغلاق" },
+  resize: { bn:"বড়/ছোট", en:"Bigger / smaller", ur:"بڑا / چھوٹا", zh:"放大／缩小", ar:"تكبير/تصغير" },
+  recite: { bn:"তিলাওয়াত", en:"Recitation", ur:"تلاوت", zh:"诵读", ar:"التلاوة" },
+  paper:  { bn:"কাগজের রঙ", en:"Paper colour", ur:"کاغذ کا رنگ", zh:"纸张颜色", ar:"لون الورق" },
+  night:  { bn:"রাতের রঙ", en:"Night colours", ur:"رات کے رنگ", zh:"夜间配色", ar:"ألوان الليل" },
+  cloud:  { bn:"ব্যাকআপ ও সিংক", en:"Backup and sync", ur:"بیک اپ اور سنک", zh:"备份与同步", ar:"النسخ والمزامنة" },
+  sound:  { bn:"শব্দে ট্যাপ করলে তিলাওয়াত", en:"Recite on word tap", ur:"لفظ پر ٹیپ سے تلاوت", zh:"点词即诵读", ar:"التلاوة عند نقر الكلمة" },
+  on:     { bn:"চালু", en:"on", ur:"چالو", zh:"开", ar:"مُفعّل" },
+  off:    { bn:"বন্ধ", en:"off", ur:"بند", zh:"关", ar:"مُعطّل" },
+  diag:   { bn:"অডিও ও মাইক যাচাই", en:"Audio and mic check", ur:"آڈیو اور مائیک جانچ", zh:"音频与麦克风检查", ar:"فحص الصوت والميكروفون" }
+};
+function uit(k){ var m = UIT[k] || {}; return m[(typeof L !== "undefined" && L.code) || "bn"] || m.en || ""; }
+function uiLabels(){
+  var set = function(id, attr, val){
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (attr) el.setAttribute(attr, val); else el.textContent = val;
+  };
+  set("drawer-open", "aria-label", uit("menu"));
+  set("hdr-search", "aria-label", uit("search"));
+  set("fab", "aria-label", uit("recite"));
+  set("idx-close", "aria-label", uit("back"));
+  set("idx-search-btn", "aria-label", uit("search"));
+  set("diag-close", "aria-label", uit("back"));
+  set("diag-ttl", "", uit("diag"));
+  set("dw-diag-l", "", uit("diag"));
+  set("dw-paper-l", "", uit("paper"));
+  set("dw-night-l", "", uit("night"));
+  set("dw-cloud-l", "", uit("cloud"));
+}
 function drawerFill(){
   var g = function(id){ return document.getElementById(id); };
   var nm = g("drawer-nm"); if (!nm) return;
@@ -6745,6 +7744,436 @@ function drawerFill(){
   });
   var pv = g("dw-paper-v");
   if (pv && L.mu) pv.textContent = { pcream:L.mu.pCream, pday:L.mu.pDay, pnight:L.mu.pNight }[S.settings.paper || "pcream"] || "";
+  uiLabels();
+}
+/* ---------- prior memorization: the screen ---------- */
+var KNL = {
+  bn:{ ttl:"আগে যা মুখস্থ", firm:"পাকা", weak:"দুর্বল", off:"বাদ দিন", mark:"ট্যাপ করলে যা বসবে",
+       juz:"পারা", surah:"সূরা", page:"পৃষ্ঠা", ayah:"আয়াত", from:"থেকে", to:"পর্যন্ত", add:"বসান",
+       have:"{0} পৃষ্ঠা জানা", left:"{0} পৃষ্ঠা বাকি", startAt:"নতুন শুরু", set:"ঠিক করুন",
+       wipe:"সব মুছুন", pgs:"{0} পৃষ্ঠা", daily:"পুরোনো মুখস্থ · দৈনিক", open:"আগে যা মুখস্থ আছে",
+       none:"কিছু বসানো হয়নি", ask:"আগে থেকে কিছু মুখস্থ থাকলে এখানে বলুন" },
+  en:{ ttl:"Already memorized", firm:"Firm", weak:"Weak", off:"Remove", mark:"A tap marks it",
+       juz:"Juz", surah:"Surah", page:"Pages", ayah:"Ayat", from:"From", to:"To", add:"Mark",
+       have:"{0} pages known", left:"{0} pages left", startAt:"New lessons start", set:"Set",
+       wipe:"Clear all", pgs:"{0} pages", daily:"Older revision · per day", open:"What you already know",
+       none:"Nothing marked yet", ask:"Already memorized part of the Qur'an? Say so here." },
+  ur:{ ttl:"جو پہلے سے یاد ہے", firm:"پکی", weak:"کمزور", off:"ہٹا دیں", mark:"ٹیپ سے یہ لگے گا",
+       juz:"پارہ", surah:"سورہ", page:"صفحات", ayah:"آیات", from:"سے", to:"تک", add:"لگائیں",
+       have:"{0} صفحے یاد", left:"{0} صفحے باقی", startAt:"نیا سبق یہاں سے", set:"طے کریں",
+       wipe:"سب مٹا دیں", pgs:"{0} صفحے", daily:"پرانا دور · روزانہ", open:"جو پہلے سے یاد ہے",
+       none:"ابھی کچھ نہیں لگا", ask:"اگر پہلے سے کچھ یاد ہے تو یہاں بتائیں" },
+  zh:{ ttl:"已经背过的部分", firm:"已熟", weak:"薄弱", off:"取消", mark:"点击后标记为",
+       juz:"卷", surah:"章", page:"页码", ayah:"节", from:"从", to:"到", add:"标记",
+       have:"已背 {0} 页", left:"还剩 {0} 页", startAt:"新课从", set:"设定",
+       wipe:"全部清除", pgs:"{0} 页", daily:"旧课复习 · 每天", open:"已经背过的部分",
+       none:"尚未标记", ask:"如果之前已经背过一部分，请在这里说明" },
+  ar:{ ttl:"ما حُفظ سابقًا", firm:"متقن", weak:"ضعيف", off:"إزالة", mark:"النقر يضع",
+       juz:"الجزء", surah:"السورة", page:"الصفحات", ayah:"الآيات", from:"من", to:"إلى", add:"ضع",
+       have:"{0} صفحة محفوظة", left:"{0} صفحة متبقية", startAt:"يبدأ الجديد من", set:"تثبيت",
+       wipe:"امسح الكل", pgs:"{0} صفحة", daily:"مراجعة القديم · يوميًا", open:"ما حُفظ سابقًا",
+       none:"لم يوضع شيء بعد", ask:"إن كنت قد حفظت شيئًا من قبل فبيّنه هنا" }
+};
+function knL(){ return KNL[L.code] || KNL.en; }
+var KN = { tab:"juz", q:"f" };
+function knOpen(){
+  var el = document.getElementById("known");
+  if (!el) return;
+  drawerClose();
+  el.hidden = false;
+  knRender();
+}
+function knClose(){
+  var el = document.getElementById("known");
+  if (el) el.hidden = true;
+  renderAll();
+}
+function knCmp(a, b){ return (a[0] - b[0]) || (a[1] - b[1]); }
+function knPageOf(st, s, a){
+  var best = 1;
+  Object.keys(st).forEach(function(p){
+    if (knCmp(st[p], [s, a]) <= 0 && +p > best) best = +p;
+  });
+  return best;
+}
+function knSurahPages(sp, s){
+  var a = sp[s] || 1, b = TOTAL_PAGES, nx = 0;
+  for (var i = s + 1; i <= 114; i++){ if (sp[i]){ nx = sp[i]; break; } }
+  /* a surah that begins mid-page shares that page with the one before it: give
+     the shared page to the later surah only, or marking two surahs in a row
+     would quietly unmark the join */
+  if (nx) b = Math.max(a, nx - 1);
+  return { a:a, b:b };
+}
+function knRange(a, b){
+  var out = [];
+  for (var p = Math.min(a, b); p <= Math.max(a, b); p++) out.push(p);
+  return out;
+}
+function knStateOf(pages){
+  var k = knownMap(), f = 0, w = 0;
+  pages.forEach(function(p){ if (k[p] === "f") f++; else if (k[p] === "w") w++; });
+  if (f + w === 0) return "";
+  return f >= w ? "f" : "w";
+}
+async function knRender(){
+  var T = knL(), body = document.getElementById("kn-body");
+  if (!body) return;
+  document.getElementById("kn-ttl").textContent = T.ttl;
+  document.getElementById("kn-close").setAttribute("aria-label", uit("back"));
+
+  document.getElementById("kn-q").innerHTML =
+    [["f", T.firm], ["w", T.weak], ["", T.off]].map(function(o){
+      return '<button data-knq="' + o[0] + '" aria-pressed="' + (KN.q === o[0]) + '">' + o[1] + '</button>';
+    }).join("");
+  qa("#kn-q button").forEach(function(b){
+    b.onclick = function(){ KN.q = b.dataset.knq; knRender(); };
+  });
+
+  var tabs = document.getElementById("kn-tabs");
+  tabs.innerHTML = [["juz", T.juz], ["surah", T.surah], ["page", T.page], ["ayah", T.ayah]].map(function(o){
+    return '<button class="idx-tab" data-kn="' + o[0] + '" aria-selected="' + (KN.tab === o[0]) + '">' + o[1] + '</button>';
+  }).join("");
+  qa("#kn-tabs .idx-tab").forEach(function(b){
+    b.onclick = function(){ KN.tab = b.dataset.kn; knRender(); };
+  });
+
+  knFoot();
+
+  if (KN.tab === "juz"){
+    body.innerHTML = '<div class="knchips">' + Array.from({ length:30 }, function(_, i){
+      var j = i + 1, r = juzRange(j), st = knStateOf(knRange(r[0], r[1]));
+      return '<button class="knchip ' + st + '" data-knjuz="' + j + '">' + n(j) + '</button>';
+    }).join("") + '</div><p class="idx-empty" style="padding:0 14px">' + T.mark + ': <b>' +
+      (KN.q === "f" ? T.firm : KN.q === "w" ? T.weak : T.off) + '</b></p>';
+    qa("#kn-body [data-knjuz]").forEach(function(b){
+      b.onclick = function(){
+        var r = juzRange(+b.dataset.knjuz);
+        knownMark(knRange(r[0], r[1]), KN.q || null);
+        knRender();
+      };
+    });
+    return;
+  }
+
+  if (KN.tab === "page"){
+    body.innerHTML = '<div class="knform">' +
+      '<div><label>' + T.from + '</label><input type="number" id="kn-p0" min="1" max="' + TOTAL_PAGES + '" value="1"></div>' +
+      '<div><label>' + T.to + '</label><input type="number" id="kn-p1" min="1" max="' + TOTAL_PAGES + '" value="1"></div>' +
+      '<button class="abtn go" id="kn-padd">' + T.add + '</button></div>';
+    document.getElementById("kn-padd").onclick = function(){
+      var a = +document.getElementById("kn-p0").value || 1;
+      var b = +document.getElementById("kn-p1").value || a;
+      knownMark(knRange(a, b), KN.q || null);
+      knFoot();
+    };
+    return;
+  }
+
+  body.innerHTML = '<p class="idx-empty">' + ((L.rd && L.rd.loading) || "…") + '</p>';
+  var ix;
+  try { ix = await mushafIndex(); } catch(e){ ix = { surah:{}, start:{} }; }
+  var sp = ix.surah || {}, st = ix.start || {};
+
+  if (KN.tab === "surah"){
+    var rows = "";
+    for (var s = 1; s <= 114; s++){
+      var r = knSurahPages(sp, s), pages = knRange(r.a, r.b);
+      rows += '<div class="knrow ' + knStateOf(pages) + '" data-knsurah="' + s + '">' +
+        '<span>' + n(s) + '. ' + esc(surahName(s)) + '</span>' +
+        '<span class="pgs">' + n(r.a) + '–' + n(r.b) + '</span></div>';
+    }
+    body.innerHTML = rows;
+    qa("#kn-body [data-knsurah]").forEach(function(b){
+      b.onclick = function(){
+        var r = knSurahPages(sp, +b.dataset.knsurah);
+        knownMark(knRange(r.a, r.b), KN.q || null);
+        knRender();
+      };
+    });
+    return;
+  }
+
+  /* ayah range — Baqarah 1–141 is the ordinary way a hafiz describes a part */
+  var opts = "";
+  for (var s2 = 1; s2 <= 114; s2++) opts += '<option value="' + s2 + '">' + n(s2) + '. ' + esc(surahName(s2)) + '</option>';
+  body.innerHTML = '<div class="knform">' +
+    '<div style="flex:1 1 180px"><label>' + T.surah + '</label><select id="kn-s" style="width:100%">' + opts + '</select></div>' +
+    '<div><label>' + T.from + '</label><input type="number" id="kn-a0" min="1" value="1"></div>' +
+    '<div><label>' + T.to + '</label><input type="number" id="kn-a1" min="1" value="1"></div>' +
+    '<button class="abtn go" id="kn-aadd">' + T.add + '</button></div>' +
+    '<p class="idx-empty" style="padding:0 14px" id="kn-ahint"></p>';
+  var sel = document.getElementById("kn-s");
+  var syncMax = function(){
+    var s3 = +sel.value || 1, mx = AYAHS[s3 - 1] || 1;
+    document.getElementById("kn-a0").max = mx;
+    document.getElementById("kn-a1").max = mx;
+    document.getElementById("kn-a1").value = mx;
+    document.getElementById("kn-ahint").textContent = surahName(s3) + " · " + n(mx) + " " + T.ayah;
+  };
+  sel.onchange = syncMax;
+  syncMax();
+  document.getElementById("kn-aadd").onclick = function(){
+    var s4 = +sel.value || 1;
+    var a0 = Math.max(1, +document.getElementById("kn-a0").value || 1);
+    var a1 = Math.max(a0, +document.getElementById("kn-a1").value || a0);
+    knownMark(knRange(knPageOf(st, s4, a0), knPageOf(st, s4, a1)), KN.q || null);
+    knFoot();
+  };
+}
+function knFoot(){
+  var T = knL(), f = document.getElementById("kn-foot");
+  if (!f) return;
+  var have = knownPages().length, left = Math.max(0, TOTAL_PAGES - memorizedPages().length);
+  var first = 1;
+  var k = knownMap();
+  while (first <= TOTAL_PAGES && k[first]) first++;
+  f.innerHTML = '<span class="sum">' + fmt(T.have, n(have)) + ' · ' + fmt(T.left, n(left)) + '</span>' +
+    '<span style="display:flex;align-items:center;gap:8px;white-space:nowrap">' +
+      '<label for="kn-start" style="font-size:12px;color:var(--ink-3)">' + T.startAt + '</label>' +
+      '<input type="number" id="kn-start" min="1" max="' + TOTAL_PAGES + '" value="' + (S.settings.startPage || first) +
+        '" style="width:74px;padding:9px 10px;border:1px solid var(--rule);border-radius:999px;background:var(--card);font:inherit;color:var(--ink)">' +
+      '<button class="abtn go" id="kn-setstart">' + T.set + '</button>' +
+    '</span>' +
+    '<button class="abtn danger" id="kn-wipe">' + T.wipe + '</button>';
+  document.getElementById("kn-setstart").onclick = function(){
+    S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +document.getElementById("kn-start").value || 1));
+    save();
+    knFoot();
+  };
+  document.getElementById("kn-wipe").onclick = function(){
+    knownMark(knownPages(), null);
+    knRender();
+  };
+}
+function knWire(){
+  var c = document.getElementById("kn-close");
+  if (c) c.onclick = knClose;
+}
+/* ---------- the mushaf index: surah / juz / both, straight from the pack ---------- */
+var IDXL = {
+  bn:{ ttl:"মুসহাফ-এর সূচী", all:"একসাথে", surah:"সূরা", juz:"পারা", page:"পৃষ্ঠা", ayah:"আয়াত", q:"সূরা খুঁজুন…", none:"কিছু পাওয়া যায়নি" },
+  en:{ ttl:"Mushaf index", all:"Together", surah:"Surah", juz:"Juz", page:"Page", ayah:"Ayat", q:"Find a surah…", none:"Nothing found" },
+  ur:{ ttl:"مصحف کی فہرست", all:"اکٹھا", surah:"سورہ", juz:"پارہ", page:"صفحہ", ayah:"آیات", q:"سورہ تلاش کریں…", none:"کچھ نہیں ملا" },
+  zh:{ ttl:"古兰经目录", all:"全部", surah:"章", juz:"卷", page:"页", ayah:"节", q:"查找章…", none:"未找到" },
+  ar:{ ttl:"فهرس المصحف", all:"الكل", surah:"السورة", juz:"الجزء", page:"الصفحة", ayah:"الآيات", q:"ابحث عن سورة…", none:"لا يوجد" }
+};
+function idxL(){ return IDXL[L.code] || IDXL.bn; }
+function applyNight(){
+  var on = !!(S.settings && S.settings.night);
+  document.body.classList.toggle("night", on);
+  var v = document.getElementById("dw-night-v");
+  if (v) v.textContent = on ? "চালু" : "বন্ধ";
+  /* the Android status bar follows the page colour, or it stays a bright strip
+     above a dark screen — the exact thing the night theme is for */
+  var m = document.querySelector('meta[name="theme-color"]');
+  if (!m){ m = document.createElement("meta"); m.name = "theme-color"; document.head.appendChild(m); }
+  m.content = on ? "#151613" : "#E2E8D8";
+  if (typeof rdFitSoon === "function") rdFitSoon();
+}
+function diagOpen(){
+  var el = document.getElementById("diag");
+  if (!el) return;
+  drawerClose();
+  el.hidden = false;
+  diagRun();
+}
+function diagClose(){ var e = document.getElementById("diag"); if (e) e.hidden = true; }
+var DGL = {
+  bn:{ run:"যাচাই চলছে…", origin:"ঠিকানা (origin)", secure:"নিরাপদ প্রসঙ্গ (secure context)",
+       yes:"হ্যাঁ", noMic:"না — মাইক কাজ করবে না", net:"ইন্টারনেট", online:"সংযুক্ত", offline:"সংযোগ নেই",
+       have:"আছে", miss:"নেই", mdMiss:"নেই — এই খোলসে মাইক পাওয়া যায় না",
+       lastHost:"শেষবার যে সার্ভার চলেছে", lastNone:"এখনো কোনোটাই চলেনি",
+       unlock:"অডিও আনলক", unlockY:"হ্যাঁ · নিজে থেকে বাজতে পারবে", unlockN:"না — পর্দায় একবার ট্যাপ করুন",
+       font:"পৃষ্ঠার ফন্ট", fontOk:"লোড হয়েছে", fontNo:"আসেনি — লেখা অদৃশ্য হবে",
+       mic:"মাইক্রোফোন", micOk:"অনুমতি পাওয়া গেছে", gone:"ফাইল নেই বা চলবে না", netErr:"নেটওয়ার্ক",
+       err:"ত্রুটি", timeout:"সময় শেষ", photo:"এই তালিকার ছবি পাঠালে ঠিক কোন জায়গায় সমস্যা তা বলা যাবে।" },
+  en:{ run:"Checking…", origin:"Address (origin)", secure:"Secure context",
+       yes:"Yes", noMic:"No — the mic cannot work", net:"Internet", online:"Connected", offline:"No connection",
+       have:"Present", miss:"Missing", mdMiss:"Missing — this shell exposes no microphone",
+       lastHost:"Last server that worked", lastNone:"None has worked yet",
+       unlock:"Audio unlocked", unlockY:"Yes · it may start on its own", unlockN:"No — tap the screen once",
+       font:"Page font", fontOk:"loaded", fontNo:"did not arrive — the text will be invisible",
+       mic:"Microphone", micOk:"Permission granted", gone:"File missing or unplayable", netErr:"Network",
+       err:"Error", timeout:"Timed out", photo:"Send a photo of this list and the exact fault can be named." },
+  ur:{ run:"جانچ جاری…", origin:"پتہ (origin)", secure:"محفوظ سیاق (secure context)",
+       yes:"جی ہاں", noMic:"نہیں — مائیک کام نہیں کرے گا", net:"انٹرنیٹ", online:"جڑا ہوا", offline:"کوئی رابطہ نہیں",
+       have:"موجود", miss:"موجود نہیں", mdMiss:"موجود نہیں — اس خول میں مائیک نہیں ملتا",
+       lastHost:"آخری چلنے والا سرور", lastNone:"ابھی کوئی نہیں چلا",
+       unlock:"آڈیو کھل گئی", unlockY:"جی · خود چل سکتی ہے", unlockN:"نہیں — اسکرین پر ایک بار ٹیپ کریں",
+       font:"صفحے کا فونٹ", fontOk:"لوڈ ہو گیا", fontNo:"نہیں آیا — متن نظر نہیں آئے گا",
+       mic:"مائیکروفون", micOk:"اجازت مل گئی", gone:"فائل نہیں یا نہیں چلے گی", netErr:"نیٹ ورک",
+       err:"خرابی", timeout:"وقت ختم", photo:"اس فہرست کی تصویر بھیجیں تو خرابی کی جگہ بتائی جا سکے گی۔" },
+  zh:{ run:"检查中…", origin:"地址 (origin)", secure:"安全上下文",
+       yes:"是", noMic:"否 — 麦克风无法工作", net:"网络", online:"已连接", offline:"无连接",
+       have:"存在", miss:"缺失", mdMiss:"缺失 — 此外壳未提供麦克风",
+       lastHost:"上次可用的服务器", lastNone:"还没有一个可用",
+       unlock:"音频已解锁", unlockY:"是 · 可自动播放", unlockN:"否 — 请在屏幕上点一下",
+       font:"页面字体", fontOk:"已加载", fontNo:"未加载 — 文字将不可见",
+       mic:"麦克风", micOk:"已获授权", gone:"文件缺失或无法播放", netErr:"网络",
+       err:"错误", timeout:"超时", photo:"把这份清单拍照发来，就能指出问题究竟出在哪里。" },
+  ar:{ run:"جارٍ الفحص…", origin:"العنوان (origin)", secure:"سياق آمن",
+       yes:"نعم", noMic:"لا — لن يعمل الميكروفون", net:"الإنترنت", online:"متصل", offline:"لا اتصال",
+       have:"موجود", miss:"غير موجود", mdMiss:"غير موجود — هذا الغلاف لا يتيح ميكروفونًا",
+       lastHost:"آخر خادم عمل", lastNone:"لم يعمل أي خادم بعد",
+       unlock:"الصوت مُفعّل", unlockY:"نعم · يمكنه البدء تلقائيًا", unlockN:"لا — انقر الشاشة مرة",
+       font:"خط الصفحة", fontOk:"حُمِّل", fontNo:"لم يصل — سيختفي النص",
+       mic:"الميكروفون", micOk:"مُنحت الإذن", gone:"الملف غير موجود أو لا يعمل", netErr:"الشبكة",
+       err:"خطأ", timeout:"انتهى الوقت", photo:"أرسل صورة لهذه القائمة ليُحدَّد موضع الخلل بدقّة." }
+};
+async function diagRun(){
+  var b = document.getElementById("diag-body");
+  if (!b) return;
+  var rows = [];
+  function add(name, ok, note){
+    rows.push('<div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;' +
+      'border-bottom:1px solid var(--rule)">' +
+      '<span style="flex:0 0 18px;color:' + (ok ? "var(--verdigris)" : "var(--maroon)") + '">' +
+      (ok ? "\u2713" : "\u00D7") + '</span>' +
+      '<span style="flex:1"><b style="font-weight:600">' + name + '</b>' +
+      (note ? '<br><span style="font-size:12.5px;color:var(--ink-3);word-break:break-all">' + esc(String(note)) + '</span>' : '') +
+      '</span></div>');
+  }
+  var G = DGL[L.code] || DGL.en;
+  b.innerHTML = '<p style="color:var(--ink-3)">' + G.run + '</p>';
+  add("Build", true, APP_VER);
+  add(G.origin, true, location.protocol + "//" + location.host);
+  add(G.secure, !!window.isSecureContext, window.isSecureContext ? G.yes : G.noMic);
+  add(G.net, !!navigator.onLine, navigator.onLine ? G.online : G.offline);
+  add("MediaRecorder", !!window.MediaRecorder, window.MediaRecorder ? G.have : G.miss);
+  var mdOk = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  add("mediaDevices", mdOk, mdOk ? G.have : G.mdMiss);
+  b.innerHTML = rows.join("");
+
+  /* Probe each host with an audio ELEMENT, not fetch: playback needs no CORS, so
+     a fetch probe reports a working host as broken and sends us chasing ghosts. */
+  function probe(url){
+    return new Promise(function(res){
+      var a = new Audio(), done = false, t1 = Date.now();
+      var fin = function(ok, m){ if (done) return; done = true;
+        try { a.pause(); a.src = ""; } catch(e){} res({ ok:ok, note:m }); };
+      a.preload = "auto";
+      a.oncanplay = function(){ fin(true, "OK · " + (Date.now() - t1) + "ms"); };
+      a.onerror = function(){
+        var c = (a.error && a.error.code) || 0;
+        fin(false, (c === 4 ? G.gone : c === 2 ? G.netErr : G.err + " " + c) +
+          " · " + (Date.now() - t1) + "ms");
+      };
+      setTimeout(function(){ fin(false, G.timeout + " · 7000ms"); }, 7000);
+      a.src = url; a.load();
+    });
+  }
+  var cands = audioSrcs("1:1").slice(0, 4);
+  for (const c of cands){
+    var pr = await probe(c.u);
+    add(c.h, pr.ok, pr.note + " · " + c.u.replace("https://", ""));
+    b.innerHTML = rows.join("");
+  }
+  add(G.lastHost, !!S.settings.audioHost, S.settings.audioHost || G.lastNone);
+  add(G.unlock, rdOK, rdOK ? G.unlockY : G.unlockN);
+  b.innerHTML = rows.join("");
+
+  var fam = "QCF" + qcfVer() + "P" + pad3(RD.page || 1);
+  var fOk = false;
+  try { fOk = document.fonts.check('16px "' + fam + '"'); } catch(e){}
+  add(G.font, fOk, fam + " · " + (fOk ? G.fontOk : G.fontNo));
+  b.innerHTML = rows.join("");
+
+  /* the microphone, with the real permission request */
+  var micNote = "", micOk = false;
+  try {
+    var st = await navigator.mediaDevices.getUserMedia({ audio:true });
+    micOk = true; micNote = G.micOk;
+    st.getTracks().forEach(function(t){ t.stop(); });
+  } catch(e){ micNote = (e && (e.name + " · " + e.message)) || String(e); }
+  add(G.mic, micOk, micNote);
+  b.innerHTML = rows.join("") +
+    '<p style="margin-top:16px;font-size:12.5px;color:var(--ink-3)">' + G.photo + '</p>';
+}
+function idxOpen(){
+  var el = document.getElementById("idx");
+  if (!el) return;
+  drawerClose();
+  el.hidden = false;
+  idxRender();
+}
+function idxClose(){
+  var el = document.getElementById("idx");
+  if (el) el.hidden = true;
+  var q = document.getElementById("idx-q");
+  if (q){ q.value = ""; q.hidden = true; }
+}
+function idxGo(p){
+  idxClose();
+  openMushaf(Math.max(1, Math.min(TOTAL_PAGES, p)));
+}
+async function idxRender(){
+  var body = document.getElementById("idx-body"), tabs = document.getElementById("idx-tabs");
+  if (!body || !tabs) return;
+  var T = idxL();
+  document.getElementById("idx-ttl").textContent = T.ttl;
+  var qEl = document.getElementById("idx-q");
+  if (qEl) qEl.placeholder = T.q;
+  tabs.innerHTML = [["all", T.all], ["surah", T.surah], ["juz", T.juz]].map(function(o){
+    return '<button class="idx-tab" data-idx="' + o[0] + '" aria-selected="' + (IDX.tab === o[0]) + '">' + o[1] + '</button>';
+  }).join("");
+  qa("#idx-tabs .idx-tab").forEach(function(b){
+    b.onclick = function(){ IDX.tab = b.dataset.idx; idxRender(); };
+  });
+  body.innerHTML = '<p class="idx-empty">' + (L.rd ? L.rd.loading : "…") + '</p>';
+  var ix;
+  try { ix = await mushafIndex(); } catch(e){ ix = { surah:{} }; }
+  var sp = ix.surah || {}, term = (qEl && !qEl.hidden ? qEl.value.trim().toLowerCase() : "");
+  var rows = "", head = "";
+  function match(nn){
+    if (!term) return true;
+    return (String(nn).indexOf(term) === 0) ||
+           (SURAH_EN[nn-1] || "").toLowerCase().indexOf(term) >= 0 ||
+           (SURAH_BN[nn-1] || "").indexOf(term) >= 0;
+  }
+  if (IDX.tab === "juz"){
+    head = '<tr><th>' + T.juz + '</th><th>' + T.page + '</th></tr>';
+    for (var j = 1; j <= 30; j++){
+      var jp = juzRange(j)[0];
+      rows += '<tr data-p="' + jp + '"><td>' + n(j) + '</td><td class="pg">' + T.page + ' ' + n(jp) + '</td></tr>';
+    }
+  } else if (IDX.tab === "surah"){
+    head = '<tr><th>' + T.surah + '</th><th>' + T.page + '</th><th>' + T.ayah + '</th></tr>';
+    for (var s = 1; s <= 114; s++){
+      if (!match(s)) continue;
+      rows += '<tr data-p="' + (sp[s] || 1) + '"><td class="nm">' + n(s) + '. ' + esc(surahName(s)) +
+        '</td><td class="pg">' + n(sp[s] || 1) + '</td><td>' + n(AYAHS[s-1]) + '</td></tr>';
+    }
+  } else {
+    head = '<tr><th>' + T.surah + '</th><th>' + T.juz + '</th><th>' + T.page + '</th></tr>';
+    for (var a = 1; a <= 114; a++){
+      if (!match(a)) continue;
+      var ap = sp[a] || 1;
+      rows += '<tr data-p="' + ap + '"><td class="nm">' + n(a) + '. ' + esc(surahName(a)) +
+        '</td><td>' + n(juzOf(ap)) + '</td><td class="pg">' + n(ap) + '</td></tr>';
+    }
+  }
+  body.innerHTML = rows
+    ? '<table class="idx-tbl"><thead>' + head + '</thead><tbody>' + rows + '</tbody></table>'
+    : '<p class="idx-empty">' + T.none + '</p>';
+  qa("#idx-body tbody tr").forEach(function(tr){
+    tr.onclick = function(){ idxGo(+tr.dataset.p || 1); };
+  });
+}
+function idxWire(){
+  var c = document.getElementById("idx-close");
+  if (c) c.onclick = idxClose;
+  var dc = document.getElementById("diag-close");
+  if (dc) dc.onclick = diagClose;
+  knWire();
+  var sb = document.getElementById("idx-search-btn"), q = document.getElementById("idx-q");
+  if (sb && q) sb.onclick = function(){
+    q.hidden = !q.hidden;
+    if (!q.hidden) q.focus(); else { q.value = ""; }
+    IDX.tab = (IDX.tab === "juz") ? "surah" : IDX.tab;   /* searching juz numbers is pointless */
+    idxRender();
+  };
+  if (q) q.oninput = function(){ idxRender(); };
 }
 function syncDrawerNav(){
   var cur = document.querySelector('#tabs .tab[aria-selected="true"]');
@@ -6818,10 +8247,42 @@ function drawerWire(){
   var sc = document.getElementById("drawer-scrim");
   if (sc) sc.onclick = drawerClose;
   var sb = document.getElementById("hdr-search");
-  if (sb) sb.onclick = function(){ goView("mushaf"); };
+  if (sb) sb.onclick = idxOpen;   /* "search" in a mushaf means find a surah or juz */
   qa("#drawer [data-go]").forEach(function(b){ b.onclick = function(){ goView(b.dataset.go); }; });
   var cb = document.getElementById("dw-cloud");
   if (cb) cb.onclick = cloudOpen;
+  var ib = document.getElementById("dw-index");
+  if (ib) ib.onclick = idxOpen;
+  var db = document.getElementById("dw-diag");
+  if (db) db.onclick = diagOpen;
+  var ab = document.getElementById("dw-aims");
+  if (ab){
+    ab.onclick = function(){
+      S.settings.aimsHid = 0; try { save(); } catch(e){}
+      drawerClose();
+      var t = document.querySelector('#tabs .tab[data-v="today"]');
+      if (t) t.click();
+      renderToday();
+    };
+    var abl = document.getElementById("dw-aims-l");
+    if (abl){
+      var AT = { bn:"এই অ্যাপ কী করে", en:"What this app does", ur:"یہ ایپ کیا کرتی ہے",
+                 zh:"本应用的用途", ar:"ماذا يفعل هذا التطبيق" };
+      abl.textContent = AT[L.code] || AT.en;
+    }
+  }
+  var nb = document.getElementById("dw-night");
+  if (nb) nb.onclick = function(){
+    S.settings.night = S.settings.night ? 0 : 1;
+    try { save(); } catch(e){}
+    applyNight();
+  };
+  applyNight();
+  var vr = document.getElementById("dw-ver");
+  if (vr) vr.textContent = "Build " + APP_VER;
+  var ibl = document.getElementById("dw-index-l");
+  if (ibl) ibl.textContent = idxL().ttl;
+  idxWire();
   var pb = document.getElementById("dw-paper");
   if (pb) pb.onclick = function(){ rdPaperCycle(); drawerFill(); };
 }
@@ -6908,8 +8369,22 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
   Sync.init();
   if (Cloud.on()) Cloud.pull(true);
 
-  if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
-    navigator.serviceWorker.register("sw.js").catch(function(){});
+  /* A packaged build already has every file on disk, so the service worker adds
+     nothing but staleness: its cache-first shell served the PREVIOUS index.html
+     for one whole launch after an update, making new APKs look like old ones.
+     Register it only for the web build, and clear any copy left inside the app. */
+  var packaged = !!(window.Capacitor || window.cordova) || location.protocol === "file:";
+  if ("serviceWorker" in navigator){
+    if (packaged){
+      navigator.serviceWorker.getRegistrations().then(function(rs){
+        rs.forEach(function(r){ r.unregister(); });
+      }).catch(function(){});
+      if (window.caches && caches.keys) caches.keys().then(function(ks){
+        ks.forEach(function(k){ if (k.indexOf("hifz-v") === 0) caches.delete(k); });
+      }).catch(function(){});
+    } else if (location.protocol.indexOf("http") === 0){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    }
   }
 } catch(err){ fatal(err); } })();
 </script>
@@ -6932,11 +8407,24 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
   function back(){
     if(window.FAB&&FAB.rec){ fabMicStop(); return true; }
     if(window.FAB&&FAB.open){ FAB.open=false; fabRender(); return true; }
+    /* anything layered over the page closes first, newest layer on top —
+       on Android the hardware key must peel these off, never exit the app */
+    var dg=document.getElementById('diag');
+    if(dg&&!dg.hidden){ diagClose(); return true; }
+    var ix=document.getElementById('idx');
+    if(ix&&!ix.hidden){ idxClose(); return true; }
+    var dw=document.getElementById('drawer');
+    if(dw&&!dw.hidden){ drawerClose(); return true; }
+    var ov=document.querySelector('.ovl.on,.rep.on');
+    if(ov){ ov.classList.remove('on'); return true; }
+    var mn=document.getElementById('rd-mean');
+    if(mn&&mn.classList.contains('on')){ rdMeanClose(); return true; }
     if(document.body.classList.contains('focus')){
       var f=document.querySelector('.fexit'); if(f){f.click(); return true;}
     }
-    var ov=document.querySelector('.ovl.on,.rep.on');
-    if(ov){ ov.classList.remove('on'); return true; }
+    var card=document.querySelector('.rdcard.open');
+    if(card){ card.classList.remove('open'); if(typeof rdFitSoon==='function') rdFitSoon(); return true; }
+    if(rdAudio){ rdStop(); return true; }
     var t=document.querySelector('#tabs [aria-selected="true"]'), all=document.querySelectorAll('#tabs .tab');
     if(t&&all.length&&t!==all[0]){ all[0].click(); return true; }
     return false;
