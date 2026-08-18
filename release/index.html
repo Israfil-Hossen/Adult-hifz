@@ -2846,6 +2846,26 @@ body.night .caprow{border-color:rgba(255,255,255,.10)}
 .wkrow b{font-family:var(--mono);font-size:16px}
 .wkrow .wkaim{color:var(--ink-3);font-size:12.5px;margin-inline-start:auto}
 body.night .wkrow{border-color:rgba(255,255,255,.10)}
+/* the surah, before you begin it */
+.surcard .surbody{display:flex;align-items:center;gap:18px;padding:10px 4px 22px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Cpath d='M17 2c5 0 9 4 9 9s-4 6-9 6-9-1-9-6 4-9 9-9z' fill='none' stroke='%235F7F52' stroke-width='0.7' opacity='0.30'/%3E%3C/svg%3E");
+  background-repeat:repeat}
+.surhouse{flex:0 0 auto;width:92px;height:92px;color:var(--verdigris)}
+.surhouse svg{width:100%;height:100%}
+.surtext{flex:1 1 auto;min-width:0}
+.surar{font-family:"Noto Naskh Arabic","Amiri","Scheherazade New",serif;
+  font-size:34px;line-height:1.35;color:var(--ink);direction:rtl}
+.surloc{font-family:var(--display);font-size:19px;color:var(--ink-2);margin-top:2px}
+.surmeta{margin-top:9px;font-size:13.5px;color:var(--ink-3);display:flex;
+  align-items:center;gap:7px;flex-wrap:wrap}
+.surmeta .surplace{color:var(--verdigris);font-weight:600}
+.surmeta .surdot{opacity:.5}
+.surcard .trs-ttl{font-family:var(--mono);font-size:14px;color:var(--ink-3)}
+@media (max-width:430px){
+  .surhouse{width:68px;height:68px}
+  .surar{font-size:28px}
+  .surloc{font-size:17px}
+}
 .mfrow{display:block;width:100%;text-align:start;padding:13px 12px;border:none;background:none;
   font:inherit;font-size:14.5px;color:var(--ink);cursor:pointer;border-radius:10px;line-height:1.45}
 .mfrow:hover{background:rgba(95,127,82,.12)}
@@ -5595,7 +5615,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "v112";
+var APP_VER = "v113";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -6523,7 +6543,7 @@ function rdSwipeWire(){
    may be swallowed by the panel toggle. */
 function rdTapBare(t){
   if (!t || !t.closest) return true;
-  if (t.closest(".w, .grab, .qnum, button, a, select, input, textarea, label")) return false;
+  if (t.closest(".w, .grab, .qnum, .qhead, button, a, select, input, textarea, label")) return false;
   if (RD.blind && t.closest(".qline")) return false;
   return true;
 }
@@ -6610,6 +6630,78 @@ async function mushafProve(wasId, wantId){
   if (typeof fabHint === "function") fabHint(fmt(uit("mushafFail"), wantId));
 }
 
+/* ---------- the surah, before you begin it ----------
+   Where it was revealed decides which house is drawn: the Kaaba for Makkah,
+   a masjid for Madinah. One character a surah, checked against the app's own
+   ayah counts on all 114 before it was trusted.
+   Source: Quranic Universal Library — surah metadata. */
+var SURAH_PLACE = "kmmmmkkmmkkkmkkkkkkkkmkmkkkkkkkkmkkkkkkkkkkkkkmmmkkkkkmkmmmmmmmmmmkkkkkkkkkmkkkkkkkkkkkkkkkkkkkkkmmkkkkkkkkkkmkkkk";
+function surahPlace(sn){ return SURAH_PLACE.charAt(sn - 1) === "m" ? "m" : "k"; }
+/* drawn rather than downloaded, in the app's own ink */
+var SUR_IC = {
+  k: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" ' +
+     'stroke-linejoin="round"><path d="M12 24l20-9 20 9v26H12z" fill="rgba(51,65,79,.10)"/>' +
+     '<path d="M12 30h40M12 34h40" stroke-width="1.4" opacity=".7"/>' +
+     '<path d="M27 50V39h10v11" fill="rgba(176,138,62,.35)"/>' +
+     '<path d="M12 50h40" stroke-width="2.4"/></svg>',
+  m: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" ' +
+     'stroke-linejoin="round"><path d="M20 50V33a12 12 0 0 1 24 0v17" fill="rgba(95,127,82,.16)"/>' +
+     '<path d="M32 21v-5M30 16h4" stroke-width="1.6"/>' +
+     '<path d="M12 50V30a3 3 0 0 1 6 0v20" fill="rgba(95,127,82,.10)"/>' +
+     '<path d="M15 27v-4M13.6 23h2.8" stroke-width="1.4"/>' +
+     '<path d="M28 50V42a4 4 0 0 1 8 0v8" fill="rgba(176,138,62,.30)"/>' +
+     '<path d="M10 50h44" stroke-width="2.4"/></svg>'
+};
+var SURL = {
+  bn:{ k:"মাক্কী", m:"মাদানী", ayat:"{0} আয়াত", para:"পারা {0}", paras:"পারা {0}–{1}", x:"বন্ধ" },
+  en:{ k:"Makki", m:"Madani", ayat:"{0} ayat", para:"Juz {0}", paras:"Juz {0}–{1}", x:"Close" },
+  ur:{ k:"مکی", m:"مدنی", ayat:"{0} آیات", para:"پارہ {0}", paras:"پارہ {0}–{1}", x:"بند" },
+  zh:{ k:"麦加", m:"麦地那", ayat:"{0} 节", para:"第 {0} 卷", paras:"第 {0}–{1} 卷", x:"关闭" },
+  ar:{ k:"مكية", m:"مدنية", ayat:"{0} آية", para:"الجزء {0}", paras:"الجزء {0}\u2013{1}", x:"إغلاق" }
+};
+function surL(){ return SURL[L.code] || SURL.en; }
+function surahCardClose(){
+  var el = document.getElementById("sur-card");
+  if (el) el.classList.remove("on");
+}
+async function surahCard(sn){
+  if (!sn || sn < 1 || sn > 114) return;
+  var T = surL(), pl = surahPlace(sn);
+  var el = document.getElementById("sur-card");
+  if (!el){
+    el = document.createElement("div");
+    el.id = "sur-card"; el.className = "rdtrs surcard";
+    document.body.appendChild(el);
+  }
+  var ayat = (typeof AYAHS !== "undefined" && AYAHS[sn - 1]) || 0;
+  el.innerHTML =
+    '<div class="trs-hd"><span class="trs-ttl">' + n(sn) + '</span>' +
+    '<button class="trs-x" aria-label="' + esc(T.x) + '">\u2715</button></div>' +
+    '<div class="trs-bd surbody">' +
+      '<div class="surhouse">' + SUR_IC[pl] + '</div>' +
+      '<div class="surtext">' +
+        '<div class="surar">' + esc(SURAH_AR[sn - 1] || "") + '</div>' +
+        '<div class="surloc">' + esc(surahName(sn)) + '</div>' +
+        '<div class="surmeta"><span class="surplace">' + esc(T[pl]) + '</span>' +
+          '<span class="surdot">\u00b7</span><span>' + fmt(T.ayat, n(ayat)) + '</span>' +
+          '<span class="surpara" id="sur-para"></span></div>' +
+      '</div>' +
+    '</div>';
+  el.classList.add("on");
+  el.querySelector(".trs-x").onclick = surahCardClose;
+  /* the juz span is the one thing that has to be looked up, so it arrives after */
+  try {
+    var ix = await mushafIndex(), sp = (ix && ix.surah) || {};
+    var from = sp[sn] || 1, next = sp[sn + 1];
+    var to = next ? Math.max(from, next - 1) : TOTAL_PAGES;
+    var j1 = juzOf(from), j2 = juzOf(to);
+    var box = document.getElementById("sur-para");
+    if (box) box.innerHTML = '<span class="surdot">\u00b7</span>' +
+      (j1 === j2 ? fmt(T.para, n(j1)) : fmt(T.paras, n(j1), n(j2)));
+  } catch(e){}
+}
+
+/* ---------- the surah, before you begin it ---------- END */
 /* ---------- what the days themselves say ----------
    The ramp hands out five, eight, eleven, fifteen lines by the calendar and
    never once looks at the reader. This measures instead.
@@ -7428,6 +7520,19 @@ async function rdPaint(p, isTodayPage){
           }).join("");
       }
     }
+    qa("#rd-paper .qline.qhead").forEach(function(hd){
+      hd.style.cursor = "pointer";
+      hd.onclick = function(){
+        var k = (pg.keys && pg.keys.length) ? pg.keys[0] : "";
+        /* the header belongs to the surah that starts under it, not the one
+           the page opened in */
+        for (var q = 0; q < pg.keys.length; q++){
+          var pr = pg.keys[q].split(":");
+          if (+pr[1] === 1){ k = pg.keys[q]; break; }
+        }
+        surahCard(+String(k).split(":")[0]);
+      };
+    });
     rdSelBar(pg);
     qa("#rd-paper .w").forEach(function(w){
       w.onclick = function(){
