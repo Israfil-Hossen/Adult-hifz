@@ -2717,6 +2717,7 @@ body.night .qline .w.tp2{background:rgba(150,88,132,.30)}
 body.night .qline .w.tp3{background:rgba(95,127,82,.30)}
 body.night .qline .w.tp4{background:rgba(196,110,74,.28)}
 body.night .qline .w.tp5{background:rgba(96,124,140,.30)}
+.rdinfo .ri-menu{color:var(--ink-2);margin-inline:0 4px}
 .rdinfo .ri-tp.on{background:rgba(95,127,82,.20)}
 /* in fullscreen the way out sits in this corner, and it was landing on the
    translate button: a tap meant for the meaning left fullscreen instead */
@@ -6772,6 +6773,14 @@ async function rdInfoFill(){
      way to the meaning rides on it rather than on the panel that vanishes */
   var top = bars[0];
   if (top){
+    var mb = document.createElement("button");
+    mb.className = "ri-btn ri-menu"; mb.type = "button";
+    mb.title = uit("menu"); mb.setAttribute("aria-label", uit("menu"));
+    mb.textContent = "☰";
+    mb.onclick = function(ev){ ev.stopPropagation(); drawerOpen(); };
+    /* first thing on the row, where a way out belongs — not filed away at the
+       end behind the things you reach for while already reading */
+    top.insertBefore(mb, top.firstChild);
     var pb = document.createElement("button");
     pb.className = "ri-btn ri-tp" + (RD.tp ? " on" : "") + (RD.tp === 2 ? " over" : ""); pb.type = "button";
     pb.title = uit("themes"); pb.setAttribute("aria-label", uit("themes"));
