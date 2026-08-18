@@ -2822,6 +2822,16 @@ body.night .rdtrs .trs-hd{border-color:rgba(255,255,255,.10)}
   border-radius:6px;margin-inline-start:2px}
 .rdinfo .ri-btn:hover{background:rgba(95,127,82,.16)}
 .rdinfo-b .ri-btn{display:none}
+/* what your own days say */
+.capcard .capsub{font-size:12.5px;color:var(--ink-3);margin:2px 0 10px}
+.capcard .capbig{font-size:16px;line-height:1.5;color:var(--ink);margin:0 0 4px}
+.capcard .capwait{color:var(--ink-3);font-size:14px;margin:6px 0 2px}
+.caprow{display:flex;align-items:baseline;gap:8px;margin-top:11px;padding-top:10px;
+  border-top:1px solid rgba(33,43,54,.10);font-size:14px;flex-wrap:wrap}
+.caprow b{font-family:var(--mono);font-size:15px;margin-inline-start:auto}
+.caprow .capwarn{flex:1 0 100%;font-size:12.5px;color:var(--maroon)}
+.capcard .capnote{margin:14px 0 0;font-size:12.5px;color:var(--ink-3);font-style:italic}
+body.night .caprow{border-color:rgba(255,255,255,.10)}
 /* is the method working */
 .wkcard .wksub{font-size:13px;color:var(--ink-3);margin:2px 0 12px}
 .wkbars{display:flex;align-items:flex-end;gap:8px;height:74px;padding:0 2px}
@@ -4640,6 +4650,8 @@ function renderToday(){
     S.settings.aimsHid = 1; try { save(); } catch(e){}
     renderToday();
   };
+  var capHost = document.getElementById("v-today");
+  if (capHost) capHost.insertAdjacentHTML("beforeend", capCard());
   bindToday();
 }
 
@@ -6582,6 +6594,131 @@ function rdDotsOpen(btn){
   });
   setTimeout(function(){ document.addEventListener("click", rdDotsAway, true); }, 0);
 }
+
+/* ---------- what the days themselves say ----------
+   The ramp hands out five, eight, eleven, fifteen lines by the calendar and
+   never once looks at the reader. This measures instead.
+
+   A day costs minutes on two things — new lines and revision pages — so across
+   many days   minutes = a*lines + b*pages   with a and b unknown. Two unknowns
+   and many days is a least-squares fit, and it separates the cost of learning
+   from the cost of holding without asking the reader to time anything.
+
+   The day's budget is then  T = L*a + revision*b , solved for L. The ceiling
+   falls out of the same equation: revision alone reaches T at N = T*Sbar/b
+   pages, which is the most this reader can hold in the time they actually have.
+   No linear forecast can see that number. */
+function capDays(){
+  var out = [];
+  Object.keys(S.days).sort().forEach(function(k){
+    if (k > TODAY) return;
+    var d = S.days[k];
+    if (!d || !(+d.minutes > 0)) return;
+    var lines = (d.sabaq && d.sabaq.done && d.sabaq.from)
+      ? Math.max(0, (d.sabaq.to || 0) - d.sabaq.from + 1) : 0;
+    var rev = ((d.sabaqi && d.sabaqi.length) || 0) +
+              ((d.manzil && d.manzil.done) ? Math.round(TOTAL_PAGES / 30) : 0);
+    out.push({ k:k, min:+d.minutes, lines:lines, rev:rev, err:+d.errors || 0 });
+  });
+  return out.slice(-42);                    /* six weeks, and the recent six */
+}
+function capMedian(a){
+  if (!a.length) return 0;
+  var b = a.slice().sort(function(x, y){ return x - y; });
+  var m = b.length >> 1;
+  return b.length % 2 ? b[m] : (b[m-1] + b[m]) / 2;
+}
+function capacity(){
+  var D = capDays();
+  if (D.length < 8) return { ok:false, why:"days", have:D.length, need:8 };
+  var Sll = 0, Slr = 0, Srr = 0, Sly = 0, Sry = 0;
+  D.forEach(function(d){
+    Sll += d.lines * d.lines; Slr += d.lines * d.rev; Srr += d.rev * d.rev;
+    Sly += d.lines * d.min;   Sry += d.rev * d.min;
+  });
+  var det = Sll * Srr - Slr * Slr;
+  if (!isFinite(det) || Math.abs(det) < 1e-6) return { ok:false, why:"flat" };
+  var a = (Sly * Srr - Sry * Slr) / det;    /* minutes per new line */
+  var b = (Sry * Sll - Sly * Slr) / det;    /* minutes per revision page */
+  if (!(a > 0.05) || !(b > 0.005)) return { ok:false, why:"flat" };
+  var T = capMedian(D.map(function(d){ return d.min; }));
+  var revNow = capMedian(D.map(function(d){ return d.rev; }));
+  var its = (S.drill && S.drill.items) || {}, st = [];
+  Object.keys(its).forEach(function(k){ if (its[k].s > 0) st.push(its[k].s); });
+  var Sbar = st.length ? capMedian(st) : 0;
+  var revMin = revNow * b;
+  return { ok:true, days:D.length, T:T, perLine:a, perRev:b,
+           revPages:revNow, revMin:revMin, lines:(T - revMin) / a, Sbar:Sbar,
+           ceiling:(Sbar > 0 ? (T * Sbar) / b : null),
+           err:capMedian(D.slice(-7).map(function(d){ return d.err; })) };
+}
+function capCard(){
+  var C = capacity(), T = capL();
+  if (!C.ok){
+    if (C.why === "days")
+      return '<div class="mapwrap capcard"><div class="maplbl"><span class="t">' + T.h +
+             '</span></div><p class="capwait">' + fmt(T.wait, n(C.need - C.have)) + '</p></div>';
+    return "";
+  }
+  var ramp = targetLines(), mine = Math.max(0, Math.round(C.lines));
+  var verdict = mine < ramp - 1 ? fmt(T.less, n(ramp), n(mine))
+              : mine > ramp + 1 ? fmt(T.more, n(ramp), n(mine))
+              : fmt(T.same, n(ramp));
+  var held = C.ceiling ? Math.round(C.ceiling) : null;
+  return '<div class="mapwrap capcard"><div class="maplbl"><span class="t">' + T.h + '</span></div>' +
+    '<p class="capsub">' + fmt(T.sub, n(C.days)) + '</p>' +
+    '<p class="capbig">' + verdict + '</p>' +
+    '<div class="caprow"><span>' + T.rev + '</span><b>' +
+      fmt(T.ofmin, n(Math.round(C.revMin)), n(Math.round(C.T))) + '</b></div>' +
+    '<div class="caprow"><span>' + T.cost + '</span><b>' +
+      fmt(T.perline, n(Math.round(C.perLine * 10) / 10)) + '</b></div>' +
+    (held ? '<div class="caprow"><span>' + T.hold + '</span><b>' + n(held) + ' ' + T.pages + '</b>' +
+      (held < TOTAL_PAGES ? '<span class="capwarn">' + T.short + '</span>' : '') + '</div>' : "") +
+    '<p class="capnote">' + T.note + '</p></div>';
+}
+var CAPL = {
+  bn:{ h:"আপনার দিনগুলো যা বলছে", sub:"শেষ {0} দিনের হিসাব থেকে মাপা",
+       wait:"আর {0} দিনের হিসাব জমলে এখানে আপনার নিজের সংখ্যা দেখাবে।",
+       less:"ছক বলছে {0} লাইন। আপনার দিনগুলো বলছে {1}।",
+       more:"ছক বলছে {0} লাইন। আপনার দিনগুলো বলছে {1} — আরও নেওয়ার জায়গা আছে।",
+       same:"ছক বলছে {0} লাইন, আপনার দিনগুলোও তাই বলছে।",
+       rev:"রিভিশনে যাচ্ছে", ofmin:"{1} মিনিটের {0}", cost:"একটি নতুন লাইনের খরচ",
+       perline:"{0} মিনিট", hold:"এই সময়ে ধরে রাখা যাবে", pages:"পৃষ্ঠা",
+       short:"পুরো কোরআনের চেয়ে কম", note:"এটি শুধু পরামর্শ — আজকের লক্ষ্য বদলায়নি।" },
+  en:{ h:"What your own days say", sub:"measured from your last {0} days",
+       wait:"{0} more days of figures and your own number appears here.",
+       less:"The ramp says {0} lines. Your days say {1}.",
+       more:"The ramp says {0} lines. Your days say {1} — you have room for more.",
+       same:"The ramp says {0} lines, and your days agree.",
+       rev:"Revision is taking", ofmin:"{0} of {1} minutes", cost:"Cost of one new line",
+       perline:"{0} minutes", hold:"You can hold about", pages:"pages",
+       short:"less than the whole Quran", note:"Advice only — today's target is unchanged." },
+  ur:{ h:"آپ کے دن کیا کہتے ہیں", sub:"پچھلے {0} دنوں سے ماپا گیا",
+       wait:"{0} دن کے اعداد اور آپ کا اپنا نمبر یہاں آ جائے گا۔",
+       less:"خاکہ {0} سطریں کہتا ہے۔ آپ کے دن {1} کہتے ہیں۔",
+       more:"خاکہ {0} کہتا ہے، آپ کے دن {1} — گنجائش ہے۔",
+       same:"خاکہ {0} سطریں کہتا ہے، آپ کے دن بھی۔",
+       rev:"دہرائی لے رہی ہے", ofmin:"{1} میں سے {0} منٹ", cost:"ایک نئی سطر کی قیمت",
+       perline:"{0} منٹ", hold:"آپ سنبھال سکتے ہیں", pages:"صفحے",
+       short:"پورے قرآن سے کم", note:"صرف مشورہ — آج کا ہدف نہیں بدلا۔" },
+  zh:{ h:"你的日子说明了什么", sub:"依据最近 {0} 天测得",
+       wait:"再有 {0} 天的数据，这里就会显示你自己的数字。",
+       less:"计划说 {0} 行，你的日子说 {1} 行。",
+       more:"计划说 {0} 行，你的日子说 {1} 行 —— 还有余量。",
+       same:"计划说 {0} 行，你的日子也一样。",
+       rev:"复习占用", ofmin:"{1} 分钟中的 {0}", cost:"每新增一行的成本",
+       perline:"{0} 分钟", hold:"你大约能保持", pages:"页",
+       short:"少于整部古兰经", note:"仅供参考 —— 今天的目标未变。" },
+  ar:{ h:"ماذا تقول أيامك", sub:"مقيسة من آخر {0} يومًا",
+       wait:"{0} أيام أخرى من الأرقام ويظهر رقمك هنا.",
+       less:"الخطة تقول {0} أسطر. أيامك تقول {1}.",
+       more:"الخطة تقول {0}، وأيامك تقول {1} — لديك متسع.",
+       same:"الخطة تقول {0} أسطر، وأيامك توافق.",
+       rev:"المراجعة تأخذ", ofmin:"{0} من {1} دقيقة", cost:"كلفة سطر جديد",
+       perline:"{0} دقائق", hold:"يمكنك الاحتفاظ بنحو", pages:"صفحة",
+       short:"أقل من القرآن كله", note:"إرشاد فقط — هدف اليوم لم يتغير." }
+};
+function capL(){ return CAPL[L.code] || CAPL.en; }
 
 /* ---------- is the method working? ----------
    The app asks the reader to trust a schedule for months. Errors were counted
