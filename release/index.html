@@ -2692,15 +2692,15 @@ body.night .rdinfo .ri-j i{background:rgba(255,255,255,.10)}
 .qline.qhead{
   background-color:rgba(176,138,62,.10);
   background-image:
-    linear-gradient(90deg,rgba(0,0,0,0) 0,var(--pap) 30%,var(--pap) 70%,rgba(0,0,0,0) 100%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cg fill='none' stroke='%23A67C2E' stroke-width='1.15'%3E%3Cpath d='M15 1 L21 7 L15 13 L9 7 Z'/%3E%3Cpath d='M15 17 L21 23 L15 29 L9 23 Z'/%3E%3Cpath d='M0 15 L6 9 L12 15 L6 21 Z'/%3E%3Cpath d='M18 15 L24 9 L30 15 L24 21 Z'/%3E%3Cpath d='M9 7 L6 9 M21 7 L24 9 M9 23 L6 21 M21 23 L24 21'/%3E%3C/g%3E%3Cg fill='%235F7F52'%3E%3Ccircle cx='15' cy='7' r='1.7'/%3E%3Ccircle cx='15' cy='23' r='1.7'/%3E%3Ccircle cx='6' cy='15' r='1.7'/%3E%3Ccircle cx='24' cy='15' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat:no-repeat,repeat;
-  background-position:center,center;
-  background-size:46% 100%,26px 26px;
+  background-repeat:repeat;
+  background-position:center;
+  background-size:26px 26px;
   border:1.5px solid rgba(166,124,46,.8);border-radius:8px;
   box-shadow:inset 0 0 0 2px var(--pap),inset 0 0 0 3px rgba(166,124,46,.5);
   padding-block:4px;padding-inline:8px;margin-block:3px 4px}
-.qline.qhead .w,.qline.qhead .pw{background:none;box-shadow:none;padding:0 2px}
+.qline.qhead .w,.qline.qhead .pw{background:var(--pap);box-shadow:0 0 0 5px var(--pap);
+  border-radius:2px;padding:0 1px}
 body.night .qline.qhead{background-color:rgba(176,138,62,.16)}
 
 /* ---------- what this page is about ----------
@@ -2846,7 +2846,19 @@ body.night .caprow{border-color:rgba(255,255,255,.10)}
 .wkrow b{font-family:var(--mono);font-size:16px}
 .wkrow .wkaim{color:var(--ink-3);font-size:12.5px;margin-inline-start:auto}
 body.night .wkrow{border-color:rgba(255,255,255,.10)}
-/* the surah, before you begin it */
+/* the band says what the surah is, under its own name */
+/* not a column — that stacked every word of the name on its own line and
+   swallowed the page. A row that wraps, with the meta claiming a full line. */
+.qline.qhead{flex-wrap:wrap;justify-content:center;align-items:center;row-gap:1px}
+.qhmeta{flex:1 0 100%;display:flex;align-items:center;justify-content:center;gap:6px;
+  direction:ltr;font-family:var(--body);font-size:11px;line-height:1.2;
+  color:var(--ink-3);white-space:nowrap;max-width:100%;overflow:hidden}
+.qhmeta b{font-weight:600;color:var(--verdigris)}
+.qhmeta em{font-style:normal}
+.qhmeta em::before{content:"·";margin-inline-end:6px;opacity:.55}
+.qhhouse{display:block;width:14px;height:14px;color:var(--verdigris);flex:0 0 auto}
+.qhhouse svg{width:100%;height:100%}
+/* the surah, before you begin it *//* the surah, before you begin it */
 .surcard .surbody{display:flex;align-items:center;gap:18px;padding:10px 4px 22px;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Cpath d='M17 2c5 0 9 4 9 9s-4 6-9 6-9-1-9-6 4-9 9-9z' fill='none' stroke='%235F7F52' stroke-width='0.7' opacity='0.30'/%3E%3C/svg%3E");
   background-repeat:repeat}
@@ -5615,7 +5627,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "v113";
+var APP_VER = "v114";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -6543,7 +6555,7 @@ function rdSwipeWire(){
    may be swallowed by the panel toggle. */
 function rdTapBare(t){
   if (!t || !t.closest) return true;
-  if (t.closest(".w, .grab, .qnum, .qhead, button, a, select, input, textarea, label")) return false;
+  if (t.closest(".w, .grab, .qnum, button, a, select, input, textarea, label")) return false;
   if (RD.blind && t.closest(".qline")) return false;
   return true;
 }
@@ -6639,18 +6651,22 @@ var SURAH_PLACE = "kmmmmkkmmkkkmkkkkkkkkmkmkkkkkkkkmkkkkkkkkkkkkkmmmkkkkkmkmmmmm
 function surahPlace(sn){ return SURAH_PLACE.charAt(sn - 1) === "m" ? "m" : "k"; }
 /* drawn rather than downloaded, in the app's own ink */
 var SUR_IC = {
-  k: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" ' +
-     'stroke-linejoin="round"><path d="M12 24l20-9 20 9v26H12z" fill="rgba(51,65,79,.10)"/>' +
-     '<path d="M12 30h40M12 34h40" stroke-width="1.4" opacity=".7"/>' +
-     '<path d="M27 50V39h10v11" fill="rgba(176,138,62,.35)"/>' +
-     '<path d="M12 50h40" stroke-width="2.4"/></svg>',
-  m: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" ' +
-     'stroke-linejoin="round"><path d="M20 50V33a12 12 0 0 1 24 0v17" fill="rgba(95,127,82,.16)"/>' +
-     '<path d="M32 21v-5M30 16h4" stroke-width="1.6"/>' +
-     '<path d="M12 50V30a3 3 0 0 1 6 0v20" fill="rgba(95,127,82,.10)"/>' +
-     '<path d="M15 27v-4M13.6 23h2.8" stroke-width="1.4"/>' +
-     '<path d="M28 50V42a4 4 0 0 1 8 0v8" fill="rgba(176,138,62,.30)"/>' +
-     '<path d="M10 50h44" stroke-width="2.4"/></svg>'
+  k: '<svg viewBox="0 0 64 64" fill="none">' +
+     '<path d="M32 8 56 18v30l-24 8-24-8V18z" fill="#2C2A28"/>' +
+     '<path d="M32 8 56 18l-24 8-24-8z" fill="#3A3734"/>' +
+     '<path d="M8 24l24 8 24-8v6l-24 8-24-8z" fill="#C8A24A"/>' +
+     '<path d="M30 40h5v14l-5-1.7z" fill="#C8A24A"/>' +
+     '</svg>',
+  m: '<svg viewBox="0 0 64 64" fill="none">' +
+     '<path d="M18 56V26a3.2 3.2 0 0 1 6.4 0v30z" fill="#E9E5DA"/>' +
+     '<path d="M18 33h6.4M18 40h6.4" stroke="#C9C2B4" stroke-width="1.3"/>' +
+     '<path d="M21.2 26l2.6-4h-5.2z" fill="#C8A24A"/>' +
+     '<circle cx="21.2" cy="18.6" r="1.7" fill="none" stroke="#C8A24A" stroke-width="1.3"/>' +
+     '<path d="M30 56V40c0-8 5.4-13 10.5-13S51 32 51 40v16z" fill="#1E7A3C"/>' +
+     '<path d="M30 46h21v10H30z" fill="#166030"/>' +
+     '<path d="M40.5 27l2.2-4h-4.4z" fill="#C8A24A"/>' +
+     '<path d="M14 56h40" stroke="#C9C2B4" stroke-width="2.4" stroke-linecap="round"/>' +
+     '</svg>'
 };
 var SURL = {
   bn:{ k:"মাক্কী", m:"মাদানী", ayat:"{0} আয়াত", para:"পারা {0}", paras:"পারা {0}–{1}", x:"বন্ধ" },
@@ -6660,6 +6676,23 @@ var SURL = {
   ar:{ k:"مكية", m:"مدنية", ayat:"{0} آية", para:"الجزء {0}", paras:"الجزء {0}\u2013{1}", x:"إغلاق" }
 };
 function surL(){ return SURL[L.code] || SURL.en; }
+/* the name alone said nothing. Under it now: the house it was revealed in,
+   how many ayat, and the juz it runs through — all of it already known here,
+   so nothing is fetched and no second screen is opened to say it. */
+function surahBandMeta(sn){
+  if (!sn || sn < 1 || sn > 114) return "";
+  var T = surL(), pl = surahPlace(sn);
+  var ay = (typeof AYAHS !== "undefined" && AYAHS[sn - 1]) || 0;
+  var j1 = 0, j2 = 0;
+  try { j1 = juzOfKey(sn + ":1"); j2 = ay ? juzOfKey(sn + ":" + ay) : j1; } catch(e){}
+  var juz = (j1 && j2) ? (j1 === j2 ? fmt(T.para, n(j1)) : fmt(T.paras, n(j1), n(j2))) : "";
+  return '<span class="qhmeta">' +
+    '<i class="qhhouse">' + SUR_IC[pl] + '</i>' +
+    '<b>' + esc(T[pl]) + '</b>' +
+    '<em>' + fmt(T.ayat, n(ay)) + '</em>' +
+    (juz ? '<em>' + juz + '</em>' : '') +
+  '</span>';
+}
 function surahCardClose(){
   var el = document.getElementById("sur-card");
   if (el) el.classList.remove("on");
@@ -7463,6 +7496,23 @@ async function rdPaint(p, isTodayPage){
     var nastNow = !!mushafDef().nast;
     function lnOn(ln){ return byWord ? false : (ln >= RD.sel.ln0 && ln <= RD.sel.ln1); }
 
+    var headSurah = {}, headWait = [];
+    for (var hl = 1; hl <= LINES_PER_PAGE; hl++){
+      var hw = pg.lines[hl];
+      if (!hw || !hw.length) continue;
+      if (hw[0] && hw[0].head){ headWait.push(hl); continue; }
+      if (hw[0] && hw[0].bism) continue;
+      if (!headWait.length) continue;
+      for (var hq = 0; hq < hw.length; hq++){
+        if (hw[hq].vk && !hw[hq].head && !hw[hq].bism){
+          var hsn = +String(hw[hq].vk).split(":")[0];
+          headWait.forEach(function(l){ headSurah[l] = hsn; });
+          headWait = [];
+          break;
+        }
+      }
+    }
+    var headCount = Object.keys(headSurah).length;
     var TPP = RD.tp ? await tpForPage(pg) : { map:{}, secs:[] };
     if (RD.page !== p) return;
     RD.tpSecs = TPP.secs;
@@ -7496,7 +7546,11 @@ async function rdPaint(p, isTodayPage){
                  (tpw ? ' data-tp="' + tpw.i + '"' : '') + (w.end ? ' data-end="1"' : '') +
                  ' data-t="' + esc(w.t || "") + '" data-m="' + esc(w.m) + '">' + gl +
                  (w.end ? '<sup class="ayn' + (nastNow ? " ring" : "") + '">' + n(w.vk.split(":")[1]) + '</sup>' : '') + '</span>';
-        }).join(" ") + '</div>';
+        }).join(" ") +
+        /* under the name, not above it: the surah announces itself first. On a page
+           that opens three surahs the line is dropped — the page is a mushaf page
+           before it is anything else, and the room belongs to the ayat. */
+        ((headSurah[ln] && headCount < 2) ? surahBandMeta(headSurah[ln]) : "") + '</div>';
     }
     paper.innerHTML = h + '<div class="rdcurtain" id="rd-curtain"><span class="grab">≡</span></div>';
     if (byWord) rdSelBands(paper);
@@ -7520,19 +7574,6 @@ async function rdPaint(p, isTodayPage){
           }).join("");
       }
     }
-    qa("#rd-paper .qline.qhead").forEach(function(hd){
-      hd.style.cursor = "pointer";
-      hd.onclick = function(){
-        var k = (pg.keys && pg.keys.length) ? pg.keys[0] : "";
-        /* the header belongs to the surah that starts under it, not the one
-           the page opened in */
-        for (var q = 0; q < pg.keys.length; q++){
-          var pr = pg.keys[q].split(":");
-          if (+pr[1] === 1){ k = pg.keys[q]; break; }
-        }
-        surahCard(+String(k).split(":")[0]);
-      };
-    });
     rdSelBar(pg);
     qa("#rd-paper .w").forEach(function(w){
       w.onclick = function(){
