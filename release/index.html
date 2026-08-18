@@ -2690,11 +2690,11 @@ body.night .rdinfo .ri-j i{background:rgba(255,255,255,.10)}
 .qline.qhead{
   background-color:rgba(176,138,62,.10);
   background-image:
-    linear-gradient(90deg,rgba(0,0,0,0) 0,var(--pap) 12%,var(--pap) 88%,rgba(0,0,0,0) 100%),
+    linear-gradient(90deg,rgba(0,0,0,0) 0,var(--pap) 30%,var(--pap) 70%,rgba(0,0,0,0) 100%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cg fill='none' stroke='%23A67C2E' stroke-width='1.15'%3E%3Cpath d='M15 1 L21 7 L15 13 L9 7 Z'/%3E%3Cpath d='M15 17 L21 23 L15 29 L9 23 Z'/%3E%3Cpath d='M0 15 L6 9 L12 15 L6 21 Z'/%3E%3Cpath d='M18 15 L24 9 L30 15 L24 21 Z'/%3E%3Cpath d='M9 7 L6 9 M21 7 L24 9 M9 23 L6 21 M21 23 L24 21'/%3E%3C/g%3E%3Cg fill='%235F7F52'%3E%3Ccircle cx='15' cy='7' r='1.7'/%3E%3Ccircle cx='15' cy='23' r='1.7'/%3E%3Ccircle cx='6' cy='15' r='1.7'/%3E%3Ccircle cx='24' cy='15' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat:no-repeat,repeat;
   background-position:center,center;
-  background-size:64% 100%,30px 30px;
+  background-size:46% 100%,26px 26px;
   border:1.5px solid rgba(166,124,46,.8);border-radius:8px;
   box-shadow:inset 0 0 0 2px var(--pap),inset 0 0 0 3px rgba(166,124,46,.5);
   padding-block:4px;padding-inline:8px;margin-block:3px 4px}
@@ -4974,7 +4974,6 @@ function renderSettings(){
         return '<option value="' + mu.id + '"' + (s.mushafId === mu.id ? " selected" : "") + '>' +
           (mu.nm[L.code] || mu.nm.en) + '</option>';
       }).join("") + '</select><div class="hint">' + T.mushafHint + '</div></div>' +
-    '<div class="fld"><label for="s-mushaf">' + T.mushafEd + '</label><input type="text" id="s-mushaf" value="' + esc(s.mushaf) + '" placeholder="' + T.mushafEdPh + '"></div>' +
     '<div class="fld"><label for="s-ret">' + L.dr.ret + '</label><select id="s-ret">' +
       [0.85,0.9,0.95].map(function(v){
         return '<option value="' + v + '"' + (+(s.retention || 0.9) === v ? " selected" : "") + '>' +
@@ -5052,7 +5051,6 @@ function renderSettings(){
     var b = this;
     setTimeout(function(){ b.textContent = L.nt.voiceTest; }, 4000);
   };
-  g("s-mushaf").onchange = function(){ S.settings.mushaf = this.value; save(); };
   g("s-mushafid").onchange = function(){
     S.settings.mushafId = this.value;
     applyMushaf();
@@ -7602,7 +7600,10 @@ function wmDragWire(){
   grip.addEventListener("pointermove", function(e){
     if (!on) return;
     e.preventDefault();
-    wmApplyH(h0 + (y0 - e.clientY));
+    /* a sheet hanging from the top grows downward, so the same drag has to mean
+       the opposite thing there */
+    var down = mn.classList.contains("wmtop");
+    wmApplyH(h0 + (down ? (e.clientY - y0) : (y0 - e.clientY)));
   });
   ["pointerup","pointercancel"].forEach(function(ev){
     grip.addEventListener(ev, function(){ if (on){ on = false; save(); } });
@@ -9410,7 +9411,10 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     renderOnboard();
     document.getElementById("ob").classList.add("on");
   } else {
-    openMushaf(1);                        /* the mushaf always opens at page one */
+    /* the day, not the tool. Someone opening this in a ten-minute gap needs to
+       know what to do now, and the mushaf is one tap away from there. When they
+       do go, renderMushaf opens the page they left — which was written down on
+       every turn and then thrown away here. */
   }
 
   Sync.init();
