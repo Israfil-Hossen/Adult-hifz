@@ -8183,6 +8183,7 @@ function drKeys(){
   return pg.keys.slice(0, 6);
 }
 async function drEnsure(){
+  mutPack();                     /* warmed early so the pairs are real by the time they are asked for */
   if (DR.loading || DR.tried) return;
   DR.loading = true; DR.tried = true;
   var p = drPage();
@@ -8192,7 +8193,45 @@ async function drEnsure(){
   renderDrill();
 }
 /* four-word runs that appear in two different ayahs among the pages on the device */
+/* Look-alike passages are what break an adult hafiz, and the app could only
+   find them among pages opened in this session — so the tool was nearly blind
+   at the moment it mattered, on a page just opened. The pack knows all of them:
+   814 phrases, 2232 ayat, every place each one recurs. */
+var MUT = { pack:undefined };
+async function mutPack(){
+  if (MUT.pack !== undefined) return MUT.pack;
+  try { MUT.pack = await getJSON("data/mut/ph.json"); }
+  catch(e){ MUT.pack = null; }
+  return MUT.pack;
+}
+/* the other places this ayah's phrases turn up, nearest first — a confusion is
+   sharpest between two passages a reader holds at the same time */
+function mutOthers(pack, vk, limit){
+  if (!pack || !pack.i || !pack.i[vk]) return [];
+  var out = [], seen = {};
+  pack.i[vk].forEach(function(gi){
+    var g = pack.g[gi]; if (!g || !g.o) return;
+    Object.keys(g.o).forEach(function(k){
+      if (k === vk || seen[k]) return;
+      seen[k] = 1;
+      out.push({ vk:k, span:g.o[k], mine:g.o[vk], n:g.n });
+    });
+  });
+  out.sort(function(a, b){ return a.n - b.n; });   /* the rarer the phrase, the sharper the trap */
+  return limit ? out.slice(0, limit) : out;
+}
 function drMutPairs(){
+  var pack = MUT.pack;
+  if (pack && pack.i){
+    var pairs = [], keys = drKeys();
+    keys.forEach(function(k){
+      mutOthers(pack, k, 2).forEach(function(o){
+        pairs.push([{ vk:k, span:o.mine }, { vk:o.vk, span:o.span }]);
+      });
+    });
+    if (pairs.length) return pairs;
+  }
+  /* no pack yet: the old same-session scan, so the drill still runs */
   var seq = {}, out = [];
   Object.keys(RD.pages).forEach(function(p){
     var pg = RD.pages[p];
