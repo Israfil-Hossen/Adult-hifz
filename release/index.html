@@ -2098,7 +2098,7 @@ body.focus .fab{display:none!important}
 body.focus .fexit{inset-inline-end:auto;inset-inline-start:50%;transform:translateX(-50%);
   padding:10px 18px;font-size:14px;white-space:nowrap;opacity:.9}
 body.focus #rd-paper{align-self:stretch;width:100%;min-height:0;border:none;box-shadow:none;background:transparent;
-  padding:4px 2px;display:flex;flex-direction:column;justify-content:center;height:calc(100dvh - 14px)}
+  padding:4px 2px;display:flex;flex-direction:column;justify-content:center;height:calc(100dvh - 26px - var(--rdinfo,0px))}
 body.focus .qline{margin:0}
 .fexit{position:fixed;inset-inline-end:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:70;
   background:var(--ink);color:var(--paper);border:none;border-radius:999px;padding:12px 20px;font-family:var(--body);
@@ -2644,7 +2644,81 @@ body.mushaf main.wrap{padding-bottom:env(safe-area-inset-bottom)}
    inset is the paper's own padding, which keeps the safe area. */
 @media (max-width:520px){
   body.mushaf .rdpapers{margin-inline:-16px}
+  body.mushaf.focus .rdpapers{margin-inline:-8px}
 }
+/* body.mushaf pins the control row down with display:flex!important, which ties
+   the focus rule on specificity and wins on order — so the one panel the reader
+   most wants gone never went. Name both classes to settle it. */
+body.mushaf.focus .rdcard{display:none!important}
+/* ---------- page margins: surah · page · para ---------- */
+.rdinfo{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-size:12.5px;color:var(--ink-3);padding:5px 4px 6px;direction:ltr;
+  border-bottom:1px solid rgba(33,43,54,.10)}
+.rdinfo-b{border-bottom:none;border-top:1px solid rgba(33,43,54,.10);padding:6px 4px 4px}
+.rdinfo .ri-s{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rdinfo .ri-p{font-family:var(--mono);flex:0 0 auto}
+.rdinfo .ri-j{flex:1 1 0;text-align:end;white-space:nowrap;display:flex;
+  align-items:center;justify-content:flex-end;gap:4px}
+.rdinfo .ri-j i{font-style:normal;font-family:var(--mono);font-size:11.5px;line-height:1;
+  min-width:17px;text-align:center;padding:2px 3px;border-radius:4px;
+  background:rgba(33,43,54,.07);color:var(--ink-3)}
+.rdinfo .ri-j i.on{background:var(--ink);color:var(--paper)}
+body.night .rdinfo{border-color:rgba(255,255,255,.10)}
+body.night .rdinfo .ri-j i{background:rgba(255,255,255,.10)}
+
+/* ---------- the illuminated surah band ----------
+   Drawn, not downloaded: an arabesque lattice tiles the whole band and each
+   word of the name sits on its own plate of paper, so the cartouche fits the
+   name at any size and the ornament never runs under the letters. */
+.qline.qhead{
+  background-color:rgba(176,138,62,.07);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23B08A3E' stroke-width='1' opacity='.55'%3E%3Cpath d='M20 2 L29 11 L20 20 L11 11 Z'/%3E%3Cpath d='M20 20 L29 29 L20 38 L11 29 Z'/%3E%3Cpath d='M0 20 L9 11 L18 20 L9 29 Z'/%3E%3Cpath d='M22 20 L31 11 L40 20 L31 29 Z'/%3E%3C/g%3E%3Cg fill='%235F7F52' opacity='.42'%3E%3Ccircle cx='20' cy='11' r='1.9'/%3E%3Ccircle cx='20' cy='29' r='1.9'/%3E%3Ccircle cx='9' cy='20' r='1.9'/%3E%3Ccircle cx='31' cy='20' r='1.9'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat:repeat;background-position:center;background-size:34px 34px;
+  border:1.5px solid rgba(176,138,62,.75);border-radius:7px;
+  box-shadow:inset 0 0 0 2.5px var(--pap),inset 0 0 0 3.5px rgba(176,138,62,.45);
+  padding-block:8px;padding-inline:16px;margin-block:6px 8px}
+.qline.qhead .w,.qline.qhead .pw{
+  background:var(--pap);border-radius:4px;padding:1px 5px;
+  box-shadow:0 0 0 1px rgba(176,138,62,.30)}
+body.night .qline.qhead{background-color:rgba(176,138,62,.13)}
+
+/* ---------- the reader's own marks ----------
+   Behind the glyphs, never over them: the ink has to stay the darkest thing
+   on the page or the word stops being readable at the very moment it matters. */
+.qline .w.hl{border-radius:4px;padding:0 3px}
+.qline .w.hl-y{background:rgba(226,182,62,.42)}
+.qline .w.hl-g{background:rgba(95,127,82,.34)}
+.qline .w.hl-b{background:rgba(74,124,168,.32)}
+.qline .w.hl-p{background:rgba(176,96,132,.30)}
+body.night .qline .w.hl-y{background:rgba(226,182,62,.30)}
+body.night .qline .w.hl-g{background:rgba(95,127,82,.34)}
+body.night .qline .w.hl-b{background:rgba(74,124,168,.34)}
+body.night .qline .w.hl-p{background:rgba(176,96,132,.30)}
+/* a saved ayah is flagged on its number, not on its words */
+.qline .w.bmk sup.ayn{box-shadow:0 0 0 2px var(--brass);border-radius:999px}
+
+.rdselbar{position:fixed;inset-inline:0;z-index:59;display:none;
+  align-items:center;justify-content:center;gap:6px;flex-wrap:nowrap;
+  bottom:env(safe-area-inset-bottom);padding:6px 8px calc(6px + env(safe-area-inset-bottom));
+  background:var(--card);border-radius:16px 16px 0 0;
+  box-shadow:0 -6px 18px rgba(51,65,79,.14)}
+.rdselbar.on{display:flex}
+.rdselbar .rdsel-k{font-family:var(--mono);font-size:12px;color:var(--ink-3);
+  padding-inline-end:4px;flex:0 0 auto}
+.rdselbar .rdic{flex:0 0 auto}
+.rdselbar .rdic.on{background:rgba(95,127,82,.22)}
+.rdselbar .hlpick .sw{display:block;width:17px;height:17px;border-radius:5px;
+  box-shadow:inset 0 0 0 1px rgba(33,43,54,.22)}
+.rdselbar .hlpick .sw-y{background:rgba(226,182,62,.9)}
+.rdselbar .hlpick .sw-g{background:rgba(95,127,82,.85)}
+.rdselbar .hlpick .sw-b{background:rgba(74,124,168,.85)}
+.rdselbar .hlpick .sw-p{background:rgba(176,96,132,.85)}
+/* while a word is marked the reading tools stand down — one bar at a time,
+   and the marked word keeps the bottom of the screen it was tapped from */
+body.mushaf.selw .rdcard{display:none!important}
+.idx-del{background:none;border:none;cursor:pointer;color:var(--ink-3);
+  font-size:15px;line-height:1;padding:6px 8px;border-radius:6px}
+.idx-del:hover{background:rgba(33,43,54,.08);color:var(--maroon)}
 body.mushaf .rdcard{position:fixed;inset-inline:0;z-index:57;margin:0;display:block;
   bottom:env(safe-area-inset-bottom);border-radius:16px 16px 0 0;
   padding:3px 8px 4px;box-shadow:0 -6px 18px rgba(51,65,79,.10);overflow:visible}
@@ -3719,8 +3793,8 @@ function blankDay(){
 function defaults(){
   return { v:1,
     settings:{ lang:null, startDate:TODAY, startPage:1, restDay:5,
-               wordSound:1, qari:"", mushaf:"", mushafId:"madani", reciter:"Husary_128kbps", manualLines:0, lastPage:0, hijriAdj:0, retention:0.9, paper:"pcream", notifyAt:"", zikrEvery:0, zikrVoice:true, drive:null },
-    known:{}, days:{}, weak:{}, rev:{}, drill:{ items:{}, salat:{}, sess:{} }, updatedAt:Date.now() };
+               wordSound:1, qari:"", mushaf:"", mushafId:"madani", reciter:"Husary_128kbps", manualLines:0, lastPage:0, hijriAdj:0, retention:0.9, paper:"pcream", notifyAt:"", zikrEvery:0, zikrVoice:true, focus:0, drive:null },
+    known:{}, days:{}, weak:{}, rev:{}, hl:{}, bm:{}, drill:{ items:{}, salat:{}, sess:{} }, updatedAt:Date.now() };
 }
 function day(k){ if (!S.days[k]) S.days[k] = blankDay(); return S.days[k]; }
 var saveTimer = null;
@@ -4140,6 +4214,8 @@ function renderChrome(){
       if (t.dataset.v !== "mushaf"){ if (typeof rdStop === "function") rdStop(); if (typeof rdMeanClose === "function") rdMeanClose(); }
       document.getElementById("v-" + t.dataset.v).classList.add("on");
       document.body.classList.toggle("mushaf", t.dataset.v === "mushaf");
+      if (t.dataset.v === "mushaf"){ if (S && S.settings && S.settings.focus) rdFocusIn(false); }
+      else rdFocusOut(false);
       syncDrawerNav();
       window.scrollTo({ top:0, behavior:"smooth" });
     };
@@ -5379,7 +5455,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "v106";
+var APP_VER = "v107";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -5943,6 +6019,9 @@ function openMushaf(p){
   qa(".view").forEach(function(v){ v.classList.remove("on"); });
   var el = document.getElementById("v-mushaf");
   if (el) el.classList.add("on");
+  /* the tab bar is not the only door into the mushaf — boot, the today card and
+     the index all land here, and each must honour the remembered mode */
+  if (S && S.settings && S.settings.focus) rdFocusIn(false);
   renderMushaf();
   window.scrollTo({ top:0, behavior:"smooth" });
 }
@@ -6020,9 +6099,11 @@ function renderMushaf(){
 
   if (RD.pick) h += '<p class="pickmsg">' + (RD.pickA ? Rd.pickB : Rd.pickA) + '</p>';
   if (RD.phrase) h += '<p class="pickmsg">' + L.rec.phraseHint + '</p>';
+  h += '<div class="rdinfo" id="rd-info"></div>';
   h += '<div class="rdpapers">' +
        '<div class="paper" id="rd-paper"><p style="text-align:center;color:#77808A">' + Rd.loading + '</p></div>' +
        '<div class="paper" id="rd-paper2"></div></div>';
+  h += '<div class="rdinfo rdinfo-b" id="rd-info-b"></div>';
   h += '<div class="rdlegend">' +
        '<span><i style="background:var(--verdigris)"></i>' + L.mu.sabaq + '</span>' +
        '<span><i style="background:var(--brass)"></i>' + L.mu.sabaqi + '</span>' +
@@ -6034,6 +6115,7 @@ function renderMushaf(){
   h += '<div class="recbox" id="rd-rec"></div>';
   h += '<div class="mutbox" id="rd-mut" style="display:none"></div>';
   el.innerHTML = h;
+  rdInfoFill();
   var barHost = document.getElementById("rd-bar");
   if (barHost){
     barHost.innerHTML = "";
@@ -6283,11 +6365,17 @@ function rdSwipeWire(){
   var box = document.querySelector(".rdpapers");
   if (!box || box.dataset.sw) return;
   box.dataset.sw = "1";
-  var x0 = 0, y0 = 0, live = false;
-  function start(x, y){ x0 = x; y0 = y; live = true; }
+  var x0 = 0, y0 = 0, live = false, tgt = null;
+  function start(x, y, t){ x0 = x; y0 = y; live = true; tgt = t; }
   function end(x, y){
     if (!live) return; live = false;
     var dx = x - x0, dy = y - y0;
+    /* a tap that went nowhere and did not land on anything that already
+       answers a tap: that is the reader asking for the panels back, or gone */
+    if (Math.abs(dx) < 12 && Math.abs(dy) < 12){
+      if (rdTapBare(tgt)) rdFocusToggle();
+      return;
+    }
     if (Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
     var fwd = dx < 0, paper = document.getElementById("rd-paper");
     if (paper) paper.classList.add(fwd ? "turnl" : "turnr");
@@ -6298,13 +6386,120 @@ function rdSwipeWire(){
     }, 150);
   }
   box.addEventListener("touchstart", function(e){
-    var t = e.touches[0]; if (t) start(t.clientX, t.clientY);
+    var t = e.touches[0]; if (t) start(t.clientX, t.clientY, e.target);
   }, { passive:true });
   box.addEventListener("touchend", function(e){
     var t = e.changedTouches[0]; if (t) end(t.clientX, t.clientY);
   }, { passive:true });
-  box.addEventListener("pointerdown", function(e){ if (e.pointerType !== "touch") start(e.clientX, e.clientY); });
+  box.addEventListener("pointerdown", function(e){ if (e.pointerType !== "touch") start(e.clientX, e.clientY, e.target); });
   box.addEventListener("pointerup", function(e){ if (e.pointerType !== "touch") end(e.clientX, e.clientY); });
+}
+/* bare paper = the margins and the gaps between lines. A word plays its ayah,
+   the curtain grab drags, and in blind mode a whole line opens — none of those
+   may be swallowed by the panel toggle. */
+function rdTapBare(t){
+  if (!t || !t.closest) return true;
+  if (t.closest(".w, .grab, .qnum, button, a, select, input, textarea, label")) return false;
+  if (RD.blind && t.closest(".qline")) return false;
+  return true;
+}
+function rdFocusToggle(){
+  if (document.body.classList.contains("focus")) rdFocusOut();
+  else rdFocusIn();
+}
+/* ---------- the bar that answers a touched word ----------
+   It covers the reading tools rather than rewriting them: the tools keep every
+   handler they were wired with, and come back untouched when the mark is gone. */
+var HLC = ["y", "g", "b", "p"];
+function rdHlColor(){ return (S.settings && S.settings.hlColor) || "y"; }
+function rdSelPanel(pg){
+  var bar = document.getElementById("rd-selbar2");
+  if (!bar){
+    bar = document.createElement("div");
+    bar.className = "rdselbar"; bar.id = "rd-selbar2";
+    document.body.appendChild(bar);
+  }
+  var w = RD.selW;
+  document.body.classList.toggle("selw", !!w);
+  if (!w){ bar.classList.remove("on"); bar.innerHTML = ""; return; }
+  var marked = !!(S.bm && S.bm[w.vk]);
+  function b(k, icon, lab, on){
+    return '<button class="rdic' + (on ? " on" : "") + '" data-sel="' + k + '" title="' + esc(lab) +
+           '" aria-label="' + esc(lab) + '">' + icon + '</button>';
+  }
+  bar.innerHTML =
+    '<span class="rdsel-k">' + ayLabel(w.vk) + '</span>' +
+    b("erase", RIC.stop || "✕", uit("erase")) +
+    '<button class="rdic hlpick" data-sel="color" title="' + esc(uit("colour")) + '" aria-label="' +
+      esc(uit("colour")) + '"><i class="sw sw-' + rdHlColor() + '"></i></button>' +
+    b("tr", "文", L.rd.tr) +
+    b("play", RIC.play, L.rd.playAll) +
+    b("bm", RIC.index, uit("bookmk"), marked) +
+    b("close", "✕", uit("done"));
+  bar.classList.add("on");
+  qa("#rd-selbar2 [data-sel]").forEach(function(btn){
+    btn.onclick = function(){
+      var k = btn.dataset.sel, sw = RD.selW;
+      if (!sw) return;
+      if (k === "erase" || k === "close"){
+        if (k === "erase" && S.hl[sw.hk]){ delete S.hl[sw.hk]; save(); }
+        RD.selW = null;
+        if (k === "erase"){
+          var el = document.querySelector('#rd-paper .w[data-vk="' + sw.vk + '"][data-wi="' + sw.wi + '"]');
+          if (el) el.classList.remove("hl", "hl-y", "hl-g", "hl-b", "hl-p");
+        }
+        rdSelPanel(pg);
+        return;
+      }
+      if (k === "color"){
+        var i = HLC.indexOf(rdHlColor());
+        S.settings.hlColor = HLC[(i + 1) % HLC.length];
+        S.hl[sw.hk] = S.settings.hlColor;
+        save();
+        var e2 = document.querySelector('#rd-paper .w[data-vk="' + sw.vk + '"][data-wi="' + sw.wi + '"]');
+        if (e2){ e2.classList.remove("hl-y", "hl-g", "hl-b", "hl-p"); e2.classList.add("hl", "hl-" + S.settings.hlColor); }
+        rdSelPanel(pg);
+        return;
+      }
+      if (k === "play"){ rdPlay([sw.vk], RD.loops); return; }
+      if (k === "bm"){
+        if (S.bm[sw.vk]) delete S.bm[sw.vk]; else S.bm[sw.vk] = { p:RD.page, t:Date.now() };
+        save();
+        qa('#rd-paper .w[data-vk="' + sw.vk + '"]').forEach(function(e3){
+          e3.classList.toggle("bmk", !!S.bm[sw.vk]);
+        });
+        rdSelPanel(pg);
+        return;
+      }
+      if (k === "tr"){
+        var mn = document.getElementById("rd-mean");
+        var el2 = document.querySelector('#rd-paper .w[data-vk="' + sw.vk + '"][data-wi="' + sw.wi + '"]');
+        if (mn && el2 && pg){ mn.innerHTML = rdMeanPanel(pg, el2); mn.classList.add("on"); mn.scrollTop = 0; rdMeanWire(); }
+      }
+    };
+  });
+}
+/* Surah name, page and para — the three things a printed mushaf puts in its
+   margins, so the reader always knows where they are without leaving the page. */
+async function rdInfoFill(){
+  var bars = [document.getElementById("rd-info"), document.getElementById("rd-info-b")];
+  if (!bars[0] && !bars[1]) return;
+  var p = RD.page; if (!p) return;
+  var sn = 0;
+  try { var pg = await rdLoadPage(p); if (pg && pg.keys && pg.keys.length) sn = +String(pg.keys[0]).split(":")[0]; }
+  catch(e){}
+  var j = juzOf(p), st = 1;
+  try { st = await juzStartPage(j) || 1; } catch(e){ st = 1; }
+  if (RD.page !== p) return;                       /* the reader turned the page mid-load */
+  var inPara = Math.max(1, p - st + 1);
+  var html =
+    '<span class="ri-s">' + (sn ? n(sn) + ". " + esc(surahName(sn)) : "") + '</span>' +
+    '<span class="ri-p">' + n(p) + '</span>' +
+    '<span class="ri-j">' + fmt(L.rd.juz, n(j)) +
+      '<i class="on">' + n(inPara) + '</i>' +
+      (inPara > 1 ? '<i>' + n(inPara - 1) + '</i>' : '') +
+    '</span>';
+  bars.forEach(function(e){ if (e) e.innerHTML = html; });
 }
 /* the facing page, read-only, when the phone is held wide */
 /* Every phone gets a different page: the glyph size is measured, not assumed.
@@ -6342,7 +6537,13 @@ function rdFit(){
   var tabsEl = document.querySelector(".tabs");
   var tabsH = (tabsEl && getComputedStyle(tabsEl).display !== "none")
     ? tabsEl.getBoundingClientRect().height : 0;
-  var chromeH = document.body.classList.contains("focus") ? 10 : 22 + tabsH + barH;
+  /* the surah/page/para rows are chrome the sheet has to fit around: the top one
+     already moved the paper down, the bottom one has to be taken off the target */
+  var infoT = document.getElementById("rd-info"), infoB = document.getElementById("rd-info-b");
+  var infoBH = infoB ? infoB.getBoundingClientRect().height : 0;
+  var infoTH = infoT ? infoT.getBoundingClientRect().height : 0;
+  document.body.style.setProperty("--rdinfo", Math.round(infoTH + infoBH) + "px");
+  var chromeH = (document.body.classList.contains("focus") ? 10 : 22 + tabsH + barH) + infoBH;
   var avail = vh - pt - chromeH;
   if (avail < 260) avail = 260;
   var target = Math.max(160, avail - 40 - footH);
@@ -6549,7 +6750,7 @@ async function rdPaint(p, isTodayPage){
     var nastNow = !!mushafDef().nast;
     function lnOn(ln){ return byWord ? false : (ln >= RD.sel.ln0 && ln <= RD.sel.ln1); }
 
-    var h = "";
+    var h = "", wcnt = {};
     for (var ln = 1; ln <= LINES_PER_PAGE; ln++){
       var ws = pg.lines[ln];
       if (!ws){ h += '<div class="qline"></div>'; continue; }
@@ -6569,8 +6770,11 @@ async function rdPaint(p, isTodayPage){
              in the Nastaliq font — with any fallback face it is an empty box, and
              the number is already drawn beside it. Drop it and draw our own. */
           var gl = (w.end && nastNow) ? "" : w.g;
+          var wi = wcnt[w.vk] || 0; wcnt[w.vk] = wi + 1;
+          var hc = S.hl && S.hl[w.vk + "#" + wi];
           return '<span class="w' + (on ? (byWord ? " sw" : "") : " off") + (on && cov ? " cov" + cov : "") +
-                 '" data-vk="' + w.vk + '"' + (w.end ? ' data-end="1"' : '') +
+                 (hc ? " hl hl-" + hc : "") + (S.bm && S.bm[w.vk] ? " bmk" : "") +
+                 '" data-vk="' + w.vk + '" data-wi="' + wi + '"' + (w.end ? ' data-end="1"' : '') +
                  ' data-t="' + esc(w.t || "") + '" data-m="' + esc(w.m) + '">' + gl +
                  (w.end ? '<sup class="ayn' + (nastNow ? " ring" : "") + '">' + n(w.vk.split(":")[1]) + '</sup>' : '') + '</span>';
         }).join(" ") + '</div>';
@@ -6626,10 +6830,23 @@ async function rdPaint(p, isTodayPage){
           renderMushaf();
           return;
         }
-        var mn = document.getElementById("rd-mean");
-        if (mn){ mn.innerHTML = rdMeanPanel(pg, w); mn.classList.add("on"); mn.scrollTop = 0; rdMeanWire(); }
-        /* silent word-by-word: the panel opens, nothing is recited */
-        if (wordSound()) rdPlay([w.dataset.vk], 1, true); else rdStop();
+        /* the mark IS the selection: touch to put it on, touch again to take it
+           off. The meaning sheet moved onto the selection bar's own button —
+           it opens over the very bar the reader would reach for next. */
+        var hk = w.dataset.vk + "#" + (w.dataset.wi || 0);
+        if (S.hl[hk]){
+          delete S.hl[hk];
+          w.classList.remove("hl", "hl-y", "hl-g", "hl-b", "hl-p");
+          RD.selW = null;
+        } else {
+          var c = rdHlColor();
+          S.hl[hk] = c;
+          w.classList.add("hl", "hl-" + c);
+          RD.selW = { vk:w.dataset.vk, wi:+(w.dataset.wi || 0), hk:hk };
+        }
+        save();
+        rdSelPanel(pg);
+        if (RD.selW && wordSound()) rdPlay([w.dataset.vk], 1, true); else rdStop();
       };
     });
   } catch(e){
@@ -7771,6 +7988,10 @@ var UIT = {
   night:  { bn:"রাতের রঙ", en:"Night colours", ur:"رات کے رنگ", zh:"夜间配色", ar:"ألوان الليل" },
   cloud:  { bn:"ব্যাকআপ ও সিংক", en:"Backup and sync", ur:"بیک اپ اور سنک", zh:"备份与同步", ar:"النسخ والمزامنة" },
   sound:  { bn:"শব্দে ট্যাপ করলে তিলাওয়াত", en:"Recite on word tap", ur:"لفظ پر ٹیپ سے تلاوت", zh:"点词即诵读", ar:"التلاوة عند نقر الكلمة" },
+  erase:  { bn:"দাগ মুছুন", en:"Remove mark", ur:"نشان ہٹائیں", zh:"清除标记", ar:"إزالة العلامة" },
+  colour: { bn:"দাগের রঙ", en:"Mark colour", ur:"نشان کا رنگ", zh:"标记颜色", ar:"لون العلامة" },
+  bookmk: { bn:"আয়াত সংরক্ষণ", en:"Bookmark this ayah", ur:"آیت محفوظ کریں", zh:"收藏此节", ar:"حفظ الآية" },
+  done:   { bn:"হয়ে গেছে", en:"Done", ur:"مکمل", zh:"完成", ar:"تم" },
   on:     { bn:"চালু", en:"on", ur:"چالو", zh:"开", ar:"مُفعّل" },
   off:    { bn:"বন্ধ", en:"off", ur:"بند", zh:"关", ar:"مُعطّل" },
   diag:   { bn:"অডিও ও মাইক যাচাই", en:"Audio and mic check", ur:"آڈیو اور مائیک جانچ", zh:"音频与麦克风检查", ar:"فحص الصوت والميكروفون" }
@@ -8017,11 +8238,11 @@ function knWire(){
 }
 /* ---------- the mushaf index: surah / juz / both, straight from the pack ---------- */
 var IDXL = {
-  bn:{ ttl:"মুসহাফ-এর সূচী", all:"একসাথে", surah:"সূরা", juz:"পারা", page:"পৃষ্ঠা", ayah:"আয়াত", q:"সূরা খুঁজুন…", none:"কিছু পাওয়া যায়নি" },
-  en:{ ttl:"Mushaf index", all:"Together", surah:"Surah", juz:"Juz", page:"Page", ayah:"Ayat", q:"Find a surah…", none:"Nothing found" },
-  ur:{ ttl:"مصحف کی فہرست", all:"اکٹھا", surah:"سورہ", juz:"پارہ", page:"صفحہ", ayah:"آیات", q:"سورہ تلاش کریں…", none:"کچھ نہیں ملا" },
-  zh:{ ttl:"古兰经目录", all:"全部", surah:"章", juz:"卷", page:"页", ayah:"节", q:"查找章…", none:"未找到" },
-  ar:{ ttl:"فهرس المصحف", all:"الكل", surah:"السورة", juz:"الجزء", page:"الصفحة", ayah:"الآيات", q:"ابحث عن سورة…", none:"لا يوجد" }
+  bn:{ ttl:"মুসহাফ-এর সূচী", all:"একসাথে", surah:"সূরা", juz:"পারা", page:"পৃষ্ঠা", ayah:"আয়াত", q:"সূরা খুঁজুন…", none:"কিছু পাওয়া যায়নি", bm:"সংরক্ষিত", bmNone:"এখনো কোনো আয়াত সংরক্ষণ করা হয়নি", del:"মুছুন" },
+  en:{ ttl:"Mushaf index", all:"Together", surah:"Surah", juz:"Juz", page:"Page", ayah:"Ayat", q:"Find a surah…", none:"Nothing found", bm:"Saved", bmNone:"No ayah saved yet", del:"Remove" },
+  ur:{ ttl:"مصحف کی فہرست", all:"اکٹھا", surah:"سورہ", juz:"پارہ", page:"صفحہ", ayah:"آیات", q:"سورہ تلاش کریں…", none:"کچھ نہیں ملا", bm:"محفوظ", bmNone:"ابھی کوئی آیت محفوظ نہیں", del:"ہٹائیں" },
+  zh:{ ttl:"古兰经目录", all:"全部", surah:"章", juz:"卷", page:"页", ayah:"节", q:"查找章…", none:"未找到", bm:"收藏", bmNone:"尚未收藏任何经文", del:"移除" },
+  ar:{ ttl:"فهرس المصحف", all:"الكل", surah:"السورة", juz:"الجزء", page:"الصفحة", ayah:"الآيات", q:"ابحث عن سورة…", none:"لا يوجد", bm:"المحفوظة", bmNone:"لم تُحفظ أي آية بعد", del:"إزالة" }
 };
 function idxL(){ return IDXL[L.code] || IDXL.bn; }
 function applyNight(){
@@ -8179,7 +8400,7 @@ async function idxRender(){
   document.getElementById("idx-ttl").textContent = T.ttl;
   var qEl = document.getElementById("idx-q");
   if (qEl) qEl.placeholder = T.q;
-  tabs.innerHTML = [["all", T.all], ["surah", T.surah], ["juz", T.juz]].map(function(o){
+  tabs.innerHTML = [["all", T.all], ["surah", T.surah], ["juz", T.juz], ["bm", T.bm]].map(function(o){
     return '<button class="idx-tab" data-idx="' + o[0] + '" aria-selected="' + (IDX.tab === o[0]) + '">' + o[1] + '</button>';
   }).join("");
   qa("#idx-tabs .idx-tab").forEach(function(b){
@@ -8196,7 +8417,28 @@ async function idxRender(){
            (SURAH_EN[nn-1] || "").toLowerCase().indexOf(term) >= 0 ||
            (SURAH_BN[nn-1] || "").indexOf(term) >= 0;
   }
-  if (IDX.tab === "juz"){
+  if (IDX.tab === "bm"){
+    /* kept in mushaf order, not in the order they were saved: the reader looks
+       for a place in the book, not for what they marked last Tuesday */
+    var keys = Object.keys(S.bm || {}).sort(function(a, b){
+      var pa = a.split(":"), pb = b.split(":");
+      return (+pa[0] - +pb[0]) || (+pa[1] - +pb[1]);
+    });
+    if (!keys.length){
+      body.innerHTML = '<p class="idx-empty">' + T.bmNone + '</p>';
+      return;
+    }
+    head = '<tr><th>' + T.surah + '</th><th>' + T.page + '</th><th></th></tr>';
+    rows = keys.map(function(vk){
+      var pr = vk.split(":"), sn = +pr[0], an = +pr[1];
+      var rec = S.bm[vk], pp = (rec && rec.p) || sp[sn] || 1;
+      return '<tr data-p="' + pp + '" data-vk="' + vk + '">' +
+        '<td class="nm">' + n(sn) + '. ' + esc(surahName(sn)) + ' · ' + T.ayah + ' ' + n(an) + '</td>' +
+        '<td class="pg">' + n(pp) + '</td>' +
+        '<td><button class="idx-del" data-del="' + vk + '" aria-label="' + esc(T.del) + '" title="' +
+          esc(T.del) + '">✕</button></td></tr>';
+    }).join("");
+  } else if (IDX.tab === "juz"){
     head = '<tr><th>' + T.juz + '</th><th>' + T.page + '</th></tr>';
     for (var j = 1; j <= 30; j++){
       var jp = juzRange(j)[0];
@@ -8222,7 +8464,19 @@ async function idxRender(){
     ? '<table class="idx-tbl"><thead>' + head + '</thead><tbody>' + rows + '</tbody></table>'
     : '<p class="idx-empty">' + T.none + '</p>';
   qa("#idx-body tbody tr").forEach(function(tr){
-    tr.onclick = function(){ idxGo(+tr.dataset.p || 1); };
+    tr.onclick = function(){
+      /* a saved ayah opens selected, so the reader lands on the words themselves */
+      if (tr.dataset.vk) RD.pendingSel = tr.dataset.vk;
+      idxGo(+tr.dataset.p || 1);
+    };
+  });
+  qa("#idx-body .idx-del").forEach(function(b){
+    b.onclick = function(e){
+      e.stopPropagation();
+      delete S.bm[b.dataset.del];
+      save();
+      idxRender();
+    };
   });
 }
 function idxWire(){
@@ -8358,16 +8612,22 @@ function renderAll(){
   drawerWire(); drawerFill();
 }
 
-function rdFocusIn(){
+/* remember=false means "the tab changed", not "the reader chose" — leaving the
+   mushaf must not forget that they read fullscreen */
+function rdFocusIn(remember){
   document.body.classList.add("focus");
   var m = document.querySelector("main.wrap"); if (m) m.scrollTop = 0;
   var r = document.documentElement;
   if (r.requestFullscreen) r.requestFullscreen().catch(function(){});
   if (screen.orientation && screen.orientation.lock) screen.orientation.lock("portrait").catch(function(){});
+  if (remember !== false && S && S.settings && !S.settings.focus){ S.settings.focus = 1; save(); }
+  rdFitSoon();
 }
-function rdFocusOut(){
+function rdFocusOut(remember){
   document.body.classList.remove("focus");
   if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(function(){});
+  if (remember !== false && S && S.settings && S.settings.focus){ S.settings.focus = 0; save(); }
+  rdFitSoon();
 }
 document.addEventListener("fullscreenchange", function(){
   if (!document.fullscreenElement) document.body.classList.remove("focus");
@@ -8411,6 +8671,8 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     if (S.settings.zikrEvery == null) S.settings.zikrEvery = 0;
     if (S.settings.zikrVoice == null) S.settings.zikrVoice = true;
     if (!S.rev) S.rev = {};
+    if (!S.hl) S.hl = {};
+    if (!S.bm) S.bm = {};
     if (!S.drill) S.drill = { items:{}, salat:{}, sess:{} };
     applyMushaf();
     if (S.settings.drive === undefined) S.settings.drive = null;
