@@ -2635,7 +2635,9 @@ footer b{color:var(--ink-2)}
   width:60px;height:60px;border-radius:50%;border:none;background:var(--verdigris);color:#fff;
   font-size:24px;line-height:1;display:none;align-items:center;justify-content:center;cursor:pointer;
   box-shadow:0 8px 22px rgba(95,127,82,.42);transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s}
-body.mushaf .fab{display:flex}
+/* the floating circle was a second microphone: the reading panel already
+   carries one, and a 60px button parked over the page cost more than it gave */
+body.mushaf .fab{display:none}
 /* ===== পাতাই পর্দা: টুলবার নিচে, বাকিটা পাতার ===== */
 body.mushaf #v-mushaf h2,body.mushaf .rdlegend,body.mushaf .rdnote,
 body.mushaf #rd-tr,body.mushaf #rd-rec{display:none!important}
@@ -2723,6 +2725,36 @@ body.night .qline .w.hl-p{background:rgba(176,96,132,.30)}
 /* while a word is marked the reading tools stand down — one bar at a time,
    and the marked word keeps the bottom of the screen it was tapped from */
 body.mushaf.selw .rdcard{display:none!important}
+/* ---------- this page, ayah by ayah ---------- */
+.rdtrs{position:fixed;inset-inline:0;bottom:0;z-index:64;display:none;
+  flex-direction:column;max-height:68dvh;background:var(--card);
+  border-radius:18px 18px 0 0;box-shadow:0 -10px 34px rgba(28,32,38,.30)}
+.rdtrs.on{display:flex}
+.rdtrs .trs-hd{display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:12px 16px 8px;border-bottom:1px solid rgba(33,43,54,.10);flex:0 0 auto}
+.rdtrs .trs-ttl{font-family:var(--display);font-size:16px;color:var(--ink)}
+.rdtrs .trs-x{background:none;border:none;cursor:pointer;color:var(--ink-3);
+  font-size:17px;line-height:1;padding:6px 8px;border-radius:8px}
+.rdtrs .trs-x:hover{background:rgba(33,43,54,.08)}
+.rdtrs .trs-bd{flex:1 1 auto;min-height:0;overflow-y:auto;
+  padding:6px 16px calc(16px + env(safe-area-inset-bottom))}
+.rdtrs .trs-wait{color:var(--ink-3);padding:18px 0;text-align:center}
+.rdtrs .trsrow{padding:12px 0;border-bottom:1px solid rgba(33,43,54,.08);cursor:pointer}
+.rdtrs .trsrow:last-child{border-bottom:none}
+.rdtrs .trsk{font-family:var(--mono);font-size:11.5px;color:var(--paper);
+  background:var(--verdigris);border-radius:999px;padding:2px 9px;display:inline-block}
+.rdtrs .trsa{direction:rtl;text-align:right;margin:7px 0 5px;line-height:2;
+  font-family:"Noto Naskh Arabic","Amiri","Scheherazade New",serif;
+  font-size:19px;color:var(--ink)}
+.rdtrs .trst{margin:0;color:var(--ink-2);line-height:1.75}
+body.night .rdtrs .trsrow{border-color:rgba(255,255,255,.10)}
+body.night .rdtrs .trs-hd{border-color:rgba(255,255,255,.10)}
+/* the way to it rides on the row that survives fullscreen */
+.rdinfo .ri-tr{flex:0 0 auto;background:none;border:none;cursor:pointer;
+  color:var(--verdigris);font-size:15px;line-height:1;padding:3px 6px;
+  border-radius:6px;margin-inline-start:2px}
+.rdinfo .ri-tr:hover{background:rgba(95,127,82,.16)}
+.rdinfo-b .ri-tr{display:none}
 .idx-del{background:none;border:none;cursor:pointer;color:var(--ink-3);
   font-size:15px;line-height:1;padding:6px 8px;border-radius:6px}
 .idx-del:hover{background:rgba(33,43,54,.08);color:var(--maroon)}
@@ -6414,6 +6446,57 @@ function rdFocusToggle(){
   if (document.body.classList.contains("focus")) rdFocusOut();
   else rdFocusIn();
 }
+/* ---------- this page, ayah by ayah ----------
+   The mushaf page cannot carry the meaning without ceasing to be a mushaf page:
+   the line breaks are the thing being memorised. So the meaning arrives over
+   the page instead, and leaves it exactly as it was. */
+function rdTrClose(){
+  var el = document.getElementById("rd-trs");
+  if (el) el.classList.remove("on");
+  document.body.classList.remove("trsheet");
+}
+async function rdTrOpen(){
+  var el = document.getElementById("rd-trs");
+  if (!el){
+    el = document.createElement("div");
+    el.id = "rd-trs"; el.className = "rdtrs";
+    document.body.appendChild(el);
+  }
+  if (el.classList.contains("on")){ rdTrClose(); return; }
+  var p = RD.page, pg = null;
+  el.innerHTML = '<div class="trs-hd"><span class="trs-ttl">' + esc(L.rd.tr) +
+                 '</span><button class="trs-x" aria-label="' + esc(uit("close")) + '">✕</button></div>' +
+                 '<div class="trs-bd"><p class="trs-wait">' + esc(L.rd.loading) + '</p></div>';
+  el.classList.add("on");
+  document.body.classList.add("trsheet");
+  try { pg = await rdLoadPage(p); } catch(e){}
+  if (RD.page !== p || !el.classList.contains("on")) return;
+  var body = el.querySelector(".trs-bd");
+  if (!pg || !pg.keys || !pg.keys.length){
+    body.innerHTML = '<p class="trs-wait">' + esc(idxL().none) + '</p>';
+  } else {
+    /* the arabic is rebuilt from the page's own words, so the sheet always
+       quotes the very print the reader is looking at */
+    var ar = {};
+    Object.keys(pg.lines).forEach(function(ln){
+      (pg.lines[ln] || []).forEach(function(w){
+        if (!w.vk || w.end || w.head || w.bism) return;
+        ar[w.vk] = (ar[w.vk] ? ar[w.vk] + " " : "") + (w.t || "");
+      });
+    });
+    body.innerHTML = pg.keys.map(function(k){
+      return '<div class="trsrow" data-vk="' + k + '">' +
+        '<div class="trsk">' + ayLabel(k) + '</div>' +
+        '<p class="trsa">' + esc(ar[k] || "") + '</p>' +
+        '<p class="trst">' + esc((pg.tr && pg.tr[k]) || "…") + '</p></div>';
+    }).join("");
+    qa("#rd-trs .trsrow").forEach(function(row){
+      row.onclick = function(){ rdPlay([row.dataset.vk], 1, true); };
+    });
+  }
+  el.querySelector(".trs-x").onclick = rdTrClose;
+}
+
 /* ---------- the bar that answers a touched word ----------
    It covers the reading tools rather than rewriting them: the tools keep every
    handler they were wired with, and come back untouched when the mark is gone. */
@@ -6507,6 +6590,17 @@ async function rdInfoFill(){
       (inPara > 1 ? '<i>' + n(inPara - 1) + '</i>' : '') +
     '</span>';
   bars.forEach(function(e){ if (e) e.innerHTML = html; });
+  /* the top row is the one piece of chrome that survives fullscreen, so the
+     way to the meaning rides on it rather than on the panel that vanishes */
+  var top = bars[0];
+  if (top){
+    var tb = document.createElement("button");
+    tb.className = "ri-tr"; tb.type = "button";
+    tb.title = L.rd.tr; tb.setAttribute("aria-label", L.rd.tr);
+    tb.textContent = "文";
+    tb.onclick = function(ev){ ev.stopPropagation(); rdTrOpen(); };
+    top.appendChild(tb);
+  }
 }
 /* the facing page, read-only, when the phone is held wide */
 /* Every phone gets a different page: the glyph size is measured, not assumed.
@@ -6790,8 +6884,6 @@ async function rdPaint(p, isTodayPage){
                  (w.end ? '<sup class="ayn' + (nastNow ? " ring" : "") + '">' + n(w.vk.split(":")[1]) + '</sup>' : '') + '</span>';
         }).join(" ") + '</div>';
     }
-    h += '<div class="rdfoot"><span>' + fmt(L.rd.juz, n(juzOf(p))) + '</span>' +
-         '<span>' + n(p) + ' / ' + n(TOTAL_PAGES) + '</span></div>';
     paper.innerHTML = h + '<div class="rdcurtain" id="rd-curtain"><span class="grab">≡</span></div>';
     if (byWord) rdSelBands(paper);
     paper.classList.toggle("picking", !!RD.pick);
