@@ -1,8 +1,0 @@
-{
-  "_format": "global word id -> { r: root, f: form, m: how the word is built }. The id is the same number data/wbw/bn.json uses, so both packs line up.",
-  "_note": "Only the words you fill in show the grammar row. Everything else shows the word and its meaning as before.",
-
-  "6554": { "r": "ربب", "f": "مذكر - واحد", "m": "رَبّ + نَا" },
-  "6557": { "r": "قلب", "f": "جمع - مؤنث",  "m": "قُلُوب + نَا" },
-  "6560": { "r": "هدي", "f": "فعل ماضٍ",     "m": "هَدَىٰ + تَ + نَا" }
-}
