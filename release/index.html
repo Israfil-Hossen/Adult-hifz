@@ -2687,9 +2687,41 @@ body.night .rdinfo .ri-j i{background:rgba(255,255,255,.10)}
   background-size:64% 100%,30px 30px;
   border:1.5px solid rgba(166,124,46,.8);border-radius:8px;
   box-shadow:inset 0 0 0 2px var(--pap),inset 0 0 0 3px rgba(166,124,46,.5);
-  padding-block:5px;padding-inline:8px;margin-block:5px 7px}
+  padding-block:4px;padding-inline:8px;margin-block:3px 4px}
 .qline.qhead .w,.qline.qhead .pw{background:none;box-shadow:none;padding:0 2px}
 body.night .qline.qhead{background-color:rgba(176,138,62,.16)}
+
+/* ---------- what this page is about ----------
+   Laid before the reader's own marks in this file on purpose: a highlight the
+   reader put there by hand must always win over a band the app painted. */
+.qline .w.tp{border-radius:3px}
+.qline .w.tp0{background:rgba(74,124,168,.20)}
+.qline .w.tp1{background:rgba(176,138,62,.20)}
+.qline .w.tp2{background:rgba(150,88,132,.19)}
+.qline .w.tp3{background:rgba(95,127,82,.20)}
+.qline .w.tp4{background:rgba(196,110,74,.18)}
+.qline .w.tp5{background:rgba(96,124,140,.20)}
+body.night .qline .w.tp0{background:rgba(74,124,168,.30)}
+body.night .qline .w.tp1{background:rgba(176,138,62,.28)}
+body.night .qline .w.tp2{background:rgba(150,88,132,.30)}
+body.night .qline .w.tp3{background:rgba(95,127,82,.30)}
+body.night .qline .w.tp4{background:rgba(196,110,74,.28)}
+body.night .qline .w.tp5{background:rgba(96,124,140,.30)}
+.rdinfo .ri-tp.on{background:rgba(95,127,82,.20)}
+/* the same six colours name the sections in the sheet */
+.rdtrs .trssec{display:flex;align-items:center;gap:8px;margin:16px 0 2px;
+  padding:7px 10px;border-radius:8px;background:rgba(33,43,54,.05)}
+.rdtrs .trssec:first-child{margin-top:4px}
+.rdtrs .trssw{flex:0 0 auto;width:11px;height:11px;border-radius:3px}
+.rdtrs .trssec.tp0 .trssw{background:rgba(74,124,168,.85)}
+.rdtrs .trssec.tp1 .trssw{background:rgba(176,138,62,.85)}
+.rdtrs .trssec.tp2 .trssw{background:rgba(150,88,132,.85)}
+.rdtrs .trssec.tp3 .trssw{background:rgba(95,127,82,.85)}
+.rdtrs .trssec.tp4 .trssw{background:rgba(196,110,74,.85)}
+.rdtrs .trssec.tp5 .trssw{background:rgba(96,124,140,.85)}
+.rdtrs .trstt{flex:1 1 auto;font-weight:600;color:var(--ink);line-height:1.4}
+.rdtrs .trssr{flex:0 0 auto;font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+body.night .rdtrs .trssec{background:rgba(255,255,255,.07)}
 
 /* ---------- the reader's own marks ----------
    Behind the glyphs, never over them: the ink has to stay the darkest thing
@@ -2750,11 +2782,11 @@ body.mushaf.selw .rdcard{display:none!important}
 body.night .rdtrs .trsrow{border-color:rgba(255,255,255,.10)}
 body.night .rdtrs .trs-hd{border-color:rgba(255,255,255,.10)}
 /* the way to it rides on the row that survives fullscreen */
-.rdinfo .ri-tr{flex:0 0 auto;background:none;border:none;cursor:pointer;
+.rdinfo .ri-btn{flex:0 0 auto;background:none;border:none;cursor:pointer;
   color:var(--verdigris);font-size:15px;line-height:1;padding:3px 6px;
   border-radius:6px;margin-inline-start:2px}
-.rdinfo .ri-tr:hover{background:rgba(95,127,82,.16)}
-.rdinfo-b .ri-tr{display:none}
+.rdinfo .ri-btn:hover{background:rgba(95,127,82,.16)}
+.rdinfo-b .ri-btn{display:none}
 .idx-del{background:none;border:none;cursor:pointer;color:var(--ink-3);
   font-size:15px;line-height:1;padding:6px 8px;border-radius:6px}
 .idx-del:hover{background:rgba(33,43,54,.08);color:var(--maroon)}
@@ -6446,6 +6478,50 @@ function rdFocusToggle(){
   if (document.body.classList.contains("focus")) rdFocusOut();
   else rdFocusIn();
 }
+/* ---------- what this page is about ----------
+   Themes are editorial: one source cuts a page into two sections, another into
+   four. So the pack is per language and the reader's own tongue wins, with
+   English underneath — a surah nobody has translated yet still gets its bands. */
+var TP = { data:{} };
+async function topicsPack(code){
+  if (TP.data[code] !== undefined) return TP.data[code];
+  try { TP.data[code] = await getJSON("data/topics/" + code + ".json"); }
+  catch(e){ TP.data[code] = null; }
+  return TP.data[code];
+}
+function tpLook(pack, sn, an){
+  var list = pack && pack[sn];
+  if (!list || !list.length) return null;
+  for (var i = 0; i < list.length; i++){
+    var a = list[i].a;
+    if (a && an >= a[0] && an <= a[1]) return list[i];
+  }
+  return null;
+}
+async function tpFind(sn, an){
+  var mine = await topicsPack(L.code);
+  var hit = tpLook(mine, sn, an);
+  if (hit) return hit;
+  if (L.code !== "en") return tpLook(await topicsPack("en"), sn, an);
+  return null;
+}
+/* the sections of one page, in the order they are met, each with its colour */
+async function tpForPage(pg){
+  var map = {}, secs = [], order = {};
+  for (var i = 0; i < pg.keys.length; i++){
+    var k = pg.keys[i], pr = k.split(":"), sn = +pr[0], an = +pr[1];
+    var sec = await tpFind(sn, an);
+    if (!sec) continue;
+    var id = sn + ":" + sec.a[0] + "-" + sec.a[1];
+    if (order[id] == null){
+      order[id] = secs.length;
+      secs.push({ id:id, t:sec.t, a:sec.a, sn:sn, ci:(sec.c != null ? +sec.c : secs.length) % 6 });
+    }
+    map[k] = secs[order[id]];
+  }
+  return { map:map, secs:secs };
+}
+
 /* ---------- this page, ayah by ayah ----------
    The mushaf page cannot carry the meaning without ceasing to be a mushaf page:
    the line breaks are the thing being memorised. So the meaning arrives over
@@ -6484,8 +6560,19 @@ async function rdTrOpen(){
         ar[w.vk] = (ar[w.vk] ? ar[w.vk] + " " : "") + (w.t || "");
       });
     });
+    var TPS = await tpForPage(pg);
+    if (RD.page !== p || !el.classList.contains("on")) return;
+    var lastSec = null;
     body.innerHTML = pg.keys.map(function(k){
-      return '<div class="trsrow" data-vk="' + k + '">' +
+      var head = "";
+      var sec = TPS.map[k];
+      if (sec && sec !== lastSec){
+        lastSec = sec;
+        head = '<div class="trssec tp' + sec.ci + '"><span class="trssw"></span>' +
+               '<span class="trstt">' + esc(sec.t) + '</span>' +
+               '<span class="trssr">' + n(sec.a[0]) + '–' + n(sec.a[1]) + '</span></div>';
+      }
+      return head + '<div class="trsrow" data-vk="' + k + '">' +
         '<div class="trsk">' + ayLabel(k) + '</div>' +
         '<p class="trsa">' + esc(ar[k] || "") + '</p>' +
         '<p class="trst">' + esc((pg.tr && pg.tr[k]) || "…") + '</p></div>';
@@ -6594,8 +6681,15 @@ async function rdInfoFill(){
      way to the meaning rides on it rather than on the panel that vanishes */
   var top = bars[0];
   if (top){
+    var pb = document.createElement("button");
+    pb.className = "ri-btn ri-tp" + (RD.tp ? " on" : ""); pb.type = "button";
+    pb.title = uit("themes"); pb.setAttribute("aria-label", uit("themes"));
+    pb.setAttribute("aria-pressed", RD.tp ? "true" : "false");
+    pb.textContent = "▤";
+    pb.onclick = function(ev){ ev.stopPropagation(); RD.tp = !RD.tp; renderMushaf(); };
+    top.appendChild(pb);
     var tb = document.createElement("button");
-    tb.className = "ri-tr"; tb.type = "button";
+    tb.className = "ri-btn ri-tr"; tb.type = "button";
     tb.title = L.rd.tr; tb.setAttribute("aria-label", L.rd.tr);
     tb.textContent = "文";
     tb.onclick = function(ev){ ev.stopPropagation(); rdTrOpen(); };
@@ -6855,6 +6949,9 @@ async function rdPaint(p, isTodayPage){
     var nastNow = !!mushafDef().nast;
     function lnOn(ln){ return byWord ? false : (ln >= RD.sel.ln0 && ln <= RD.sel.ln1); }
 
+    var TPP = RD.tp ? await tpForPage(pg) : { map:{}, secs:[] };
+    if (RD.page !== p) return;
+    RD.tpSecs = TPP.secs;
     var h = "", wcnt = {};
     for (var ln = 1; ln <= LINES_PER_PAGE; ln++){
       var ws = pg.lines[ln];
@@ -6877,7 +6974,9 @@ async function rdPaint(p, isTodayPage){
           var gl = (w.end && nastNow) ? "" : w.g;
           var wi = wcnt[w.vk] || 0; wcnt[w.vk] = wi + 1;
           var hc = S.hl && S.hl[w.vk + "#" + wi];
+          var tpw = TPP.map[w.vk];
           return '<span class="w' + (on ? (byWord ? " sw" : "") : " off") + (on && cov ? " cov" + cov : "") +
+                 (tpw ? " tp tp" + tpw.ci : "") +
                  (hc ? " hl hl-" + hc : "") + (S.bm && S.bm[w.vk] ? " bmk" : "") +
                  '" data-vk="' + w.vk + '" data-wi="' + wi + '"' + (w.end ? ' data-end="1"' : '') +
                  ' data-t="' + esc(w.t || "") + '" data-m="' + esc(w.m) + '">' + gl +
@@ -8091,6 +8190,7 @@ var UIT = {
   night:  { bn:"রাতের রঙ", en:"Night colours", ur:"رات کے رنگ", zh:"夜间配色", ar:"ألوان الليل" },
   cloud:  { bn:"ব্যাকআপ ও সিংক", en:"Backup and sync", ur:"بیک اپ اور سنک", zh:"备份与同步", ar:"النسخ والمزامنة" },
   sound:  { bn:"শব্দে ট্যাপ করলে তিলাওয়াত", en:"Recite on word tap", ur:"لفظ پر ٹیپ سے تلاوت", zh:"点词即诵读", ar:"التلاوة عند نقر الكلمة" },
+  themes: { bn:"এই পাতা কী নিয়ে", en:"What this page is about", ur:"یہ صفحہ کس بارے میں", zh:"本页主题", ar:"موضوع الصفحة" },
   erase:  { bn:"দাগ মুছুন", en:"Remove mark", ur:"نشان ہٹائیں", zh:"清除标记", ar:"إزالة العلامة" },
   colour: { bn:"দাগের রঙ", en:"Mark colour", ur:"نشان کا رنگ", zh:"标记颜色", ar:"لون العلامة" },
   bookmk: { bn:"আয়াত সংরক্ষণ", en:"Bookmark this ayah", ur:"آیت محفوظ کریں", zh:"收藏此节", ar:"حفظ الآية" },
