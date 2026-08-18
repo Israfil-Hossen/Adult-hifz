@@ -2822,6 +2822,18 @@ body.night .rdtrs .trs-hd{border-color:rgba(255,255,255,.10)}
   border-radius:6px;margin-inline-start:2px}
 .rdinfo .ri-btn:hover{background:rgba(95,127,82,.16)}
 .rdinfo-b .ri-btn{display:none}
+/* is the method working */
+.wkcard .wksub{font-size:13px;color:var(--ink-3);margin:2px 0 12px}
+.wkbars{display:flex;align-items:flex-end;gap:8px;height:74px;padding:0 2px}
+.wkbar{flex:1 1 0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px}
+.wkbar i{display:block;width:100%;max-width:34px;background:var(--verdigris);border-radius:3px 3px 0 0;opacity:.85}
+.wkbar b{font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--ink-3)}
+.wkverdict{margin:12px 0 0;font-size:13.5px;color:var(--ink-2)}
+.wkrow{display:flex;align-items:baseline;gap:8px;margin-top:12px;
+  padding-top:11px;border-top:1px solid rgba(33,43,54,.10);font-size:14px}
+.wkrow b{font-family:var(--mono);font-size:16px}
+.wkrow .wkaim{color:var(--ink-3);font-size:12.5px;margin-inline-start:auto}
+body.night .wkrow{border-color:rgba(255,255,255,.10)}
 .pggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;padding:12px 2px}
 .pgcell{font-family:var(--mono);font-size:13px;padding:9px 0;border-radius:8px;cursor:pointer;
   border:1px solid var(--rule);background:transparent;color:var(--ink-2)}
@@ -4869,6 +4881,7 @@ function renderProgress(){
       }).join("") + '</tbody></table></div>';
   }
 
+  h += workCard();
   document.getElementById("v-progress").innerHTML = h;
   document.getElementById("pg-rep").onclick = openReport;
 }
@@ -6571,6 +6584,80 @@ function rdDotsOpen(btn){
   });
   setTimeout(function(){ document.addEventListener("click", rdDotsAway, true); }, 0);
 }
+
+/* ---------- is the method working? ----------
+   The app asks the reader to trust a schedule for months. Errors were counted
+   every day and never shown as a trend, so the one question that decides
+   whether to keep going — is this working for me — had no answer in the app.
+   Everything here is already in S; none of it is new measurement. */
+function wkKey(k){ return Math.floor(daysBetween(S.settings.startDate, k) / 7); }
+function workReport(){
+  var days = Object.keys(S.days).filter(function(k){ return k <= TODAY; }).sort();
+  var wk = {};
+  days.forEach(function(k){
+    var d = S.days[k];
+    if (!d || (!d.errors && !d.minutes && !d.sabaq.done)) return;
+    var w = Math.max(0, wkKey(k));
+    var b = wk[w] || (wk[w] = { err:0, days:0, mins:0 });
+    b.err += (+d.errors || 0); b.mins += (+d.minutes || 0); b.days++;
+  });
+  var weeks = Object.keys(wk).map(Number).sort(function(a, b){ return a - b; }).slice(-8);
+  var trend = weeks.map(function(w){
+    return { w:w + 1, per:wk[w].days ? (wk[w].err / wk[w].days) : 0, days:wk[w].days, mins:wk[w].mins };
+  });
+  /* what the scheduler actually achieved, against what it was aimed at */
+  var its = (S.drill && S.drill.items) || {};
+  var ks = Object.keys(its), reps = 0, errs = 0, firm = 0;
+  ks.forEach(function(k){ reps += (its[k].reps || 0); errs += (its[k].err || 0); if ((its[k].streak || 0) >= 4) firm++; });
+  return { trend:trend, tracked:ks.length, firm:firm,
+           recalled:reps ? (reps - errs) / reps : null,
+           target:+(S.settings.retention || 0.9) };
+}
+function workCard(){
+  var W = workReport(), T = wkL();
+  if (!W.trend.length && !W.tracked) return "";
+  var mx = 0;
+  W.trend.forEach(function(t){ if (t.per > mx) mx = t.per; });
+  var bars = W.trend.map(function(t){
+    var hgt = mx ? Math.max(3, Math.round(t.per / mx * 54)) : 3;
+    return '<span class="wkbar" title="' + fmt(T.wk, n(t.w)) + ' · ' + n(Math.round(t.per * 10) / 10) + '">' +
+           '<i style="height:' + hgt + 'px"></i><b>' + n(t.w) + '</b></span>';
+  }).join("");
+  var first = W.trend.length ? W.trend[0].per : 0, last = W.trend.length ? W.trend[W.trend.length - 1].per : 0;
+  var verdict = !W.trend.length ? "" :
+    (last < first * 0.85 ? T.falling : last > first * 1.15 ? T.rising : T.flat);
+  var hit = W.recalled == null ? "" :
+    '<div class="wkrow"><span>' + T.recall + '</span><b>' + n(Math.round(W.recalled * 100)) + '%</b>' +
+    '<span class="wkaim">' + fmt(T.aim, n(Math.round(W.target * 100))) + '</span></div>';
+  return '<div class="mapwrap wkcard" style="margin-top:28px">' +
+    '<div class="maplbl"><span class="t">' + T.h + '</span></div>' +
+    (W.trend.length ? '<p class="wksub">' + T.sub + '</p><div class="wkbars">' + bars + '</div>' +
+      (verdict ? '<p class="wkverdict">' + verdict + '</p>' : "") : "") +
+    hit +
+    '<div class="wkrow"><span>' + T.firm + '</span><b>' + n(W.firm) + ' / ' + n(W.tracked) + '</b></div></div>';
+}
+var WKL = {
+  bn:{ h:"পদ্ধতিটা কাজ করছে কি?", sub:"সপ্তাহপ্রতি দিনে গড় ভুল — কমছে কি না, সেটাই আসল মাপ",
+       wk:"সপ্তাহ {0}", falling:"ভুল কমছে। পদ্ধতি আপনার জন্য কাজ করছে।",
+       rising:"ভুল বাড়ছে — দৈনিক লক্ষ্য কমান, বা পুরোনো রিভিশন বাড়ান।",
+       flat:"ভুল একই জায়গায়। আরেক সপ্তাহ দেখুন।",
+       recall:"ড্রিলে সঠিক", aim:"লক্ষ্য {0}%", firm:"পাকা আয়াত" },
+  en:{ h:"Is the method working?", sub:"Average mistakes per day, by week — whether this is falling is the real measure",
+       wk:"Week {0}", falling:"Mistakes are falling. The method is working for you.",
+       rising:"Mistakes are rising — lower the daily target, or give more time to old revision.",
+       flat:"Mistakes are level. Give it another week.",
+       recall:"Recalled in drill", aim:"aiming for {0}%", firm:"Firm ayat" },
+  ur:{ h:"کیا طریقہ کام کر رہا ہے؟", sub:"ہر ہفتے، روزانہ اوسط غلطیاں",
+       wk:"ہفتہ {0}", falling:"غلطیاں کم ہو رہی ہیں۔", rising:"غلطیاں بڑھ رہی ہیں — روزانہ ہدف کم کریں۔",
+       flat:"غلطیاں برابر ہیں۔", recall:"ڈرل میں درست", aim:"ہدف {0}%", firm:"پختہ آیات" },
+  zh:{ h:"这个方法有效吗？", sub:"按周统计的每日平均错误",
+       wk:"第 {0} 周", falling:"错误在减少。", rising:"错误在增加 —— 请降低每日目标。",
+       flat:"错误持平。", recall:"测练正确率", aim:"目标 {0}%", firm:"牢固经文" },
+  ar:{ h:"هل تنجح الطريقة؟", sub:"متوسط الأخطاء اليومية، أسبوعًا بأسبوع",
+       wk:"الأسبوع {0}", falling:"الأخطاء تتناقص.", rising:"الأخطاء تتزايد — خفّف الهدف اليومي.",
+       flat:"الأخطاء ثابتة.", recall:"الصحيح في التمرين", aim:"الهدف {0}%", firm:"آيات متقنة" }
+};
+function wkL(){ return WKL[L.code] || WKL.en; }
 
 /* ---------- what this page is about ----------
    Themes are editorial: one source cuts a page into two sections, another into
