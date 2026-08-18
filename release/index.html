@@ -3792,7 +3792,7 @@ var Cloud = {
     if (!data || typeof data !== "object") return;
     var codeKeep = S.settings && S.settings.cloudCode;
     S = data;
-    if (!S.settings) S.settings = blankState().settings;
+    if (!S.settings) S.settings = defaults().settings;
     S.settings.cloudCode = codeKeep;
     await Store.set(S);
     renderAll();
