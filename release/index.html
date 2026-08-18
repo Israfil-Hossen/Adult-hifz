@@ -2711,16 +2711,16 @@ body.night .qline .w.tp5{background:rgba(96,124,140,.30)}
 .rdinfo .ri-tp.over{background:var(--verdigris);color:var(--paper)}
 /* the page seen from above: solid, and the arabic deliberately under it */
 .tpover{position:absolute;inset:0;z-index:6;pointer-events:none}
-.tpblk{position:absolute;border-radius:3px}
-.tpover .tp0{background:#6FA3D6}
-.tpover .tp1{background:#C3B291}
-.tpover .tp2{background:#9C5E92}
-.tpover .tp3{background:#7FA88C}
-.tpover .tp4{background:#D08A66}
-.tpover .tp5{background:#8496A4}
-.tplab{position:absolute;inset-inline:14px;display:flex;align-items:center;
-  color:#fff;font-family:var(--body);font-weight:700;font-size:17px;line-height:1.3;
-  direction:ltr;text-align:start;text-shadow:0 1px 2px rgba(0,0,0,.22)}
+.tpblk{position:absolute}
+.tpover .tp0{background:#2E6DA4}
+.tpover .tp1{background:#7D6B43}
+.tpover .tp2{background:#7A3F72}
+.tpover .tp3{background:#3F6B4E}
+.tpover .tp4{background:#A2522C}
+.tpover .tp5{background:#4E6070}
+.tplab{position:absolute;display:flex;align-items:center;
+  color:#fff;font-family:var(--body);font-weight:700;font-size:16px;line-height:1.3;
+  direction:ltr;text-align:start;text-shadow:0 1px 2px rgba(0,0,0,.30)}
 /* the same six colours name the sections in the sheet */
 .rdtrs .trssec{display:flex;align-items:center;gap:8px;margin:16px 0 2px;
   padding:7px 10px;border-radius:8px;background:rgba(33,43,54,.05)}
@@ -6572,13 +6572,29 @@ function rdTpBands(){
       over.appendChild(d);
     });
     var sp = span[sec.i];
+    var lo = Infinity, hi = -Infinity;
+    rs.forEach(function(r){ lo = Math.min(lo, r.l); hi = Math.max(hi, r.r); });
     var lab = document.createElement("span");
     lab.className = "tplab";
-    lab.style.cssText = "top:" + sp.t + "px;height:" + (sp.b - sp.t) + "px";
+    lab.style.cssText = "left:" + (lo + 8) + "px;width:" + Math.max(40, (hi - lo) - 16) + "px";
     lab.textContent = sec.t;
+    lab.dataset.t = sp.t; lab.dataset.b = sp.b;
     over.appendChild(lab);
   });
   paper.appendChild(over);
+  /* placed only once the labels can be measured: each sits in the middle of its
+     own section, then is pushed clear of the one above so a shared boundary
+     line never prints two titles on top of each other */
+  var floor = 0;
+  Array.prototype.slice.call(over.querySelectorAll(".tplab")).forEach(function(lab){
+    var t = +lab.dataset.t, b = +lab.dataset.b, h = lab.getBoundingClientRect().height;
+    var y = t + Math.max(0, (b - t - h) / 2);
+    if (y < floor) y = floor;
+    if (y + h > b) y = Math.max(t, b - h);
+    lab.style.top = y + "px";
+    lab.style.height = h + "px";
+    floor = y + h + 4;
+  });
 }
 
 /* ---------- this page, ayah by ayah ----------
