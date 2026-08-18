@@ -2254,6 +2254,7 @@ main.wrap{width:100%}
     <button class="drawer-it" id="dw-cloud"><i>↥</i><span id="dw-cloud-l">ব্যাকআপ ও সিংক</span></button>
     <button class="drawer-it" id="dw-aims"><i>◇</i><span id="dw-aims-l">এই অ্যাপ কী করে</span></button>
     <button class="drawer-it" id="dw-night"><i>☾</i><span id="dw-night-l">রাতের রঙ</span><span class="dwval" id="dw-night-v"></span></button>
+    <button class="drawer-it" id="dw-diag"><i>⚙</i><span id="dw-diag-l">যাচাই</span></button>
     
   </div>
 </aside>
@@ -8672,7 +8673,7 @@ var UIT = {
   done:   { bn:"হয়ে গেছে", en:"Done", ur:"مکمل", zh:"完成", ar:"تم" },
   on:     { bn:"চালু", en:"on", ur:"چالو", zh:"开", ar:"مُفعّل" },
   off:    { bn:"বন্ধ", en:"off", ur:"بند", zh:"关", ar:"مُعطّل" },
-  diag:   { bn:"অডিও ও মাইক যাচাই", en:"Audio and mic check", ur:"آڈیو اور مائیک جانچ", zh:"音频与麦克风检查", ar:"فحص الصوت والميكروفون" }
+  diag:   { bn:"যাচাই · কী কাজ করছে", en:"Check what is working", ur:"جانچ \u00b7 کیا کام کر رہا ہے", zh:"检查运行状况", ar:"فحص ما يعمل" }
 };
 function uit(k){ var m = UIT[k] || {}; return m[(typeof L !== "undefined" && L.code) || "bn"] || m.en || ""; }
 function uiLabels(){
@@ -9007,6 +9008,21 @@ async function diagRun(){
   add("MediaRecorder", !!window.MediaRecorder, window.MediaRecorder ? G.have : G.miss);
   var mdOk = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
   add("mediaDevices", mdOk, mdOk ? G.have : G.mdMiss);
+  var def = mushafDef();
+  add("Mushaf", true, def.id + " \u00b7 " + n(def.pages) + "p / " + n(def.lines) + " \u00b7 " + def.local);
+  for (var mi = 0; mi < MUSHAFS.length; mi++){
+    var m = MUSHAFS[mi], okI = false, note = "";
+    try {
+      var r = await fetch(m.local + "/info.json", { cache:"no-store" });
+      okI = r.ok; note = "info.json " + r.status;
+      if (r.ok){
+        var j = await r.json();
+        var c = await fetch(m.local + "/c0.json", { cache:"no-store" });
+        okI = c.ok; note = n(j.files) + " chunks \u00b7 c0 " + c.status;
+      }
+    } catch(e){ okI = false; note = String((e && e.message) || e).slice(0, 90); }
+    add((m.id === def.id ? "\u25b8 " : "") + m.id, okI, note);
+  }
   b.innerHTML = rows.join("");
 
   /* Probe each host with an audio ELEMENT, not fetch: playback needs no CORS, so
