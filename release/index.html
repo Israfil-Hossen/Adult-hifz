@@ -6533,12 +6533,16 @@ function rdFocusToggle(){
    loop a phrase, quiz, look-alike passages, download — nine controls with no
    way to reach any of them once the page opened. The dots let them out again.
    Each item presses the real chip, so every handler stays where it was. */
+/* Only what has no other door, and no second way of doing it. Picking a
+   range on the page went: the two dropdowns beside the tick already set it,
+   they are always on screen, and pick mode seized the word tap that now marks
+   a word. Downloading went too: settings owns it, with the scope and the audio
+   choice this could not offer. What is left is a phrase loop, a test of this
+   page, and its look-alikes — none of which exist anywhere else. */
 var DOTS = [
-  ["pick",   function(){ return Rd().pick; }],
   ["phrase", function(){ return L.rec.phrase; }],
   ["exam",   function(){ return L.ex.open; }],
-  ["mut",    function(){ return L.mut.find; }],
-  ["dl",     function(){ return Rd().dl; }]
+  ["mut",    function(){ return L.mut.find; }]
 ];
 function Rd(){ return L.rd; }
 function rdDotsClose(){
