@@ -2808,6 +2808,15 @@ body.night .rdtrs .trs-hd{border-color:rgba(255,255,255,.10)}
   border-radius:6px;margin-inline-start:2px}
 .rdinfo .ri-btn:hover{background:rgba(95,127,82,.16)}
 .rdinfo-b .ri-btn{display:none}
+.pggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;padding:12px 2px}
+.pgcell{font-family:var(--mono);font-size:13px;padding:9px 0;border-radius:8px;cursor:pointer;
+  border:1px solid var(--rule);background:transparent;color:var(--ink-2)}
+.pgcell:hover{background:rgba(95,127,82,.12)}
+.pgcell.on{background:var(--ink);color:var(--paper);border-color:transparent}
+/* the row says where you are and is also how you leave */
+.rdinfo .ri-s,.rdinfo .ri-p,.rdinfo .ri-j{background:none;border:none;cursor:pointer;
+  font:inherit;color:inherit;padding:3px 4px;border-radius:6px}
+.rdinfo .ri-s:hover,.rdinfo .ri-p:hover,.rdinfo .ri-j:hover{background:rgba(95,127,82,.14)}
 .idx-del{background:none;border:none;cursor:pointer;color:var(--ink-3);
   font-size:15px;line-height:1;padding:6px 8px;border-radius:6px}
 .idx-del:hover{background:rgba(33,43,54,.08);color:var(--maroon)}
@@ -6738,14 +6747,22 @@ async function rdInfoFill(){
   try { st = await juzStartPage(j) || 1; } catch(e){ st = 1; }
   if (RD.page !== p) return;                       /* the reader turned the page mid-load */
   var inPara = Math.max(1, p - st + 1);
+  var T = idxL();
   var html =
-    '<span class="ri-s">' + (sn ? n(sn) + ". " + esc(surahName(sn)) : "") + '</span>' +
-    '<span class="ri-p">' + n(p) + '</span>' +
-    '<span class="ri-j">' + fmt(L.rd.juz, n(j)) +
+    '<button class="ri-s" type="button" title="' + esc(T.surah) + '">' +
+      (sn ? n(sn) + ". " + esc(surahName(sn)) : "") + '</button>' +
+    '<button class="ri-p" type="button" title="' + esc(T.page) + '">' + n(p) + '</button>' +
+    '<button class="ri-j" type="button" title="' + esc(T.juz) + '">' + fmt(L.rd.juz, n(j)) +
       '<i class="on">' + n(inPara) + '</i>' +
       (inPara > 1 ? '<i>' + n(inPara - 1) + '</i>' : '') +
-    '</span>';
+    '</button>';
   bars.forEach(function(e){ if (e) e.innerHTML = html; });
+  var jump = { "ri-s":"surah", "ri-p":"page", "ri-j":"juz" };
+  Object.keys(jump).forEach(function(cls){
+    qa(".rdinfo ." + cls).forEach(function(b){
+      b.onclick = function(ev){ ev.stopPropagation(); IDX.tab = jump[cls]; idxOpen(); };
+    });
+  });
   /* the top row is the one piece of chrome that survives fullscreen, so the
      way to the meaning rides on it rather than on the panel that vanishes */
   var top = bars[0];
@@ -8701,7 +8718,7 @@ async function idxRender(){
   document.getElementById("idx-ttl").textContent = T.ttl;
   var qEl = document.getElementById("idx-q");
   if (qEl) qEl.placeholder = T.q;
-  tabs.innerHTML = [["all", T.all], ["surah", T.surah], ["juz", T.juz], ["bm", T.bm]].map(function(o){
+  tabs.innerHTML = [["all", T.all], ["surah", T.surah], ["juz", T.juz], ["page", T.page], ["bm", T.bm]].map(function(o){
     return '<button class="idx-tab" data-idx="' + o[0] + '" aria-selected="' + (IDX.tab === o[0]) + '">' + o[1] + '</button>';
   }).join("");
   qa("#idx-tabs .idx-tab").forEach(function(b){
@@ -8717,6 +8734,20 @@ async function idxRender(){
     return (String(nn).indexOf(term) === 0) ||
            (SURAH_EN[nn-1] || "").toLowerCase().indexOf(term) >= 0 ||
            (SURAH_BN[nn-1] || "").indexOf(term) >= 0;
+  }
+  if (IDX.tab === "page"){
+    /* every page of this mushaf at once: a grid reads faster than 604 rows,
+       and the one you are on is marked so you can see where you stand */
+    var g = "";
+    for (var pn = 1; pn <= TOTAL_PAGES; pn++)
+      g += '<button class="pgcell' + (pn === RD.page ? " on" : "") + '" data-p="' + pn + '">' + n(pn) + '</button>';
+    body.innerHTML = '<div class="pggrid">' + g + '</div>';
+    qa("#idx-body .pgcell").forEach(function(b){
+      b.onclick = function(){ idxGo(+b.dataset.p); };
+    });
+    var cur = body.querySelector(".pgcell.on");
+    if (cur) cur.scrollIntoView({ block:"center" });
+    return;
   }
   if (IDX.tab === "bm"){
     /* kept in mushaf order, not in the order they were saved: the reader looks
