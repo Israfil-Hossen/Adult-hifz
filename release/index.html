@@ -6568,7 +6568,7 @@ function rdDotsOpen(btn){
     return '<button class="dotit' + (on ? " on" : "") + '" data-dot="' + d[0] + '">' + esc(lab) + '</button>';
   }).join("");
   m.innerHTML = rows + '<div class="dotsep"></div>' +
-    '<button class="dotit" data-dot="_drawer">' + esc(uit("menu")) + '</button>';
+    '<button class="dotit" data-dot="_drawer">' + esc(uit("goscreen")) + '</button>';
   document.body.appendChild(m);
   var r = btn.getBoundingClientRect();
   m.style.top = Math.round(r.bottom + 6) + "px";
@@ -8525,6 +8525,8 @@ var UIT = {
   cloud:  { bn:"ব্যাকআপ ও সিংক", en:"Backup and sync", ur:"بیک اپ اور سنک", zh:"备份与同步", ar:"النسخ والمزامنة" },
   sound:  { bn:"শব্দে ট্যাপ করলে তিলাওয়াত", en:"Recite on word tap", ur:"لفظ پر ٹیپ سے تلاوت", zh:"点词即诵读", ar:"التلاوة عند نقر الكلمة" },
   themes: { bn:"এই পাতা কী নিয়ে", en:"What this page is about", ur:"یہ صفحہ کس بارے میں", zh:"本页主题", ar:"موضوع الصفحة" },
+  goscreen:{ bn:"অন্য পর্দায় যান · সেটিংস", en:"Other screens · settings",
+             ur:"دوسری اسکرین · ترتیبات", zh:"其他页面 · 设置", ar:"شاشات أخرى · الإعدادات" },
   erase:  { bn:"দাগ মুছুন", en:"Remove mark", ur:"نشان ہٹائیں", zh:"清除标记", ar:"إزالة العلامة" },
   colour: { bn:"দাগের রঙ", en:"Mark colour", ur:"نشان کا رنگ", zh:"标记颜色", ar:"لون العلامة" },
   bookmk: { bn:"আয়াত সংরক্ষণ", en:"Bookmark this ayah", ur:"آیت محفوظ کریں", zh:"收藏此节", ar:"حفظ الآية" },
