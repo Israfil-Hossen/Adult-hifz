@@ -2095,8 +2095,13 @@ body.focus .rdnote,body.focus #v-mushaf h2,body.focus .trbox,body.focus .recbox,
 body.focus .rdcard,body.focus .wmean,body.focus .rdfoot{display:none!important}
 body.focus main.wrap{width:100%;max-width:none;margin:0;padding:6px 8px}
 body.focus .fab{display:none!important}
-body.focus .fexit{inset-inline-end:auto;inset-inline-start:50%;transform:translateX(-50%);
-  padding:10px 18px;font-size:14px;white-space:nowrap;opacity:.9}
+body.focus .fexit{inset-inline-start:auto;inset-inline-end:10px;transform:none;
+  top:calc(9px + env(safe-area-inset-top));bottom:auto;
+  width:34px;height:34px;padding:0;font-size:0;border-radius:999px;
+  display:grid;place-items:center;opacity:.62;
+  background:rgba(51,65,79,.34);box-shadow:none;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+body.focus .fexit:hover,body.focus .fexit:active{opacity:1}
+body.focus .fexit::before{content:"✕";font-size:16px;line-height:1;color:var(--paper)}
 body.focus #rd-paper{align-self:stretch;width:100%;min-height:0;border:none;box-shadow:none;background:transparent;
   padding:4px 2px;display:flex;flex-direction:column;justify-content:center;height:calc(100dvh - 26px - var(--rdinfo,0px))}
 body.focus .qline{margin:0}
@@ -2667,20 +2672,22 @@ body.night .rdinfo{border-color:rgba(255,255,255,.10)}
 body.night .rdinfo .ri-j i{background:rgba(255,255,255,.10)}
 
 /* ---------- the illuminated surah band ----------
-   Drawn, not downloaded: an arabesque lattice tiles the whole band and each
-   word of the name sits on its own plate of paper, so the cartouche fits the
-   name at any size and the ornament never runs under the letters. */
+   Drawn, not downloaded. The lattice tiles the whole band and a plate of paper
+   is laid over its middle, so the ornament reads as two side panels and the
+   name always has a clear field — at any width, in any of the paper colours. */
 .qline.qhead{
-  background-color:rgba(176,138,62,.07);
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23B08A3E' stroke-width='1' opacity='.55'%3E%3Cpath d='M20 2 L29 11 L20 20 L11 11 Z'/%3E%3Cpath d='M20 20 L29 29 L20 38 L11 29 Z'/%3E%3Cpath d='M0 20 L9 11 L18 20 L9 29 Z'/%3E%3Cpath d='M22 20 L31 11 L40 20 L31 29 Z'/%3E%3C/g%3E%3Cg fill='%235F7F52' opacity='.42'%3E%3Ccircle cx='20' cy='11' r='1.9'/%3E%3Ccircle cx='20' cy='29' r='1.9'/%3E%3Ccircle cx='9' cy='20' r='1.9'/%3E%3Ccircle cx='31' cy='20' r='1.9'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat:repeat;background-position:center;background-size:34px 34px;
-  border:1.5px solid rgba(176,138,62,.75);border-radius:7px;
-  box-shadow:inset 0 0 0 2.5px var(--pap),inset 0 0 0 3.5px rgba(176,138,62,.45);
-  padding-block:8px;padding-inline:16px;margin-block:6px 8px}
-.qline.qhead .w,.qline.qhead .pw{
-  background:var(--pap);border-radius:4px;padding:1px 5px;
-  box-shadow:0 0 0 1px rgba(176,138,62,.30)}
-body.night .qline.qhead{background-color:rgba(176,138,62,.13)}
+  background-color:rgba(176,138,62,.10);
+  background-image:
+    linear-gradient(90deg,rgba(0,0,0,0) 0,var(--pap) 12%,var(--pap) 88%,rgba(0,0,0,0) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cg fill='none' stroke='%23A67C2E' stroke-width='1.15'%3E%3Cpath d='M15 1 L21 7 L15 13 L9 7 Z'/%3E%3Cpath d='M15 17 L21 23 L15 29 L9 23 Z'/%3E%3Cpath d='M0 15 L6 9 L12 15 L6 21 Z'/%3E%3Cpath d='M18 15 L24 9 L30 15 L24 21 Z'/%3E%3Cpath d='M9 7 L6 9 M21 7 L24 9 M9 23 L6 21 M21 23 L24 21'/%3E%3C/g%3E%3Cg fill='%235F7F52'%3E%3Ccircle cx='15' cy='7' r='1.7'/%3E%3Ccircle cx='15' cy='23' r='1.7'/%3E%3Ccircle cx='6' cy='15' r='1.7'/%3E%3Ccircle cx='24' cy='15' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat:no-repeat,repeat;
+  background-position:center,center;
+  background-size:64% 100%,30px 30px;
+  border:1.5px solid rgba(166,124,46,.8);border-radius:8px;
+  box-shadow:inset 0 0 0 2px var(--pap),inset 0 0 0 3px rgba(166,124,46,.5);
+  padding-block:5px;padding-inline:8px;margin-block:5px 7px}
+.qline.qhead .w,.qline.qhead .pw{background:none;box-shadow:none;padding:0 2px}
+body.night .qline.qhead{background-color:rgba(176,138,62,.16)}
 
 /* ---------- the reader's own marks ----------
    Behind the glyphs, never over them: the ink has to stay the darkest thing
@@ -6519,7 +6526,11 @@ function rdFit(){
   if (!lines.length) return;
   /* clear last run's centring first — its gaps would be measured as content
      width and the search would spiral down to the floor */
-  lines.concat(lines2).forEach(function(ln){ ln.classList.remove("qcen"); });
+  lines.concat(lines2).forEach(function(ln){
+    /* the header and the basmallah are centred by the print, not by the fit */
+    if (ln.classList.contains("qhead") || ln.classList.contains("qbism")) return;
+    ln.classList.remove("qcen");
+  });
   paper.style.removeProperty("--tw");
   if (paper2) paper2.style.removeProperty("--tw");
 
