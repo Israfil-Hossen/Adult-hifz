@@ -2708,6 +2708,19 @@ body.night .qline .w.tp3{background:rgba(95,127,82,.30)}
 body.night .qline .w.tp4{background:rgba(196,110,74,.28)}
 body.night .qline .w.tp5{background:rgba(96,124,140,.30)}
 .rdinfo .ri-tp.on{background:rgba(95,127,82,.20)}
+.rdinfo .ri-tp.over{background:var(--verdigris);color:var(--paper)}
+/* the page seen from above: solid, and the arabic deliberately under it */
+.tpover{position:absolute;inset:0;z-index:6;pointer-events:none}
+.tpblk{position:absolute;border-radius:3px}
+.tpover .tp0{background:#6FA3D6}
+.tpover .tp1{background:#C3B291}
+.tpover .tp2{background:#9C5E92}
+.tpover .tp3{background:#7FA88C}
+.tpover .tp4{background:#D08A66}
+.tpover .tp5{background:#8496A4}
+.tplab{position:absolute;inset-inline:14px;display:flex;align-items:center;
+  color:#fff;font-family:var(--body);font-weight:700;font-size:17px;line-height:1.3;
+  direction:ltr;text-align:start;text-shadow:0 1px 2px rgba(0,0,0,.22)}
 /* the same six colours name the sections in the sheet */
 .rdtrs .trssec{display:flex;align-items:center;gap:8px;margin:16px 0 2px;
   padding:7px 10px;border-radius:8px;background:rgba(33,43,54,.05)}
@@ -6124,11 +6137,6 @@ function renderMushaf(){
   h += '<div class="glbar" id="rd-glimpse" style="display:none"></div>';
   h += '<div class="rdcard">' +
        '<div class="rdhead">' +
-         '<div class="rdgrp rdpg">' +
-           '<button data-rd="prev" aria-label="' + Rd.prev + '">' + RIC.prev + '</button>' +
-           '<input type="number" id="rd-page" min="1" max="' + TOTAL_PAGES + '" value="' + RD.page + '">' +
-           '<button data-rd="next" aria-label="' + Rd.next + '">' + RIC.next + '</button>' +
-         '</div>' +
          '<select class="rdjuz" id="rd-juz" aria-label="' + fmt(Rd.juz, "") + '">' +
            (function(){ var o = "", cur = juzOf(RD.page);
              for (var j = 1; j <= 30; j++)
@@ -6174,7 +6182,6 @@ function renderMushaf(){
   h += '<div class="rdpapers">' +
        '<div class="paper" id="rd-paper"><p style="text-align:center;color:#77808A">' + Rd.loading + '</p></div>' +
        '<div class="paper" id="rd-paper2"></div></div>';
-  h += '<div class="rdinfo rdinfo-b" id="rd-info-b"></div>';
   h += '<div class="rdlegend">' +
        '<span><i style="background:var(--verdigris)"></i>' + L.mu.sabaq + '</span>' +
        '<span><i style="background:var(--brass)"></i>' + L.mu.sabaqi + '</span>' +
@@ -6197,6 +6204,7 @@ function renderMushaf(){
       var range = cardEl.querySelector(".rdsabaq");
       if (range){
         cardEl.appendChild(range);                       /* opens only on demand */
+        cardEl.classList.add("open");
         var tg = document.createElement("button");
         tg.className = "rdrangebtn";
         tg.type = "button";
@@ -6268,7 +6276,6 @@ function renderMushaf(){
       renderMushaf();
     });
   };
-  g("rd-page").onchange  = function(){ rdStop(); RD.page = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); RD.sel = null; renderMushaf(); };
 
   rdPaint(RD.page, RD.page === tp);
   recBox();
@@ -6515,11 +6522,63 @@ async function tpForPage(pg){
     var id = sn + ":" + sec.a[0] + "-" + sec.a[1];
     if (order[id] == null){
       order[id] = secs.length;
-      secs.push({ id:id, t:sec.t, a:sec.a, sn:sn, ci:(sec.c != null ? +sec.c : secs.length) % 6 });
+      secs.push({ id:id, i:secs.length, t:sec.t, a:sec.a, sn:sn,
+                  ci:(sec.c != null ? +sec.c : secs.length) % 6 });
     }
     map[k] = secs[order[id]];
   }
   return { map:map, secs:secs };
+}
+
+/* The overview lays each section's own shape over the page — one rectangle per
+   line, from the section's first word on that line to its last, so the block
+   steps exactly where the passage does. The arabic goes under it on purpose:
+   this is the page seen from above, not a page to read. */
+function rdTpBands(){
+  var paper = document.getElementById("rd-paper");
+  if (!paper) return;
+  var old = paper.querySelector(".tpover");
+  if (old) old.remove();
+  if (RD.tp !== 2 || !RD.tpSecs || !RD.tpSecs.length) return;
+  var pr = paper.getBoundingClientRect();
+  var over = document.createElement("div");
+  over.className = "tpover";
+  var runs = {}, span = {};
+  qa("#rd-paper .qline").forEach(function(line){
+    var byI = {};
+    Array.prototype.slice.call(line.querySelectorAll(".w[data-tp]")).forEach(function(w){
+      var i = w.dataset.tp, r = w.getBoundingClientRect();
+      var b = byI[i] || (byI[i] = { l:Infinity, r:-Infinity, t:Infinity, b:-Infinity });
+      b.l = Math.min(b.l, r.left); b.r = Math.max(b.r, r.right);
+      b.t = Math.min(b.t, r.top);  b.b = Math.max(b.b, r.bottom);
+    });
+    var lr = line.getBoundingClientRect();
+    Object.keys(byI).forEach(function(i){
+      var b = byI[i];
+      (runs[i] = runs[i] || []).push({ l:b.l - pr.left, r:b.r - pr.left,
+                                       t:lr.top - pr.top, h:lr.height });
+      var sp = span[i] || (span[i] = { t:Infinity, b:-Infinity });
+      sp.t = Math.min(sp.t, lr.top - pr.top);
+      sp.b = Math.max(sp.b, lr.top - pr.top + lr.height);
+    });
+  });
+  RD.tpSecs.forEach(function(sec){
+    var rs = runs[sec.i]; if (!rs) return;
+    rs.forEach(function(r){
+      var d = document.createElement("i");
+      d.className = "tpblk tp" + sec.ci;
+      d.style.cssText = "left:" + Math.max(0, r.l - 4) + "px;width:" + Math.max(0, (r.r - r.l) + 8) +
+                        "px;top:" + r.t + "px;height:" + r.h + "px";
+      over.appendChild(d);
+    });
+    var sp = span[sec.i];
+    var lab = document.createElement("span");
+    lab.className = "tplab";
+    lab.style.cssText = "top:" + sp.t + "px;height:" + (sp.b - sp.t) + "px";
+    lab.textContent = sec.t;
+    over.appendChild(lab);
+  });
+  paper.appendChild(over);
 }
 
 /* ---------- this page, ayah by ayah ----------
@@ -6659,8 +6718,8 @@ function rdSelPanel(pg){
 /* Surah name, page and para — the three things a printed mushaf puts in its
    margins, so the reader always knows where they are without leaving the page. */
 async function rdInfoFill(){
-  var bars = [document.getElementById("rd-info"), document.getElementById("rd-info-b")];
-  if (!bars[0] && !bars[1]) return;
+  var bars = [document.getElementById("rd-info")];
+  if (!bars[0]) return;
   var p = RD.page; if (!p) return;
   var sn = 0;
   try { var pg = await rdLoadPage(p); if (pg && pg.keys && pg.keys.length) sn = +String(pg.keys[0]).split(":")[0]; }
@@ -6682,11 +6741,11 @@ async function rdInfoFill(){
   var top = bars[0];
   if (top){
     var pb = document.createElement("button");
-    pb.className = "ri-btn ri-tp" + (RD.tp ? " on" : ""); pb.type = "button";
+    pb.className = "ri-btn ri-tp" + (RD.tp ? " on" : "") + (RD.tp === 2 ? " over" : ""); pb.type = "button";
     pb.title = uit("themes"); pb.setAttribute("aria-label", uit("themes"));
     pb.setAttribute("aria-pressed", RD.tp ? "true" : "false");
     pb.textContent = "▤";
-    pb.onclick = function(ev){ ev.stopPropagation(); RD.tp = !RD.tp; renderMushaf(); };
+    pb.onclick = function(ev){ ev.stopPropagation(); RD.tp = ((RD.tp || 0) + 1) % 3; renderMushaf(); };
     top.appendChild(pb);
     var tb = document.createElement("button");
     tb.className = "ri-btn ri-tr"; tb.type = "button";
@@ -6736,13 +6795,12 @@ function rdFit(){
   var tabsEl = document.querySelector(".tabs");
   var tabsH = (tabsEl && getComputedStyle(tabsEl).display !== "none")
     ? tabsEl.getBoundingClientRect().height : 0;
-  /* the surah/page/para rows are chrome the sheet has to fit around: the top one
-     already moved the paper down, the bottom one has to be taken off the target */
-  var infoT = document.getElementById("rd-info"), infoB = document.getElementById("rd-info-b");
-  var infoBH = infoB ? infoB.getBoundingClientRect().height : 0;
+  /* the surah/page/para row is chrome the sheet has to fit around: it has
+     already moved the paper down, so fullscreen only needs its height back */
+  var infoT = document.getElementById("rd-info");
   var infoTH = infoT ? infoT.getBoundingClientRect().height : 0;
-  document.body.style.setProperty("--rdinfo", Math.round(infoTH + infoBH) + "px");
-  var chromeH = (document.body.classList.contains("focus") ? 10 : 22 + tabsH + barH) + infoBH;
+  document.body.style.setProperty("--rdinfo", Math.round(infoTH) + "px");
+  var chromeH = (document.body.classList.contains("focus") ? 10 : 22 + tabsH + barH);
   var avail = vh - pt - chromeH;
   if (avail < 260) avail = 260;
   var target = Math.max(160, avail - 40 - footH);
@@ -6838,6 +6896,10 @@ function rdFit(){
     if (ln.classList.contains("qhead") || ln.classList.contains("qbism")) return;
     ln.classList.toggle("qcen", lineBox > 0 && nat[i] < lineBox * 0.82);
   });
+  /* drawn straight away, not on the next frame: the fit has just settled the
+     layout, and a page that is not compositing (a background tab) would never
+     get that frame and would sit there with no blocks at all */
+  if (RD.tp === 2) rdTpBands();
 
 }
 function rdFitSoon(){
@@ -6978,7 +7040,8 @@ async function rdPaint(p, isTodayPage){
           return '<span class="w' + (on ? (byWord ? " sw" : "") : " off") + (on && cov ? " cov" + cov : "") +
                  (tpw ? " tp tp" + tpw.ci : "") +
                  (hc ? " hl hl-" + hc : "") + (S.bm && S.bm[w.vk] ? " bmk" : "") +
-                 '" data-vk="' + w.vk + '" data-wi="' + wi + '"' + (w.end ? ' data-end="1"' : '') +
+                 '" data-vk="' + w.vk + '" data-wi="' + wi + '"' +
+                 (tpw ? ' data-tp="' + tpw.i + '"' : '') + (w.end ? ' data-end="1"' : '') +
                  ' data-t="' + esc(w.t || "") + '" data-m="' + esc(w.m) + '">' + gl +
                  (w.end ? '<sup class="ayn' + (nastNow ? " ring" : "") + '">' + n(w.vk.split(":")[1]) + '</sup>' : '') + '</span>';
         }).join(" ") + '</div>';
