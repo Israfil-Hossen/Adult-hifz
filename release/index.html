@@ -2902,6 +2902,23 @@ body.mushaf .rdhead .rdic.t{min-width:30px;height:30px;flex:0 0 auto;padding:0}
 body.mushaf .rdjuz{flex:0 1 auto;min-width:0;max-width:60px;font-size:11.5px;padding:4px 5px}
 body.mushaf .rdpg{flex:0 0 auto}
 body.mushaf .rdrangebtn{flex:0 0 auto;padding:4px 7px;font-size:11.5px}
+/* one row that fits, on any phone: nothing here may need a sideways drag */
+body.mushaf .rdcard .rdhead{overflow-x:visible;flex-wrap:nowrap;gap:3px}
+body.mushaf .rdcard .rdsabaq{flex:0 1 auto;min-width:0;gap:3px}
+body.mushaf .rdcard .rdsabaq [data-rd="auto"]{display:none}
+body.mushaf .rdcard .rdsabaq .sblbl{display:none}
+/* a select is as wide as its widest option unless it is told otherwise,
+   and the ayah numbers made these two the widest things on the row */
+/* an id-specificity rule already sized these, so a class selector could not
+   reach them however precise it looked. Beat it on its own terms. */
+body.mushaf #rd-selbar.rdsabaq .sbrange select{min-width:0;width:46px;padding:2px 1px;font-size:15px}
+body.mushaf #rd-selbar.rdsabaq .sbdash{display:none}
+@media (max-width:430px){
+  body.mushaf .rdcard .rdhead{gap:2px}
+  body.mushaf .rdcard .rdic{padding-inline:5px}
+  body.mushaf #rd-selbar.rdsabaq .sbrange select{font-size:14px;width:42px}
+  body.mushaf .rdcard .rdsabaq .sbn{display:none}
+}
 body.mushaf .rdcard .rdsabaq{margin:0;padding:0;background:none;border:none;box-shadow:none;gap:6px}
 body.mushaf .rdsep{display:none}
 /* the floating button IS the microphone — hiding it on the paper screen left the
@@ -5941,7 +5958,6 @@ function inWebView(){
 /* highlight each word as it is recited (needs the phone's speech engine) */
 function fabListenStart(){
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (inWebView()) return false;
   var pg = RD.pages[RD.page]; if (!SR || !pg || !RD.sel) return false;
   FAB.words = qa("#rd-paper .w").filter(function(el){
     return !el.dataset.end && el.dataset.t && !el.classList.contains("off");
@@ -5964,7 +5980,9 @@ function fabListenStart(){
         }
       });
     };
-    r.onerror = function(){};
+    /* no engine, no permission, no network: the recitation is still being
+       recorded, so this ends without a word to the reader */
+    r.onerror = function(){ try { r.stop(); } catch(e){} FAB.sr = null; };
     r.start(); FAB.sr = r; return true;
   } catch(e){ return false; }
 }
@@ -5974,9 +5992,11 @@ function fabListenStop(){
 function fabMic(){
   if (!micAsk()) return;
   FAB.rec = true; FAB.open = false; fabRender();
-  /* record — always. Handing the mic to speech-recognition instead meant the
-     button pulsed red on every browser that has the API and saved nothing. */
+  /* recording always happens: it is what compare-with-the-qari needs, and it
+     must never be traded away for anything */
   recStart();
+  /* and follow the words when the phone can hear them */
+  try { fabListenStart(); } catch(e){}
 }
 function fabMicStop(){
   FAB.rec = false; fabListenStop(); recStop(); fabRender(); recPop();
@@ -6506,7 +6526,6 @@ function rdFocusToggle(){
    way to reach any of them once the page opened. The dots let them out again.
    Each item presses the real chip, so every handler stays where it was. */
 var DOTS = [
-  ["hide",   function(){ return Rd().cover; }],
   ["pick",   function(){ return Rd().pick; }],
   ["phrase", function(){ return L.rec.phrase; }],
   ["exam",   function(){ return L.ex.open; }],
