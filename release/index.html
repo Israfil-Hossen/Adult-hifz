@@ -2273,7 +2273,7 @@ main.wrap{width:100%}
 .qline{max-width:var(--tw,none);margin-inline:auto}
 .paper{padding-inline:max(18px, env(safe-area-inset-left), env(safe-area-inset-right))}
 .paper{position:relative;flex:1 1 0;min-width:0;--pap:#F7F1E3;--pink:#2B3440;
-  background:var(--pap);color:var(--pink);border-radius:14px;padding:26px 30px 14px;
+  background:var(--pap);color:var(--pink);border-radius:14px;padding-block:26px 14px;
   box-shadow:0 14px 40px rgba(28,32,38,.18),0 1px 0 rgba(255,255,255,.5) inset;direction:rtl;
   transition:background .3s,color .3s,transform .22s cubic-bezier(.2,.7,.3,1),opacity .22s}
 .paper.pday{--pap:#FFFFFF;--pink:#2B3440}
@@ -2638,6 +2638,13 @@ body.mushaf #rd-tr,body.mushaf #rd-rec{display:none!important}
    row, so the page claims everything else */
 body.mushaf #v-mushaf{padding-top:6px;padding-bottom:calc(126px + env(safe-area-inset-bottom))}
 body.mushaf main.wrap{padding-bottom:env(safe-area-inset-bottom)}
+/* On a phone the fit is bound by width, not height: the glyphs stop growing
+   while the sheet still has room below, so the page reads small and gappy.
+   The sheet takes the page gutter back and spans the screen — the reading
+   inset is the paper's own padding, which keeps the safe area. */
+@media (max-width:520px){
+  body.mushaf .rdpapers{margin-inline:-16px}
+}
 body.mushaf .rdcard{position:fixed;inset-inline:0;z-index:57;margin:0;display:block;
   bottom:env(safe-area-inset-bottom);border-radius:16px 16px 0 0;
   padding:3px 8px 4px;box-shadow:0 -6px 18px rgba(51,65,79,.10);overflow:visible}
