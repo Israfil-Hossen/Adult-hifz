@@ -9251,11 +9251,40 @@ function cloudOpen(){
   if (!Cloud.url()) Cloud.status(L.cloud ? L.cloud.noUrl : "config.js-এ syncUrl বসালে সার্ভার সেভ চালু হবে", "err");
 }
 
+/* the drawer slides in from one edge, so pushing it back at that edge should
+   send it away — the scrim tap was the only way out, and on a wide phone that
+   is a reach across the whole screen with the thumb that just opened it */
+function drawerSwipeWire(){
+  var d = document.getElementById("drawer");
+  if (!d || d.dataset.sw) return;
+  d.dataset.sw = "1";
+  var x0 = 0, y0 = 0, live = false;
+  function start(x, y){ x0 = x; y0 = y; live = true; }
+  function end(x, y){
+    if (!live) return; live = false;
+    var dx = x - x0, dy = y - y0;
+    if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+    /* toward the edge it came from: left for a left-hand drawer, right for the
+       right-hand one the arabic and urdu layouts get */
+    var rtl = (document.documentElement.getAttribute("dir") === "rtl") ||
+              (L && L.dir === "rtl");
+    if (rtl ? dx > 0 : dx < 0) drawerClose();
+  }
+  d.addEventListener("touchstart", function(e){
+    var t = e.touches[0]; if (t) start(t.clientX, t.clientY);
+  }, { passive:true });
+  d.addEventListener("touchend", function(e){
+    var t = e.changedTouches[0]; if (t) end(t.clientX, t.clientY);
+  }, { passive:true });
+  d.addEventListener("pointerdown", function(e){ if (e.pointerType !== "touch") start(e.clientX, e.clientY); });
+  d.addEventListener("pointerup",   function(e){ if (e.pointerType !== "touch") end(e.clientX, e.clientY); });
+}
 function drawerWire(){
   var ob = document.getElementById("drawer-open");
   if (ob) ob.onclick = drawerOpen;
   var sc = document.getElementById("drawer-scrim");
   if (sc) sc.onclick = drawerClose;
+  drawerSwipeWire();
   var sb = document.getElementById("hdr-search");
   if (sb) sb.onclick = idxOpen;   /* "search" in a mushaf means find a surah or juz */
   qa("#drawer [data-go]").forEach(function(b){ b.onclick = function(){ goView(b.dataset.go); }; });
