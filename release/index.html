@@ -6673,7 +6673,10 @@ function tpLook(pack, sn, an){
   if (!list || !list.length) return null;
   for (var i = 0; i < list.length; i++){
     var a = list[i].a;
-    if (a && an >= a[0] && an <= a[1]) return list[i];
+    /* an entry with no title yet is not an answer: a half-translated pack falls
+       through section by section, so the reader sees their own language wherever
+       it exists and English only where it does not */
+    if (a && an >= a[0] && an <= a[1]) return (list[i].t && String(list[i].t).trim()) ? list[i] : null;
   }
   return null;
 }
