@@ -2250,6 +2250,7 @@ main.wrap{width:100%}
       <div class="langrow" id="drawer-langrow"></div>
     </div>
     <button class="drawer-it" id="dw-index"><i>☰</i><span id="dw-index-l">মুসহাফ-এর সূচী</span></button>
+    <button class="drawer-it" id="dw-mushaf"><i>▤</i><span id="dw-mushaf-l">মুসহাফ</span><span class="dwval" id="dw-mushaf-v"></span></button>
     <button class="drawer-it" id="dw-paper"><i>☀</i><span id="dw-paper-l">কাগজের রঙ</span><span class="dwval" id="dw-paper-v"></span></button>
     <button class="drawer-it" id="dw-cloud"><i>↥</i><span id="dw-cloud-l">ব্যাকআপ ও সিংক</span></button>
     <button class="drawer-it" id="dw-aims"><i>◇</i><span id="dw-aims-l">এই অ্যাপ কী করে</span></button>
@@ -2845,6 +2846,11 @@ body.night .caprow{border-color:rgba(255,255,255,.10)}
 .wkrow b{font-family:var(--mono);font-size:16px}
 .wkrow .wkaim{color:var(--ink-3);font-size:12.5px;margin-inline-start:auto}
 body.night .wkrow{border-color:rgba(255,255,255,.10)}
+.mfrow{display:block;width:100%;text-align:start;padding:13px 12px;border:none;background:none;
+  font:inherit;font-size:14.5px;color:var(--ink);cursor:pointer;border-radius:10px;line-height:1.45}
+.mfrow:hover{background:rgba(95,127,82,.12)}
+.mfrow.on{background:rgba(95,127,82,.20);font-weight:600}
+.mfrow.on .mfnm::after{content:" ✓";color:var(--verdigris)}
 .mushafwarn{margin:8px 0 0;font-size:12.5px;color:var(--maroon);line-height:1.5}
 .pggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;padding:12px 2px}
 .pgcell{font-family:var(--mono);font-size:13px;padding:9px 0;border-radius:8px;cursor:pointer;
@@ -4971,11 +4977,6 @@ function renderSettings(){
         return '<option value="' + r.id + '"' + (s.reciter === r.id ? " selected" : "") + '>' + (r.nm[L.code] || r.nm.en) + '</option>';
       }).join("") + '</select></div>' +
     '<div class="fld"><label for="s-qari">' + T.qari + '</label><input type="text" id="s-qari" value="' + esc(s.qari) + '" placeholder="' + T.qariPh + '"></div>' +
-    '<div class="fld"><label for="s-mushafid">' + T.mushaf + '</label><select id="s-mushafid">' +
-      MUSHAFS.map(function(mu){
-        return '<option value="' + mu.id + '"' + (s.mushafId === mu.id ? " selected" : "") + '>' +
-          (mu.nm[L.code] || mu.nm.en) + '</option>';
-      }).join("") + '</select><div class="hint">' + T.mushafHint + '</div></div>' +
     '<div class="fld"><label for="s-ret">' + L.dr.ret + '</label><select id="s-ret">' +
       [0.85,0.9,0.95].map(function(v){
         return '<option value="' + v + '"' + (+(s.retention || 0.9) === v ? " selected" : "") + '>' +
@@ -5053,11 +5054,12 @@ function renderSettings(){
     var b = this;
     setTimeout(function(){ b.textContent = L.nt.voiceTest; }, 4000);
   };
-  g("s-mushafid").onchange = function(){
+  function mushafChoose(id){
     var wasId = S.settings.mushafId;
-    S.settings.mushafId = this.value;
+    if (id === wasId) return;
+    S.settings.mushafId = id;
     applyMushaf();
-    mushafProve(wasId, this.value);
+    mushafProve(wasId, id);
     RD.pages = {}; RD.fonts = {}; RD.sel = null; rdStop();
     IP.chunks = {}; IP.info = null; IP.chunkFor = null;
     DR.pg = null; DR.page = 0; DR.tried = false; DR.kind = null;   /* Practice reloads the new mushaf */
@@ -5607,7 +5609,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "v110";
+var APP_VER = "v111";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -6617,15 +6619,9 @@ async function mushafProve(wasId, wantId){
     RD.pages = {}; RD.fonts = {}; IP.chunks = {}; IP.info = null; IP.chunkFor = null;
     save(); renderAll();
   }
-  var sel = document.getElementById("s-mushafid");
-  if (!sel) return;
-  box = document.getElementById("s-mushafwarn");
-  if (!box){
-    box = document.createElement("p");
-    box.id = "s-mushafwarn"; box.className = "mushafwarn";
-    sel.parentNode.appendChild(box);
-  }
-  box.textContent = fmt(uit("mushafFail"), wantId) + " \u00b7 " + msg;
+  /* the chooser is a sheet in the drawer now and may already be closed, so the
+     news has to travel on its own */
+  if (typeof fabHint === "function") fabHint(fmt(uit("mushafFail"), wantId));
 }
 
 /* ---------- what the days themselves say ----------
@@ -8704,6 +8700,7 @@ var UIT = {
                ur:"{0} کا پیک نہیں آیا۔",
                zh:"{0} 数据包未到达。",
                ar:"لم تصل حزمة {0}." },
+  mushafPick:{ bn:"কোন মুসহাফ", en:"Which mushaf", ur:"کون سا مصحف", zh:"哪一部古兰经", ar:"أي مصحف" },
   goscreen:{ bn:"অন্য পর্দায় যান · সেটিংস", en:"Other screens · settings",
              ur:"دوسری اسکرین · ترتیبات", zh:"其他页面 · 设置", ar:"شاشات أخرى · الإعدادات" },
   erase:  { bn:"দাগ মুছুন", en:"Remove mark", ur:"نشان ہٹائیں", zh:"清除标记", ar:"إزالة العلامة" },
@@ -8733,6 +8730,36 @@ function uiLabels(){
   set("dw-night-l", "", uit("night"));
   set("dw-cloud-l", "", uit("cloud"));
 }
+/* every edition on one sheet, with what makes them differ — the page count and
+   the lines to a page, which is the whole of why a hafiz picks one and keeps it */
+function mushafPickClose(){
+  var el = document.getElementById("mf-pick");
+  if (el) el.classList.remove("on");
+}
+function mushafPick(){
+  var el = document.getElementById("mf-pick");
+  if (!el){
+    el = document.createElement("div");
+    el.id = "mf-pick"; el.className = "rdtrs";
+    document.body.appendChild(el);
+  }
+  var cur = S.settings.mushafId;
+  el.innerHTML = '<div class="trs-hd"><span class="trs-ttl">' + esc(uit("mushafPick")) +
+    '</span><button class="trs-x" aria-label="' + esc(uit("close")) + '">✕</button></div>' +
+    '<div class="trs-bd">' + MUSHAFS.map(function(mu){
+      return '<button class="mfrow' + (mu.id === cur ? " on" : "") + '" data-mf="' + mu.id + '">' +
+        '<span class="mfnm">' + esc(mu.nm[L.code] || mu.nm.en) + '</span></button>';
+    }).join("") + '</div>';
+  el.classList.add("on");
+  el.querySelector(".trs-x").onclick = mushafPickClose;
+  qa("#mf-pick .mfrow").forEach(function(b){
+    b.onclick = function(){
+      mushafPickClose();
+      drawerClose();
+      mushafChoose(b.dataset.mf);
+    };
+  });
+}
 function drawerFill(){
   var g = function(id){ return document.getElementById(id); };
   var nm = g("drawer-nm"); if (!nm) return;
@@ -8746,6 +8773,12 @@ function drawerFill(){
   qa("#drawer-langrow button").forEach(function(b){
     b.onclick = function(){ drawerClose(); setLang(b.dataset.lang, true); };
   });
+  var mv = g("dw-mushaf-v");
+  if (mv){
+    var d0 = mushafDef();
+    var full = d0.nm[L.code] || d0.nm.en || d0.id;
+    mv.textContent = full.split("·")[0].trim();      /* the name, without the counts */
+  }
   var pv = g("dw-paper-v");
   if (pv && L.mu) pv.textContent = { pcream:L.mu.pCream, pday:L.mu.pDay, pnight:L.mu.pNight }[S.settings.paper || "pcream"] || "";
   uiLabels();
@@ -9348,6 +9381,8 @@ function drawerWire(){
   if (cb) cb.onclick = cloudOpen;
   var ib = document.getElementById("dw-index");
   if (ib) ib.onclick = idxOpen;
+  var mb2 = document.getElementById("dw-mushaf");
+  if (mb2) mb2.onclick = mushafPick;
   var db = document.getElementById("dw-diag");
   if (db) db.onclick = diagOpen;
   var ab = document.getElementById("dw-aims");
