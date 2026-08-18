@@ -2845,6 +2845,7 @@ body.night .caprow{border-color:rgba(255,255,255,.10)}
 .wkrow b{font-family:var(--mono);font-size:16px}
 .wkrow .wkaim{color:var(--ink-3);font-size:12.5px;margin-inline-start:auto}
 body.night .wkrow{border-color:rgba(255,255,255,.10)}
+.mushafwarn{margin:8px 0 0;font-size:12.5px;color:var(--maroon);line-height:1.5}
 .pggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;padding:12px 2px}
 .pgcell{font-family:var(--mono);font-size:13px;padding:9px 0;border-radius:8px;cursor:pointer;
   border:1px solid var(--rule);background:transparent;color:var(--ink-2)}
@@ -5053,8 +5054,10 @@ function renderSettings(){
     setTimeout(function(){ b.textContent = L.nt.voiceTest; }, 4000);
   };
   g("s-mushafid").onchange = function(){
+    var wasId = S.settings.mushafId;
     S.settings.mushafId = this.value;
     applyMushaf();
+    mushafProve(wasId, this.value);
     RD.pages = {}; RD.fonts = {}; RD.sel = null; rdStop();
     IP.chunks = {}; IP.info = null; IP.chunkFor = null;
     DR.pg = null; DR.page = 0; DR.tried = false; DR.kind = null;   /* Practice reloads the new mushaf */
@@ -5604,7 +5607,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "v109";
+var APP_VER = "v110";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -6592,6 +6595,37 @@ function rdDotsOpen(btn){
     };
   });
   setTimeout(function(){ document.addEventListener("click", rdDotsAway, true); }, 0);
+}
+
+/* Proving an edition means fetching the one file every page of it needs. If it
+   does not come, the reader is told which edition and why, and put back on the
+   one that was working rather than left on a page that will not turn. */
+async function mushafProve(wasId, wantId){
+  var def = mushafDef(), msg = "";
+  try {
+    var info = await ipInfo(def);
+    if (!info || !info.files) throw new Error("info.json");
+    await ipPage(1, def);
+  } catch(e){
+    msg = String((e && e.message) || e).slice(0, 90);
+  }
+  var box = document.getElementById("s-mushafwarn");
+  if (!msg){ if (box) box.remove(); return; }
+  if (wasId && wasId !== wantId){
+    S.settings.mushafId = wasId;
+    applyMushaf();
+    RD.pages = {}; RD.fonts = {}; IP.chunks = {}; IP.info = null; IP.chunkFor = null;
+    save(); renderAll();
+  }
+  var sel = document.getElementById("s-mushafid");
+  if (!sel) return;
+  box = document.getElementById("s-mushafwarn");
+  if (!box){
+    box = document.createElement("p");
+    box.id = "s-mushafwarn"; box.className = "mushafwarn";
+    sel.parentNode.appendChild(box);
+  }
+  box.textContent = fmt(uit("mushafFail"), wantId) + " \u00b7 " + msg;
 }
 
 /* ---------- what the days themselves say ----------
@@ -8665,6 +8699,11 @@ var UIT = {
   cloud:  { bn:"ব্যাকআপ ও সিংক", en:"Backup and sync", ur:"بیک اپ اور سنک", zh:"备份与同步", ar:"النسخ والمزامنة" },
   sound:  { bn:"শব্দে ট্যাপ করলে তিলাওয়াত", en:"Recite on word tap", ur:"لفظ پر ٹیپ سے تلاوت", zh:"点词即诵读", ar:"التلاوة عند نقر الكلمة" },
   themes: { bn:"এই পাতা কী নিয়ে", en:"What this page is about", ur:"یہ صفحہ کس بارے میں", zh:"本页主题", ar:"موضوع الصفحة" },
+  mushafFail:{ bn:"{0} মুসহাফের ফাইল আসেনি — আগেরটাই রাখা হলো।",
+               en:"The {0} pack did not arrive - the previous one is kept. See Check in the drawer.",
+               ur:"{0} کا پیک نہیں آیا۔",
+               zh:"{0} 数据包未到达。",
+               ar:"لم تصل حزمة {0}." },
   goscreen:{ bn:"অন্য পর্দায় যান · সেটিংস", en:"Other screens · settings",
              ur:"دوسری اسکرین · ترتیبات", zh:"其他页面 · 设置", ar:"شاشات أخرى · الإعدادات" },
   erase:  { bn:"দাগ মুছুন", en:"Remove mark", ur:"نشان ہٹائیں", zh:"清除标记", ar:"إزالة العلامة" },
