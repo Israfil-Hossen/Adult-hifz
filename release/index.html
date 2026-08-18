@@ -2062,7 +2062,12 @@ h3{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.4}
 
 /* ---------- SETTINGS ---------- */
 .act{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-.abtn{padding:10px 17px;border:1px solid var(--ink-3);font-size:14.5px}
+/* .abtn leaned on the base button rule for its colour and its lack of
+   underline. The download control is an <a>, which never matched that rule, so
+   it came out as a browser default hyperlink sitting in a pill border. */
+.abtn{display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 17px;border:1px solid var(--ink-3);font-size:14.5px;
+  color:inherit;background:none;text-decoration:none;cursor:pointer}
 .abtn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .abtn.danger{border-color:var(--maroon);color:var(--maroon)}
 .abtn.danger:hover{background:var(--maroon);color:#fff}
