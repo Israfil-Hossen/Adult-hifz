@@ -2824,8 +2824,6 @@ body.mushaf .rdcard .rdsabaq{display:none}
 /* The ayah selection sits INSIDE the top row, right where আয়াত is — it is not a
    floating strip and never becomes a third row. Opening it stands the view tools
    and পারা down for the moment, so the row keeps its width. */
-body.mushaf .rdcard.open .rdset,
-body.mushaf .rdcard.open .rdjuz{display:none!important}
 body.mushaf .rdhead .rdsabaq{display:none}
 body.mushaf .rdcard.open .rdhead .rdsabaq{display:flex;align-items:center;gap:5px;
   flex:0 0 auto;margin:0;padding:0;border:none;background:none;box-shadow:none}
@@ -6136,29 +6134,22 @@ function renderMushaf(){
   if (!RD.sel) h += '<p class="rdnote">' + fmt(Rd.selNote, n(targetLines())) + ' ' + Rd.tap + '</p>';
   h += '<div class="glbar" id="rd-glimpse" style="display:none"></div>';
   h += '<div class="rdcard">' +
+       /* One row, and only what the memorising needs: set today's lesson, cover
+          it and recite, play it back a counted number of times, record yourself.
+          The juz picker, the menu, the index and the paper colour are all in the
+          drawer or the index already; stop is what pause and leaving the page
+          do between them; speed was tuning, not memorising. */
        '<div class="rdhead">' +
-         '<select class="rdjuz" id="rd-juz" aria-label="' + fmt(Rd.juz, "") + '">' +
-           (function(){ var o = "", cur = juzOf(RD.page);
-             for (var j = 1; j <= 30; j++)
-               o += '<option value="' + j + '"' + (j === cur ? " selected" : "") + '>' + fmt(Rd.juz, n(j)) + '</option>';
-             return o; })() + '</select>' +
          '<span class="rdprog" id="rd-prog"></span>' +
          '<div class="rdgrp rdset">' +
-           '<button class="rdic t" data-rd="paper" title="' + L.mu.paper + '" aria-label="' + L.mu.paper + '">' + RIC.paper + '</button>' +
            '<button class="rdic t" data-rd="curtain" title="' + L.mu.curtain + '" aria-label="' + L.mu.curtain + '" aria-pressed="' + (RD.curtainOn ? "true" : "false") + '">' + RIC.curtain + '</button>' +
            '<button class="rdic t" data-rd="blind" title="' + L.mu.blind + '" aria-label="' + L.mu.blind + '" aria-pressed="' + (RD.blind ? "true" : "false") + '">' + RIC.blind + '</button>' +
            '<button class="rdic t" data-rd="glimpse" title="' + L.mu.glimpse + '" aria-label="' + L.mu.glimpse + '">' + RIC.glimpse + '</button>' +
+           '<button class="rdic go" data-rd="play" title="' + Rd.playAll + '" aria-label="' + Rd.playAll + '">' + RIC.play + '</button>' +
+           '<button class="rdic" id="rd-pause" data-rd="pause" title="' + Rd.pause + '" aria-label="' + Rd.pause + '">' + RIC.pause + '</button>' +
+           '<button class="rdic num" id="rd-loop" data-rd="loopc" title="' + Rd.loop + '" aria-label="' + Rd.loop + '">' + RIC.loop + '<i>' + (RD.loops === Infinity ? "\u221e" : n(RD.loops)) + '</i></button>' +
+           '<button class="rdic t rdmic" data-rd="mic" title="' + (L.rec && L.rec.rec ? L.rec.rec : "\u09b0\u09c7\u0995\u09b0\u09cd\u09a1") + '" aria-label="' + (L.rec && L.rec.rec ? L.rec.rec : "\u09b0\u09c7\u0995\u09b0\u09cd\u09a1") + '">' + RIC.mic + '</button>' +
          '</div>' +
-       '</div>' +
-       '<div class="rdgrp rdplay">' +
-         '<button class="rdic t rdmenu" data-rd="menu" title="' + (L.nav.menu || "মেনু") + '" aria-label="' + (L.nav.menu || "মেনু") + '">' + RIC.menu + '</button>' +
-         '<button class="rdic t" data-rd="index" title="' + idxL().ttl + '" aria-label="' + idxL().ttl + '">' + RIC.index + '</button>' +
-         '<button class="rdic go" data-rd="play" title="' + Rd.playAll + '" aria-label="' + Rd.playAll + '">' + RIC.play + '</button>' +
-         '<button class="rdic" id="rd-pause" data-rd="pause" title="' + Rd.pause + '" aria-label="' + Rd.pause + '">' + RIC.pause + '</button>' +
-         '<button class="rdic" data-rd="stop" title="' + Rd.stop + '" aria-label="' + Rd.stop + '">' + RIC.stop + '</button>' +
-         '<button class="rdic num" id="rd-loop" data-rd="loopc" title="' + Rd.loop + '" aria-label="' + Rd.loop + '">' + RIC.loop + '<i>' + (RD.loops === Infinity ? "∞" : n(RD.loops)) + '</i></button>' +
-         '<button class="rdic num" id="rd-speed" data-rd="speedc" title="' + Rd.speed + '" aria-label="' + Rd.speed + '">' + RIC.speed + '<i>' + n(RD.speed) + '×</i></button>' +
-       '<button class="rdic t rdmic" data-rd="mic" title="' + (L.rec && L.rec.rec ? L.rec.rec : "\u09b0\u09c7\u0995\u09b0\u09cd\u09a1") + '" aria-label="' + (L.rec && L.rec.rec ? L.rec.rec : "\u09b0\u09c7\u0995\u09b0\u09cd\u09a1") + '">' + RIC.mic + '</button>' +
        '</div>' +
        '<div class="rdtools' + (RD.more ? "" : " tight") + '">' +
          chip("hide",   "▨", Rd.cover,        RD.hide) +
@@ -6205,19 +6196,10 @@ function renderMushaf(){
       if (range){
         cardEl.appendChild(range);                       /* opens only on demand */
         cardEl.classList.add("open");
-        var tg = document.createElement("button");
-        tg.className = "rdrangebtn";
-        tg.type = "button";
-        tg.textContent = (L.rd && L.rd.ay) ? L.rd.ay : "আয়াত";
-        tg.onclick = function(){ cardEl.classList.toggle("open"); rdFitSoon(); };
-        var row2 = cardEl.querySelector(".rdplay");
-        /* the ayah range is the most-used control, and it belongs beside পারা —
-           both choose WHERE you are, so they sit together on the top row */
-        var juz = head.querySelector(".rdjuz");
-        if (juz && juz.nextSibling) head.insertBefore(tg, juz.nextSibling);
-        else if (juz) head.appendChild(tg);
-        else (row2 || head).appendChild(tg);
-        head.insertBefore(range, tg.nextSibling);   /* selection lives beside its own button */
+        /* the range leads the row: choosing today's lesson is why the panel is
+           there at all, so the practice controls follow it. It no longer hides,
+           so the button that used to reveal it is gone with the rest. */
+        head.insertBefore(range, head.firstChild);
       }
     }
     /* the bar was just rebuilt, so every stateful control still shows its markup
