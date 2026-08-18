@@ -2404,6 +2404,11 @@ main.wrap{width:100%}
   box-shadow:0 -10px 34px rgba(51,65,79,.22);
   animation:wmup .22s cubic-bezier(.2,.7,.3,1) both}
 @keyframes wmup{from{transform:translateY(14px);opacity:.6}to{transform:none;opacity:1}}
+/* the same sheet, hung from the top instead */
+.wmean.on.wmtop{bottom:auto;top:0;border-radius:0 0 20px 20px;
+  padding:calc(6px + env(safe-area-inset-top)) 18px 14px;
+  box-shadow:0 10px 34px rgba(51,65,79,.22);animation:wmdown .22s cubic-bezier(.2,.7,.3,1) both}
+@keyframes wmdown{from{transform:translateY(-14px);opacity:.6}to{transform:none;opacity:1}}
 .wmbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;
   gap:10px;padding:6px 0 4px;background:var(--card)}
 .wmbar{cursor:ns-resize;touch-action:none}
@@ -2708,6 +2713,9 @@ body.night .qline .w.tp3{background:rgba(95,127,82,.30)}
 body.night .qline .w.tp4{background:rgba(196,110,74,.28)}
 body.night .qline .w.tp5{background:rgba(96,124,140,.30)}
 .rdinfo .ri-tp.on{background:rgba(95,127,82,.20)}
+/* in fullscreen the way out sits in this corner, and it was landing on the
+   translate button: a tap meant for the meaning left fullscreen instead */
+body.focus .rdinfo{padding-inline-end:48px}
 .rdinfo .ri-tp.over{background:var(--verdigris);color:var(--paper)}
 /* the page seen from above: solid, and the arabic deliberately under it */
 .tpover{position:absolute;inset:0;z-index:6;pointer-events:none}
@@ -3875,7 +3883,7 @@ function blankDay(){
 function defaults(){
   return { v:1,
     settings:{ lang:null, startDate:TODAY, startPage:1, restDay:5,
-               wordSound:1, qari:"", mushaf:"", mushafId:"madani", reciter:"Husary_128kbps", manualLines:0, lastPage:0, hijriAdj:0, retention:0.9, paper:"pcream", notifyAt:"", zikrEvery:0, zikrVoice:true, focus:0, drive:null },
+               wordSound:1, qari:"", mushaf:"", mushafId:"madani", reciter:"Husary_128kbps", manualLines:0, lastPage:0, hijriAdj:0, retention:0.9, paper:"pcream", notifyAt:"", zikrEvery:0, zikrVoice:true, focus:0, wmFollow:1, drive:null },
     known:{}, days:{}, weak:{}, rev:{}, hl:{}, bm:{}, drill:{ items:{}, salat:{}, sess:{} }, updatedAt:Date.now() };
 }
 function day(k){ if (!S.days[k]) S.days[k] = blankDay(); return S.days[k]; }
@@ -5827,6 +5835,7 @@ function rdTrack(){
     els[i].classList.add("now");
     RD.wi = i;
     rdMeanLive(els[i]);
+    wmSide(els[i]);
   }
 }
 /* ---------- floating button: bubbles up, long-press turns into a mic ---------- */
@@ -5969,7 +5978,9 @@ function fabWire(){
 }
 function rdPlay(keys, loops, noFollow){
   rdStop();
-  RD.follow = !noFollow;   /* a single tapped word keeps its full panel */
+  /* a single tapped word keeps its full panel; a whole recitation only opens
+     the sheet if the reader has not already waved it away */
+  RD.follow = !noFollow && (!S || !S.settings || S.settings.wmFollow !== 0);
   RD.queue = keys.slice(); RD.qi = 0; RD.left = (loops === Infinity) ? Infinity : Math.max(1, loops || 1);
   rdNext();
 }
@@ -6708,7 +6719,8 @@ function rdSelPanel(pg){
       if (k === "tr"){
         var mn = document.getElementById("rd-mean");
         var el2 = document.querySelector('#rd-paper .w[data-vk="' + sw.vk + '"][data-wi="' + sw.wi + '"]');
-        if (mn && el2 && pg){ mn.innerHTML = rdMeanPanel(pg, el2); mn.classList.add("on"); mn.scrollTop = 0; rdMeanWire(); }
+        if (S && S.settings && S.settings.wmFollow === 0){ S.settings.wmFollow = 1; save(); }
+        if (mn && el2 && pg){ mn.innerHTML = rdMeanPanel(pg, el2); mn.classList.add("on"); mn.scrollTop = 0; rdMeanWire(); wmSide(el2); }
       }
     };
   });
@@ -7175,6 +7187,21 @@ function rdMeanPanel(pg, el){
   return h;
 }
 /* while the recitation moves, the box below follows the word being recited */
+/* The sheet must never sit on the word being recited. It moves to whichever
+   half of the screen the word is not in — and only once it would actually be
+   covered, so a recitation running down the page flips it once, at the middle,
+   instead of flickering either side of a line. */
+function wmSide(el){
+  var mn = document.getElementById("rd-mean");
+  if (!mn || !el) return;
+  var r = el.getBoundingClientRect();
+  if (!r.height) return;
+  var vh = window.innerHeight || 700;
+  var sheet = mn.getBoundingClientRect().height || vh * 0.38;
+  var atTop = mn.classList.contains("wmtop");
+  if (!atTop && r.bottom > vh - sheet) mn.classList.add("wmtop");
+  else if (atTop && r.top < sheet) mn.classList.remove("wmtop");
+}
 function rdMeanLive(el){
   var mn = document.getElementById("rd-mean"), pg = RD.pages[RD.page];
   if (!RD.follow || !mn || !pg || !el) return;
@@ -7247,12 +7274,22 @@ function wmDragWire(){
   });
 }
 function rdMeanClose(){
+  var mnc = document.getElementById("rd-mean");
+  if (mnc) mnc.classList.remove("wmtop");
   var mn = document.getElementById("rd-mean");
   if (mn){ mn.classList.remove("on"); mn.innerHTML = ""; }
-  /* the panel and the word it plays are one thing: closing it used to leave the
-     ayah playing, and the next word tap then fought the old audio */
-  if (rdAudio && typeof rdStop === "function") rdStop();
-  rdClear("on"); rdClear("now");
+  /* one tapped word is the sheet's own audio, so it goes when the sheet goes.
+     A running recitation is not: closing the sheet there means "let me just
+     listen", and that is remembered so the next play stays quiet too. */
+  var reciting = !!RD.follow;
+  if (reciting){
+    RD.follow = false;
+    if (S && S.settings){ S.settings.wmFollow = 0; save(); }
+  } else if (rdAudio && typeof rdStop === "function"){
+    rdStop();
+  }
+  rdClear("on");
+  if (!reciting) rdClear("now");
 }
 function rdMeanWire(){
   qa("#rd-mean .wmx").forEach(function(b){ b.onclick = rdMeanClose; });
