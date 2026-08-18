@@ -2718,6 +2718,14 @@ body.night .qline .w.tp3{background:rgba(95,127,82,.30)}
 body.night .qline .w.tp4{background:rgba(196,110,74,.28)}
 body.night .qline .w.tp5{background:rgba(96,124,140,.30)}
 .rdinfo .ri-menu{color:var(--ink-2);margin-inline:0 4px}
+.rddots{position:fixed;z-index:66;min-width:190px;max-width:70vw;padding:6px;
+  background:var(--card);border:1px solid var(--rule);border-radius:14px;
+  box-shadow:0 12px 34px rgba(28,32,38,.24);display:flex;flex-direction:column}
+.rddots .dotit{text-align:start;padding:10px 12px;border-radius:9px;border:none;
+  background:none;font:inherit;font-size:14px;color:var(--ink);cursor:pointer}
+.rddots .dotit:hover{background:rgba(95,127,82,.14)}
+.rddots .dotit.on{background:rgba(95,127,82,.20);font-weight:600}
+.rddots .dotsep{height:1px;background:var(--rule);margin:5px 8px}
 .rdinfo .ri-tp.on{background:rgba(95,127,82,.20)}
 /* in fullscreen the way out sits in this corner, and it was landing on the
    translate button: a tap meant for the meaning left fullscreen instead */
@@ -6493,6 +6501,58 @@ function rdFocusToggle(){
   if (document.body.classList.contains("focus")) rdFocusOut();
   else rdFocusIn();
 }
+/* The tools row is hidden in the mushaf, and has been all along: cover, pick,
+   loop a phrase, quiz, look-alike passages, download — nine controls with no
+   way to reach any of them once the page opened. The dots let them out again.
+   Each item presses the real chip, so every handler stays where it was. */
+var DOTS = [
+  ["hide",   function(){ return Rd().cover; }],
+  ["pick",   function(){ return Rd().pick; }],
+  ["phrase", function(){ return L.rec.phrase; }],
+  ["exam",   function(){ return L.ex.open; }],
+  ["mut",    function(){ return L.mut.find; }],
+  ["tr",     function(){ return Rd().tr; }],
+  ["dl",     function(){ return Rd().dl; }]
+];
+function Rd(){ return L.rd; }
+function rdDotsClose(){
+  var m = document.getElementById("rd-dots");
+  if (m) m.remove();
+  document.removeEventListener("click", rdDotsAway, true);
+}
+function rdDotsAway(e){
+  var m = document.getElementById("rd-dots");
+  if (m && !m.contains(e.target) && !e.target.closest(".ri-menu")) rdDotsClose();
+}
+function rdDotsOpen(btn){
+  if (document.getElementById("rd-dots")){ rdDotsClose(); return; }
+  var m = document.createElement("div");
+  m.className = "rddots"; m.id = "rd-dots";
+  var rows = DOTS.map(function(d){
+    var chip = document.querySelector('.rdtools [data-rd="' + d[0] + '"]');
+    if (!chip) return "";
+    var lab = ""; try { lab = d[1]() || d[0]; } catch(e){ lab = d[0]; }
+    var on = chip.getAttribute("aria-pressed") === "true";
+    return '<button class="dotit' + (on ? " on" : "") + '" data-dot="' + d[0] + '">' + esc(lab) + '</button>';
+  }).join("");
+  m.innerHTML = rows + '<div class="dotsep"></div>' +
+    '<button class="dotit" data-dot="_drawer">' + esc(uit("menu")) + '</button>';
+  document.body.appendChild(m);
+  var r = btn.getBoundingClientRect();
+  m.style.top = Math.round(r.bottom + 6) + "px";
+  m.style.insetInlineStart = Math.round(r.left) + "px";
+  qa("#rd-dots .dotit").forEach(function(b){
+    b.onclick = function(){
+      var k = b.dataset.dot;
+      rdDotsClose();
+      if (k === "_drawer"){ drawerOpen(); return; }
+      var chip = document.querySelector('.rdtools [data-rd="' + k + '"]');
+      if (chip) chip.click();
+    };
+  });
+  setTimeout(function(){ document.addEventListener("click", rdDotsAway, true); }, 0);
+}
+
 /* ---------- what this page is about ----------
    Themes are editorial: one source cuts a page into two sections, another into
    four. So the pack is per language and the reader's own tongue wins, with
@@ -6776,8 +6836,8 @@ async function rdInfoFill(){
     var mb = document.createElement("button");
     mb.className = "ri-btn ri-menu"; mb.type = "button";
     mb.title = uit("menu"); mb.setAttribute("aria-label", uit("menu"));
-    mb.textContent = "☰";
-    mb.onclick = function(ev){ ev.stopPropagation(); drawerOpen(); };
+    mb.textContent = "⋮";
+    mb.onclick = function(ev){ ev.stopPropagation(); rdDotsOpen(mb); };
     /* first thing on the row, where a way out belongs — not filed away at the
        end behind the things you reach for while already reading */
     top.insertBefore(mb, top.firstChild);
