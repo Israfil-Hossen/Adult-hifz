@@ -5054,20 +5054,6 @@ function renderSettings(){
     var b = this;
     setTimeout(function(){ b.textContent = L.nt.voiceTest; }, 4000);
   };
-  function mushafChoose(id){
-    var wasId = S.settings.mushafId;
-    if (id === wasId) return;
-    S.settings.mushafId = id;
-    applyMushaf();
-    mushafProve(wasId, id);
-    RD.pages = {}; RD.fonts = {}; RD.sel = null; rdStop();
-    IP.chunks = {}; IP.info = null; IP.chunkFor = null;
-    DR.pg = null; DR.page = 0; DR.tried = false; DR.kind = null;   /* Practice reloads the new mushaf */
-    S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, S.settings.startPage));
-    S.settings.lastPage = Math.max(1, Math.min(TOTAL_PAGES, S.settings.lastPage || 1));
-    RD.page = Math.max(1, Math.min(TOTAL_PAGES, RD.page || 1));
-    save(); renderAll();
-  };
 
   qa("[data-unweak]").forEach(function(b){
     b.onclick = function(){ delete S.weak[b.dataset.unweak]; save(); renderAll(); };
@@ -5609,7 +5595,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "v111";
+var APP_VER = "v112";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -8730,6 +8716,24 @@ function uiLabels(){
   set("dw-night-l", "", uit("night"));
   set("dw-cloud-l", "", uit("cloud"));
 }
+/* Lifted out of renderSettings, where it was born and could only be called.
+   The chooser lives in the drawer now and reached for it from the top level,
+   found nothing, and every tap did quietly nothing at all. */
+function mushafChoose(id){
+  var wasId = S.settings.mushafId;
+  if (id === wasId) return;
+  S.settings.mushafId = id;
+  applyMushaf();
+  mushafProve(wasId, id);
+  RD.pages = {}; RD.fonts = {}; RD.sel = null; rdStop();
+  IP.chunks = {}; IP.info = null; IP.chunkFor = null;
+  DR.pg = null; DR.page = 0; DR.tried = false; DR.kind = null;   /* Practice reloads the new mushaf */
+  S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, S.settings.startPage));
+  S.settings.lastPage = Math.max(1, Math.min(TOTAL_PAGES, S.settings.lastPage || 1));
+  RD.page = Math.max(1, Math.min(TOTAL_PAGES, RD.page || 1));
+  save(); renderAll();
+};
+
 /* every edition on one sheet, with what makes them differ — the page count and
    the lines to a page, which is the whole of why a hafiz picks one and keeps it */
 function mushafPickClose(){
