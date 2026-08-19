@@ -4354,6 +4354,7 @@ function beginTimer(name, mins){
   stopTimer(true);
   timer.startMins = mins; timer.sec = mins * 60; timer.block = name;
   document.getElementById("tbar").classList.add("on");
+  if (typeof rdFitSoon === "function") rdFitSoon();
   document.getElementById("tbar-nm").textContent = name;
   tick(); timer.id = setInterval(tick, 1000);
 }
@@ -4372,6 +4373,7 @@ function stopTimer(silent){
     }
   }
   document.getElementById("tbar").classList.remove("on");
+  if (typeof rdFitSoon === "function") rdFitSoon();
 }
 
 /* ---------- chrome ---------- */
@@ -5637,7 +5639,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "1.0.3";
+var APP_VER = "1.0.4";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -7295,9 +7297,16 @@ function rdFit(){
      anything below it (translation, recording) stays scrollable extras */
   var vh = window.innerHeight || 700;
   var pt = paper.getBoundingClientRect().top;
-  var card = document.querySelector(".rdcard");
-  var barH = 0;
-  if (card && getComputedStyle(card).position === "fixed") barH += card.getBoundingClientRect().height;
+  var bottomTop = vh;
+  [document.querySelector(".rdcard"), document.getElementById("tbar"),
+   document.getElementById("rd-selbar2")].forEach(function(el){
+    if (!el) return;
+    var st = getComputedStyle(el);
+    if (st.display === "none" || st.position !== "fixed") return;
+    var r = el.getBoundingClientRect();
+    if (r.height > 0 && r.top < bottomTop) bottomTop = r.top;
+  });
+  var barH = Math.max(0, vh - bottomTop);
   /* the tab bar is hidden in the mushaf view — measure it instead of assuming it,
      so the height it used to take goes back to the page */
   var tabsEl = document.querySelector(".tabs");
@@ -7307,8 +7316,10 @@ function rdFit(){
      already moved the paper down, so fullscreen only needs its height back */
   var infoT = document.getElementById("rd-info");
   var infoTH = infoT ? infoT.getBoundingClientRect().height : 0;
-  document.body.style.setProperty("--rdinfo", Math.round(infoTH) + "px");
-  var chromeH = (document.body.classList.contains("focus") ? 10 : 22 + tabsH + barH);
+  /* the timer stands on the foot of the screen whenever it runs, in fullscreen
+     as well, so the page has to end above it */
+  document.body.style.setProperty("--rdinfo", Math.round(infoTH + barH) + "px");
+  var chromeH = (document.body.classList.contains("focus") ? 10 : 22 + tabsH) + barH;
   var avail = vh - pt - chromeH;
   if (avail < 260) avail = 260;
   var target = Math.max(160, avail - 40 - footH);
