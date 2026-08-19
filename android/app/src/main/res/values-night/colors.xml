@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- system splash inverts at night: navy ground, gold mark -->
+    <color name="splash_background">#131F35</color>
+    <color name="splash_mark">#C9A227</color>
+</resources>

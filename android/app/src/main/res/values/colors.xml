@@ -5,5 +5,8 @@
     <color name="colorPrimary">#33414F</color>
     <color name="colorPrimaryDark">#2A3642</color>
     <color name="colorAccent">#5F7F52</color>
-    <color name="ic_launcher_background">#131F35</color>
+
+    <!-- system splash: parchment ground, navy mark -->
+    <color name="splash_background">#F3EAD7</color>
+    <color name="splash_mark">#131F35</color>
 </resources>
