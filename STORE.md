@@ -100,6 +100,81 @@ npm run bundle
 
 ---
 
+## ৩ক. English store listing (default language = en-US)
+
+Copy these straight into Play Console. Character limits are Play's own.
+
+### App name — 30 max
+
+```
+Adult Hifz
+```
+
+### Short description — 80 max (this one is 79)
+
+```
+Quran memorisation for adults - daily lesson, and revision timed to your recall
+```
+
+### Full description — 4000 max
+
+```
+Starting hifz as an adult is rarely a problem of memory. It is a problem of bookkeeping.
+
+Which page is new today? Which of last week's pages still need revising? Of everything you memorised months ago, whose turn is it?
+
+Adult Hifz does that arithmetic every morning, so your time goes on reciting instead of planning.
+
+
+WHAT IT DOES
+
+• Today's lesson — the next lines, continuing exactly where you stopped yesterday
+• The real mushaf page, with the true line breaks, your portion marked
+• Ayah-by-ayah recitation with word-by-word highlighting, slower playback, and phrase looping
+• Record your own recitation and compare it against the qari
+• Retrieval tests — reorder the pieces, fill the gap, choose what comes next
+• A revision engine that pushes clean pages further away and brings shaky ones back tomorrow
+• Warnings for look-alike ayahs (mutashabihat), which adults confuse far more often than they forget
+• Full translation and word-by-word meaning in বাংলা, English, اردو and 中文
+• Daily and dhikr reminders
+
+
+SIX MUSHAF LAYOUTS
+
+Madani 15-line (1405 and 1421 prints), Indo-Pak 15-line, 16-line Taj, and two 13-line layouts. Choose the one you learned from. The line breaks are not a detail — they are the thing you are memorising.
+
+
+BUILT AROUND HOW MEMORY ACTUALLY WORKS
+
+Spacing, retrieval practice and delayed feedback are not decoration here. Each is drawn from established memory research, and the app cites its sources inside the Routine section so you can read them yourself.
+
+The daily workload is measured rather than assumed. Instead of ramping up new lines by the calendar, the app learns from your own recorded minutes how long a new line costs you and how long revision costs you, then sets a target that fits the time you really have — and tells you how much you can hold at that pace.
+
+
+PRIVATE BY DEFAULT
+
+Works offline. No account. No ads. No tracking. Your record stays on your device unless you turn on backup yourself.
+
+
+The app keeps the record. It does not teach. For tajwid you will still need a teacher.
+```
+
+### Category and contact
+
+| Field | Value |
+|---|---|
+| App or game | App |
+| Category | Education |
+| Tags | Quran, Islam, Memorisation, Education |
+| Contact email | israfil.crp@gmail.com |
+| Website | https://israfil-hossen.github.io/Adult-hifz/ |
+| Privacy policy | https://israfil-hossen.github.io/Adult-hifz/PRIVACY.html |
+
+> বাংলা তালিকাটা পরে **Store listings → Add language → বাংলা (bn-BD)** থেকে
+> যোগ করবেন, নিচের বাংলা বিবরণ দিয়ে।
+
+---
+
 ## ৪. Data safety ফর্ম — সাবধানে
 
 আগে এখানে লেখা ছিল "সব না"। ওটা **পুরোপুরি ঠিক নয়**।
