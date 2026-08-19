@@ -2212,8 +2212,23 @@ main.wrap{width:100%}
   .rdhead .rdpg input{flex:0 0 52px!important;width:52px;font-size:17px}
 }
 </style>
+<style>
+/* launch lockup — painted on the first frame, faded out once the app is up */
+#brandsplash{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;
+  justify-content:center;background:#F3EAD7;transition:opacity .45s ease}
+#brandsplash img{width:min(74vw,74vh);max-width:540px;height:auto;display:block}
+#brandsplash.gone{opacity:0;pointer-events:none}
+@media (prefers-color-scheme:dark){#brandsplash{background:#131F35}}
+</style>
 </head>
 <body>
+
+<div id="brandsplash" aria-hidden="true">
+  <picture>
+    <source srcset="splash-lockup-dark.png" media="(prefers-color-scheme: dark)">
+    <img src="splash-lockup.png" alt="">
+  </picture>
+</div>
 
 <div class="ob" id="ob"><div class="ob-in" id="ob-in"></div></div>
 
@@ -8164,7 +8179,7 @@ async function ntAsk(){
 }
 function ntShow(title, body, silent){
   if (!ntOn()) return;
-  var o = { body:body, icon:"icon.svg", badge:"icon.svg", tag:"hifz", silent:!!silent };
+  var o = { body:body, icon:"icon-192.png", badge:"icon-192.png", tag:"hifz", silent:!!silent };
   try {
     if (navigator.serviceWorker && navigator.serviceWorker.ready){
       navigator.serviceWorker.ready.then(function(r){
@@ -9862,6 +9877,24 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
   try{ document.body.classList.toggle('mushaf', !!document.querySelector('#v-mushaf.on'));
        try{ if(typeof syncDrawerNav==='function') syncDrawerNav(); }catch(e){}
        try{ if(typeof fabWire==='function') fabWire(); }catch(e){} }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var el = document.getElementById("brandsplash");
+  if (!el) return;
+  var t0 = Date.now(), MIN = 900, fired = false;
+  function dismiss(){
+    if (fired) return;
+    fired = true;
+    setTimeout(function(){
+      el.classList.add("gone");
+      setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); }, 500);
+    }, Math.max(0, MIN - (Date.now() - t0)));
+  }
+  if (document.readyState === "complete") dismiss();
+  else window.addEventListener("load", dismiss);
+  setTimeout(dismiss, 6000);
 })();
 </script>
 </body>
