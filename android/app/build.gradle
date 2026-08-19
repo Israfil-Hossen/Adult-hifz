@@ -1,5 +1,16 @@
 apply plugin: 'com.android.application'
 
+// Release signing. The key itself never enters this repo: its details go in
+// android/keystore.properties, which .gitignore excludes along with *.jks.
+// With no such file the release build stays unsigned rather than failing, so
+// anyone can still clone and build without holding the signing key.
+def keystorePropsFile = rootProject.file("keystore.properties")
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) {
+    keystorePropsFile.withInputStream { keystoreProps.load(it) }
+}
+
+
 android {
     namespace = "com.israfilhossen.hifz"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -16,8 +27,23 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (keystorePropsFile.exists()) {
+                storeFile file(keystoreProps['storeFile'])
+                storePassword keystoreProps['storePassword']
+                keyAlias keystoreProps['keyAlias']
+                keyPassword keystoreProps['keyPassword']
+            }
+        }
+    }
     buildTypes {
         release {
+            if (keystorePropsFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+            // left off deliberately: R8 on a Capacitor WebView app needs rules
+            // this project has not written yet, and the win is small.
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
