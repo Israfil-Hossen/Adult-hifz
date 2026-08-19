@@ -2875,7 +2875,20 @@ body.night .wkrow{border-color:rgba(255,255,255,.10)}
   .surar{font-size:28px}
   .surloc{font-size:17px}
 }
-.mfrow{display:block;width:100%;text-align:start;padding:13px 12px;border:none;background:none;
+/* reaching the author */
+.ctbody{padding-bottom:26px}
+.ctnote{font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:6px 0 14px}
+.ctmail{display:block;width:100%;padding:14px 12px;border:1px dashed var(--rule);
+  background:rgba(95,127,82,.07);border-radius:10px;font-family:var(--mono);
+  font-size:15px;color:var(--ink);cursor:pointer;text-align:center}
+.ctmail:hover{background:rgba(95,127,82,.14)}
+.ctrow{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}
+.ctrow .abtn{flex:1 1 auto;justify-content:center}
+.ctfacts{margin:16px 0 0;padding:11px 12px;background:rgba(33,43,54,.05);
+  border-radius:9px;font-family:var(--mono);font-size:11px;line-height:1.7;
+  color:var(--ink-3);white-space:pre-wrap;word-break:break-word}
+body.night .ctfacts{background:rgba(255,255,255,.07)}
+.mfrow{display:block;.mfrow{display:block;width:100%;text-align:start;padding:13px 12px;border:none;background:none;
   font:inherit;font-size:14.5px;color:var(--ink);cursor:pointer;border-radius:10px;line-height:1.45}
 .mfrow:hover{background:rgba(95,127,82,.12)}
 .mfrow.on{background:rgba(95,127,82,.20);font-weight:600}
@@ -5624,7 +5637,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "1.0";
+var APP_VER = "1.0.1";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -7484,6 +7497,8 @@ async function rdPaint(p, isTodayPage){
       var rA = rdLinesOf(pg, pg.keys[RD.sel.a]), rB = rdLinesOf(pg, pg.keys[RD.sel.b]);
       RD.sel.ln0 = rA ? rA[0] : 1; RD.sel.ln1 = rB ? rB[1] : LINES_PER_PAGE;
     }
+    var dayNow = day(TODAY);
+    var marking = !!(isTodayPage && dayNow.sabaq && dayNow.sabaq.from) || !!RD.pick || !!RD.phrase;
     var sel = {}, pickOne = RD.pick && RD.pickA != null;
     if (pickOne) sel[pg.keys[RD.pickA]] = true;
     else rdSelKeys(pg).forEach(function(k){ sel[k] = true; });
@@ -7520,7 +7535,7 @@ async function rdPaint(p, isTodayPage){
       var any = byWord ? ws.some(function(w){ return sel[w.vk]; }) : lnOn(ln);
       var cov = (+RD.hide || 0);
       var kind = ws[0] && ws[0].head ? " qhead qcen" : (ws[0] && ws[0].bism ? " qbism qcen" : "");
-      h += '<div class="qline' + (any && !byWord ? " tl" : "") + kind + (ws.length < 4 && !kind ? " qcen" : "") +
+      h += '<div class="qline' + (marking && any && !byWord ? " tl" : "") + kind + (ws.length < 4 && !kind ? " qcen" : "") +
            '" data-ln="' + ln + '" style="font-family:\'' + fam + '\'">' +
         '<i class="qhm ' + rdLineFirm(pg, ln) + '"></i><i class="qrib ' + rdLineRibbon(p, ln) + '"></i>' +
         '<span class="qnum">' + n(ln) + '</span>' +
@@ -7528,7 +7543,9 @@ async function rdPaint(p, isTodayPage){
           /* the printed chrome — surah header, basmallah — is not page text:
              it is never selected, dimmed, masked or tracked by the audio */
           if (w.head || w.bism) return '<span class="pw">' + w.g + '</span>';
-          var on = byWord ? !!sel[w.vk] : any;
+          /* off dims a word to a fifth; nothing is dimmed unless the page is
+             actually being worked */
+          var on = marking ? (byWord ? !!sel[w.vk] : any) : true;
           /* the Indo-Pak packs end an ayah with U+FDAB, an ornament that lives only
              in the Nastaliq font — with any fallback face it is an empty box, and
              the number is already drawn beside it. Drop it and draw our own. */
@@ -8833,6 +8850,14 @@ var UIT = {
   version:{ bn:"সংস্করণ {0}", en:"Version {0}", ur:"ورژن {0}", zh:"版本 {0}", ar:"إصدار {0}" },
   contact:{ bn:"যোগাযোগ ও সমস্যা জানান", en:"Contact and report a problem",
             ur:"رابطہ اور مسئلہ بتائیں", zh:"联系与报告问题", ar:"تواصل والإبلاغ عن مشكلة" },
+  contactHow:{ bn:"সমস্যা জানাতে নিচের ঠিকানায় লিখুন। ঠিকানা বা তথ্য কপি করে যেকোনো মেইল অ্যাপে পাঠাতে পারেন।",
+               en:"Write to the address below. You can copy the address or the details into any mail app.",
+               ur:"نیچے دیے پتے پر لکھیں۔ پتہ یا تفصیلات کاپی کر سکتے ہیں۔",
+               zh:"请写信至下方地址。可复制地址或详情到任意邮件应用。",
+               ar:"اكتب إلى العنوان أدناه. يمكنك نسخ العنوان أو التفاصيل." },
+  contactMail:{ bn:"মেইল অ্যাপ খুলুন", en:"Open mail app", ur:"میل ایپ کھولیں", zh:"打开邮件应用", ar:"افتح تطبيق البريد" },
+  contactDetails:{ bn:"তথ্য কপি করুন", en:"Copy the details", ur:"تفصیلات کاپی کریں", zh:"复制详情", ar:"انسخ التفاصيل" },
+  copied:{ bn:"কপি হয়েছে", en:"Copied", ur:"کاپی ہو گیا", zh:"已复制", ar:"تم النسخ" },
   contactFoot:{ bn:"সমস্যা খুঁজে বের করতে নিচের তথ্যটুকু রেখে দিন",
                 en:"Please leave the lines below - they help find the problem",
                 ur:"نیچے کی سطریں رہنے دیں - ان سے مسئلہ ڈھونڈنے میں مدد ملتی ہے",
@@ -8918,9 +8943,9 @@ function mushafPick(){
 var CONTACT_TO = "israfil.crp@gmail.com";
 /* Everything the check screen used to show goes into the letter, because the
    reader should not have to find a diagnostics page and describe it. */
-function contactOpen(){
+function contactFacts(){
   var d = mushafDef();
-  var facts = [
+  return [
     uit("version").replace("{0}", APP_VER),
     "mushaf: " + d.id + " (" + d.pages + "p/" + d.lines + ")",
     "lang: " + L.code,
@@ -8929,13 +8954,63 @@ function contactOpen(){
     "online: " + (navigator.onLine ? "yes" : "no"),
     navigator.userAgent
   ].join("\n");
-  var body = "\n\n\n----------------\n" + uit("contactFoot") + "\n" + facts + "\n";
-  var url = "mailto:" + CONTACT_TO +
-    "?subject=" + encodeURIComponent("Hifz " + APP_VER + " \u2014 " + uit("contact")) +
-    "&body=" + encodeURIComponent(body);
+}
+async function contactCopy(text, btn){
+  var done = false;
+  try { await navigator.clipboard.writeText(text); done = true; } catch(e){}
+  if (!done){
+    /* an app inside a webview often has no clipboard permission; a hidden
+       textarea and execCommand still works where the modern call does not */
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", "");
+      ta.style.cssText = "position:fixed;left:-9999px;top:0";
+      document.body.appendChild(ta); ta.select();
+      done = document.execCommand("copy");
+      ta.remove();
+    } catch(e){}
+  }
+  if (btn){
+    var was = btn.textContent;
+    btn.textContent = done ? uit("copied") : text;
+    setTimeout(function(){ btn.textContent = was; }, done ? 1400 : 6000);
+  }
+  return done;
+}
+/* The letter is offered, but never relied on: a phone with no mail app set up
+   answers a mailto with nothing at all, and the reader is left thinking the
+   button is broken. The address is on the screen either way. */
+function contactOpen(){
+  var el = document.getElementById("contact-sheet");
+  if (!el){
+    el = document.createElement("div");
+    el.id = "contact-sheet"; el.className = "rdtrs";
+    document.body.appendChild(el);
+  }
+  el.innerHTML =
+    '<div class="trs-hd"><span class="trs-ttl">' + esc(uit("contact")) + '</span>' +
+    '<button class="trs-x" aria-label="' + esc(uit("close")) + '">\u2715</button></div>' +
+    '<div class="trs-bd ctbody">' +
+      '<p class="ctnote">' + esc(uit("contactHow")) + '</p>' +
+      '<button class="ctmail" id="ct-addr">' + esc(CONTACT_TO) + '</button>' +
+      '<div class="ctrow">' +
+        '<button class="abtn go" id="ct-open">' + esc(uit("contactMail")) + '</button>' +
+        '<button class="abtn" id="ct-facts">' + esc(uit("contactDetails")) + '</button>' +
+      '</div>' +
+      '<pre class="ctfacts">' + esc(contactFacts()) + '</pre>' +
+    '</div>';
+  el.classList.add("on");
   drawerClose();
-  try { window.location.href = url; }
-  catch(e){ fabHint(CONTACT_TO); }
+  el.querySelector(".trs-x").onclick = function(){ el.classList.remove("on"); };
+  document.getElementById("ct-addr").onclick = function(){ contactCopy(CONTACT_TO, this); };
+  document.getElementById("ct-facts").onclick = function(){ contactCopy(contactFacts(), this); };
+  document.getElementById("ct-open").onclick = function(){
+    var body = "\n\n\n----------------\n" + uit("contactFoot") + "\n" + contactFacts() + "\n";
+    var url = "mailto:" + CONTACT_TO +
+      "?subject=" + encodeURIComponent("Hifz " + APP_VER + " \u2014 " + uit("contact")) +
+      "&body=" + encodeURIComponent(body);
+    try { window.location.href = url; } catch(e){}
+  };
 }
 function drawerFill(){
   var g = function(id){ return document.getElementById(id); };
