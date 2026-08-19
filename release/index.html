@@ -2255,7 +2255,7 @@ main.wrap{width:100%}
     <button class="drawer-it" id="dw-cloud"><i>↥</i><span id="dw-cloud-l">ব্যাকআপ ও সিংক</span></button>
     <button class="drawer-it" id="dw-aims"><i>◇</i><span id="dw-aims-l">এই অ্যাপ কী করে</span></button>
     <button class="drawer-it" id="dw-night"><i>☾</i><span id="dw-night-l">রাতের রঙ</span><span class="dwval" id="dw-night-v"></span></button>
-    <button class="drawer-it" id="dw-diag"><i>⚙</i><span id="dw-diag-l">যাচাই</span></button>
+    <button class="drawer-it" id="dw-contact"><i>✉</i><span id="dw-contact-l">যোগাযোগ ও সমস্যা জানান</span></button>
     
   </div>
 </aside>
@@ -5624,7 +5624,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "v116";
+var APP_VER = "1.0";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -8830,6 +8830,14 @@ var UIT = {
                zh:"{0} 数据包未到达。",
                ar:"لم تصل حزمة {0}." },
   mushafPick:{ bn:"কোন মুসহাফ", en:"Which mushaf", ur:"کون سا مصحف", zh:"哪一部古兰经", ar:"أي مصحف" },
+  version:{ bn:"সংস্করণ {0}", en:"Version {0}", ur:"ورژن {0}", zh:"版本 {0}", ar:"إصدار {0}" },
+  contact:{ bn:"যোগাযোগ ও সমস্যা জানান", en:"Contact and report a problem",
+            ur:"رابطہ اور مسئلہ بتائیں", zh:"联系与报告问题", ar:"تواصل والإبلاغ عن مشكلة" },
+  contactFoot:{ bn:"সমস্যা খুঁজে বের করতে নিচের তথ্যটুকু রেখে দিন",
+                en:"Please leave the lines below - they help find the problem",
+                ur:"نیچے کی سطریں رہنے دیں - ان سے مسئلہ ڈھونڈنے میں مدد ملتی ہے",
+                zh:"请保留以下几行，它们有助于定位问题",
+                ar:"اترك الأسطر أدناه فهي تساعد في تحديد المشكلة" },
   goscreen:{ bn:"অন্য পর্দায় যান · সেটিংস", en:"Other screens · settings",
              ur:"دوسری اسکرین · ترتیبات", zh:"其他页面 · 设置", ar:"شاشات أخرى · الإعدادات" },
   erase:  { bn:"দাগ মুছুন", en:"Remove mark", ur:"نشان ہٹائیں", zh:"清除标记", ar:"إزالة العلامة" },
@@ -8854,7 +8862,7 @@ function uiLabels(){
   set("idx-search-btn", "aria-label", uit("search"));
   set("diag-close", "aria-label", uit("back"));
   set("diag-ttl", "", uit("diag"));
-  set("dw-diag-l", "", uit("diag"));
+  set("dw-contact-l", "", uit("contact"));
   set("dw-paper-l", "", uit("paper"));
   set("dw-night-l", "", uit("night"));
   set("dw-cloud-l", "", uit("cloud"));
@@ -8906,6 +8914,28 @@ function mushafPick(){
       mushafChoose(b.dataset.mf);
     };
   });
+}
+var CONTACT_TO = "israfil.crp@gmail.com";
+/* Everything the check screen used to show goes into the letter, because the
+   reader should not have to find a diagnostics page and describe it. */
+function contactOpen(){
+  var d = mushafDef();
+  var facts = [
+    uit("version").replace("{0}", APP_VER),
+    "mushaf: " + d.id + " (" + d.pages + "p/" + d.lines + ")",
+    "lang: " + L.code,
+    "pages memorised: " + (memorizedPages().length + knownPages().length),
+    "screen: " + window.innerWidth + "x" + window.innerHeight,
+    "online: " + (navigator.onLine ? "yes" : "no"),
+    navigator.userAgent
+  ].join("\n");
+  var body = "\n\n\n----------------\n" + uit("contactFoot") + "\n" + facts + "\n";
+  var url = "mailto:" + CONTACT_TO +
+    "?subject=" + encodeURIComponent("Hifz " + APP_VER + " \u2014 " + uit("contact")) +
+    "&body=" + encodeURIComponent(body);
+  drawerClose();
+  try { window.location.href = url; }
+  catch(e){ fabHint(CONTACT_TO); }
 }
 function drawerFill(){
   var g = function(id){ return document.getElementById(id); };
@@ -9530,8 +9560,8 @@ function drawerWire(){
   if (ib) ib.onclick = idxOpen;
   var mb2 = document.getElementById("dw-mushaf");
   if (mb2) mb2.onclick = mushafPick;
-  var db = document.getElementById("dw-diag");
-  if (db) db.onclick = diagOpen;
+  var cb2 = document.getElementById("dw-contact");
+  if (cb2) cb2.onclick = contactOpen;
   var ab = document.getElementById("dw-aims");
   if (ab){
     ab.onclick = function(){
@@ -9556,7 +9586,7 @@ function drawerWire(){
   };
   applyNight();
   var vr = document.getElementById("dw-ver");
-  if (vr) vr.textContent = "Build " + APP_VER;
+  if (vr) vr.textContent = fmt(uit("version"), APP_VER);
   var ibl = document.getElementById("dw-index-l");
   if (ibl) ibl.textContent = idxL().ttl;
   idxWire();
