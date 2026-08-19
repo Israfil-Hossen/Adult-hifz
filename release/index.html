@@ -2393,15 +2393,14 @@ main.wrap{width:100%}
 .qline.covered .w.now{background:rgba(95,127,82,.28)}
 .qcen{justify-content:center;gap:10px}
 /* the printed surah header: a ruled band, the way a mushaf sets it */
-.qline.qhead{margin-block:2px 4px;margin-inline:auto;padding:4px 14px;border-radius:8px;
-  border:1.5px solid var(--verdigris);background:rgba(95,127,82,.09)}
+.qline.qhead{margin-block:2px 4px;margin-inline:auto;padding:4px 14px}
 /* the banner and basmala are PLAIN Arabic text — the QCF page font (glyph-coded)
    renders them as empty boxes, so force a real Arabic face for these two lines */
 .qline.qhead,.qline.qbism{font-family:"Noto Naskh Arabic","Amiri","Scheherazade New","Traditional Arabic",serif!important}
-.qline.qhead .pw,.qline.qhead .w{font-size:.9em;color:var(--verdigris);opacity:1;cursor:default}
+.qline.qhead .pw,.qline.qhead .w{font-size:1.3em;color:var(--ink);opacity:1;cursor:default;line-height:1.5}
 .qline.qbism .pw,.qline.qbism .w{font-size:.95em;opacity:1;cursor:default}
 .qline.qhead .pw:hover,.qline.qbism .pw:hover{background:none}
-.paper.pnight .qline.qhead{background:rgba(95,127,82,.16)}
+
 .rdfoot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:#77808A;padding-top:10px;margin-top:8px;border-top:1px solid rgba(33,43,54,.12);direction:ltr}
 .wmean{display:none}
 .wmean.on{display:block;position:fixed;inset-inline:0;bottom:0;z-index:59;
@@ -2689,19 +2688,13 @@ body.night .rdinfo .ri-j i{background:rgba(255,255,255,.10)}
    Drawn, not downloaded. The lattice tiles the whole band and a plate of paper
    is laid over its middle, so the ornament reads as two side panels and the
    name always has a clear field — at any width, in any of the paper colours. */
+/* Clean: no ornament, no plate, no white. Just the name, given room and size,
+   and the line under it. What a printed mushaf frames, this one lets breathe. */
 .qline.qhead{
-  background-color:rgba(176,138,62,.10);
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cg fill='none' stroke='%23A67C2E' stroke-width='1.15'%3E%3Cpath d='M15 1 L21 7 L15 13 L9 7 Z'/%3E%3Cpath d='M15 17 L21 23 L15 29 L9 23 Z'/%3E%3Cpath d='M0 15 L6 9 L12 15 L6 21 Z'/%3E%3Cpath d='M18 15 L24 9 L30 15 L24 21 Z'/%3E%3Cpath d='M9 7 L6 9 M21 7 L24 9 M9 23 L6 21 M21 23 L24 21'/%3E%3C/g%3E%3Cg fill='%235F7F52'%3E%3Ccircle cx='15' cy='7' r='1.7'/%3E%3Ccircle cx='15' cy='23' r='1.7'/%3E%3Ccircle cx='6' cy='15' r='1.7'/%3E%3Ccircle cx='24' cy='15' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat:repeat;
-  background-position:center;
-  background-size:26px 26px;
-  border:1.5px solid rgba(166,124,46,.8);border-radius:8px;
-  box-shadow:inset 0 0 0 2px var(--pap),inset 0 0 0 3px rgba(166,124,46,.5);
-  padding-block:4px;padding-inline:8px;margin-block:3px 4px}
-.qline.qhead .w,.qline.qhead .pw{background:var(--pap);box-shadow:0 0 0 5px var(--pap);
-  border-radius:2px;padding:0 1px}
-body.night .qline.qhead{background-color:rgba(176,138,62,.16)}
+  background:none;border:none;box-shadow:none;
+  padding-block:2px;padding-inline:6px;margin-block:6px 8px}
+.qline.qhead .w,.qline.qhead .pw{background:none;box-shadow:none;padding:0 3px}
+body.night .qline.qhead{background:none}
 
 /* ---------- what this page is about ----------
    Laid before the reader's own marks in this file on purpose: a highlight the
@@ -2850,13 +2843,13 @@ body.night .wkrow{border-color:rgba(255,255,255,.10)}
 /* not a column — that stacked every word of the name on its own line and
    swallowed the page. A row that wraps, with the meta claiming a full line. */
 .qline.qhead{flex-wrap:wrap;justify-content:center;align-items:center;row-gap:1px}
-.qhmeta{flex:1 0 100%;display:flex;align-items:center;justify-content:center;gap:6px;
-  direction:ltr;font-family:var(--body);font-size:11px;line-height:1.2;
+.qhmeta{flex:1 0 100%;display:flex;align-items:center;justify-content:center;gap:7px;
+  direction:ltr;font-family:var(--body);font-size:12.5px;line-height:1.35;margin-top:3px;
   color:var(--ink-3);white-space:nowrap;max-width:100%;overflow:hidden}
 .qhmeta b{font-weight:600;color:var(--verdigris)}
 .qhmeta em{font-style:normal}
 .qhmeta em::before{content:"·";margin-inline-end:6px;opacity:.55}
-.qhhouse{display:block;width:14px;height:14px;color:var(--verdigris);flex:0 0 auto}
+.qhhouse{display:block;width:17px;height:17px;color:var(--verdigris);flex:0 0 auto}
 .qhhouse svg{width:100%;height:100%}
 /* the surah, before you begin it *//* the surah, before you begin it */
 .surcard .surbody{display:flex;align-items:center;gap:18px;padding:10px 4px 22px;
@@ -5627,7 +5620,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "v114";
+var APP_VER = "v115";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
