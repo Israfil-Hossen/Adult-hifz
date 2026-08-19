@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- the app's own ink and paper, so the shell around the page matches it
+         instead of arriving in Capacitor's blue -->
+    <color name="colorPrimary">#33414F</color>
+    <color name="colorPrimaryDark">#2A3642</color>
+    <color name="colorAccent">#5F7F52</color>
+    <color name="ic_launcher_background">#131F35</color>
+</resources>

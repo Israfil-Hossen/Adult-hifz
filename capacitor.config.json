@@ -1,0 +1,13 @@
+{
+  "appId": "com.israfilhossen.hifz",
+  "appName": "হিফজ · দৈনিক সঙ্গী",
+  "webDir": "hifz-1.0.4",
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

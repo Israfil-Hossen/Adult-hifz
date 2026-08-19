@@ -1,0 +1,23 @@
+{
+  "name": "hifz-daily-companion",
+  "version": "1.0.4",
+  "description": "Hifz · Daily Companion — a research-based Quran memorisation companion for adults",
+  "private": true,
+  "author": "ISRAFIL HOSSEN <israfil.crp@gmail.com>",
+  "license": "UNLICENSED",
+  "scripts": {
+    "sync": "cap sync android",
+    "open": "cap open android",
+    "apk": "cd android && gradlew.bat assembleDebug",
+    "bundle": "cd android && gradlew.bat bundleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/core": "^8.5.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.0",
+    "sharp": "^0.35.3"
+  }
+}
