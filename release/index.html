@@ -2849,6 +2849,10 @@ body.night .wkrow{border-color:rgba(255,255,255,.10)}
 .qhmeta b{font-weight:600;color:var(--verdigris)}
 .qhmeta em{font-style:normal}
 .qhmeta em::before{content:"·";margin-inline-end:6px;opacity:.55}
+/* a page that opens three surahs cannot spare three extra lines, so there the
+   line rides beside the name instead of beneath it and costs no height at all */
+.qhmeta.tight{flex:0 0 auto;margin-inline-start:12px;font-size:11px;gap:5px;margin-top:0}
+.qhmeta.tight .qhhouse{width:13px;height:13px}
 .qhhouse{display:block;width:17px;height:17px;color:var(--verdigris);flex:0 0 auto}
 .qhhouse svg{width:100%;height:100%}
 /* the surah, before you begin it *//* the surah, before you begin it */
@@ -5620,7 +5624,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "v115";
+var APP_VER = "v116";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -6672,14 +6676,14 @@ function surL(){ return SURL[L.code] || SURL.en; }
 /* the name alone said nothing. Under it now: the house it was revealed in,
    how many ayat, and the juz it runs through — all of it already known here,
    so nothing is fetched and no second screen is opened to say it. */
-function surahBandMeta(sn){
+function surahBandMeta(sn, tight){
   if (!sn || sn < 1 || sn > 114) return "";
   var T = surL(), pl = surahPlace(sn);
   var ay = (typeof AYAHS !== "undefined" && AYAHS[sn - 1]) || 0;
   var j1 = 0, j2 = 0;
   try { j1 = juzOfKey(sn + ":1"); j2 = ay ? juzOfKey(sn + ":" + ay) : j1; } catch(e){}
   var juz = (j1 && j2) ? (j1 === j2 ? fmt(T.para, n(j1)) : fmt(T.paras, n(j1), n(j2))) : "";
-  return '<span class="qhmeta">' +
+  return '<span class="qhmeta' + (tight ? " tight" : "") + '">' +
     '<i class="qhhouse">' + SUR_IC[pl] + '</i>' +
     '<b>' + esc(T[pl]) + '</b>' +
     '<em>' + fmt(T.ayat, n(ay)) + '</em>' +
@@ -7543,7 +7547,7 @@ async function rdPaint(p, isTodayPage){
         /* under the name, not above it: the surah announces itself first. On a page
            that opens three surahs the line is dropped — the page is a mushaf page
            before it is anything else, and the room belongs to the ayat. */
-        ((headSurah[ln] && headCount < 2) ? surahBandMeta(headSurah[ln]) : "") + '</div>';
+        (headSurah[ln] ? surahBandMeta(headSurah[ln], headCount > 1) : "") + '</div>';
     }
     paper.innerHTML = h + '<div class="rdcurtain" id="rd-curtain"><span class="grab">≡</span></div>';
     if (byWord) rdSelBands(paper);
