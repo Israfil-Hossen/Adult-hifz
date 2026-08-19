@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+    <color name="app_background">#191A17</color>
+
     <!-- system splash inverts at night: navy ground, gold mark -->
     <color name="splash_background">#131F35</color>
     <color name="splash_mark">#C9A227</color>

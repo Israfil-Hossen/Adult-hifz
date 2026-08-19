@@ -6,6 +6,10 @@
     <color name="colorPrimaryDark">#2A3642</color>
     <color name="colorAccent">#5F7F52</color>
 
+    <!-- painted behind the status and navigation bars, so the inset strip
+         matches the page rather than flashing white -->
+    <color name="app_background">#E7E1D6</color>
+
     <!-- system splash: parchment ground, navy mark -->
     <color name="splash_background">#F3EAD7</color>
     <color name="splash_mark">#131F35</color>
