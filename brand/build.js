@@ -93,3 +93,22 @@ const save = async (buf, file) => { fs.writeFileSync(ensure(file), buf); note(fi
 
   console.log(out.length + ' files written');
 })();
+
+// --- Play Store feature graphic (1024x500) -------------------------------
+// Play crops the edges on some surfaces, so everything sits well inside.
+(async () => {
+  const W = 1024, H = 500;
+  const { buf, w, h } = await word(GOLD, 300);
+  const text = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '">' +
+    '<rect width="' + W + '" height="' + H + '" fill="' + NAVY + '"/>' +
+    '<text x="' + W / 2 + '" y="345" text-anchor="middle" font-family="Georgia, \'Times New Roman\', serif" font-size="74" fill="' + PARCH + '">Adult Hifz</text>' +
+    '<rect x="' + (W / 2 - 100) + '" y="372" width="200" height="3" fill="' + GOLD + '"/>' +
+    '<text x="' + W / 2 + '" y="422" text-anchor="middle" font-family="Georgia, \'Times New Roman\', serif" font-size="29" fill="' + MUTED_D + '">daily companion</text>' +
+    '</svg>');
+  const out = await sharp(text)
+    .composite([{ input: buf, left: Math.round((W - w) / 2), top: Math.round(175 - h / 2) }])
+    .png().toBuffer();
+  fs.mkdirSync('store', { recursive: true });
+  fs.writeFileSync('store/feature-graphic.png', out);
+  console.log('store/feature-graphic.png (1024x500)');
+})();
