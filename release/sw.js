@@ -1,6 +1,6 @@
 /* হিফজ · দৈনিক সঙ্গী — অফলাইন ক্যাশ
    অ্যাপ আপডেট করলে নিচের সংখ্যাটা বাড়িয়ে দিন: hifz-v45, hifz-v45 … */
-const CACHE = "hifz-1.0.2";
+const CACHE = "hifz-1.0.3";
 const SHELL = [
   "./",
   "./index.html",

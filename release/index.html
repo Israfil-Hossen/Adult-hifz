@@ -3995,7 +3995,7 @@ function blankDay(){
 function defaults(){
   return { v:1,
     settings:{ lang:null, startDate:TODAY, startPage:1, restDay:5,
-               wordSound:1, qari:"", mushaf:"", mushafId:"madani", reciter:"Husary_128kbps", manualLines:0, lastPage:0, hijriAdj:0, retention:0.9, paper:"pcream", notifyAt:"", zikrEvery:0, zikrVoice:true, focus:0, wmFollow:1, drive:null },
+               wordSound:1, qari:"", mushaf:"", mushafId:"madani", reciter:"Husary_128kbps", manualLines:0, lastPage:0, hijriAdj:0, retention:0.9, paper:"pcream", notifyAt:"", zikrEvery:0, zikrVoice:true, focus:0, wmFollow:1, plain:0, drive:null },
     known:{}, days:{}, weak:{}, rev:{}, hl:{}, bm:{}, drill:{ items:{}, salat:{}, sess:{} }, updatedAt:Date.now() };
 }
 function day(k){ if (!S.days[k]) S.days[k] = blankDay(); return S.days[k]; }
@@ -5637,7 +5637,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "1.0.2";
+var APP_VER = "1.0.3";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -6584,6 +6584,7 @@ function rdFocusToggle(){
    choice this could not offer. What is left is a phrase loop, a test of this
    page, and its look-alikes — none of which exist anywhere else. */
 var DOTS = [
+  ["_plain", function(){ return uit("plain"); }],
   ["phrase", function(){ return L.rec.phrase; }],
   ["exam",   function(){ return L.ex.open; }],
   ["mut",    function(){ return L.mut.find; }]
@@ -6603,9 +6604,14 @@ function rdDotsOpen(btn){
   var m = document.createElement("div");
   m.className = "rddots"; m.id = "rd-dots";
   var rows = DOTS.map(function(d){
+    var lab = ""; try { lab = d[1]() || d[0]; } catch(e){ lab = d[0]; }
+    if (d[0].charAt(0) === "_"){
+      /* not a chip in the tools row — this one is the app's own state */
+      var self = (d[0] === "_plain") && !!(S.settings && S.settings.plain);
+      return '<button class="dotit' + (self ? " on" : "") + '" data-dot="' + d[0] + '">' + esc(lab) + '</button>';
+    }
     var chip = document.querySelector('.rdtools [data-rd="' + d[0] + '"]');
     if (!chip) return "";
-    var lab = ""; try { lab = d[1]() || d[0]; } catch(e){ lab = d[0]; }
     var on = chip.getAttribute("aria-pressed") === "true";
     return '<button class="dotit' + (on ? " on" : "") + '" data-dot="' + d[0] + '">' + esc(lab) + '</button>';
   }).join("");
@@ -6620,6 +6626,13 @@ function rdDotsOpen(btn){
       var k = b.dataset.dot;
       rdDotsClose();
       if (k === "_drawer"){ drawerOpen(); return; }
+      if (k === "_plain"){
+        S.settings.plain = S.settings.plain ? 0 : 1;
+        save();
+        fabHint(uit(S.settings.plain ? "plainOn" : "plainOff"));
+        renderMushaf();
+        return;
+      }
       var chip = document.querySelector('.rdtools [data-rd="' + k + '"]');
       if (chip) chip.click();
     };
@@ -7498,7 +7511,8 @@ async function rdPaint(p, isTodayPage){
       RD.sel.ln0 = rA ? rA[0] : 1; RD.sel.ln1 = rB ? rB[1] : LINES_PER_PAGE;
     }
     var dayNow = day(TODAY);
-    var marking = !!(isTodayPage && dayNow.sabaq && dayNow.sabaq.from) || !!RD.pick || !!RD.phrase;
+    var plain = !!(S.settings && S.settings.plain);
+    var marking = (!plain && !!(isTodayPage && dayNow.sabaq && dayNow.sabaq.from)) || !!RD.pick || !!RD.phrase;
     var sel = {}, pickOne = RD.pick && RD.pickA != null;
     if (pickOne) sel[pg.keys[RD.pickA]] = true;
     else rdSelKeys(pg).forEach(function(k){ sel[k] = true; });
@@ -8850,6 +8864,12 @@ var UIT = {
   version:{ bn:"সংস্করণ {0}", en:"Version {0}", ur:"ورژن {0}", zh:"版本 {0}", ar:"إصدار {0}" },
   contact:{ bn:"যোগাযোগ ও সমস্যা জানান", en:"Contact and report a problem",
             ur:"رابطہ اور مسئلہ بتائیں", zh:"联系与报告问题", ar:"تواصل والإبلاغ عن مشكلة" },
+  plain:{ bn:"দাগ ছাড়া পড়ুন", en:"Read without marks", ur:"بغیر نشان پڑھیں",
+          zh:"无标记阅读", ar:"القراءة بلا علامات" },
+  plainOn:{ bn:"দাগ বন্ধ — পুরো পাতা পড়ার জন্য", en:"Marks off - the whole page to read",
+            ur:"نشان بند - پورا صفحہ", zh:"标记已关闭 —— 整页可读", ar:"العلامات مغلقة - الصفحة كاملة" },
+  plainOff:{ bn:"দাগ চালু — আজকের সবক দেখা যাবে", en:"Marks on - today's lesson is shown",
+             ur:"نشان چالو - آج کا سبق", zh:"标记已开启 —— 显示今日课业", ar:"العلامات مفعّلة - درس اليوم" },
   contactHow:{ bn:"সমস্যা জানাতে নিচের ঠিকানায় লিখুন। ঠিকানা বা তথ্য কপি করে যেকোনো মেইল অ্যাপে পাঠাতে পারেন।",
                en:"Write to the address below. You can copy the address or the details into any mail app.",
                ur:"نیچے دیے پتے پر لکھیں۔ پتہ یا تفصیلات کاپی کر سکتے ہیں۔",
