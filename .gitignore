@@ -23,3 +23,8 @@ hifz-*/sync-data/
 *.keystore
 *.jks
 keystore.properties
+
+# the signed bundle is a build output, not source — it is rebuilt from this
+# tree by `gradlew bundleRelease` and is far too large to carry in history
+play-*/app-release.aab
+play-*.zip

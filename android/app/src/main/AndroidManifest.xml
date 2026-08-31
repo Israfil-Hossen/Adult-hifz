@@ -20,6 +20,11 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".PlaybackService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -39,6 +44,13 @@
 
     <!-- the daily reminder and the dhikr reminder, from Android 13 on -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Recitation has to survive the screen going off. Without a foreground
+         service Android freezes the app once it is cached and the audio stops
+         mid-ayah. The media-playback type is mandatory from Android 14. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- a phone with no microphone can still memorise: do not hide the app from it -->
     <uses-feature android:name="android.hardware.microphone" android:required="false" />

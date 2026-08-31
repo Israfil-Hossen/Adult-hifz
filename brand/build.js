@@ -69,15 +69,15 @@ const save = async (buf, file) => { fs.writeFileSync(ensure(file), buf); note(fi
   await save(await markOn(1024, null, GOLD, 1024 * 0.58, 512), 'assets/icon-foreground.png');
   await save(await sharp({ create: { width: 1024, height: 1024, channels: 4, background: NAVY } }).png().toBuffer(), 'assets/icon-background.png');
 
-  await save(await sharp(flat).resize(192).png().toBuffer(), 'hifz-1.0.4/icon-192.png');
-  await save(await sharp(flat).resize(512).png().toBuffer(), 'hifz-1.0.4/icon-512.png');
-  await save(await sharp(await markOn(1024, NAVY, GOLD, 1024 * 0.58, 512)).resize(512).png().toBuffer(), 'hifz-1.0.4/icon-maskable-512.png');
+  await save(await sharp(flat).resize(192).png().toBuffer(), 'hifz-1.0.6/icon-192.png');
+  await save(await sharp(flat).resize(512).png().toBuffer(), 'hifz-1.0.6/icon-512.png');
+  await save(await sharp(await markOn(1024, NAVY, GOLD, 1024 * 0.58, 512)).resize(512).png().toBuffer(), 'hifz-1.0.6/icon-maskable-512.png');
 
   // splash sources for capacitor-assets, and the in-app launch lockups
   await save(await lockup(2732, PARCH, NAVY, NAVY, MUTED_L), 'assets/splash.png');
   await save(await lockup(2732, NAVY, GOLD, PARCH, MUTED_D), 'assets/splash-dark.png');
-  await save(await lockup(1024, PARCH, NAVY, NAVY, MUTED_L), 'hifz-1.0.4/splash-lockup.png');
-  await save(await lockup(1024, NAVY, GOLD, PARCH, MUTED_D), 'hifz-1.0.4/splash-lockup-dark.png');
+  await save(await lockup(1024, PARCH, NAVY, NAVY, MUTED_L), 'hifz-1.0.6/splash-lockup.png');
+  await save(await lockup(1024, NAVY, GOLD, PARCH, MUTED_D), 'hifz-1.0.6/splash-lockup-dark.png');
 
   // Android 12+ system splash icon: 288dp canvas, only the inner 192dp is
   // safe, so the word is capped at 176/288 of whatever density we emit.

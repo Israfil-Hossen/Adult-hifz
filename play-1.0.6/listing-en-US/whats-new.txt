@@ -1,0 +1,9 @@
+Memorise from the mushaf itself: select ayat - across two pages if you need to - and tap the tick; hold it for the whole page.
+
+Listen mode plays a surah, juz or page range straight through, turning pages itself, and keeps playing with the screen off. 28 reciters, sleep timer.
+
+Download a surah for offline use - text, translation and recitation.
+Turn any page into translation only.
+A short guided tour on first run.
+
+Fixed: the repeat count, and a crash when granting the microphone.

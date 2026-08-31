@@ -4,4 +4,6 @@
     <string name="title_activity_main">Adult Hifz</string>
     <string name="package_name">com.israfilhossen.hifz</string>
     <string name="custom_url_scheme">com.israfilhossen.hifz</string>
+    <string name="playback_channel">Recitation</string>
+    <string name="playback_running">Reciting</string>
 </resources>
