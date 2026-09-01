@@ -2361,8 +2361,8 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
   border-radius:18px 18px 0 0;padding:6px 0 calc(env(safe-area-inset-bottom) + 10px);
   box-shadow:0 -10px 30px rgba(0,0,0,.26);max-height:72vh;overflow:auto}
 .rdsheet h5{margin:8px 17px 6px;font-family:var(--display);font-size:16px;color:var(--ink)}
-.shrow{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;
-  padding:13px 17px;font:inherit;font-size:15px;color:var(--ink);cursor:pointer;text-align:start}
+.shrow{display:flex;align-items:center;gap:13px;width:100%;border:0;background:none;
+  padding:15px 17px;font:inherit;font-size:15.5px;color:var(--ink);cursor:pointer;text-align:start}
 .shrow:active{background:rgba(0,0,0,.06)}
 .shrow.on{color:var(--verdigris);font-weight:600}
 .shrow .shic{width:24px;flex:0 0 24px;display:inline-flex;justify-content:center}
@@ -4994,7 +4994,9 @@ function renderToday(){
          (rest ? L.phase.rest : fmt(L.phase.target, n(lines))) + '</div>' +
        '<div class="b">' + (rest ? L.phase.noNew : fmt(L.phase.page, pagesTxt) + ' \u00b7 ' + lineTxt) + '</div></div>' +
        '<div class="c">' + (rest ? L.phase.restNote : phaseNote()) + '</div>' +
-       (rest ? "" : '<button class="start" data-openpage="' + (d.sabaq.pages[0] || 1) + '">' + L.rd.openPage + ' \u203a</button>') +
+       '<button class="start" data-openpage="' +
+         (rest ? ((S.settings && S.settings.lastPage) || prevPages[0] || d.sabaq.pages[0] || 1)
+               : (d.sabaq.pages[0] || 1)) + '">' + L.rd.openPage + ' \u203a</button>' +
        '</div>';
 
   if (!rest){
@@ -6226,7 +6228,8 @@ var RIC = {
   mic:     ric('<path d="M12 15a3.5 3.5 0 0 0 3.5-3.5V6a3.5 3.5 0 0 0-7 0v5.5A3.5 3.5 0 0 0 12 15z"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/>'),
   book:    ric('<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 1 6.5 18H19v3H6.5A1.5 1.5 0 0 1 5 19.5z"/>'),
   test:    ric('<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.4 2.4 0 1 1 3.1 2.3c-.6.2-.9.6-.9 1.2v.4"/><path d="M11.8 16.4h.4"/>'),
-  flag:    ric('<path d="M5 21V4"/><path d="M5 4.5h10.5l-1.8 3.2 1.8 3.3H5"/>')
+  flag:    ric('<path d="M5 21V4"/><path d="M5 4.5h10.5l-1.8 3.2 1.8 3.3H5"/>'),
+  target:  ric('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>')
 };
 async function mushafIndex(){
   var def = mushafDef();
@@ -6961,7 +6964,9 @@ function rdPlayKeys(pg){
   return rdSelKeys(pg);
 }
 
-function openMushaf(p){
+function openMushaf(p, noPush){
+  var wasV = (typeof curView === "function") ? curView() : "";
+  if (!noPush && wasV && wasV !== "mushaf" && typeof VSTACK !== "undefined") VSTACK.push(wasV);
   document.body.classList.add("mushaf");
   wakeOn();
   if (p) { RD.page = Math.max(1, Math.min(TOTAL_PAGES, p)); RD.sel = null; }
@@ -7011,13 +7016,10 @@ function renderMushaf(){
        '<div class="rdhead">' +
          '<span class="rdprog" id="rd-prog"></span>' +
          '<div class="rdgrp rdset">' +
-           '<button class="rdic t rdlbl" data-rd="mistakes" title="' + BL.mistakes + '" aria-label="' + BL.mistakes + '" aria-pressed="' + (S.weak[RD.page] ? "true" : "false") + '">' + RIC.flag + '</button>' +
            '<button class="rdic t" data-rd="book" title="' + BL.book + '" aria-label="' + BL.book + '">' + RIC.book + '</button>' +
            '<button class="rdic t" data-rd="veil" title="' + BL.veil + '" aria-label="' + BL.veil + '" aria-pressed="' + (RD.blind ? "true" : "false") + '">' + RIC.blind + '</button>' +
            '<button class="rdic t rdmem" data-rd="memtog" title="' + L.mu.mem + '" aria-label="' + L.mu.mem + '" aria-pressed="' + (rdMemState(RD.pages[RD.page]) ? "true" : "false") + '">' + RIC.mem + '</button>' +
-           '<button class="rdic t" data-rd="lsheet" title="' + BL.listen + '" aria-label="' + BL.listen + '">' + RIC.listen + '</button>' +
-           '<button class="rdic t" data-rd="tsheet" title="' + BL.test + '" aria-label="' + BL.test + '">' + RIC.test + '</button>' +
-           '<button class="rdic rdfab rdmic" data-rd="mic" title="' + L.rec.start + '" aria-label="' + L.rec.start + '">' + RIC.mic + '</button>' +
+           '<button class="rdic rdfab" data-rd="do" title="' + BL.practice + '" aria-label="' + BL.practice + '">' + RIC.target + '</button>' +
          '</div>' +
        '</div>' +
        '<div class="rdtools' + (RD.more ? "" : " tight") + '">' +
@@ -7440,7 +7442,8 @@ function rdFocusToggle(){
    lets the bar be rearranged without touching a single behaviour. */
 function rdAct(k, b){
   var pg = RD.pages[RD.page];
-      if (k === "lsheet"){ rdSheetOpen("listen"); }
+      if (k === "do"){ rdSheetOpen("do"); }
+  else if (k === "lsheet"){ rdSheetOpen("listen"); }
   else if (k === "tsheet"){ rdSheetOpen("test"); }
   else if (k === "book"){ rdSheetOpen("book"); }
   else if (k === "veil"){ RD.blind = !RD.blind; renderMushaf(); }
@@ -7496,24 +7499,24 @@ function rdAct(k, b){
       }
 }
 var BARL = {
-  bn:{ listen:"শুনুন", recite:"তিলাওয়াত", test:"পরীক্ষা",
+  bn:{ practice:"অনুশীলন", listen:"শুনুন", recite:"তিলাওয়াত", test:"পরীক্ষা",
        mistakes:"ভুল", book:"মুসহাফ", veil:"ঢাকুন",
        edition:"মুসহাফ ও লেখার আকার",
        weakOn:"এই পাতা দুর্বল বলে রাখলাম",
        weakOff:"দুর্বলের চিহ্ন তুলে নিলাম" },
-  en:{ listen:"Listen", recite:"Recite", test:"Test",
+  en:{ practice:"Practise", listen:"Listen", recite:"Recite", test:"Test",
        mistakes:"Mistakes", book:"Mushaf", veil:"Cover",
        edition:"Mushaf and text size",
        weakOn:"Page marked weak", weakOff:"Weak mark removed" },
-  ur:{ listen:"سنیے", recite:"تلاوت", test:"امتحان",
+  ur:{ practice:"مشق", listen:"سنیے", recite:"تلاوت", test:"امتحان",
        mistakes:"غلطیاں", book:"مصحف", veil:"ڈھانپیں",
        edition:"مصحف اور تحریر کا سائز",
        weakOn:"یہ صفحہ کمزور نشان زد", weakOff:"نشان ہٹا دیا" },
-  zh:{ listen:"聊听", recite:"诵读", test:"测试",
+  zh:{ practice:"练习", listen:"聊听", recite:"诵读", test:"测试",
        mistakes:"错处", book:"经本", veil:"遮住",
        edition:"经本与字号",
        weakOn:"已标为薄弱", weakOff:"已取消标记" },
-  ar:{ listen:"استمع", recite:"تلاوة", test:"اختبار",
+  ar:{ practice:"تمرين", listen:"استمع", recite:"تلاوة", test:"اختبار",
        mistakes:"الأخطاء", book:"المصحف", veil:"استر",
        edition:"المصحف وحجم الخط",
        weakOn:"وُسِمت الصفحة بالضعف", weakOff:"رُفِعت العلامة" }
@@ -7524,6 +7527,13 @@ function barL(){ return BARL[L.code] || BARL.en; }
    its overflow menu held is filed under one of them, or under the book. */
 function rdSheetDef(which){
   var B = barL();
+  if (which === "do") return [B.practice, [
+    ["lsheet",   function(){ return B.listen; },   RIC.listen],
+    ["mic",      function(){ return B.recite; },   RIC.mic],
+    ["tsheet",   function(){ return B.test; },     RIC.test],
+    ["mistakes", function(){ return B.mistakes; }, RIC.flag, null,
+                 function(){ return !!S.weak[RD.page]; }]
+  ]];
   if (which === "listen") return [B.listen, [
     ["play",   function(){ return L.rd.playAll; }, RIC.play],
     ["pause",  function(){ return L.rd.pause; },   RIC.pause],
@@ -7629,6 +7639,7 @@ function rdSheetOpen(which){
         rdSheetOpen(which);
         return;
       }
+      if (k === "lsheet" || k === "tsheet"){ rdSheetOpen(k === "lsheet" ? "listen" : "test"); return; }
       rdVeilClose();
       if (k.charAt(0) === "_"){
         for (var i = 0; i < DOTS.length; i++){
@@ -11103,10 +11114,18 @@ function drawerClose(){
   if (d) d.hidden = true;
   if (s) s.hidden = true;
 }
-function goView(v){
+/* where each screen was opened from, so back has somewhere to return to */
+var VSTACK = [];
+function curView(){
+  var on = document.querySelector(".view.on");
+  return on ? on.id.replace(/^v-/, "") : "";
+}
+function goView(v, noPush){
   drawerClose();
+  var was = curView();
+  if (!noPush && was && was !== v) VSTACK.push(was);
   var tab = document.querySelector('#tabs .tab[data-v="' + v + '"]');
-  if (tab){ tab.click(); return; }
+  if (tab){ tab.click(); rdRepaintView(v); return; }
   /* routine and settings left the tab bar and are reached from the drawer, but
      they still need the view switch the tabs used to perform */
   qa(".tab").forEach(function(x){ x.setAttribute("aria-selected", "false"); });
@@ -11118,7 +11137,15 @@ function goView(v){
   document.body.classList.remove("mushaf");
   if (typeof rdFocusOut === "function") rdFocusOut(false);
   syncDrawerNav();
+  rdRepaintView(v);
   window.scrollTo({ top:0, behavior:"smooth" });
+}
+/* a screen shown again is a screen whose numbers may have moved while it was
+   away - marking a page in the mushaf changes what Today has to say */
+function rdRepaintView(v){
+  var f = { today:"renderToday", progress:"renderProgress", settings:"renderSettings" }[v];
+  if (!f) return;
+  try { if (typeof window[f] === "function") window[f](); } catch(e){}
 }
 function cloudOpen(){
   var el = document.getElementById("cloud-in");
@@ -11394,6 +11421,14 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     if(window.FAB&&FAB.open){ FAB.open=false; fabRender(); return true; }
     /* anything layered over the page closes first, newest layer on top —
        on Android the hardware key must peel these off, never exit the app */
+    var sh=document.getElementById('rd-sheet')||document.getElementById('rd-scrim');
+    if(sh){ rdVeilClose(); return true; }
+    var tr=document.getElementById('tour');
+    if(tr&&tr.classList.contains('on')){ tourEnd(); return true; }
+    var dl=document.getElementById('dlsheet');
+    if(dl&&!dl.hidden){ dl.hidden=true; return true; }
+    var ln=document.getElementById('listen');
+    if(ln&&!ln.hidden){ lsClose(); return true; }
     var dg=document.getElementById('diag');
     if(dg&&!dg.hidden){ diagClose(); return true; }
     var ix=document.getElementById('idx');
@@ -11410,8 +11445,15 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     var card=document.querySelector('.rdcard.open');
     if(card){ card.classList.remove('open'); if(typeof rdFitSoon==='function') rdFitSoon(); return true; }
     if(rdAudio){ rdStop(); return true; }
+    /* a screen opened from another screen goes back to it, not out of the app */
+    if(typeof VSTACK!=='undefined' && VSTACK.length){
+      var prev=VSTACK.pop();
+      if(prev==='mushaf') openMushaf(0,true); else goView(prev,true);
+      return true;
+    }
     var t=document.querySelector('#tabs [aria-selected="true"]'), all=document.querySelectorAll('#tabs .tab');
     if(t&&all.length&&t!==all[0]){ all[0].click(); return true; }
+    if(document.body.classList.contains('mushaf')){ goView('today',true); return true; }
     return false;
   }
   history.pushState({h:1},'');
