@@ -2357,15 +2357,6 @@ body.mushaf .rdcard .rdfab{width:38px;height:38px;min-width:38px}
 .rdfab svg{width:22px;height:22px}
 body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .rdscrim{position:fixed;inset:0;z-index:58;background:rgba(24,28,32,.62)}
-.rdfan{position:fixed;z-index:59;inset-inline-end:16px;
-  bottom:calc(env(safe-area-inset-bottom) + 62px);display:flex;flex-direction:column;
-  align-items:flex-end;gap:11px}
-.fanrow{display:flex;align-items:center;gap:11px;border:0;background:none;cursor:pointer;font:inherit;padding:0}
-.fanrow b{color:#fff;font-size:15px;font-weight:600;background:rgba(24,28,32,.72);
-  border-radius:999px;padding:5px 12px}
-.fanrow i{width:46px;height:46px;border-radius:50%;background:var(--card);color:var(--ink);
-  display:inline-flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.25)}
-.fanrow i svg{width:22px;height:22px}
 .rdsheet{position:fixed;z-index:60;inset-inline:0;bottom:0;background:var(--card);
   border-radius:18px 18px 0 0;padding:6px 0 calc(env(safe-area-inset-bottom) + 10px);
   box-shadow:0 -10px 30px rgba(0,0,0,.26);max-height:72vh;overflow:auto}
@@ -2382,10 +2373,7 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .shx select{width:100%;padding:9px 10px;border:1px solid var(--rule);border-radius:10px;
   background:transparent;color:var(--ink);font:inherit;font-size:14.5px}
 .shx .shchips{display:flex;flex-wrap:wrap;gap:6px}
-.rdic.rdlbl{gap:5px;padding-inline:9px!important;min-width:0!important;width:auto!important}
-.rdic.rdlbl b{font-size:12.5px;font-weight:600}
 .rdic.rdlbl[aria-pressed="true"]{color:var(--maroon)}
-body.mushaf .rdcard .rdic.rdlbl{height:30px;min-width:0}
 .dlhead{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;
   color:var(--ink-3);margin-bottom:7px}
 .dlhead b{font-family:var(--display);font-size:19px;color:var(--ink)}
@@ -3153,6 +3141,11 @@ body.mushaf #rd-selbar.rdsabaq .sbrange select{min-width:0;width:46px;padding:2p
 body.mushaf #rd-selbar.rdsabaq .sbdash{display:none}
 @media (max-width:430px){
   body.mushaf .rdcard .rdhead{gap:2px}
+  /* seven tools, two ayah pickers and the sun all share one row on a phone;
+     a few pixels each is the difference between fitting and being cut off */
+  body.mushaf .rdcard .rdic.t{min-width:27px}
+  body.mushaf .rdcard .rdfab{width:34px;height:34px;min-width:34px}
+  body.mushaf .rdcard .rdfab svg{width:19px;height:19px}
   body.mushaf .rdcard .rdic{padding-inline:5px}
   body.mushaf #rd-selbar.rdsabaq .sbrange select{font-size:14px;width:42px}
   body.mushaf .rdcard .rdsabaq .sbn{display:none}
@@ -7018,11 +7011,13 @@ function renderMushaf(){
        '<div class="rdhead">' +
          '<span class="rdprog" id="rd-prog"></span>' +
          '<div class="rdgrp rdset">' +
-           '<button class="rdic t rdlbl" data-rd="mistakes" title="' + BL.mistakes + '" aria-label="' + BL.mistakes + '" aria-pressed="' + (S.weak[RD.page] ? "true" : "false") + '">' + RIC.flag + '<b>' + esc(BL.mistakes) + '</b></button>' +
+           '<button class="rdic t rdlbl" data-rd="mistakes" title="' + BL.mistakes + '" aria-label="' + BL.mistakes + '" aria-pressed="' + (S.weak[RD.page] ? "true" : "false") + '">' + RIC.flag + '</button>' +
            '<button class="rdic t" data-rd="book" title="' + BL.book + '" aria-label="' + BL.book + '">' + RIC.book + '</button>' +
            '<button class="rdic t" data-rd="veil" title="' + BL.veil + '" aria-label="' + BL.veil + '" aria-pressed="' + (RD.blind ? "true" : "false") + '">' + RIC.blind + '</button>' +
            '<button class="rdic t rdmem" data-rd="memtog" title="' + L.mu.mem + '" aria-label="' + L.mu.mem + '" aria-pressed="' + (rdMemState(RD.pages[RD.page]) ? "true" : "false") + '">' + RIC.mem + '</button>' +
-           '<button class="rdic rdfab" data-rd="fab" title="' + L.rec.start + '" aria-label="' + L.rec.start + '">' + RIC.mic + '</button>' +
+           '<button class="rdic t" data-rd="lsheet" title="' + BL.listen + '" aria-label="' + BL.listen + '">' + RIC.listen + '</button>' +
+           '<button class="rdic t" data-rd="tsheet" title="' + BL.test + '" aria-label="' + BL.test + '">' + RIC.test + '</button>' +
+           '<button class="rdic rdfab rdmic" data-rd="mic" title="' + L.rec.start + '" aria-label="' + L.rec.start + '">' + RIC.mic + '</button>' +
          '</div>' +
        '</div>' +
        '<div class="rdtools' + (RD.more ? "" : " tight") + '">' +
@@ -7445,7 +7440,8 @@ function rdFocusToggle(){
    lets the bar be rearranged without touching a single behaviour. */
 function rdAct(k, b){
   var pg = RD.pages[RD.page];
-      if (k === "fab"){ rdFanOpen(); }
+      if (k === "lsheet"){ rdSheetOpen("listen"); }
+  else if (k === "tsheet"){ rdSheetOpen("test"); }
   else if (k === "book"){ rdSheetOpen("book"); }
   else if (k === "veil"){ RD.blind = !RD.blind; renderMushaf(); }
   else if (k === "mistakes"){
@@ -7533,12 +7529,9 @@ function rdSheetDef(which){
     ["pause",  function(){ return L.rd.pause; },   RIC.pause],
     ["loopc",  function(){ return L.rd.loop; },    RIC.loop,
                function(){ return RD.loops === Infinity ? "\u221e" : n(RD.loops); }],
-    ["listen", function(){ return lsL().open; },   RIC.listen]
-  ]];
-  if (which === "recite") return [B.recite, [
-    ["mic",    function(){ return L.rec.start; },  RIC.mic],
     ["phrase", function(){ return L.rec.phrase; }, RIC.ayah, null,
-               function(){ return !!RD.phrase; }]
+               function(){ return !!RD.phrase; }],
+    ["listen", function(){ return lsL().open; },   RIC.listen]
   ]];
   if (which === "test") return [B.test, [
     ["exam",    function(){ return L.ex.open; },     RIC.test],
@@ -7564,9 +7557,7 @@ function rdSheetDef(which){
   ]];
 }
 function rdVeilClose(){
-  var f = document.getElementById("rd-fan"), sh = document.getElementById("rd-sheet"),
-      sc = document.getElementById("rd-scrim");
-  if (f) f.remove();
+  var sh = document.getElementById("rd-sheet"), sc = document.getElementById("rd-scrim");
   if (sh) sh.remove();
   if (sc) sc.remove();
 }
@@ -7576,22 +7567,6 @@ function rdScrim(){
   sc.onclick = rdVeilClose;
   document.body.appendChild(sc);
   return sc;
-}
-function rdFanOpen(){
-  if (document.getElementById("rd-fan")){ rdVeilClose(); return; }
-  rdVeilClose(); rdScrim();
-  var B = barL();
-  var f = document.createElement("div");
-  f.className = "rdfan on"; f.id = "rd-fan";
-  f.innerHTML = [["listen", B.listen, RIC.listen],
-                 ["recite", B.recite, RIC.mic],
-                 ["test",   B.test,   RIC.test]].map(function(r){
-    return '<button class="fanrow" data-fan="' + r[0] + '"><b>' + esc(r[1]) + '</b><i>' + r[2] + '</i></button>';
-  }).join("");
-  document.body.appendChild(f);
-  qa("#rd-fan .fanrow").forEach(function(b){
-    b.onclick = function(){ rdSheetOpen(b.dataset.fan); };
-  });
 }
 function rdSheetOpen(which){
   var def = rdSheetDef(which);
@@ -10700,36 +10675,36 @@ var TRL = {
        s2t:"আজকের সবক", s2b:"কোন পাতা, কোন লাইন — অ্যাপ নিজেই ঠিক করে দেয়। চাপলে মুসহাফ খোলে।",
        s3t:"দিনের বাকি কাজ", s3b:"শোনা, নামাজে পাঠ, রাতের পুনরাবৃত্তি। চাপলেই হয়ে গেল।",
        s4t:"মুখস্থ হয়েছে", s4b:"আয়াত বেছে এখানে চাপুন। চেপে ধরলে পুরো পাতা। এটাই আপনার অগ্রগতি লেখে।",
-       s5t:"শুধু শুনুন", s5b:"সূরা বা পারা বেছে দিন — পাতা নিজেই উলটে বাজতে থাকবে, স্ক্রিন বন্ধ থাকলেও।",
-       s6t:"আরও সরঞ্জাম", s6b:"পর্দা টানা, লাইন ঢাকা, শুধু অনুবাদ — পড়ার সব যন্ত্র এখানে।" },
+       s5t:"শুনুন", s5b:"ক্বারী, ঘুমের টাইমার, কতবার — সব এখানে। স্ক্রিন বন্ধ থাকলেও বাজবে।",
+       s6t:"নিজেকে যাচাই", s6b:"লেখা সরিয়ে নিজে পড়ুন — পরীক্ষা, চোখ বন্ধ, লাইন ঢাকা, এক ঝলক, পর্দা, মিল-আয়াত।" },
   en:{ next:"Next", back:"Back", skip:"Skip", done:"Start", of:"{0} of {1}", open:"Show me again",
        s1t:"Where you are", s1b:"The whole Qur'an as a grid. Each page you memorise fills a cell - a single day is visible.",
        s2t:"Today's lesson", s2b:"Which page, which lines - the app decides. Tap to open it in the mushaf.",
        s3t:"The rest of the day", s3b:"Listening, reciting in prayer, the night repetition. One tap each.",
        s4t:"Memorised", s4b:"Select ayat and tap here. Hold for the whole page. This is what records your progress.",
-       s5t:"Listen only", s5b:"Pick a surah or juz - the pages turn themselves, and it keeps playing with the screen off.",
-       s6t:"More tools", s6b:"The curtain, covering lines, translation only - everything for reading lives here." },
+       s5t:"Listen", s5b:"The reciter, the sleep timer, the repeat count - all here. It keeps playing with the screen off.",
+       s6t:"Prove it to yourself", s6b:"Take the text away and recite - the exam, eyes closed, covered lines, the glimpse, the curtain, the look-alikes." },
   ur:{ next:"اگلا", back:"پچھلا", skip:"چھوڑیں", done:"شروع کریں", of:"{0} / {1}", open:"دوبارہ دیکھیں",
        s1t:"آپ کہاں ہیں", s1b:"پورے قرآن کا خاکہ۔ جو صفحہ یاد ہوگا وہ خانہ بھر جائے گا۔",
        s2t:"آج کا سبق", s2b:"کون سا صفحہ، کون سی سطریں - ایپ خود طے کرتی ہے۔",
        s3t:"دن کے باقی کام", s3b:"سننا، نماز میں پڑھنا، رات کی تکرار۔",
        s4t:"حفظ ہو گیا", s4b:"آیات منتخب کر کے یہاں دبائیں۔ دبائے رکھیں تو پورا صفحہ۔",
-       s5t:"صرف سنیں", s5b:"سورہ یا پارہ چنیں - صفحے خود پلٹیں گے، اسکرین بند ہو تب بھی۔",
-       s6t:"مزید اوزار", s6b:"پردہ، سطریں ڈھانپنا، صرف ترجمہ - پڑھنے کا سب کچھ یہاں۔" },
+       s5t:"سنیں", s5b:"قاری، سلیپ ٹائمر، تکرار - سب یہاں۔ اسکرین بند ہو تب بھی چلتا رہے گا۔",
+       s6t:"خود کو پرکھیں", s6b:"متن ہٹا کر پڑھئیں - امتحان، آنکھیں بند، سطریں ڈھکیں، ایک جھلک، پردہ، ملتی جلتی آیتیں۔" },
   zh:{ next:"下一步", back:"上一步", skip:"跳过", done:"开始", of:"{0} / {1}", open:"再看一次",
        s1t:"你的位置", s1b:"整本古兰经的格子图。每背下一页，就填满一格。",
        s2t:"今日课业", s2b:"哪一页、哪几行由应用决定。点按即可打开经本。",
        s3t:"当天其余的功课", s3b:"聆听、礼拜中诵读、夜间复习。各点一下即可。",
        s4t:"已背诵", s4b:"选好节次后点这里。长按记录整页。",
-       s5t:"只听", s5b:"选一章或一卷 —— 书页自动翻，熄屏也继续播放。",
-       s6t:"更多工具", s6b:"帘子、遮行、仅译文 —— 阅读所需都在这里。" },
+       s5t:"聊听", s5b:"诵者、定时停、重复次数 —— 都在这里。熄屏也继续播放。",
+       s6t:"自我检验", s6b:"遮住经文自己背 —— 测试、闭眼、遮行、一瞥、帘子、相似节。" },
   ar:{ next:"التالي", back:"السابق", skip:"تخطٍّ", done:"ابدأ", of:"{0} / {1}", open:"أعد العرض",
        s1t:"أين أنت", s1b:"المصحف كله شبكةً. كل صفحة تُحفَظ تملأ خانة.",
        s2t:"درس اليوم", s2b:"أي صفحة وأي أسطر - التطبيق يقرّر. انقر لفتح المصحف.",
        s3t:"بقية اليوم", s3b:"الاستماع، القراءة في الصلاة، تكرار الليل.",
        s4t:"حُفظ", s4b:"اختر الآيات ثم انقر هنا. اضغط مطولًا للصفحة كاملة.",
-       s5t:"للاستماع فقط", s5b:"اختر سورة أو جزءًا - تُقلَب الصفحات وحدها ويستمر مع إطفاء الشاشة.",
-       s6t:"أدوات أخرى", s6b:"الستارة، ستر الأسطر، الترجمة فقط - كل أدوات القراءة هنا." }
+       s5t:"استمع", s5b:"القارئ، مؤقّت النوم، عدد التكرار - كلها هنا. ويستمر مع إطفاء الشاشة.",
+       s6t:"اختبر نفسك", s6b:"أخفِ النص واقرأ - الاختبار، إغماض العينين، ستر الأسطر، اللمحة، الستارة، المتشابهات." }
 };
 function trL(){ return TRL[L.code] || TRL.en; }
 var TOUR = { i:0, on:false };
@@ -10740,8 +10715,8 @@ function tourSteps(){
     { view:"today",  sel:".phase",               t:T.s2t, b:T.s2b },
     { view:"today",  sel:".habits",              t:T.s3t, b:T.s3b },
     { view:"mushaf", sel:'[data-rd="memtog"]',   t:T.s4t, b:T.s4b },
-    { view:"mushaf", sel:'[data-rd="fab"]',      t:T.s5t, b:T.s5b },
-    { view:"mushaf", sel:'[data-rd="book"]',     t:T.s6t, b:T.s6b }
+    { view:"mushaf", sel:'[data-rd="lsheet"]',   t:T.s5t, b:T.s5b },
+    { view:"mushaf", sel:'[data-rd="tsheet"]',   t:T.s6t, b:T.s6b }
   ];
 }
 function tourStart(){
