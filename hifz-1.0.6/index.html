@@ -2346,6 +2346,38 @@ main.wrap{width:100%}
 .tourcard h4{margin:5px 0 6px;font-family:var(--display);font-size:18px;color:var(--ink)}
 .tourcard p{margin:0 0 13px;font-size:14px;line-height:1.65;color:var(--ink-2)}
 .tourbtns{display:flex;align-items:center;gap:8px}
+.rdfab{position:fixed;z-index:58;inset-inline-end:14px;
+  bottom:calc(env(safe-area-inset-bottom) + 62px);width:56px;height:56px;border-radius:50%;
+  border:0;background:var(--verdigris);color:#fff;display:none;align-items:center;
+  justify-content:center;box-shadow:0 6px 18px rgba(31,90,74,.34);cursor:pointer}
+body.mushaf .rdfab{display:flex}
+body.mushaf.playing .rdfab,body.reading .rdfab{display:flex}
+.rdfab svg{width:26px;height:26px}
+.rdscrim{position:fixed;inset:0;z-index:58;background:rgba(24,28,32,.62)}
+.rdfan{position:fixed;z-index:59;inset-inline-end:16px;
+  bottom:calc(env(safe-area-inset-bottom) + 128px);display:flex;flex-direction:column;
+  align-items:flex-end;gap:11px}
+.fanrow{display:flex;align-items:center;gap:11px;border:0;background:none;cursor:pointer;font:inherit;padding:0}
+.fanrow b{color:#fff;font-size:15px;font-weight:600;background:rgba(24,28,32,.72);
+  border-radius:999px;padding:5px 12px}
+.fanrow i{width:46px;height:46px;border-radius:50%;background:var(--card);color:var(--ink);
+  display:inline-flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.fanrow i svg{width:22px;height:22px}
+.rdsheet{position:fixed;z-index:60;inset-inline:0;bottom:0;background:var(--card);
+  border-radius:18px 18px 0 0;padding:6px 0 calc(env(safe-area-inset-bottom) + 10px);
+  box-shadow:0 -10px 30px rgba(0,0,0,.26);max-height:72vh;overflow:auto}
+.rdsheet h5{margin:8px 17px 6px;font-family:var(--display);font-size:16px;color:var(--ink)}
+.shrow{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;
+  padding:13px 17px;font:inherit;font-size:15px;color:var(--ink);cursor:pointer;text-align:start}
+.shrow:active{background:rgba(0,0,0,.06)}
+.shrow.on{color:var(--verdigris);font-weight:600}
+.shrow .shic{width:24px;flex:0 0 24px;display:inline-flex;justify-content:center}
+.shrow .shic svg{width:21px;height:21px}
+.shrow .shv{margin-inline-start:auto;color:var(--ink-3);font-size:13px;font-family:var(--mono)}
+.rdic.rdlbl{gap:5px;padding-inline:9px!important;min-width:0!important;width:auto!important}
+.rdic.rdlbl b{font-size:12.5px;font-weight:600}
+.rdic.rdlbl[aria-pressed="true"]{color:var(--maroon)}
+body.mushaf .rdcard .rdic.rdlbl{height:30px;min-width:0}
 .dlhead{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;
   color:var(--ink-3);margin-bottom:7px}
 .dlhead b{font-family:var(--display);font-size:19px;color:var(--ink)}
@@ -6190,7 +6222,10 @@ var RIC = {
   index:   ric('<path d="M4 6h16M4 12h16M4 18h10"/><circle cx="19" cy="18" r="2"/>'),
   sound:   ric('<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/>'),
   mute:    ric('<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 10l4 4M21 10l-4 4"/>'),
-  mic:     ric('<path d="M12 15a3.5 3.5 0 0 0 3.5-3.5V6a3.5 3.5 0 0 0-7 0v5.5A3.5 3.5 0 0 0 12 15z"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/>')
+  mic:     ric('<path d="M12 15a3.5 3.5 0 0 0 3.5-3.5V6a3.5 3.5 0 0 0-7 0v5.5A3.5 3.5 0 0 0 12 15z"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/>'),
+  book:    ric('<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 1 6.5 18H19v3H6.5A1.5 1.5 0 0 1 5 19.5z"/>'),
+  test:    ric('<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.4 2.4 0 1 1 3.1 2.3c-.6.2-.9.6-.9 1.2v.4"/><path d="M11.8 16.4h.4"/>'),
+  flag:    ric('<path d="M5 21V4"/><path d="M5 4.5h10.5l-1.8 3.2 1.8 3.3H5"/>')
 };
 async function mushafIndex(){
   var def = mushafDef();
@@ -6958,6 +6993,7 @@ function renderMushaf(){
     el.innerHTML = '<h2 style="margin-bottom:12px">' + fmt(L.phase.page, n(RD.page)) + '</h2><p class="empty">' + Rd.notMadani + '</p>';
     return;
   }
+  var BL = barL();
   var chip = function(k, ic, lab, on){
     return '<button class="rdmini" data-rd="' + k + '" title="' + lab + '" aria-label="' + lab + '"' +
       (on === undefined ? "" : ' aria-pressed="' + (on ? "true" : "false") + '"') +
@@ -6974,14 +7010,10 @@ function renderMushaf(){
        '<div class="rdhead">' +
          '<span class="rdprog" id="rd-prog"></span>' +
          '<div class="rdgrp rdset">' +
-           '<button class="rdic t" data-rd="listen" title="' + lsL().open + '" aria-label="' + lsL().open + '">' + RIC.listen + '</button>' +
-           '<button class="rdic t" data-rd="blind" title="' + L.mu.blind + '" aria-label="' + L.mu.blind + '" aria-pressed="' + (RD.blind ? "true" : "false") + '">' + RIC.blind + '</button>' +
+           '<button class="rdic t rdlbl" data-rd="mistakes" title="' + BL.mistakes + '" aria-label="' + BL.mistakes + '" aria-pressed="' + (S.weak[RD.page] ? "true" : "false") + '">' + RIC.flag + '<b>' + esc(BL.mistakes) + '</b></button>' +
+           '<button class="rdic t" data-rd="book" title="' + BL.book + '" aria-label="' + BL.book + '">' + RIC.book + '</button>' +
+           '<button class="rdic t" data-rd="veil" title="' + BL.veil + '" aria-label="' + BL.veil + '" aria-pressed="' + (RD.curtainOn ? "true" : "false") + '">' + RIC.blind + '</button>' +
            '<button class="rdic t rdmem" data-rd="memtog" title="' + L.mu.mem + '" aria-label="' + L.mu.mem + '" aria-pressed="' + (rdMemState(RD.pages[RD.page]) ? "true" : "false") + '">' + RIC.mem + '</button>' +
-           '<button class="rdic go" data-rd="play" title="' + Rd.playAll + '" aria-label="' + Rd.playAll + '">' + RIC.play + '</button>' +
-           '<button class="rdic" id="rd-pause" data-rd="pause" title="' + Rd.pause + '" aria-label="' + Rd.pause + '">' + RIC.pause + '</button>' +
-           '<button class="rdic num" id="rd-loop" data-rd="loopc" title="' + Rd.loop + '" aria-label="' + Rd.loop + '">' + RIC.loop + '<i>' + (RD.loops === Infinity ? "\u221e" : n(RD.loops)) + '</i></button>' +
-           '<button class="rdic t rdmore" data-rd="dots" title="' + Rd.more + '" aria-label="' + Rd.more + '">⋯</button>' +
-           '<button class="rdic t rdmic" data-rd="mic" title="' + (L.rec && L.rec.rec ? L.rec.rec : "\u09b0\u09c7\u0995\u09b0\u09cd\u09a1") + '" aria-label="' + (L.rec && L.rec.rec ? L.rec.rec : "\u09b0\u09c7\u0995\u09b0\u09cd\u09a1") + '">' + RIC.mic + '</button>' +
          '</div>' +
        '</div>' +
        '<div class="rdtools' + (RD.more ? "" : " tight") + '">' +
@@ -6999,7 +7031,8 @@ function renderMushaf(){
          chip("more",   RD.more ? "×" : "⋯", RD.more ? Rd.less : Rd.more) +
        '</div>' +
        '<div class="rdsabaq" id="rd-selbar"></div>' +
-       '</div>';
+       '</div>' +
+       '<button class="rdfab" data-rd="fab" title="' + L.rec.start + '" aria-label="' + L.rec.start + '">' + RIC.mic + '</button>';
 
   if (RD.pick) h += '<p class="pickmsg">' + (RD.pickA ? Rd.pickB : Rd.pickA) + '</p>';
   if (RD.phrase) h += '<p class="pickmsg">' + L.rec.phraseHint + '</p>';
@@ -7062,51 +7095,7 @@ function renderMushaf(){
         b.addEventListener(ev, function(){ if (hold) clearTimeout(hold); });
       });
     }
-    b.onclick = function(){
-      var k = b.dataset.rd, pg = RD.pages[RD.page];
-      if (k === "menu"){ drawerOpen(); }
-      else if (k === "index"){ idxOpen(); }
-      else if (k === "mic"){ rdMicToggle(); }
-      else if (k === "prev"){ rdStop(); RD.page = Math.max(1, RD.page - 1); RD.sel = null; renderMushaf(); }
-      else if (k === "next"){ rdStop(); RD.page = Math.min(TOTAL_PAGES, RD.page + 1); RD.sel = null; renderMushaf(); }
-      else if (k === "hide"){ RD.hide = ((+RD.hide || 0) + 1) % 4; renderMushaf(); }
-      else if (k === "paper"){ rdPaperCycle(); }
-      else if (k === "curtain"){ RD.curtainOn = !RD.curtainOn; RD.curtain = RD.curtainOn ? 0.25 : 0; renderMushaf(); }
-      else if (k === "blind"){ RD.blind = !RD.blind; renderMushaf(); }
-      else if (k === "glimpse"){ rdGlimpse(); }
-      else if (k === "dots"){ rdDotsOpen(b); }
-      else if (k === "listen"){ rdStop(); lsOpen(); }
-      else if (k === "memtog"){
-        if (RD.memHeld){ RD.memHeld = false; return; }
-        if (pg) rdMarkMem(pg);
-      }
-      else if (k === "more"){ RD.more = !RD.more; renderMushaf(); }
-      else if (k === "focus") rdFocusIn();
-      else if (k === "pick"){ RD.pick = !RD.pick; RD.phrase = false; RD.pickA = null; rdStop(); renderMushaf(); }
-      else if (k === "phrase"){ RD.phrase = !RD.phrase; RD.pick = false; RD.phraseA = null; rdStop(); renderMushaf(); }
-      else if (k === "play"){ if (pg) (rdReadMode(), rdPlay(rdPlayKeys(pg), RD.loops)); }
-      else if (k === "auto"){ if (pg){ RD.sel = rdAutoSel(pg, RD.sel ? RD.sel.a : 0); renderMushaf(); } }
-      else if (k === "setday"){ if (pg) rdSetToday(pg); }
-      else if (k === "pause") rdTogglePause();
-      else if (k === "stop") rdStop();
-      else if (k === "tr"){ RD.tr = (RD.tr === false); renderMushaf(); }
-      else if (k === "exam"){ rdStop(); exOpen("order"); }
-      else if (k === "mut"){ var mb = document.getElementById("rd-mut"); if (mb) mb.style.display = "block"; mutScan(); }
-      else if (k === "dl") rdDownloadJuz();
-      else if (k === "loopc"){
-        var LP = [1,3,5,7,Infinity]; RD.loops = LP[(LP.indexOf(RD.loops) + 1) % LP.length];
-        b.querySelector("i").textContent = RD.loops === Infinity ? "∞" : n(RD.loops);
-        /* the countdown lives in RD.left, set once when play began — without this
-           the number on the button changed and the recitation carried on ignoring
-           it, which read as "the repeat count does not work" */
-        if (rdAudio) RD.left = RD.loops;
-      }
-      else if (k === "speedc"){
-        var SP = [0.7,0.85,1]; RD.speed = SP[(SP.indexOf(RD.speed) + 1) % SP.length];
-        if (rdAudio) rdAudio.playbackRate = RD.speed;
-        b.querySelector("i").textContent = n(RD.speed) + "×";
-      }
-    };
+    b.onclick = function(){ rdAct(b.dataset.rd, b); };
   });
   var jz = g("rd-juz");
   if (jz) jz.onchange = function(){
@@ -7249,7 +7238,7 @@ function rdSelBar(pg){
     '</div>' +
     (nl ? '<span class="sbn">' + fmt(((L.set && L.set.linesN) || (L.settings && L.settings.linesN) || "{0}"), n(nl)) + '</span>' : '') +
     '<button class="sbbtn" data-rd="auto" title="' + L.rd.auto + '">⤢</button>' +
-    '<button class="sbbtn go" data-rd="setday" title="' + L.rd.setDay + '">✓</button>';
+    '<button class="sbbtn go" data-rd="setday" title="' + L.rd.setDay + '">☀</button>';
   document.getElementById("rd-a").onchange = function(){
     RD.sel.k0 = this.value;
     if (ayCmp(RD.sel.k1, RD.sel.k0) < 0) RD.sel.k1 = RD.sel.k0;
@@ -7442,6 +7431,199 @@ function rdFocusToggle(){
 /* Two shapes of entry. A plain key proxies the matching chip in .rdtools, which
    `display:none` hides but leaves clickable. A key starting with an underscore
    carries its own state and action, for the things that are not chips at all. */
+/* Every control on the reading screen resolves to one of these keys, so a
+   row in a sheet and a button on the bar are the same action - which is what
+   lets the bar be rearranged without touching a single behaviour. */
+function rdAct(k, b){
+  var pg = RD.pages[RD.page];
+      if (k === "fab"){ rdFanOpen(); }
+  else if (k === "book"){ rdSheetOpen("book"); }
+  else if (k === "veil"){
+    RD.curtainOn = !RD.curtainOn; RD.curtain = RD.curtainOn ? 0.25 : 0; renderMushaf();
+  }
+  else if (k === "mistakes"){
+    /* today this is the page-level weak mark the exam already sets; marking the
+       ayah itself is the next piece of work, and this button is where it lands */
+    var B2 = barL();
+    if (S.weak[RD.page]) delete S.weak[RD.page]; else S.weak[RD.page] = 1;
+    save(); fabHint(S.weak[RD.page] ? B2.weakOn : B2.weakOff);
+    renderMushaf(); renderToday(); renderProgress();
+  }
+  else if (k === "menu"){ drawerOpen(); }
+      else if (k === "index"){ idxOpen(); }
+      else if (k === "mic"){ rdMicToggle(); }
+      else if (k === "prev"){ rdStop(); RD.page = Math.max(1, RD.page - 1); RD.sel = null; renderMushaf(); }
+      else if (k === "next"){ rdStop(); RD.page = Math.min(TOTAL_PAGES, RD.page + 1); RD.sel = null; renderMushaf(); }
+      else if (k === "hide"){ RD.hide = ((+RD.hide || 0) + 1) % 4; renderMushaf(); }
+      else if (k === "paper"){ rdPaperCycle(); }
+      else if (k === "curtain"){ RD.curtainOn = !RD.curtainOn; RD.curtain = RD.curtainOn ? 0.25 : 0; renderMushaf(); }
+      else if (k === "blind"){ RD.blind = !RD.blind; renderMushaf(); }
+      else if (k === "glimpse"){ rdGlimpse(); }
+      else if (k === "dots"){ rdDotsOpen(b); }
+      else if (k === "listen"){ rdStop(); lsOpen(); }
+      else if (k === "memtog"){
+        if (RD.memHeld){ RD.memHeld = false; return; }
+        if (pg) rdMarkMem(pg);
+      }
+      else if (k === "more"){ RD.more = !RD.more; renderMushaf(); }
+      else if (k === "focus") rdFocusIn();
+      else if (k === "pick"){ RD.pick = !RD.pick; RD.phrase = false; RD.pickA = null; rdStop(); renderMushaf(); }
+      else if (k === "phrase"){ RD.phrase = !RD.phrase; RD.pick = false; RD.phraseA = null; rdStop(); renderMushaf(); }
+      else if (k === "play"){ if (pg) (rdReadMode(), rdPlay(rdPlayKeys(pg), RD.loops)); }
+      else if (k === "auto"){ if (pg){ RD.sel = rdAutoSel(pg, RD.sel ? RD.sel.a : 0); renderMushaf(); } }
+      else if (k === "setday"){ if (pg) rdSetToday(pg); }
+      else if (k === "pause") rdTogglePause();
+      else if (k === "stop") rdStop();
+      else if (k === "tr"){ RD.tr = (RD.tr === false); renderMushaf(); }
+      else if (k === "exam"){ rdStop(); exOpen("order"); }
+      else if (k === "mut"){ var mb = document.getElementById("rd-mut"); if (mb) mb.style.display = "block"; mutScan(); }
+      else if (k === "dl") rdDownloadJuz();
+      else if (k === "loopc"){
+        var LP = [1,3,5,7,Infinity]; RD.loops = LP[(LP.indexOf(RD.loops) + 1) % LP.length];
+        b.querySelector("i").textContent = RD.loops === Infinity ? "∞" : n(RD.loops);
+        /* the countdown lives in RD.left, set once when play began — without this
+           the number on the button changed and the recitation carried on ignoring
+           it, which read as "the repeat count does not work" */
+        if (rdAudio) RD.left = RD.loops;
+      }
+      else if (k === "speedc"){
+        var SP = [0.7,0.85,1]; RD.speed = SP[(SP.indexOf(RD.speed) + 1) % SP.length];
+        if (rdAudio) rdAudio.playbackRate = RD.speed;
+        b.querySelector("i").textContent = n(RD.speed) + "×";
+      }
+}
+var BARL = {
+  bn:{ listen:"শুনুন", recite:"তিলাওয়াত", test:"পরীক্ষা",
+       mistakes:"ভুল", book:"মুসহাফ", veil:"ঢাকুন",
+       edition:"মুসহাফ ও লেখার আকার",
+       weakOn:"এই পাতা দুর্বল বলে রাখলাম",
+       weakOff:"দুর্বলের চিহ্ন তুলে নিলাম" },
+  en:{ listen:"Listen", recite:"Recite", test:"Test",
+       mistakes:"Mistakes", book:"Mushaf", veil:"Cover",
+       edition:"Mushaf and text size",
+       weakOn:"Page marked weak", weakOff:"Weak mark removed" },
+  ur:{ listen:"سنیے", recite:"تلاوت", test:"امتحان",
+       mistakes:"غلطیاں", book:"مصحف", veil:"ڈھانپیں",
+       edition:"مصحف اور تحریر کا سائز",
+       weakOn:"یہ صفحہ کمزور نشان زد", weakOff:"نشان ہٹا دیا" },
+  zh:{ listen:"聊听", recite:"诵读", test:"测试",
+       mistakes:"错处", book:"经本", veil:"遮住",
+       edition:"经本与字号",
+       weakOn:"已标为薄弱", weakOff:"已取消标记" },
+  ar:{ listen:"استمع", recite:"تلاوة", test:"اختبار",
+       mistakes:"الأخطاء", book:"المصحف", veil:"استر",
+       edition:"المصحف وحجم الخط",
+       weakOn:"وُسِمت الصفحة بالضعف", weakOff:"رُفِعت العلامة" }
+};
+function barL(){ return BARL[L.code] || BARL.en; }
+
+/* The three things a reader opens the mushaf to do. Everything the old bar and
+   its overflow menu held is filed under one of them, or under the book. */
+function rdSheetDef(which){
+  var B = barL();
+  if (which === "listen") return [B.listen, [
+    ["play",   function(){ return L.rd.playAll; }, RIC.play],
+    ["pause",  function(){ return L.rd.pause; },   RIC.pause],
+    ["loopc",  function(){ return L.rd.loop; },    RIC.loop,
+               function(){ return RD.loops === Infinity ? "\u221e" : n(RD.loops); }],
+    ["listen", function(){ return lsL().open; },   RIC.listen]
+  ]];
+  if (which === "recite") return [B.recite, [
+    ["mic",    function(){ return L.rec.start; },  RIC.mic],
+    ["phrase", function(){ return L.rec.phrase; }, RIC.ayah, null,
+               function(){ return !!RD.phrase; }]
+  ]];
+  if (which === "test") return [B.test, [
+    ["exam",    function(){ return L.ex.open; },     RIC.test],
+    ["blind",   function(){ return L.mu.blind; },    RIC.blind, null,
+                function(){ return !!RD.blind; }],
+    ["hide",    function(){ return L.rd.hide; },     RIC.curtain, null,
+                function(){ return !!RD.hide; }],
+    ["glimpse", function(){ return L.mu.glimpse; },  RIC.glimpse],
+    ["curtain", function(){ return L.mu.curtain; },  RIC.curtain, null,
+                function(){ return !!RD.curtainOn; }],
+    ["mut",     function(){ return L.mut.find; },    RIC.ayah]
+  ]];
+  return [B.book, [
+    ["tr",       function(){ return L.rd.tr; },        RIC.ayah, null,
+                 function(){ return RD.tr !== false; }],
+    ["_tronly",  function(){ return uit("tronly"); },  RIC.ayah, null,
+                 function(){ return !!RD.trOnly; }],
+    ["_plain",   function(){ return uit("plain"); },   RIC.ayah, null,
+                 function(){ return !!(S.settings && S.settings.plain); }],
+    ["paper",    function(){ return L.mu.paper; },    RIC.paper],
+    ["focus",    function(){ return L.rd.focus; },     RIC.glimpse],
+    ["_edition", function(){ return B.edition; },      RIC.book]
+  ]];
+}
+function rdVeilClose(){
+  var f = document.getElementById("rd-fan"), sh = document.getElementById("rd-sheet"),
+      sc = document.getElementById("rd-scrim");
+  if (f) f.remove();
+  if (sh) sh.remove();
+  if (sc) sc.remove();
+}
+function rdScrim(){
+  var sc = document.createElement("div");
+  sc.className = "rdscrim on"; sc.id = "rd-scrim";
+  sc.onclick = rdVeilClose;
+  document.body.appendChild(sc);
+  return sc;
+}
+function rdFanOpen(){
+  if (document.getElementById("rd-fan")){ rdVeilClose(); return; }
+  rdVeilClose(); rdScrim();
+  var B = barL();
+  var f = document.createElement("div");
+  f.className = "rdfan on"; f.id = "rd-fan";
+  f.innerHTML = [["listen", B.listen, RIC.listen],
+                 ["recite", B.recite, RIC.mic],
+                 ["test",   B.test,   RIC.test]].map(function(r){
+    return '<button class="fanrow" data-fan="' + r[0] + '"><b>' + esc(r[1]) + '</b><i>' + r[2] + '</i></button>';
+  }).join("");
+  document.body.appendChild(f);
+  qa("#rd-fan .fanrow").forEach(function(b){
+    b.onclick = function(){ rdSheetOpen(b.dataset.fan); };
+  });
+}
+function rdSheetOpen(which){
+  var def = rdSheetDef(which);
+  rdVeilClose(); rdScrim();
+  var sh = document.createElement("div");
+  sh.className = "rdsheet on"; sh.id = "rd-sheet";
+  sh.innerHTML = '<h5>' + esc(def[0]) + '</h5>' + def[1].map(function(r){
+    var lab = ""; try { lab = r[1]() || r[0]; } catch(e){ lab = r[0]; }
+    var on = false; try { on = !!(r[4] && r[4]()); } catch(e){}
+    var val = ""; try { val = r[3] ? r[3]() : ""; } catch(e){}
+    return '<button class="shrow' + (on ? " on" : "") + '" data-sh="' + r[0] + '">' +
+           '<span class="shic">' + (r[2] || "") + '</span>' + esc(lab) +
+           (val ? '<span class="shv">' + esc(val) + '</span>' : '') + '</button>';
+  }).join("");
+  document.body.appendChild(sh);
+  qa("#rd-sheet .shrow").forEach(function(b){
+    b.onclick = function(){
+      var k = b.dataset.sh;
+      /* the counter is the one row worth staying open for - a reader setting it
+         to seven taps it more than once */
+      if (k === "loopc"){
+        var LP = [1,3,5,7,Infinity];
+        RD.loops = LP[(LP.indexOf(RD.loops) + 1) % LP.length];
+        if (rdAudio) RD.left = RD.loops;
+        rdSheetOpen(which);
+        return;
+      }
+      rdVeilClose();
+      if (k.charAt(0) === "_"){
+        for (var i = 0; i < DOTS.length; i++){
+          if (DOTS[i][0] === k){ try { DOTS[i][3](); } catch(e){} return; }
+        }
+        if (k === "_edition"){ goView("settings"); }
+        return;
+      }
+      rdAct(k);
+    };
+  });
+}
 var DOTS = [
   /* The whole page as meaning. The reader turns it on and off themselves, and
      with it off not a pixel of the mushaf changes - which is the only reason
@@ -7470,6 +7652,10 @@ var DOTS = [
   ["mut",      function(){ return L.mut.find; }],
   ["glimpse",  function(){ return L.mu.glimpse; }]
 ];
+/* the sheet's one row that leaves the mushaf: edition and text size are settings,
+   not reading tools, and they belong on the settings screen */
+DOTS.push(["_edition", function(){ return barL().edition; }, function(){ return false; },
+           function(){ goView("settings"); }]);
 function Rd(){ return L.rd; }
 function rdDotsClose(){
   var m = document.getElementById("rd-dots");
@@ -10512,8 +10698,8 @@ function tourSteps(){
     { view:"today",  sel:".phase",               t:T.s2t, b:T.s2b },
     { view:"today",  sel:".habits",              t:T.s3t, b:T.s3b },
     { view:"mushaf", sel:'[data-rd="memtog"]',   t:T.s4t, b:T.s4b },
-    { view:"mushaf", sel:'[data-rd="listen"]',   t:T.s5t, b:T.s5b },
-    { view:"mushaf", sel:'[data-rd="dots"]',     t:T.s6t, b:T.s6b }
+    { view:"mushaf", sel:'[data-rd="fab"]',      t:T.s5t, b:T.s5b },
+    { view:"mushaf", sel:'[data-rd="book"]',     t:T.s6t, b:T.s6b }
   ];
 }
 function tourStart(){
