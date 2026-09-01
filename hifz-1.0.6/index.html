@@ -2118,6 +2118,10 @@ body.focus .fexit::before{content:"✕";font-size:16px;line-height:1;color:var(-
 body.focus #rd-paper{align-self:stretch;width:100%;min-height:0;border:none;box-shadow:none;background:transparent;
   padding:4px 2px;display:flex;flex-direction:column;justify-content:center;height:calc(100dvh - 26px - var(--rdinfo,0px))}
 body.focus .qline{margin:0}
+/* translation is a column of text, not a printed page: it needs its own height
+   and a scrollbar, or quiet reading cuts it in half */
+body.focus.tronly #rd-paper{height:auto;min-height:0;max-height:calc(100dvh - 26px);
+  justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .fexit{position:fixed;inset-inline-end:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:70;
   background:var(--ink);color:var(--paper);border:none;border-radius:999px;padding:12px 20px;font-family:var(--body);
   font-size:15px;cursor:pointer;display:none;box-shadow:0 6px 20px rgba(0,0,0,.25)}
@@ -2346,16 +2350,15 @@ main.wrap{width:100%}
 .tourcard h4{margin:5px 0 6px;font-family:var(--display);font-size:18px;color:var(--ink)}
 .tourcard p{margin:0 0 13px;font-size:14px;line-height:1.65;color:var(--ink-2)}
 .tourbtns{display:flex;align-items:center;gap:8px}
-.rdfab{position:fixed;z-index:58;inset-inline-end:14px;
-  bottom:calc(env(safe-area-inset-bottom) + 62px);width:56px;height:56px;border-radius:50%;
-  border:0;background:var(--verdigris);color:#fff;display:none;align-items:center;
-  justify-content:center;box-shadow:0 6px 18px rgba(31,90,74,.34);cursor:pointer}
-body.mushaf .rdfab{display:flex}
-body.mushaf.playing .rdfab,body.reading .rdfab{display:flex}
-.rdfab svg{width:26px;height:26px}
+.rdfab{width:40px;height:40px;min-width:40px;border-radius:50%;border:0;
+  background:var(--verdigris);color:#fff;display:inline-flex;align-items:center;
+  justify-content:center;padding:0;cursor:pointer;flex:0 0 auto}
+body.mushaf .rdcard .rdfab{width:38px;height:38px;min-width:38px}
+.rdfab svg{width:22px;height:22px}
+body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .rdscrim{position:fixed;inset:0;z-index:58;background:rgba(24,28,32,.62)}
 .rdfan{position:fixed;z-index:59;inset-inline-end:16px;
-  bottom:calc(env(safe-area-inset-bottom) + 128px);display:flex;flex-direction:column;
+  bottom:calc(env(safe-area-inset-bottom) + 62px);display:flex;flex-direction:column;
   align-items:flex-end;gap:11px}
 .fanrow{display:flex;align-items:center;gap:11px;border:0;background:none;cursor:pointer;font:inherit;padding:0}
 .fanrow b{color:#fff;font-size:15px;font-weight:600;background:rgba(24,28,32,.72);
@@ -2374,6 +2377,11 @@ body.mushaf.playing .rdfab,body.reading .rdfab{display:flex}
 .shrow .shic{width:24px;flex:0 0 24px;display:inline-flex;justify-content:center}
 .shrow .shic svg{width:21px;height:21px}
 .shrow .shv{margin-inline-start:auto;color:var(--ink-3);font-size:13px;font-family:var(--mono)}
+.shx{padding:4px 17px 8px;border-top:1px solid var(--sg-line,var(--rule))}
+.shx .shlab{font-size:12.5px;color:var(--ink-3);margin:10px 0 5px}
+.shx select{width:100%;padding:9px 10px;border:1px solid var(--rule);border-radius:10px;
+  background:transparent;color:var(--ink);font:inherit;font-size:14.5px}
+.shx .shchips{display:flex;flex-wrap:wrap;gap:6px}
 .rdic.rdlbl{gap:5px;padding-inline:9px!important;min-width:0!important;width:auto!important}
 .rdic.rdlbl b{font-size:12.5px;font-weight:600}
 .rdic.rdlbl[aria-pressed="true"]{color:var(--maroon)}
@@ -7012,8 +7020,9 @@ function renderMushaf(){
          '<div class="rdgrp rdset">' +
            '<button class="rdic t rdlbl" data-rd="mistakes" title="' + BL.mistakes + '" aria-label="' + BL.mistakes + '" aria-pressed="' + (S.weak[RD.page] ? "true" : "false") + '">' + RIC.flag + '<b>' + esc(BL.mistakes) + '</b></button>' +
            '<button class="rdic t" data-rd="book" title="' + BL.book + '" aria-label="' + BL.book + '">' + RIC.book + '</button>' +
-           '<button class="rdic t" data-rd="veil" title="' + BL.veil + '" aria-label="' + BL.veil + '" aria-pressed="' + (RD.curtainOn ? "true" : "false") + '">' + RIC.blind + '</button>' +
+           '<button class="rdic t" data-rd="veil" title="' + BL.veil + '" aria-label="' + BL.veil + '" aria-pressed="' + (RD.blind ? "true" : "false") + '">' + RIC.blind + '</button>' +
            '<button class="rdic t rdmem" data-rd="memtog" title="' + L.mu.mem + '" aria-label="' + L.mu.mem + '" aria-pressed="' + (rdMemState(RD.pages[RD.page]) ? "true" : "false") + '">' + RIC.mem + '</button>' +
+           '<button class="rdic rdfab" data-rd="fab" title="' + L.rec.start + '" aria-label="' + L.rec.start + '">' + RIC.mic + '</button>' +
          '</div>' +
        '</div>' +
        '<div class="rdtools' + (RD.more ? "" : " tight") + '">' +
@@ -7031,8 +7040,7 @@ function renderMushaf(){
          chip("more",   RD.more ? "×" : "⋯", RD.more ? Rd.less : Rd.more) +
        '</div>' +
        '<div class="rdsabaq" id="rd-selbar"></div>' +
-       '</div>' +
-       '<button class="rdfab" data-rd="fab" title="' + L.rec.start + '" aria-label="' + L.rec.start + '">' + RIC.mic + '</button>';
+       '</div>';
 
   if (RD.pick) h += '<p class="pickmsg">' + (RD.pickA ? Rd.pickB : Rd.pickA) + '</p>';
   if (RD.phrase) h += '<p class="pickmsg">' + L.rec.phraseHint + '</p>';
@@ -7299,6 +7307,7 @@ function rdPaperSkin(){
     p.classList.add(skin);
     p.classList.toggle("nast", !!mushafDef().nast);
     p.classList.toggle("blind", !!RD.blind);
+    document.body.classList.toggle("tronly", !!RD.trOnly);
     p.classList.toggle("curtain", !!RD.curtainOn);
   });
   var c = document.getElementById("rd-curtain");
@@ -7438,9 +7447,7 @@ function rdAct(k, b){
   var pg = RD.pages[RD.page];
       if (k === "fab"){ rdFanOpen(); }
   else if (k === "book"){ rdSheetOpen("book"); }
-  else if (k === "veil"){
-    RD.curtainOn = !RD.curtainOn; RD.curtain = RD.curtainOn ? 0.25 : 0; renderMushaf();
-  }
+  else if (k === "veil"){ RD.blind = !RD.blind; renderMushaf(); }
   else if (k === "mistakes"){
     /* today this is the page-level weak mark the exam already sets; marking the
        ayah itself is the next piece of work, and this button is where it lands */
@@ -7599,6 +7606,41 @@ function rdSheetOpen(which){
            '<span class="shic">' + (r[2] || "") + '</span>' + esc(lab) +
            (val ? '<span class="shv">' + esc(val) + '</span>' : '') + '</button>';
   }).join("");
+  /* Play and pause are not what a listener came for. The voice and the sleep
+     timer are, and sending them to another screen to find them is why this
+     sheet read as empty. */
+  if (which === "listen"){
+    var T = lsL(), opts = [0, 10, 20, 30, 45, 60];
+    var ex = document.createElement("div");
+    ex.className = "shx";
+    ex.innerHTML =
+      '<div class="shlab">' + esc(L.rd.reciter) + '</div>' +
+      '<select id="sh-qari">' + RECITERS.map(function(r){
+        return '<option value="' + r.id + '"' + (S.settings.reciter === r.id ? " selected" : "") + '>' +
+          esc(r.nm[L.code] || r.nm.en) + '</option>';
+      }).join("") + '</select>' +
+      '<div class="shlab">' + esc(T.sleep) + '</div>' +
+      '<div class="shchips">' + opts.map(function(m){
+        return '<button class="knchip' + ((RD.sleepFor || 0) === m ? " f" : "") +
+               '" data-shsleep="' + m + '">' + (m ? fmt(T.min, n(m)) : T.off) + '</button>';
+      }).join("") + '</div>';
+    sh.appendChild(ex);
+    var qs = ex.querySelector("#sh-qari");
+    qs.onchange = function(){
+      S.settings.reciter = this.value;
+      /* the host that answered last belongs to the old voice, not the new one */
+      S.settings.audioHost = "";
+      save();
+      try { renderSettings(); } catch(e){}
+    };
+    qa("#rd-sheet [data-shsleep]").forEach(function(c){
+      c.onclick = function(){
+        RD.sleepFor = +c.dataset.shsleep;
+        RD.sleepAt = RD.sleepFor ? Date.now() + RD.sleepFor * 60000 : 0;
+        rdSheetOpen("listen");
+      };
+    });
+  }
   document.body.appendChild(sh);
   qa("#rd-sheet .shrow").forEach(function(b){
     b.onclick = function(){

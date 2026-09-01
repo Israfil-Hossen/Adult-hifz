@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="bn" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>মাইক পরীক্ষা · Adult Hifz</title>
+<style>
+:root{
+  --paper:#F3F0E8; --card:#FFFDF7; --ink:#242A30; --ink-2:#4D565F; --ink-3:#7A838C;
+  --rule:#DCD6C8; --green:#2E7D5B; --green-soft:#DDEFE5; --amber:#B4761A; --red:#9B3226;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  padding:14px 14px calc(env(safe-area-inset-bottom) + 90px)}
+h1{margin:0 0 4px;font-size:19px;font-weight:600}
+.sub{margin:0 0 14px;color:var(--ink-3);font-size:13px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:14px;
+  padding:12px 14px;margin-bottom:12px}
+.k{font-size:12.5px;color:var(--ink-3);letter-spacing:.04em;text-transform:uppercase}
+.v{font-size:15px;margin-top:2px}
+.ok{color:var(--green);font-weight:600}
+.no{color:var(--red);font-weight:600}
+.warn{color:var(--amber);font-weight:600}
+select,button{font:inherit}
+select{width:100%;padding:9px 10px;border:1px solid var(--rule);border-radius:10px;
+  background:var(--card);color:var(--ink)}
+.ayah{direction:rtl;text-align:right;font-size:30px;line-height:2.5;margin:0 0 10px;
+  font-family:"Traditional Arabic","Amiri","Scheherazade New",serif}
+.w{padding:1px 3px;border-radius:6px;transition:background .12s,color .12s}
+.w.hit{background:var(--green-soft);color:#14503A}
+.w.at{outline:2px dashed var(--amber);outline-offset:1px}
+.log{font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;
+  direction:rtl;text-align:right;max-height:34vh;overflow:auto;color:var(--ink-2)}
+.bar{position:fixed;inset-inline:0;bottom:0;background:var(--card);
+  border-top:1px solid var(--rule);padding:10px 14px calc(env(safe-area-inset-bottom) + 10px);
+  display:flex;gap:10px;align-items:center}
+.go{flex:1;padding:13px;border:0;border-radius:12px;background:var(--green);color:#fff;
+  font-size:16px;font-weight:600}
+.go.stop{background:var(--red)}
+.ghost{padding:13px 14px;border:1px solid var(--rule);border-radius:12px;
+  background:transparent;color:var(--ink-2)}
+.score{font-size:13px;color:var(--ink-3);margin-top:6px}
+</style>
+</head>
+<body>
+
+<h1>মাইক পরীক্ষা</h1>
+<p class="sub">অ্যাপ বদলায় না। এটা শুধু দেখে — আপনার ফোন আরবি তিলাওয়াত কতটা চেনে।</p>
+
+<div class="card">
+  <div class="k">শনাক্তকারী</div><div class="v" id="cap">দেখছি…</div>
+  <div class="k" style="margin-top:9px">ইন্টারনেট</div><div class="v" id="net">—</div>
+  <div class="k" style="margin-top:9px">কোথায় চলছে</div><div class="v" id="where">—</div>
+</div>
+
+<div class="card">
+  <div class="k" style="margin-bottom:6px">যা পড়বেন</div>
+  <select id="pick">
+    <option value="ikhlas">সূরা আল-ইখলাস</option>
+    <option value="fatiha">সূরা আল-ফাতিহা</option>
+  </select>
+</div>
+
+<div class="card">
+  <div id="text" class="ayah"></div>
+  <div class="score" id="score">০ / ০ শব্দ মিলেছে</div>
+</div>
+
+<div class="card">
+  <div class="k" style="margin-bottom:6px">কাঁচা যা শুনেছে</div>
+  <div class="log" id="log">—</div>
+</div>
+
+<div class="bar">
+  <button class="go" id="go">শুরু করুন</button>
+  <button class="ghost" id="reset">আবার</button>
+</div>
+
+<script>
+/* ---------- the two surahs, as plain word lists ---------- */
+var TEXT = {
+  ikhlas: ["قُلْ","هُوَ","ٱللَّهُ","أَحَدٌ",
+           "ٱللَّهُ","ٱلصَّمَدُ",
+           "لَمْ","يَلِدْ","وَلَمْ","يُولَدْ",
+           "وَلَمْ","يَكُن","لَّهُۥ","كُفُوًا","أَحَدٌۢ"],
+  fatiha: ["بِسْمِ","ٱللَّهِ","ٱلرَّحْمَٰنِ","ٱلرَّحِيمِ",
+           "ٱلْحَمْدُ","لِلَّهِ","رَبِّ","ٱلْعَٰلَمِينَ",
+           "ٱلرَّحْمَٰنِ","ٱلرَّحِيمِ",
+           "مَٰلِكِ","يَوْمِ","ٱلدِّينِ",
+           "إِيَّاكَ","نَعْبُدُ","وَإِيَّاكَ","نَسْتَعِينُ",
+           "ٱهْدِنَا","ٱلصِّرَٰطَ","ٱلْمُسْتَقِيمَ",
+           "صِرَٰطَ","ٱلَّذِينَ","أَنْعَمْتَ","عَلَيْهِمْ",
+           "غَيْرِ","ٱلْمَغْضُوبِ","عَلَيْهِمْ","وَلَا","ٱلضَّآلِّينَ"]
+};
+
+/* ---------- the whole idea in one function ----------
+   We are not asking "what did he say". We know every word on the page already.
+   We are asking "how far has he got" - so both sides are stripped down to bare
+   letters and the pointer only ever walks forward. */
+function norm(w){
+  return String(w)
+    .replace(/[ً-ْٓ-ٰٕۖ-ۭـ۟۠]/g, "")
+    .replace(/[آأإٱٲٳ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ئ/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ة/g, "ه")
+    .replace(/[^ء-ي]/g, "");
+}
+function near(a, b){
+  if (a === b) return true;
+  if (a.length < 4 || b.length < 4) return false;
+  if (Math.abs(a.length - b.length) > 1) return false;
+  /* one edit apart is close enough: the recogniser drops a letter constantly */
+  var i = 0, j = 0, slips = 0;
+  while (i < a.length && j < b.length){
+    if (a[i] === b[j]){ i++; j++; continue; }
+    if (++slips > 1) return false;
+    if (a.length > b.length) i++;
+    else if (b.length > a.length) j++;
+    else { i++; j++; }
+  }
+  return slips + (a.length - i) + (b.length - j) <= 1;
+}
+
+var WORDS = [], NORM = [], ptr = 0, active = false, rec = null, heard = 0;
+
+function paint(){
+  var t = document.getElementById("text");
+  t.innerHTML = WORDS.map(function(w, i){
+    return '<span class="w' + (i < ptr ? " hit" : (i === ptr ? " at" : "")) + '">' + w + '</span>';
+  }).join(" ");
+  document.getElementById("score").textContent =
+    toBn(ptr) + " / " + toBn(WORDS.length) + " শব্দ মিলেছে";
+}
+function toBn(n){
+  return String(n).replace(/[0-9]/g, function(d){ return "০১২৩৪৫৬৭৮৯"[+d]; });
+}
+function load(){
+  WORDS = TEXT[document.getElementById("pick").value].slice();
+  NORM = WORDS.map(norm);
+  ptr = 0;
+  paint();
+}
+
+/* the pointer looks a few words ahead, never behind - so a word the recogniser
+   mangles costs a moment, not the whole page */
+function feed(phrase){
+  var toks = String(phrase).split(/\s+/).map(norm).filter(Boolean);
+  for (var t = 0; t < toks.length; t++){
+    for (var k = 0; k < 6 && ptr + k < NORM.length; k++){
+      if (near(toks[t], NORM[ptr + k])){ ptr = ptr + k + 1; break; }
+    }
+  }
+  paint();
+}
+
+function log(s, kind){
+  var el = document.getElementById("log");
+  if (el.textContent === "—") el.textContent = "";
+  el.textContent = (kind === "final" ? "● " : "○ ") + s + "\n" + el.textContent;
+}
+
+function caps(){
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var c = document.getElementById("cap");
+  if (SR){ c.innerHTML = '<span class="ok">আছে</span> — এই ব্রাউজার আরবি শুনতে পারে'; }
+  else { c.innerHTML = '<span class="no">নেই</span> — এই ব্রাউজারে কণ্ঠ শনাক্তকরণ নেই'; }
+  document.getElementById("net").innerHTML = navigator.onLine
+    ? '<span class="ok">আছে</span> — বেশিরভাগ ফোনে এটা লাগে'
+    : '<span class="warn">নেই</span> — অফলাইনে সম্ভবত কাজ করবে না';
+  var ua = navigator.userAgent;
+  document.getElementById("where").textContent =
+    (/wv\)/.test(ua) ? "অ্যাপের ভিতরের WebView" : "ব্রাউজার") +
+    (/Chrome\/(\d+)/.test(ua) ? " · Chrome " + RegExp.$1 : "");
+  return !!SR;
+}
+
+function start(){
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR){ alert("এই ব্রাউজারে কণ্ঠ শনাক্তকরণ নেই। Chrome দিয়ে খুলে দেখুন।"); return; }
+  rec = new SR();
+  rec.lang = "ar-SA";
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+  rec.onresult = function(e){
+    for (var i = e.resultIndex; i < e.results.length; i++){
+      var r = e.results[i], txt = r[0].transcript.trim();
+      if (!txt) continue;
+      heard++;
+      log(txt, r.isFinal ? "final" : "interim");
+      feed(txt);
+    }
+  };
+  rec.onerror = function(e){ log("ত্রুটি: " + e.error, "final"); };
+  rec.onend = function(){
+    /* the recogniser gives up on its own every few seconds; pick it back up */
+    if (active){ try { rec.start(); } catch(e){} }
+  };
+  active = true;
+  try { rec.start(); } catch(e){ log("চালু করা গেল না: " + e.message, "final"); }
+  var b = document.getElementById("go");
+  b.textContent = "থামুন"; b.classList.add("stop");
+}
+function stop(){
+  active = false;
+  if (rec){ try { rec.stop(); } catch(e){} }
+  var b = document.getElementById("go");
+  b.textContent = "শুরু করুন"; b.classList.remove("stop");
+}
+
+document.getElementById("go").onclick = function(){ active ? stop() : start(); };
+document.getElementById("reset").onclick = function(){
+  ptr = 0; heard = 0; paint();
+  document.getElementById("log").textContent = "—";
+};
+document.getElementById("pick").onchange = function(){ stop(); load(); };
+caps();
+load();
+</script>
+</body>
+</html>
