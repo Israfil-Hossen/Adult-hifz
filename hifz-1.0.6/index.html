@@ -14,6 +14,8 @@
 <link id="fontlink" rel="stylesheet" href="">
 <link id="blfont" rel="stylesheet" href="https://fonts.maateen.me/solaiman-lipi/font.css">
 <style>
+@font-face{font-family:'AmiriQuran';font-style:normal;font-weight:400;font-display:swap;
+  src:url(fonts/amiri-quran.woff2) format('woff2')}
 @font-face{font-family:'SolaimanLipi';font-style:normal;font-weight:400;font-display:swap;
   src:local('SolaimanLipi'),local('Solaiman Lipi'),
       url('https://fonts.maateen.me/solaiman-lipi/solaimanlipi-normal-v1.0.woff2') format('woff2'),
@@ -6143,6 +6145,7 @@ async function rdLoadNast(){
 async function rdLoadFont(p){
   var def = mushafDef();
   if (def.nast){ var f = await rdLoadNast(); RD.fonts[p] = f; RD.fonts["v-" + p] = def.id; return f; }
+  if (!RD.noGlyph) RD.noGlyph = {};
   if (RD.fonts["v-" + p] === qcfVer()) return RD.fonts[p];
   var v = qcfVer(), fam = "QCF" + v + "P" + pad3(p);
   if (RD.fonts[fam]) return fam;
@@ -6151,9 +6154,18 @@ async function rdLoadFont(p){
   var blob = null;
   try { blob = await rdFetch(dataUrl("fonts/qcf/" + v + "/p" + p + ".woff2")); }
   catch(e){ blob = null; }
-  if (!blob) blob = await rdFetch(QCF_BASE + v + "/woff2/p" + p + ".woff2");
+  if (!blob){
+    try { blob = await rdFetch(QCF_BASE + v + "/woff2/p" + p + ".woff2"); }
+    catch(e){ blob = null; }
+  }
+  /* no page font and no network: the page is still printable from the text
+     every word carries, so hand back the bundled face and say which pages are
+     standing in. Throwing here left the reader on "Loading the page" for ever. */
+  if (!blob){ RD.noGlyph[p] = 1; return "AmiriQuran"; }
   var face = new FontFace(fam, "url(" + URL.createObjectURL(blob) + ")");
-  await face.load(); document.fonts.add(face);
+  try { await face.load(); } catch(e){ RD.noGlyph[p] = 1; return "AmiriQuran"; }
+  document.fonts.add(face);
+  delete RD.noGlyph[p];
   RD.fonts[p] = fam; RD.fonts[fam] = fam; RD.fonts["v-" + p] = v;
   return fam;
 }
@@ -6727,7 +6739,7 @@ async function rdContNext(){
   if (RD.stopAt && RD.page >= RD.stopAt){ rdStop(); return; }
   var p = RD.page + 1;
   try {
-    await rdLoadFont(p);
+    try { await rdLoadFont(p); } catch(e){}
     var pg = await rdLoadPage(p);
     RD.page = p; RD.sel = null;
     S.settings.lastPage = p; save();
@@ -6756,7 +6768,7 @@ async function rdTurnToAyah(vk){
     var ix = await mushafIndex(), st = ix.start || {}, q = String(vk).split(":");
     var pn = knPageOf(st, +q[0], +q[1]);
     if (pn && pn !== RD.page){
-      await rdLoadFont(pn);
+      try { await rdLoadFont(pn); } catch(e){}
       await rdLoadPage(pn);
       RD.page = pn;
       S.settings.lastPage = pn;
@@ -8532,7 +8544,9 @@ async function rdSidePaint(p2){
     el.innerHTML = ""; return;
   }
   try {
-    var fam = await rdLoadFont(p2), pg = await rdLoadPage(p2);
+    var fam = "AmiriQuran";
+    try { fam = (await rdLoadFont(p2)) || fam; } catch(e){}
+    var pg = await rdLoadPage(p2);
     if (RD.page + 1 !== p2) return;
     var h2 = "";
     for (var ln = 1; ln <= LINES_PER_PAGE; ln++){
@@ -8593,7 +8607,9 @@ function rdGlimpse(){
 async function rdPaint(p, isTodayPage){
   var paper = document.getElementById("rd-paper");
   try {
-    var fam = await rdLoadFont(p), pg = await rdLoadPage(p);
+    var fam = "AmiriQuran";
+    try { fam = (await rdLoadFont(p)) || fam; } catch(e){}
+    var pg = await rdLoadPage(p);
     if (RD.page !== p || !document.getElementById("rd-paper")) return;
     if (RD.pendingSel){
       var pi = rdKeyIdx(pg, RD.pendingSel);
@@ -8635,6 +8651,9 @@ async function rdPaint(p, isTodayPage){
        line-based blocks highlight whole lines */
     var byWord = pickOne || !!RD.sel.exact;
     var nastNow = !!mushafDef().nast;
+    /* the printed page font never arrived: set this page from each word's own
+       text instead, which is bundled and needs nothing from the network */
+    var noGlyph = !nastNow && !!(RD.noGlyph && RD.noGlyph[p]);
     function lnOn(ln){ return byWord ? false : (ln >= RD.sel.ln0 && ln <= RD.sel.ln1); }
 
     var headSurah = {}, headWait = [];
@@ -8686,7 +8705,7 @@ async function rdPaint(p, isTodayPage){
           /* the Indo-Pak packs end an ayah with U+FDAB, an ornament that lives only
              in the Nastaliq font — with any fallback face it is an empty box, and
              the number is already drawn beside it. Drop it and draw our own. */
-          var gl = (w.end && nastNow) ? "" : w.g;
+          var gl = (w.end && (nastNow || noGlyph)) ? "" : (noGlyph ? esc(w.t || w.g) : w.g);
           var wi = wcnt[w.vk] || 0; wcnt[w.vk] = wi + 1;
           var hc = S.hl && S.hl[w.vk + "#" + wi];
           var tpw = TPP.map[w.vk];
@@ -8696,7 +8715,7 @@ async function rdPaint(p, isTodayPage){
                  '" data-vk="' + w.vk + '" data-wi="' + wi + '"' +
                  (tpw ? ' data-tp="' + tpw.i + '"' : '') + (w.end ? ' data-end="1"' : '') +
                  ' data-t="' + esc(w.t || "") + '" data-m="' + esc(w.m) + '">' + gl +
-                 (w.end ? '<sup class="ayn' + (nastNow ? " ring" : "") + '">' + n(w.vk.split(":")[1]) + '</sup>' : '') + '</span>';
+                 (w.end ? '<sup class="ayn' + ((nastNow || noGlyph) ? " ring" : "") + '">' + n(w.vk.split(":")[1]) + '</sup>' : '') + '</span>';
         }).join(" ") +
         /* under the name, not above it: the surah announces itself first. On a page
            that opens three surahs the line is dropped — the page is a mushaf page
@@ -10323,7 +10342,7 @@ async function lsPlay(p0, p1, vk0){
   if (RD.sleepFor) RD.sleepAt = Date.now() + RD.sleepFor * 60000;
   openMushaf(p0);
   try {
-    await rdLoadFont(p0);
+    try { await rdLoadFont(p0); } catch(e){}
     var pg = await rdLoadPage(p0);
     if (!document.hidden){
       for (var i = 0; i < 60; i++){
