@@ -14,8 +14,8 @@
 <link id="fontlink" rel="stylesheet" href="">
 <link id="blfont" rel="stylesheet" href="https://fonts.maateen.me/solaiman-lipi/font.css">
 <style>
-@font-face{font-family:'AmiriQuran';font-style:normal;font-weight:400;font-display:swap;
-  src:url(fonts/amiri-quran.woff2) format('woff2')}
+@font-face{font-family:'UthmanicHafs';font-style:normal;font-weight:400;font-display:swap;
+  src:url(fonts/uthmanic-hafs.woff2) format('woff2')}
 @font-face{font-family:'SolaimanLipi';font-style:normal;font-weight:400;font-display:swap;
   src:local('SolaimanLipi'),local('Solaiman Lipi'),
       url('https://fonts.maateen.me/solaiman-lipi/solaimanlipi-normal-v1.0.woff2') format('woff2'),
@@ -2277,7 +2277,6 @@ main.wrap{width:100%}
     <button class="drawer-it" id="dw-index"><i>☰</i><span id="dw-index-l">Mushaf index</span></button>
     <button class="drawer-it" id="dw-listen"><i>♪</i><span id="dw-listen-l">Listen only</span></button>
     <button class="drawer-it" id="dw-dl"><i>↓</i><span id="dw-dl-l">Downloads</span></button>
-    <button class="drawer-it" id="dw-tour"><i>◎</i><span id="dw-tour-l">Show me again</span></button>
 
     <div class="drawer-lbl dwgrp" id="dw-look-l">Appearance</div>
     <button class="drawer-it" id="dw-paper"><i>☀</i><span id="dw-paper-l">Paper colour</span><span class="dwval" id="dw-paper-v"></span></button>
@@ -5509,8 +5508,6 @@ function renderSettings(){
       RECITERS.map(function(r){
         return '<option value="' + r.id + '"' + (s.reciter === r.id ? " selected" : "") + '>' + (r.nm[L.code] || r.nm.en) + '</option>';
       }).join("") + '</select></div>' +
-    '<div class="fld"><label>' + L.dlg.h + '</label>' +
-      '</div>' +
     '</div>';
 
   /* 2 - the plan */
@@ -6159,9 +6156,9 @@ async function rdLoadFont(p){
   /* no page font and no network: the page is still printable from the text
      every word carries, so hand back the bundled face and say which pages are
      standing in. Throwing here left the reader on "Loading the page" for ever. */
-  if (!blob){ RD.noGlyph[p] = 1; return "AmiriQuran"; }
+  if (!blob){ RD.noGlyph[p] = 1; return "UthmanicHafs"; }
   var face = new FontFace(fam, "url(" + URL.createObjectURL(blob) + ")");
-  try { await face.load(); } catch(e){ RD.noGlyph[p] = 1; return "AmiriQuran"; }
+  try { await face.load(); } catch(e){ RD.noGlyph[p] = 1; return "UthmanicHafs"; }
   document.fonts.add(face);
   delete RD.noGlyph[p];
   RD.fonts[p] = fam; RD.fonts[fam] = fam; RD.fonts["v-" + p] = v;
@@ -6430,6 +6427,31 @@ function rdMarkWhere(){
   S.settings.lastAt = Date.now();
   try { save(); } catch(e){}
 }
+function ntPlugin(){
+  try { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Reminder; }
+  catch(e){ return null; }
+}
+/* the page's own timer only reaches a reader who is already looking at it, so
+   the real reminder is an alarm the system holds */
+function ntNative(){
+  var R = ntPlugin();
+  if (!R) return false;
+  var at = S.settings.notifyAt;
+  if (!at || !/^\d\d:\d\d$/.test(at)){
+    try { R.cancel(); } catch(e){}
+    return true;
+  }
+  var p = at.split(":"), d = day(TODAY);
+  try {
+    R.set({
+      hour: +p[0], minute: +p[1],
+      title: L.nt.dailyTitle,
+      body: fmt(L.nt.dailyBody, n(d.sabaq.pages[0] || S.settings.startPage),
+                n(d.sabaq.from || 1), n(d.sabaq.to || LINES_PER_PAGE))
+    });
+  } catch(e){ return false; }
+  return true;
+}
 function kaPlugin(){
   try { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AudioKeepAlive; }
   catch(e){ return null; }
@@ -6443,9 +6465,9 @@ function kaHandoff(){
   var rest = RD.queue.slice(from);
   if (!rest.length) return;
   var q = rest.map(function(vk){
-    var srcs = audioSrcs(vk).map(function(c){ return c.u; });
-    if (RD.blobs && RD.blobs[vk]) srcs.unshift(RD.blobs[vk]);
-    return srcs;
+    /* http only: blob: belongs to this WebView and means nothing to the player
+       on the other side of the handoff */
+    return audioSrcs(vk).map(function(c){ return c.u; });
   });
   KAH.active = true; KAH.base = from;
   try { rdAudio.pause(); } catch(e){}
@@ -7150,6 +7172,7 @@ async function rdSetToday(pg){
   d.sabaq.ayahTo   = keys[keys.length - 1];
   d.sabaq.blocks   = [false,false,false];
   save(); renderToday(); renderProgress();
+  try { ntNative(); } catch(e){}
   var bar = document.getElementById("rd-prog");
   if (bar) bar.textContent = L.rd.setDone;
 }
@@ -7564,7 +7587,7 @@ function rdSheetDef(which){
                  function(){ return RD.trOnly ? B.trOnly : (RD.tr === false ? B.trOff : B.trUnder); },
                  function(){ return RD.trOnly || RD.tr !== false; }],
     ["focus",    function(){ return L.rd.focus; },     RIC.glimpse],
-    ["_edition", function(){ return B.edition; },      RIC.book]
+    ["_pickmushaf", function(){ return uit("mushafPick"); }, RIC.book]
   ]];
 }
 function rdVeilClose(){
@@ -7633,6 +7656,7 @@ function rdSheetOpen(which){
       var k = b.dataset.sh;
       /* the counter is the one row worth staying open for - a reader setting it
          to seven taps it more than once */
+      if (k === "_pickmushaf"){ rdVeilClose(); mushafPick(); return; }
       if (k === "tr3"){
         if (RD.trOnly){ RD.trOnly = false; RD.tr = false; }
         else if (RD.tr === false){ RD.tr = true; }
@@ -8541,7 +8565,7 @@ async function rdSidePaint(p2){
     el.innerHTML = ""; return;
   }
   try {
-    var fam = "AmiriQuran";
+    var fam = "UthmanicHafs";
     try { fam = (await rdLoadFont(p2)) || fam; } catch(e){}
     var pg = await rdLoadPage(p2);
     if (RD.page + 1 !== p2) return;
@@ -8604,7 +8628,7 @@ function rdGlimpse(){
 async function rdPaint(p, isTodayPage){
   var paper = document.getElementById("rd-paper");
   try {
-    var fam = "AmiriQuran";
+    var fam = "UthmanicHafs";
     try { fam = (await rdLoadFont(p)) || fam; } catch(e){}
     var pg = await rdLoadPage(p);
     if (RD.page !== p || !document.getElementById("rd-paper")) return;
@@ -9330,7 +9354,21 @@ function ntTick(){
     }
   }
 }
-function ntSchedule(){ clearInterval(NT.timer); NT.timer = setInterval(ntTick, 30000); ntTick(); }
+function ntSchedule(){
+  clearInterval(NT.timer);
+  /* where Android holds the alarm the page must not also fire one, or the
+     reader is reminded twice */
+  var native = ntNative();
+  NT.timer = setInterval(native ? ntTickZikr : ntTick, 30000);
+  (native ? ntTickZikr : ntTick)();
+}
+/* the dhikr reminder is a while-you-are-here nudge and stays in the page */
+function ntTickZikr(){
+  if (!ntOn() || !S) return;
+  var was = S.settings.notifyAt;
+  S.settings.notifyAt = "";
+  try { ntTick(); } finally { S.settings.notifyAt = was; }
+}
 
 /* ---------- recording + phrase loop ----------
    Memorization has to be verified out loud: the cover-and-recite test is
@@ -10268,7 +10306,11 @@ function drawerLabels(){
   try { if ((e = g("dw-index-l")))  e.textContent = idxL().ttl;   } catch(x){}
   try { if ((e = g("dw-listen-l"))) e.textContent = lsL().open;   } catch(x){}
   try { if ((e = g("dw-dl-l")))     e.textContent = dlL().title;  } catch(x){}
-  try { if ((e = g("dw-tour-l")))   e.textContent = trL().open;   } catch(x){}
+  /* on/off is written by applyNight, which runs on a toggle and not on a
+     language change - so after switching languages it read "off" in the old one */
+  try { if ((e = g("dw-night-v"))) e.textContent = uit(S.settings.night ? "on" : "off"); } catch(x){}
+  try { if ((e = g("dw-night-l"))) e.textContent = uit("night"); } catch(x){}
+  try { if ((e = g("dw-paper-l"))) e.textContent = L.mu.paper; } catch(x){}
 }
 function drawerFill(){
   var g = function(id){ return document.getElementById(id); };
@@ -11253,12 +11295,6 @@ function drawerWire(){
   qa("#drawer [data-go]").forEach(function(b){ b.onclick = function(){ goView(b.dataset.go); }; });
   var cb = document.getElementById("dw-cloud");
   if (cb) cb.onclick = cloudOpen;
-  var tb2 = document.getElementById("dw-tour");
-  if (tb2){
-    tb2.onclick = function(){ drawerClose(); setTimeout(tourStart, 260); };
-    var tbl = document.getElementById("dw-tour-l");
-    if (tbl) tbl.textContent = trL().open;
-  }
   var db = document.getElementById("dw-dl");
   if (db){
     db.onclick = dlOpen;
