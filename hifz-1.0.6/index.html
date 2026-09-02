@@ -5006,7 +5006,6 @@ function renderToday(){
       (blocked ? '<p class="lessonnote">' + L.sabaq.blocked + '</p>' : '') +
       pageGrid(lineFrom, lineTo, d.sabaq.blocks) +
       '<div class="lessonrow">' +
-        '<button class="tbtn" data-timer="' + L.blk.sabaq + '|50">' + fmt(L.timer.start, n(50)) + '</button>' +
         habitDot("sabaq", H.done, d.sabaq.done, "\u2713") +
       '</div></div>';
   }
@@ -5511,7 +5510,7 @@ function renderSettings(){
         return '<option value="' + r.id + '"' + (s.reciter === r.id ? " selected" : "") + '>' + (r.nm[L.code] || r.nm.en) + '</option>';
       }).join("") + '</select></div>' +
     '<div class="fld"><label>' + L.dlg.h + '</label>' +
-      '<div class="act"><button class="abtn" id="s-dl">' + G.dlOpen + ' ›</button></div></div>' +
+      '</div>' +
     '</div>';
 
   /* 2 - the plan */
@@ -5603,7 +5602,6 @@ function renderSettings(){
 
   on("s-mushafpick", "onclick", mushafPick);
   on("s-reciter", "onchange", function(){ S.settings.reciter = this.value; S.settings.audioHost = ""; save(); });
-  on("s-dl", "onclick", dlOpen);
 
   on("s-date", "onchange", function(){ S.settings.startDate = this.value || TODAY; save(); renderAll(); });
   on("s-page", "onchange", function(){ S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); save(); renderAll(); });
@@ -7511,24 +7509,24 @@ function rdAct(k, b){
       }
 }
 var BARL = {
-  bn:{ practice:"অনুশীলন", listen:"শুনুন", recite:"তিলাওয়াত", test:"পরীক্ষা",
+  bn:{ trOff:"বন্ধ", trUnder:"পাতার নিচে", trOnly:"শুধু অনুবাদ", practice:"অনুশীলন", listen:"শুনুন", recite:"তিলাওয়াত", test:"পরীক্ষা",
        mistakes:"ভুল", book:"মুসহাফ", veil:"ঢাকুন",
        edition:"মুসহাফ ও লেখার আকার",
        weakOn:"এই পাতা দুর্বল বলে রাখলাম",
        weakOff:"দুর্বলের চিহ্ন তুলে নিলাম" },
-  en:{ practice:"Practise", listen:"Listen", recite:"Recite", test:"Test",
+  en:{ trOff:"Off", trUnder:"Below the page", trOnly:"Only translation", practice:"Practise", listen:"Listen", recite:"Recite", test:"Test",
        mistakes:"Mistakes", book:"Mushaf", veil:"Cover",
        edition:"Mushaf and text size",
        weakOn:"Page marked weak", weakOff:"Weak mark removed" },
-  ur:{ practice:"مشق", listen:"سنیے", recite:"تلاوت", test:"امتحان",
+  ur:{ trOff:"بند", trUnder:"صفحے کے نیچے", trOnly:"صرف ترجمہ", practice:"مشق", listen:"سنیے", recite:"تلاوت", test:"امتحان",
        mistakes:"غلطیاں", book:"مصحف", veil:"ڈھانپیں",
        edition:"مصحف اور تحریر کا سائز",
        weakOn:"یہ صفحہ کمزور نشان زد", weakOff:"نشان ہٹا دیا" },
-  zh:{ practice:"练习", listen:"聊听", recite:"诵读", test:"测试",
+  zh:{ trOff:"关闭", trUnder:"页面下方", trOnly:"仅译文", practice:"练习", listen:"聊听", recite:"诵读", test:"测试",
        mistakes:"错处", book:"经本", veil:"遮住",
        edition:"经本与字号",
        weakOn:"已标为薄弱", weakOff:"已取消标记" },
-  ar:{ practice:"تمرين", listen:"استمع", recite:"تلاوة", test:"اختبار",
+  ar:{ trOff:"مغلق", trUnder:"أسفل الصفحة", trOnly:"الترجمة فقط", practice:"تمرين", listen:"استمع", recite:"تلاوة", test:"اختبار",
        mistakes:"الأخطاء", book:"المصحف", veil:"استر",
        edition:"المصحف وحجم الخط",
        weakOn:"وُسِمت الصفحة بالضعف", weakOff:"رُفِعت العلامة" }
@@ -7552,28 +7550,19 @@ function rdSheetDef(which){
     ["loopc",  function(){ return L.rd.loop; },    RIC.loop,
                function(){ return RD.loops === Infinity ? "\u221e" : n(RD.loops); }],
     ["phrase", function(){ return L.rec.phrase; }, RIC.ayah, null,
-               function(){ return !!RD.phrase; }],
-    ["listen", function(){ return lsL().open; },   RIC.listen]
+               function(){ return !!RD.phrase; }]
   ]];
   if (which === "test") return [B.test, [
     ["exam",    function(){ return L.ex.open; },     RIC.test],
     ["blind",   function(){ return L.mu.blind; },    RIC.blind, null,
                 function(){ return !!RD.blind; }],
-    ["hide",    function(){ return L.rd.hide; },     RIC.curtain, null,
-                function(){ return !!RD.hide; }],
-    ["glimpse", function(){ return L.mu.glimpse; },  RIC.glimpse],
     ["curtain", function(){ return L.mu.curtain; },  RIC.curtain, null,
-                function(){ return !!RD.curtainOn; }],
-    ["mut",     function(){ return L.mut.find; },    RIC.ayah]
+                function(){ return !!RD.curtainOn; }]
   ]];
   return [B.book, [
-    ["tr",       function(){ return L.rd.tr; },        RIC.ayah, null,
-                 function(){ return RD.tr !== false; }],
-    ["_tronly",  function(){ return uit("tronly"); },  RIC.ayah, null,
-                 function(){ return !!RD.trOnly; }],
-    ["_plain",   function(){ return uit("plain"); },   RIC.ayah, null,
-                 function(){ return !!(S.settings && S.settings.plain); }],
-    ["paper",    function(){ return L.mu.paper; },    RIC.paper],
+    ["tr3",      function(){ return L.rd.tr; },        RIC.ayah,
+                 function(){ return RD.trOnly ? B.trOnly : (RD.tr === false ? B.trOff : B.trUnder); },
+                 function(){ return RD.trOnly || RD.tr !== false; }],
     ["focus",    function(){ return L.rd.focus; },     RIC.glimpse],
     ["_edition", function(){ return B.edition; },      RIC.book]
   ]];
@@ -7644,6 +7633,14 @@ function rdSheetOpen(which){
       var k = b.dataset.sh;
       /* the counter is the one row worth staying open for - a reader setting it
          to seven taps it more than once */
+      if (k === "tr3"){
+        if (RD.trOnly){ RD.trOnly = false; RD.tr = false; }
+        else if (RD.tr === false){ RD.tr = true; }
+        else { RD.trOnly = true; RD.tr = true; }
+        renderMushaf();
+        rdSheetOpen(which);
+        return;
+      }
       if (k === "loopc"){
         var LP = [1,3,5,7,Infinity];
         RD.loops = LP[(LP.indexOf(RD.loops) + 1) % LP.length];
@@ -10266,9 +10263,17 @@ function contactOpen(){
     try { window.location.href = url; } catch(e){}
   };
 }
+function drawerLabels(){
+  var g = function(id){ return document.getElementById(id); }, e;
+  try { if ((e = g("dw-index-l")))  e.textContent = idxL().ttl;   } catch(x){}
+  try { if ((e = g("dw-listen-l"))) e.textContent = lsL().open;   } catch(x){}
+  try { if ((e = g("dw-dl-l")))     e.textContent = dlL().title;  } catch(x){}
+  try { if ((e = g("dw-tour-l")))   e.textContent = trL().open;   } catch(x){}
+}
 function drawerFill(){
   var g = function(id){ return document.getElementById(id); };
   var nm = g("drawer-nm"); if (!nm) return;
+  drawerLabels();
   nm.textContent = L.app.name;
   g("drawer-sub").textContent = L.app.tagline || L.app.footer2 || "";
   g("drawer-lang-l").textContent = L.set ? L.set.lang || "ভাষা" : "ভাষা";
