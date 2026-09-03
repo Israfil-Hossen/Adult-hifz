@@ -2369,6 +2369,11 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .shrow .shic{width:24px;flex:0 0 24px;display:inline-flex;justify-content:center}
 .shrow .shic svg{width:21px;height:21px}
 .shrow .shv{margin-inline-start:auto;color:var(--ink-3);font-size:13px;font-family:var(--mono)}
+/* a value you can press looks pressable: bigger, in the app's green, and with
+   room around it so it is not a five-pixel target beside a row-wide one */
+.shrow .shv.shtap{font-size:15px;font-weight:600;color:var(--verdigris);
+  padding:11px 15px;border:1px solid var(--rule);border-radius:999px;line-height:1;
+  margin-block:-4px}
 .shx{padding:4px 17px 8px;border-top:1px solid var(--sg-line,var(--rule))}
 .shx .shlab{font-size:12.5px;color:var(--ink-3);margin:10px 0 5px}
 .shx select{width:100%;padding:9px 10px;border:1px solid var(--rule);border-radius:10px;
@@ -7665,7 +7670,8 @@ function rdSheetDef(which){
   ]];
   if (which === "listen") return [B.listen, [
     ["playpause", function(){ return (rdAudio && !rdAudio.paused) ? L.rd.pause : L.rd.playAll; },
-                  (rdAudio && !rdAudio.paused) ? RIC.pause : RIC.play],
+                  (rdAudio && !rdAudio.paused) ? RIC.pause : RIC.play,
+                  function(){ return n(RD.speed || 1) + "\u00d7"; }, null, "speed"],
     ["loopc",     function(){ return L.rd.loop; }, RIC.loop,
                   function(){ return RD.loops === Infinity ? "\u221e" : n(RD.loops); }]
   ]];
@@ -7708,7 +7714,9 @@ function rdSheetOpen(which){
     var val = ""; try { val = r[3] ? r[3]() : ""; } catch(e){}
     return '<button class="shrow' + (on ? " on" : "") + '" data-sh="' + r[0] + '">' +
            '<span class="shic">' + (r[2] || "") + '</span>' + esc(lab) +
-           (val ? '<span class="shv">' + esc(val) + '</span>' : '') + '</button>';
+           (val ? (r[5]
+             ? '<b class="shv shtap" data-shx="' + r[5] + '">' + esc(val) + '</b>'
+             : '<span class="shv">' + esc(val) + '</span>') : '') + '</button>';
   }).join("");
   /* Play and pause are not what a listener came for. The voice and the sleep
      timer are, and sending them to another screen to find them is why this
@@ -7722,11 +7730,6 @@ function rdSheetOpen(which){
       '<select id="sh-qari">' + RECITERS.map(function(r){
         return '<option value="' + r.id + '"' + (S.settings.reciter === r.id ? " selected" : "") + '>' +
           esc(r.nm[L.code] || r.nm.en) + '</option>';
-      }).join("") + '</select>' +
-      '<div class="shlab">' + esc(L.rd.speed) + '</div>' +
-      '<select id="sh-speed">' + [0.5, 0.75, 1, 1.25, 1.5, 2].map(function(v){
-        return '<option value="' + v + '"' + ((RD.speed || 1) === v ? " selected" : "") + '>' +
-               n(v) + '×' + '</option>';
       }).join("") + '</select>' +
       '<div class="shlab">' + esc(T.sleep) + '</div>' +
       '<select id="sh-sleep">' + opts.map(function(m){
@@ -7742,14 +7745,6 @@ function rdSheetOpen(which){
       save();
       try { renderSettings(); } catch(e){}
     };
-    var sp = ex.querySelector("#sh-speed");
-    if (sp) sp.onchange = function(){
-      RD.speed = +this.value || 1;
-      S.settings.speed = RD.speed;
-      try { save(); } catch(e){}
-      /* the ayah already sounding changes with it, rather than at the next one */
-      if (rdAudio) rdAudio.playbackRate = RD.speed;
-    };
     var sl = ex.querySelector("#sh-sleep");
     if (sl) sl.onchange = function(){
       RD.sleepFor = +this.value;
@@ -7757,6 +7752,22 @@ function rdSheetOpen(which){
     };
   }
   document.body.appendChild(sh);
+  /* the number on a row is its own button, and must not also press the row */
+  qa("#rd-sheet .shtap").forEach(function(v){
+    v.onclick = function(ev){
+      ev.stopPropagation();
+      if (v.dataset.shx === "speed"){
+        var SP = [0.5, 0.75, 1, 1.25, 1.5, 2];
+        var i = SP.indexOf(+RD.speed);
+        RD.speed = SP[(i < 0 ? 2 : i + 1) % SP.length];
+        S.settings.speed = RD.speed;
+        try { save(); } catch(e){}
+        /* the ayah already sounding changes with it, not the next one */
+        if (rdAudio) rdAudio.playbackRate = RD.speed;
+        rdSheetOpen(which);
+      }
+    };
+  });
   qa("#rd-sheet .shrow").forEach(function(b){
     b.onclick = function(){
       var k = b.dataset.sh;
