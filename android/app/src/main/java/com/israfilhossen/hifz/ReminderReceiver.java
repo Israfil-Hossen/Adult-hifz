@@ -10,6 +10,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * The daily nudge, posted by Android rather than by the page.
  *
@@ -31,6 +35,8 @@ public class ReminderReceiver extends BroadcastReceiver {
     static final String KEY_MIN   = "minute";
     static final String KEY_TITLE = "title";
     static final String KEY_BODY  = "body";
+    static final String KEY_AWAY  = "away";
+    static final String KEY_SEEN  = "seen";
     static final int    ALARM_ID  = 7311;
     static final int    NOTE_ID   = 7312;
 
@@ -56,6 +62,32 @@ public class ReminderReceiver extends BroadcastReceiver {
 
     boolean post(Context ctx) { return show(ctx); }
 
+    /** How long since the app was opened, and what to say about it.
+     *
+     *  Returns null on a day the reader has been here - then the ordinary
+     *  reminder, which names today's lesson, is the right thing to say.
+     *  The stored list is [{d, t, b}, ...] in ascending days; the last entry
+     *  whose threshold has passed wins. */
+    private String[] awayWords(SharedPreferences p) {
+        long seen = p.getLong(KEY_SEEN, 0L);
+        if (seen <= 0L) return null;                 /* never opened - say nothing new */
+        long days = (System.currentTimeMillis() - seen) / 86400000L;
+        if (days < 1L) return null;
+        String raw = p.getString(KEY_AWAY, "");
+        if (raw == null || raw.length() == 0) return null;
+        try {
+            JSONArray arr = new JSONArray(raw);
+            String[] best = null;
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject o = arr.getJSONObject(i);
+                if (o.optLong("d", 0L) > days) continue;
+                best = new String[]{ o.optString("t", ""), o.optString("b", "") };
+            }
+            if (best != null && best[0].length() > 0) return best;
+        } catch (JSONException ignored) {}
+        return null;
+    }
+
     private boolean show(Context ctx) {
         NotificationManager nm =
                 (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -71,6 +103,13 @@ public class ReminderReceiver extends BroadcastReceiver {
         SharedPreferences p = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         String title = p.getString(KEY_TITLE, "Today's lesson");
         String body  = p.getString(KEY_BODY, "");
+
+        /* Someone who has not opened the app in days already knows there is a
+           lesson waiting; naming it again is not why they stayed away. The web
+           layer hands us a set of words for each stretch of silence, and we say
+           the one that fits. */
+        String[] away = awayWords(p);
+        if (away != null) { title = away[0]; body = away[1]; }
 
         Intent open = new Intent(ctx, MainActivity.class);
         open.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

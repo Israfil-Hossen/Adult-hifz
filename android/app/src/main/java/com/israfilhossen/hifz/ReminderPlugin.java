@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 
+import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -81,10 +82,23 @@ public class ReminderPlugin extends Plugin {
         e.putInt(ReminderReceiver.KEY_MIN, minute);
         e.putString(ReminderReceiver.KEY_TITLE, call.getString("title", "Today's lesson"));
         e.putString(ReminderReceiver.KEY_BODY, call.getString("body", ""));
+        /* the come-back words, one set per stretch of silence. Stored verbatim:
+           the receiver picks by day count and we never have to know the language. */
+        JSArray away = call.getArray("away");
+        e.putString(ReminderReceiver.KEY_AWAY, away == null ? "" : away.toString());
         e.apply();
 
         schedule(ctx, hour, minute);
         call.resolve(new JSObject().put("set", true));
+    }
+
+    /** The app was opened. Android cannot read the page's storage, so the time
+     *  is kept here for the alarm to read when it fires with the app closed. */
+    @PluginMethod
+    public void seen(PluginCall call) {
+        getContext().getSharedPreferences(ReminderReceiver.PREFS, Context.MODE_PRIVATE)
+                    .edit().putLong(ReminderReceiver.KEY_SEEN, System.currentTimeMillis()).apply();
+        call.resolve();
     }
 
     @PluginMethod
