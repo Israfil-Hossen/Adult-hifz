@@ -4846,6 +4846,9 @@ function renderOnboard(){
     '<div class="fld"><label for="ob-rest">' + o.rest + '</label><select id="ob-rest">' +
       days.map(function(d){ return '<option value="' + d + '">' + L.weekdays[d] + '</option>'; }).join("") +
       '</select><div class="hint">' + o.restHint + '</div></div>' +
+    '<div class="fld"><label for="ob-nt">' + L.nt.daily + '</label>' +
+      '<input type="time" id="ob-nt" value="20:00">' +
+      '<div class="hint">' + L.nt.dailyHint + '</div></div>' +
     '<button class="abtn" id="ob-known" style="margin-top:4px">' + knL().open + '</button>' +
     '<button class="abtn go" id="ob-go" style="margin-top:10px">' + o.go + '</button>';
 
@@ -4860,6 +4863,7 @@ function renderOnboard(){
     S.settings.startDate = document.getElementById("ob-date").value || TODAY;
     S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +document.getElementById("ob-page").value || 1));
     S.settings.restDay   = +document.getElementById("ob-rest").value;
+    S.settings.notifyAt  = document.getElementById("ob-nt").value || "";
     await Store.set(S);
     knOpen();
   };
@@ -4867,9 +4871,14 @@ function renderOnboard(){
     S.settings.startDate = document.getElementById("ob-date").value || TODAY;
     S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +document.getElementById("ob-page").value || 1));
     S.settings.restDay   = +document.getElementById("ob-rest").value;
+    S.settings.notifyAt  = document.getElementById("ob-nt").value || "";
     await Store.set(S);
     document.getElementById("ob").classList.remove("on");
     renderAll();
+    /* renderAll schedules it; ask for the permission it needs right after, so
+       the reader answers that prompt while they still remember asking for a
+       reminder at all */
+    try { if (!ntOn() && ntCan()) await ntAsk(); } catch(e){}
   };
 }
 
