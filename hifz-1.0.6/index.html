@@ -10545,7 +10545,7 @@ function drawerFill(){
   var nm = g("drawer-nm"); if (!nm) return;
   drawerLabels();
   nm.textContent = L.app.name;
-  g("drawer-sub").textContent = L.app.tagline || L.app.footer2 || "";
+  g("drawer-sub").textContent = L.app.footer2 || "";
   g("drawer-lang-l").textContent = L.set ? L.set.lang || "ভাষা" : "ভাষা";
   g("drawer-langrow").innerHTML = LANGS.map(function(c){
     var name = (LANG_CACHE[c] && LANG_CACHE[c].name) || c.toUpperCase();
