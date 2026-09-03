@@ -10,13 +10,13 @@
 Capacitor বিল্ডে সব ফাইল APK-র ভিতরেই থাকে, তাই স্টোরে দিতে সাইট **লাগে না**।
 তবু সাইটটা রাখলে গোপনীয়তা নীতির লিংক আর ওয়েব সংস্করণ — দুটোই পাওয়া যায়।
 
-- অ্যাপ: `https://israfil-hossen.github.io/Adult-hifz/hifz-1.0.6/`
+- অ্যাপ: `https://israfil-hossen.github.io/Adult-hifz/hifz-1.0.8/`
 - রুট (`/Adult-hifz/`) ওখানেই পাঠিয়ে দেয়
 - গোপনীয়তা নীতি: `https://israfil-hossen.github.io/Adult-hifz/PRIVACY.html`
 
 Pages-এর উৎস: **Settings → Pages → Deploy from a branch → master / (root)**।
 
-আপডেটের নিয়ম: ফাইল বদলে push করুন, আর `hifz-1.0.6/sw.js`-এর `CACHE` মানটা
+আপডেটের নিয়ম: ফাইল বদলে push করুন, আর `hifz-1.0.8/sw.js`-এর `CACHE` মানটা
 বদলান — তা না হলে পুরোনো সংস্করণ ক্যাশে আটকে থাকবে।
 
 ---
@@ -58,7 +58,7 @@ npm run bundle
 
 | কী | কোথায় |
 |---|---|
-| আইকন ৫১২×৫১২ | `hifz-1.0.6/icon-512.png` |
+| আইকন ৫১২×৫১২ | `hifz-1.0.8/icon-512.png` |
 | ফিচার গ্রাফিক ১০২৪×৫০০ | `store/feature-graphic.png` |
 | গোপনীয়তা নীতি | উপরের লিংক |
 | বিবরণ | নিচে |

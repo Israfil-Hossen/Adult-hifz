@@ -1,4 +1,4 @@
-# Play Store upload — version 1.0.6
+# Play Store upload — version 1.0.8
 
 Everything in this folder is ready to paste or upload, except two things: the
 screenshots, which have to be taken on the phone (see `screenshots/README.md`),
@@ -13,7 +13,7 @@ with `cd android && ./gradlew bundleRelease`, then copy
 | File | `app-release.aab` — build it, see above |
 | Size | about 12 MB |
 | versionCode | **3** |
-| versionName | **1.0.6** |
+| versionName | **1.0.8** |
 | Signed with | `adult-hifz.jks` — the same key as the previous release |
 | Package | `com.israfilhossen.hifz` |
 
