@@ -6041,7 +6041,7 @@ function audioSrcs(vk){
   cands.forEach(function(c){ if (!seen[c.u]){ seen[c.u] = 1; list.push(c); } });
   return list;
 }
-var RD = { page:0, hide:0, curtain:0, curtainOn:false, blind:false, loops:1, speed:1, pages:{}, fonts:{}, blobs:{}, busy:false, queue:[], qi:0, left:0, cont:false, stopAt:0, sleepAt:0, sleepFor:0, ka:false, turning:false };
+var RD = { page:0, hide:0, curtain:0, curtainOn:false, blind:false, loops:1, speed:1, files:{}, pages:{}, fonts:{}, blobs:{}, busy:false, queue:[], qi:0, left:0, cont:false, stopAt:0, sleepAt:0, sleepFor:0, ka:false, turning:false };
 var rdAudio = null;
 /* ONE audio element for the whole session. A fresh install has no media
    engagement, so Chrome (and the WebView the APK runs in) refuses play() on any
@@ -7723,6 +7723,12 @@ function rdSheetOpen(which){
         return '<option value="' + r.id + '"' + (S.settings.reciter === r.id ? " selected" : "") + '>' +
           esc(r.nm[L.code] || r.nm.en) + '</option>';
       }).join("") + '</select>' +
+      '<div class="shlab">' + esc(L.rd.speed) + '</div>' +
+      '<select id="sh-speed">' + [0.5, 0.75, 1, 1.25, 1.5, 2].map(function(v){
+        return '<option value="' + v + '"' + ((RD.speed || 1) === v ? " selected" : "") + '>' +
+               n(v) + '\u00d7' + (v === 1 ? '' : (v < 1 ? ' \u00b7 ' + esc(L.rd.slow || "") : '')) +
+               '</option>';
+      }).join("") + '</select>' +
       '<div class="shlab">' + esc(T.sleep) + '</div>' +
       '<select id="sh-sleep">' + opts.map(function(m){
         return '<option value="' + m + '"' + ((RD.sleepFor || 0) === m ? " selected" : "") + '>' +
@@ -7736,6 +7742,14 @@ function rdSheetOpen(which){
       S.settings.audioHost = "";
       save();
       try { renderSettings(); } catch(e){}
+    };
+    var sp = ex.querySelector("#sh-speed");
+    if (sp) sp.onchange = function(){
+      RD.speed = +this.value || 1;
+      S.settings.speed = RD.speed;
+      try { save(); } catch(e){}
+      /* the ayah already sounding changes with it, rather than at the next one */
+      if (rdAudio) rdAudio.playbackRate = RD.speed;
     };
     var sl = ex.querySelector("#sh-sleep");
     if (sl) sl.onchange = function(){
@@ -8486,7 +8500,12 @@ async function rdInfoFill(){
     pb.title = uit("themes"); pb.setAttribute("aria-label", uit("themes"));
     pb.setAttribute("aria-pressed", RD.tp ? "true" : "false");
     pb.textContent = "▤";
-    pb.onclick = function(ev){ ev.stopPropagation(); RD.tp = ((RD.tp || 0) + 1) % 3; renderMushaf(); };
+    pb.onclick = function(ev){
+      ev.stopPropagation();
+      RD.tp = RD.tp ? 0 : 2;
+      if (RD.tp) fabHint(uit("themes"));
+      renderMushaf();
+    };
     top.appendChild(pb);
     var tb = document.createElement("button");
     tb.className = "ri-btn ri-tr"; tb.type = "button";
@@ -11555,6 +11574,7 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     if (!S.settings.mushafId) S.settings.mushafId = "madani";
     if (!S.settings.reciter) S.settings.reciter = "Ayman_Sowaid_64kbps";
     if (S.settings.notifyAt == null) S.settings.notifyAt = "";
+    if (S.settings.speed) RD.speed = +S.settings.speed || 1;
     if (S.settings.zikrEvery == null) S.settings.zikrEvery = 0;
     if (S.settings.zikrVoice == null) S.settings.zikrVoice = true;
     if (!S.rev) S.rev = {};
