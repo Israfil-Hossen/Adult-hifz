@@ -32,18 +32,16 @@ public class AudioKeepAlivePlugin extends Plugin {
     @PluginMethod
     public void handoff(PluginCall call) {
         try {
-            JSArray arr = call.getArray("queue");
-            List<List<String>> q = new ArrayList<>();
-            if (arr != null) {
-                for (int i = 0; i < arr.length(); i++) {
-                    JSONArray srcs = arr.getJSONArray(i);
-                    List<String> one = new ArrayList<>();
-                    for (int j = 0; j < srcs.length(); j++) one.add(srcs.getString(j));
-                    q.add(one);
-                }
-            }
+            List<List<String>> q = readQueue(call.getArray("queue"));
             PlaybackService.QUEUE = q;
             PlaybackService.INDEX = 0;
+            PlaybackService.LOOP = readQueue(call.getArray("loop"));
+            Integer rep = call.getInt("repeat");
+            PlaybackService.REPEAT = rep == null ? 0 : rep;
+            PlaybackService.PASSES = 0;
+            PlaybackService.DONE = false;
+            Double at = call.getDouble("stopAt");
+            PlaybackService.STOP_AT = at == null ? 0L : at.longValue();
             Double sp = call.getDouble("speed");
             PlaybackService.SPEED = sp == null ? 1.0f : sp.floatValue();
 
@@ -62,12 +60,28 @@ public class AudioKeepAlivePlugin extends Plugin {
         }
     }
 
+    /* a list of per-ayah source lists, in the order the web layer would try them */
+    private static List<List<String>> readQueue(JSArray arr) throws Exception {
+        List<List<String>> q = new ArrayList<>();
+        if (arr == null) return q;
+        for (int i = 0; i < arr.length(); i++) {
+            JSONArray srcs = arr.getJSONArray(i);
+            List<String> one = new ArrayList<>();
+            for (int j = 0; j < srcs.length(); j++) one.add(srcs.getString(j));
+            q.add(one);
+        }
+        return q;
+    }
+
     @PluginMethod
     public void status(PluginCall call) {
         JSObject o = new JSObject();
         o.put("index", PlaybackService.INDEX);
         o.put("playing", PlaybackService.PLAYING);
         o.put("queued", PlaybackService.QUEUE.size());
+        o.put("passes", PlaybackService.PASSES);
+        o.put("repeat", PlaybackService.REPEAT);
+        o.put("done", PlaybackService.DONE);
         call.resolve(o);
     }
 
@@ -89,6 +103,8 @@ public class AudioKeepAlivePlugin extends Plugin {
     public void stop(PluginCall call) {
         try {
             PlaybackService.QUEUE = new ArrayList<>();
+            PlaybackService.LOOP = new ArrayList<>();
+            PlaybackService.REPEAT = 0;
             PlaybackService.PLAYING = false;
             getContext().stopService(new Intent(getContext(), PlaybackService.class));
         } catch (Exception ignored) {}

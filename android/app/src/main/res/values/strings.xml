@@ -6,4 +6,5 @@
     <string name="custom_url_scheme">com.israfilhossen.hifz</string>
     <string name="playback_channel">Recitation</string>
     <string name="playback_running">Reciting</string>
+    <string name="playback_stop">Stop</string>
 </resources>

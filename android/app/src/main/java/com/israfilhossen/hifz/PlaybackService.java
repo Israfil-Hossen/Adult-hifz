@@ -38,12 +38,23 @@ public class PlaybackService extends Service {
 
     private static final String CHANNEL = "hifz_playback";
     private static final int NOTE_ID = 1;
+    static final String ACTION_STOP = "com.israfilhossen.hifz.STOP_PLAYBACK";
 
     /* the handoff: written by the plugin, read here. One process, one user. */
     static volatile List<List<String>> QUEUE = new ArrayList<>();
     static volatile int INDEX = 0;
     static volatile boolean PLAYING = false;
     static volatile float SPEED = 1.0f;
+    /* The lesson again, and how many more times. QUEUE is the tail the page
+       broke off in the middle of; LOOP is the whole lesson to repeat after it.
+       REPEAT counts the passes still owed, -1 meaning endlessly - the reader
+       who chose that wants the lesson in their ear all day, not until the
+       first pass runs out. */
+    static volatile List<List<String>> LOOP = new ArrayList<>();
+    static volatile int REPEAT = 0;
+    static volatile int PASSES = 0;
+    static volatile long STOP_AT = 0;
+    static volatile boolean DONE = false;
 
     private MediaPlayer mp;
     private int srcTry = 0;
@@ -63,6 +74,14 @@ public class PlaybackService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        /* An endless lesson has to be stoppable without hunting for the app.
+           The notification is where a listener already looks to see it playing,
+           so that is where the stop belongs. */
+        if (intent != null && ACTION_STOP.equals(intent.getAction())) {
+            PLAYING = false; DONE = true; REPEAT = 0;
+            stopSelf();
+            return START_NOT_STICKY;
+        }
         Intent open = new Intent(this, MainActivity.class);
         open.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent tap = PendingIntent.getActivity(
@@ -76,6 +95,7 @@ public class PlaybackService extends Service {
                 .setOngoing(true)
                 .setSilent(true)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
+                .addAction(0, getString(R.string.playback_stop), stopIntent())
                 .build();
 
         if (Build.VERSION.SDK_INT >= 34) {
@@ -89,6 +109,12 @@ public class PlaybackService extends Service {
             playCurrent();
         }
         return START_NOT_STICKY;
+    }
+
+    private PendingIntent stopIntent() {
+        Intent i = new Intent(this, PlaybackService.class).setAction(ACTION_STOP);
+        return PendingIntent.getService(this, 1, i,
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private void requestFocus() {
@@ -107,8 +133,22 @@ public class PlaybackService extends Service {
     }
 
     private void playCurrent() {
+        /* the sleep timer ends the day between ayat, never mid-word */
+        if (STOP_AT > 0 && System.currentTimeMillis() >= STOP_AT) {
+            PLAYING = false; DONE = true; stopSelf(); return;
+        }
         List<List<String>> q = QUEUE;
-        if (INDEX >= q.size()) { PLAYING = false; stopSelf(); return; }
+        if (INDEX >= q.size()) {
+            if (REPEAT != 0 && !LOOP.isEmpty()) {
+                if (REPEAT > 0) REPEAT--;
+                PASSES++;
+                QUEUE = LOOP;
+                INDEX = 0; srcTry = 0;
+                playCurrent();
+                return;
+            }
+            PLAYING = false; DONE = true; stopSelf(); return;
+        }
         List<String> srcs = q.get(INDEX);
         if (srcTry >= srcs.size()) {
             /* every host refused this ayah - skip it rather than fall silent */

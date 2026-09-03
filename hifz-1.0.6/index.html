@@ -6564,6 +6564,13 @@ function kaPlugin(){
   catch(e){ return null; }
 }
 var KAH = { active:false, base:0 };
+function kaSrcs(vk){
+  var u = audioSrcs(vk).map(function(c){ return c.u; });
+  /* a stored file is the only address that works with the network off; a
+     blob: is the one that never works, and is deliberately not here */
+  if (RD.files && RD.files[vk]) u = [RD.files[vk]].concat(u);
+  return u;
+}
 function kaHandoff(){
   var KA = kaPlugin();
   if (!KA || !KA.handoff || !rdAudio || rdAudio.paused || !RD.queue.length) return;
@@ -6571,16 +6578,18 @@ function kaHandoff(){
   var from = Math.max(0, RD.qi - 1);
   var rest = RD.queue.slice(from);
   if (!rest.length) return;
-  var q = rest.map(function(vk){
-    var u = audioSrcs(vk).map(function(c){ return c.u; });
-    /* a stored file is the only address that works with the network off; a
-       blob: is the one that never works, and is deliberately not here */
-    if (RD.files && RD.files[vk]) u = [RD.files[vk]].concat(u);
-    return u;
-  });
+  /* The repeat count travels with the queue. A reader who set the lesson to
+     play endlessly meant endlessly in their pocket - that is the whole reason
+     they asked for it - so the passes still owed go native too, and the sleep
+     timer goes with them so it can still end the day. */
+  var more = (RD.left === Infinity) ? -1 : Math.max(0, (RD.left || 1) - 1);
   KAH.active = true; KAH.base = from;
   try { rdAudio.pause(); } catch(e){}
-  KA.handoff({ queue:q, speed:RD.speed || 1 });
+  KA.handoff({ queue:rest.map(kaSrcs),
+               loop:more ? RD.queue.map(kaSrcs) : [],
+               repeat:more,
+               stopAt:RD.sleepAt || 0,
+               speed:RD.speed || 1 });
 }
 function kaTakeBack(){
   var KA = kaPlugin();
@@ -6588,8 +6597,13 @@ function kaTakeBack(){
   KAH.active = false;
   KA.status().then(function(st){
     KA.stop();
-    var qi = KAH.base + Math.max(0, (st && st.index) || 0);
-    if (st && st.playing === false && st.index >= st.queued){ rdStop(); return; }
+    if (!st || st.done){ rdStop(); return; }
+    /* the first pass is the tail we handed over, so it is offset by where we
+       broke off; every pass after it is the whole queue from its start */
+    var passes = st.passes || 0;
+    var qi = (passes ? 0 : KAH.base) + Math.max(0, st.index || 0);
+    RD.left = (st.repeat < 0) ? Infinity : Math.max(1, (st.repeat || 0) + 1);
+    if (st.playing === false && qi >= RD.queue.length && !passes){ rdStop(); return; }
     if (qi < RD.queue.length){ RD.qi = qi; rdNext(); }
     else rdStop();
   }).catch(function(){ try { KA.stop(); } catch(e){} });
@@ -7644,23 +7658,28 @@ function rdAct(k, b){
 var BARL = {
   bn:{ trOff:"বন্ধ", trUnder:"পাতার নিচে", trOnly:"শুধু অনুবাদ", practice:"অনুশীলন", listen:"শুনুন", recite:"তিলাওয়াত", test:"পরীক্ষা",
        mistakes:"ভুল", book:"মুসহাফ", veil:"ঢাকুন",
+       hearSabaq:"সবক শুনুন", hearPage:"পুরো পাতা শুনুন", once:"একবার", times:"{0} বার", endless:"অবিরাম",
        edition:"মুসহাফ ও লেখার আকার",
        weakOn:"এই পাতা দুর্বল বলে রাখলাম",
        weakOff:"দুর্বলের চিহ্ন তুলে নিলাম" },
   en:{ trOff:"Off", trUnder:"Below the page", trOnly:"Only translation", practice:"Practise", listen:"Listen", recite:"Recite", test:"Test",
        mistakes:"Mistakes", book:"Mushaf", veil:"Cover",
+       hearSabaq:"Play the lesson", hearPage:"Play the page", once:"Once", times:"{0} times", endless:"Endless",
        edition:"Mushaf and text size",
        weakOn:"Page marked weak", weakOff:"Weak mark removed" },
   ur:{ trOff:"بند", trUnder:"صفحے کے نیچے", trOnly:"صرف ترجمہ", practice:"مشق", listen:"سنیے", recite:"تلاوت", test:"امتحان",
        mistakes:"غلطیاں", book:"مصحف", veil:"ڈھانپیں",
+       hearSabaq:"سبق سنیے", hearPage:"پورا صفحہ سنیے", once:"ایک بار", times:"{0} بار", endless:"لامحدود",
        edition:"مصحف اور تحریر کا سائز",
        weakOn:"یہ صفحہ کمزور نشان زد", weakOff:"نشان ہٹا دیا" },
   zh:{ trOff:"关闭", trUnder:"页面下方", trOnly:"仅译文", practice:"练习", listen:"聊听", recite:"诵读", test:"测试",
        mistakes:"错处", book:"经本", veil:"遮住",
+       hearSabaq:"播放今日功课", hearPage:"播放整页", once:"一遍", times:"{0} 遍", endless:"不限次",
        edition:"经本与字号",
        weakOn:"已标为薄弱", weakOff:"已取消标记" },
   ar:{ trOff:"مغلق", trUnder:"أسفل الصفحة", trOnly:"الترجمة فقط", practice:"تمرين", listen:"استمع", recite:"تلاوة", test:"اختبار",
        mistakes:"الأخطاء", book:"المصحف", veil:"استر",
+       hearSabaq:"استمع إلى الدرس", hearPage:"استمع إلى الصفحة", once:"مرة", times:"{0} مرات", endless:"بلا توقف",
        edition:"المصحف وحجم الخط",
        weakOn:"وُسِمت الصفحة بالضعف", weakOff:"رُفِعت العلامة" }
 };
@@ -7677,12 +7696,14 @@ function rdSheetDef(which){
     ["mistakes", function(){ return B.mistakes; }, RIC.flag, null,
                  function(){ return !!S.weak[RD.page]; }]
   ]];
+  /* One row, and it says what it plays. The reader has already chosen the
+     lesson on the page; "play the selection" left them wondering what was
+     selected. How many times is a list below, not a chip counted up to. */
   if (which === "listen") return [B.listen, [
-    ["playpause", function(){ return (rdAudio && !rdAudio.paused) ? L.rd.pause : L.rd.playAll; },
+    ["playpause", function(){ return (rdAudio && !rdAudio.paused) ? L.rd.pause
+                    : (RD.sel ? B.hearSabaq : B.hearPage); },
                   (rdAudio && !rdAudio.paused) ? RIC.pause : RIC.play,
-                  function(){ return n(RD.speed || 1) + "\u00d7"; }, null, "speed"],
-    ["loopc",     function(){ return L.rd.loop; }, RIC.loop,
-                  function(){ return RD.loops === Infinity ? "\u221e" : n(RD.loops); }]
+                  function(){ return n(RD.speed || 1) + "\u00d7"; }, null, "speed"]
   ]];
   if (which === "test") return [B.test, [
     ["exam",    function(){ return L.ex.open; },     RIC.test],
@@ -7731,10 +7752,18 @@ function rdSheetOpen(which){
      timer are, and sending them to another screen to find them is why this
      sheet read as empty. */
   if (which === "listen"){
-    var T = lsL(), opts = [0, 10, 20, 30, 45, 60];
+    var T = lsL(), B = barL(), opts = [0, 10, 20, 30, 45, 60];
     var ex = document.createElement("div");
     ex.className = "shx";
+    var LPS = [1, 3, 5, 7, Infinity];
     ex.innerHTML =
+      '<div class="shlab">' + esc(L.rd.loop) + '</div>' +
+      '<select id="sh-loop">' + LPS.map(function(v){
+        return '<option value="' + (v === Infinity ? "0" : v) + '"' +
+               (RD.loops === v ? " selected" : "") + '>' +
+               esc(v === Infinity ? B.endless : (v === 1 ? B.once : fmt(B.times, n(v)))) +
+               '</option>';
+      }).join("") + '</select>' +
       '<div class="shlab">' + esc(L.rd.reciter) + '</div>' +
       '<select id="sh-qari">' + RECITERS.map(function(r){
         return '<option value="' + r.id + '"' + (S.settings.reciter === r.id ? " selected" : "") + '>' +
@@ -7746,6 +7775,15 @@ function rdSheetOpen(which){
                (m ? fmt(T.min, n(m)) : T.off) + '</option>';
       }).join("") + '</select>';
     sh.appendChild(ex);
+    var lp = ex.querySelector("#sh-loop");
+    if (lp) lp.onchange = function(){
+      var v = +this.value;
+      RD.loops = v ? v : Infinity;
+      S.settings.loops = v;                /* 0 is endless, and outlives a restart */
+      try { save(); } catch(e){}
+      if (rdAudio) RD.left = RD.loops;
+      if (KAH.active) kaHandoff();         /* changed while it plays in the pocket */
+    };
     var qs = ex.querySelector("#sh-qari");
     qs.onchange = function(){
       S.settings.reciter = this.value;
@@ -7798,13 +7836,6 @@ function rdSheetOpen(which){
         else if (RD.tr === false){ RD.tr = true; }
         else { RD.trOnly = true; RD.tr = true; }
         renderMushaf();
-        rdSheetOpen(which);
-        return;
-      }
-      if (k === "loopc"){
-        var LP = [1,3,5,7,Infinity];
-        RD.loops = LP[(LP.indexOf(RD.loops) + 1) % LP.length];
-        if (rdAudio) RD.left = RD.loops;
         rdSheetOpen(which);
         return;
       }
@@ -11594,6 +11625,7 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     if (!S.settings.reciter) S.settings.reciter = "Ayman_Sowaid_64kbps";
     if (S.settings.notifyAt == null) S.settings.notifyAt = "";
     if (S.settings.speed) RD.speed = +S.settings.speed || 1;
+    if (S.settings.loops != null) RD.loops = +S.settings.loops ? +S.settings.loops : Infinity;
     if (S.settings.zikrEvery == null) S.settings.zikrEvery = 0;
     if (S.settings.zikrVoice == null) S.settings.zikrVoice = true;
     if (!S.rev) S.rev = {};
