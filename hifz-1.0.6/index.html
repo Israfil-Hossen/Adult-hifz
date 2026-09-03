@@ -7726,8 +7726,7 @@ function rdSheetOpen(which){
       '<div class="shlab">' + esc(L.rd.speed) + '</div>' +
       '<select id="sh-speed">' + [0.5, 0.75, 1, 1.25, 1.5, 2].map(function(v){
         return '<option value="' + v + '"' + ((RD.speed || 1) === v ? " selected" : "") + '>' +
-               n(v) + '\u00d7' + (v === 1 ? '' : (v < 1 ? ' \u00b7 ' + esc(L.rd.slow || "") : '')) +
-               '</option>';
+               n(v) + '×' + '</option>';
       }).join("") + '</select>' +
       '<div class="shlab">' + esc(T.sleep) + '</div>' +
       '<select id="sh-sleep">' + opts.map(function(m){
