@@ -4078,21 +4078,76 @@ function parseKey(k){ var p = k.split("-"); return new Date(+p[0], +p[1]-1, +p[2
 function addDays(d, x){ var y = new Date(d.getTime()); y.setDate(y.getDate() + x); return y; }
 function daysBetween(a, b){ return Math.round((parseKey(b) - parseKey(a)) / 86400000); }
 function hijriAdj(){ return (S && S.settings && +S.settings.hijriAdj) || 0; }
-function hijriDate(d0){
+
+/* The Hijri date, computed here rather than asked of the phone.
+
+   It used to come from Intl with the islamic-umalqura calendar. That works on
+   a desktop browser and on a full Android WebView; on a trimmed one the
+   calendar simply is not there, Intl throws, and the date vanished from the
+   header with no error and no clue - which is exactly what a reader reported.
+
+   Umm al-Qura is a published table, not a formula: the tabular approximation
+   every "hijri in 15 lines" snippet uses is a day out on roughly half the days
+   of any year, which is worse than useless on the first of Ramadan. So the
+   table itself is here - one 12-bit number per year, bit m set when month m+1
+   runs to 30 days - covering 1435-1510 AH (2013-2087) in under 400 bytes.
+   Same answer on every device, and no network. */
+var HJ_Y0 = 1435;
+var HJ_EPOCH = Date.UTC(2013, 10, 4);   /* 1 Muharram 1435 */
+var HJ_LEN = [2901,2730,2381,1181,2397,698,1461,1450,3413,2714,2350,622,1373,2778,
+  1748,1701,2855,2637,1197,1389,2906,1876,3913,3730,3366,2646,854,1717,2986,2962,
+  2853,1675,2715,1370,2778,1460,3497,2898,2714,1334,630,1397,2802,1748,1705,1365,
+  685,1213,2490,1396,2921,2898,2709,1325,2653,1242,2777,1714,3733,3626,3222,2350,
+  2733,1386,3429,3402,3349,1579,3163,1338,1717,3506,3428,3369,2645,1197];
+var HJ_MONTHS = {
+  en:["Muharram","Safar","Rabi\u02bb I","Rabi\u02bb II","Jumada I","Jumada II",
+      "Rajab","Sha\u02bbban","Ramadan","Shawwal","Dhu al-Qa\u02bbdah","Dhu al-Hijjah"],
+  bn:["\u09ae\u09c1\u09b9\u09be\u09b0\u09cd\u09b0\u09ae","\u09b8\u09ab\u09b0","\u09b0\u09ac\u09bf\u0989\u09b2 \u0986\u0989\u09df\u09be\u09b2","\u09b0\u09ac\u09bf\u0989\u09b8 \u09b8\u09be\u09a8\u09bf",
+      "\u099c\u09c1\u09ae\u09be\u09a6\u09be\u09b2 \u0989\u09b2\u09be","\u099c\u09c1\u09ae\u09be\u09a6\u09be\u09b8 \u09b8\u09be\u09a8\u09bf","\u09b0\u099c\u09ac","\u09b6\u09be\u09ac\u09be\u09a8",
+      "\u09b0\u09ae\u099c\u09be\u09a8","\u09b6\u09be\u0993\u09df\u09be\u09b2","\u099c\u09bf\u09b2\u0995\u09a6","\u099c\u09bf\u09b2\u09b9\u099c"],
+  ur:["\u0645\u062d\u0631\u0645","\u0635\u0641\u0631","\u0631\u0628\u06cc\u0639 \u0627\u0644\u0627\u0648\u0644","\u0631\u0628\u06cc\u0639 \u0627\u0644\u062b\u0627\u0646\u06cc",
+      "\u062c\u0645\u0627\u062f\u06cc \u0627\u0644\u0627\u0648\u0644","\u062c\u0645\u0627\u062f\u06cc \u0627\u0644\u062b\u0627\u0646\u06cc","\u0631\u062c\u0628","\u0634\u0639\u0628\u0627\u0646",
+      "\u0631\u0645\u0636\u0627\u0646","\u0634\u0648\u0627\u0644","\u0630\u0648\u0627\u0644\u0642\u0639\u062f\u06c1","\u0630\u0648\u0627\u0644\u062d\u062c\u06c1"],
+  ar:["\u0645\u062d\u0631\u0645","\u0635\u0641\u0631","\u0631\u0628\u064a\u0639 \u0627\u0644\u0623\u0648\u0644","\u0631\u0628\u064a\u0639 \u0627\u0644\u0622\u062e\u0631",
+      "\u062c\u0645\u0627\u062f\u0649 \u0627\u0644\u0623\u0648\u0644\u0649","\u062c\u0645\u0627\u062f\u0649 \u0627\u0644\u0622\u062e\u0631\u0629","\u0631\u062c\u0628","\u0634\u0639\u0628\u0627\u0646",
+      "\u0631\u0645\u0636\u0627\u0646","\u0634\u0648\u0627\u0644","\u0630\u0648 \u0627\u0644\u0642\u0639\u062f\u0629","\u0630\u0648 \u0627\u0644\u062d\u062c\u0629"]
+};
+/* [year, month 1-12, day 1-30] for a Gregorian date, or null outside the table */
+function hijriParts(d0){
   var d = addDays(d0, hijriAdj());
-  var code = (L && L.code) || "en";
-  var loc = { bn:"bn", ur:"ur", zh:"zh", en:"en", ar:"ar-SA" }[code] || "en";
-  var suffix = { bn:"হিজরি", ur:"ھ", zh:"希吉来历", en:"AH", ar:"هـ" }[code] || "AH";
-  function build(l){
-    /* Intl appends an era designator ("যুগ" in Bengali) — drop it and use the
-       proper hijri label instead. */
-    var parts = new Intl.DateTimeFormat(l, { day:"numeric", month:"long", year:"numeric" }).formatToParts(d);
-    var out = parts.filter(function(p){ return p.type !== "era"; })
-                   .map(function(p){ return p.value; }).join("");
-    return out.replace(/[\s,·]+$/, "") + " " + suffix;
+  var days = Math.floor((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - HJ_EPOCH) / 86400000);
+  if (days < 0) return null;
+  for (var y = 0; y < HJ_LEN.length; y++){
+    for (var m = 0; m < 12; m++){
+      var len = (HJ_LEN[y] & (1 << m)) ? 30 : 29;
+      if (days < len) return [HJ_Y0 + y, m + 1, days + 1];
+      days -= len;
+    }
   }
-  try { return build(loc + "-u-ca-islamic-umalqura"); }
-  catch(e){ try { return build("en-u-ca-islamic"); } catch(e2){ return ""; } }
+  return null;
+}
+function hijriDate(d0){
+  var h = hijriParts(d0);
+  var code = (L && L.code) || "en";
+  if (!h){
+    /* beyond the table - the phone may still know, and if it does not, nothing
+       is shown rather than something wrong */
+    try {
+      var d = addDays(d0, hijriAdj());
+      var parts = new Intl.DateTimeFormat(code + "-u-ca-islamic-umalqura",
+                    { day:"numeric", month:"long", year:"numeric" }).formatToParts(d);
+      return parts.filter(function(p){ return p.type !== "era"; })
+                  .map(function(p){ return p.value; }).join("").replace(/[\s,\u00b7]+$/, "");
+    } catch(e){ return ""; }
+  }
+  var suffix = { bn:"\u09b9\u09bf\u099c\u09b0\u09bf", ur:"\u06be", zh:"\u5e0c\u5409\u6765\u5386", en:"AH", ar:"\u0647\u0640" }[code] || "AH";
+  /* Chinese names the months by number, as the platform did before this */
+  if (code === "zh") return n(h[0]) + "\u5e74" + n(h[1]) + "\u6708" + n(h[2]) + "\u65e5 " + suffix;
+  var mo = (HJ_MONTHS[code] || HJ_MONTHS.en)[h[1] - 1];
+  if (code === "en") return mo + " " + n(h[2]) + ", " + n(h[0]) + " " + suffix;
+  /* Arabic and Urdu take the Arabic comma, not the Latin one */
+  var comma = (code === "ar" || code === "ur") ? "،" : ",";
+  return n(h[2]) + " " + mo + comma + " " + n(h[0]) + " " + suffix;
 }
 function clockText(d){
   var hr = d.getHours(), mer = (L.hj ? (hr < 12 ? L.hj.am : L.hj.pm) : (hr < 12 ? "AM" : "PM"));
@@ -9631,21 +9686,21 @@ async function insPrompt(){
    open or in the background, and remembers the last one it fired so a reload
    does not repeat it. */
 var ZIKR = [
-  { ar:"سُبْحَانَ اللّٰه",              nm:{ en:"Glory be to Allah", bn:"আল্লাহ পবিত্র", ur:"اللہ پاک ہے", zh:"赞主清净" } },
-  { ar:"اَلْحَمْدُ لِلّٰه",              nm:{ en:"All praise is for Allah", bn:"সব প্রশংসা আল্লাহর", ur:"سب تعریف اللہ کے لیے", zh:"一切赞颂全归主" } },
-  { ar:"لَا إِلٰهَ إِلَّا اللّٰه",        nm:{ en:"There is no god but Allah", bn:"আল্লাহ ছাড়া কোনো ইলাহ নেই", ur:"اللہ کے سوا کوئی معبود نہیں", zh:"万物非主，唯有真主" } },
-  { ar:"اَللّٰهُ أَكْبَر",               nm:{ en:"Allah is the greatest", bn:"আল্লাহ সবচেয়ে মহান", ur:"اللہ سب سے بڑا ہے", zh:"真主至大" } },
-  { ar:"أَسْتَغْفِرُ اللّٰه",            nm:{ en:"I seek Allah's forgiveness", bn:"আমি আল্লাহর ক্ষমা চাই", ur:"میں اللہ سے بخشش مانگتا ہوں", zh:"我向主求恕" } },
-  { ar:"لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰه", nm:{ en:"There is no power except with Allah", bn:"আল্লাহ ছাড়া কোনো শক্তি নেই", ur:"اللہ کے سوا کوئی طاقت نہیں", zh:"无能无力，全凭真主" } },
-  { ar:"سُبْحَانَ اللّٰهِ وَبِحَمْدِهِ",   nm:{ en:"Glory be to Allah and praise be to Him", bn:"আল্লাহ পবিত্র, সব প্রশংসা তাঁরই", ur:"اللہ پاک ہے اور اسی کی حمد ہے", zh:"赞主清净，赞主超绝" } },
-  { ar:"اَللّٰهُمَّ صَلِّ عَلٰى مُحَمَّد", nm:{ en:"O Allah, send blessings upon Muhammad", bn:"হে আল্লাহ, মুহাম্মদের উপর রহমত পাঠান", ur:"اے اللہ، محمد پر رحمت بھیج", zh:"主啊，赐福于穆罕默德" } },
-  { ar:"حَسْبُنَا اللّٰهُ وَنِعْمَ الْوَكِيل", nm:{ en:"Allah is enough for us, the best guardian", bn:"আল্লাহই আমাদের জন্য যথেষ্ট, তিনি উত্তম অভিভাবক", ur:"ہمیں اللہ کافی ہے، وہی بہترین کارساز", zh:"真主是我们的至优护佑者" } }
+  { f:"subhanallah.mp3", ar:"سُبْحَانَ اللّٰه",              nm:{ en:"Glory be to Allah", bn:"আল্লাহ পবিত্র", ur:"اللہ پاک ہے", zh:"赞主清净" } },
+  { f:"alhamdulillah.mp3", ar:"اَلْحَمْدُ لِلّٰه",              nm:{ en:"All praise is for Allah", bn:"সব প্রশংসা আল্লাহর", ur:"سب تعریف اللہ کے لیے", zh:"一切赞颂全归主" } },
+  { f:"lailahaillallah.mp3", ar:"لَا إِلٰهَ إِلَّا اللّٰه",        nm:{ en:"There is no god but Allah", bn:"আল্লাহ ছাড়া কোনো ইলাহ নেই", ur:"اللہ کے سوا کوئی معبود نہیں", zh:"万物非主，唯有真主" } },
+  { f:"allahuakbar.mp3", ar:"اَللّٰهُ أَكْبَر",               nm:{ en:"Allah is the greatest", bn:"আল্লাহ সবচেয়ে মহান", ur:"اللہ سب سے بڑا ہے", zh:"真主至大" } },
+  { f:"astaghfirullah.mp3", ar:"أَسْتَغْفِرُ اللّٰه",            nm:{ en:"I seek Allah's forgiveness", bn:"আমি আল্লাহর ক্ষমা চাই", ur:"میں اللہ سے بخشش مانگتا ہوں", zh:"我向主求恕" } },
+  { f:"lahawla.mp3", ar:"لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰه", nm:{ en:"There is no power except with Allah", bn:"আল্লাহ ছাড়া কোনো শক্তি নেই", ur:"اللہ کے سوا کوئی طاقت نہیں", zh:"无能无力，全凭真主" } },
+  { f:"subhanallahwabihamdih.mp3", ar:"سُبْحَانَ اللّٰهِ وَبِحَمْدِهِ",   nm:{ en:"Glory be to Allah and praise be to Him", bn:"আল্লাহ পবিত্র, সব প্রশংসা তাঁরই", ur:"اللہ پاک ہے اور اسی کی حمد ہے", zh:"赞主清净，赞主超绝" } },
+  { f:"sallialamuhammad.mp3", ar:"اَللّٰهُمَّ صَلِّ عَلٰى مُحَمَّد", nm:{ en:"O Allah, send blessings upon Muhammad", bn:"হে আল্লাহ, মুহাম্মদের উপর রহমত পাঠান", ur:"اے اللہ، محمد پر رحمت بھیج", zh:"主啊，赐福于穆罕默德" } },
+  { f:"hasbunallah.mp3", ar:"حَسْبُنَا اللّٰهُ وَنِعْمَ الْوَكِيل", nm:{ en:"Allah is enough for us, the best guardian", bn:"আল্লাহই আমাদের জন্য যথেষ্ট, তিনি উত্তম অভিভাবক", ur:"ہمیں اللہ کافی ہے، وہی بہترین کارساز", zh:"真主是我们的至优护佑者" } }
 ];
 /* durood — its own pool: one of these on every other reminder, and on Friday every time */
 var DUROOD = [
-  { ar:"اَللّٰهُمَّ صَلِّ عَلٰى مُحَمَّدٍ وَعَلٰى آلِ مُحَمَّد", nm:{ en:"O Allah, send blessings upon Muhammad and his family", bn:"হে আল্লাহ, মুহাম্মদ ও তাঁর পরিবারের উপর রহমত পাঠান", ur:"اے اللہ، محمد اور آلِ محمد پر رحمت بھیج", zh:"主啊，赐福于穆罕默德及其后裔" } },
-  { ar:"صَلَّى اللّٰهُ عَلَيْهِ وَسَلَّم", nm:{ en:"May Allah's peace and blessings be upon him", bn:"তাঁর উপর আল্লাহর রহমত ও শান্তি বর্ষিত হোক", ur:"اللہ کی رحمت و سلامتی ہو ان پر", zh:"愿主赐他慈悯与平安" } },
-  { ar:"اَللّٰهُمَّ صَلِّ وَسَلِّمْ عَلٰى نَبِيِّنَا مُحَمَّد", nm:{ en:"O Allah, send blessings and peace upon our Prophet Muhammad", bn:"হে আল্লাহ, আমাদের নবী মুহাম্মদের উপর রহমত ও শান্তি পাঠান", ur:"اے اللہ، ہمارے نبی محمد پر درود و سلام بھیج", zh:"主啊，赐福我们的先知穆罕默德并使其平安" } }
+  { f:"durood-ibrahim.mp3", ar:"اَللّٰهُمَّ صَلِّ عَلٰى مُحَمَّدٍ وَعَلٰى آلِ مُحَمَّد", nm:{ en:"O Allah, send blessings upon Muhammad and his family", bn:"হে আল্লাহ, মুহাম্মদ ও তাঁর পরিবারের উপর রহমত পাঠান", ur:"اے اللہ، محمد اور آلِ محمد پر رحمت بھیج", zh:"主啊，赐福于穆罕默德及其后裔" } },
+  { f:"sallallahualayhi.mp3", ar:"صَلَّى اللّٰهُ عَلَيْهِ وَسَلَّم", nm:{ en:"May Allah's peace and blessings be upon him", bn:"তাঁর উপর আল্লাহর রহমত ও শান্তি বর্ষিত হোক", ur:"اللہ کی رحمت و سلامتی ہو ان پر", zh:"愿主赐他慈悯与平安" } },
+  { f:"sallwasallim.mp3", ar:"اَللّٰهُمَّ صَلِّ وَسَلِّمْ عَلٰى نَبِيِّنَا مُحَمَّد", nm:{ en:"O Allah, send blessings and peace upon our Prophet Muhammad", bn:"হে আল্লাহ, আমাদের নবী মুহাম্মদের উপর রহমত ও শান্তি পাঠান", ur:"اے اللہ، ہمارے نبی محمد پر درود و سلام بھیج", zh:"主啊，赐福我们的先知穆罕默德并使其平安" } }
 ];
 DUROOD.forEach(function(z){ z.say = z.ar.replace(/[\u064B-\u0652\u0670\u06D6-\u06ED]/g, ""); });
 ZIKR.forEach(function(z){ z.say = z.ar.replace(/[\u064B-\u0652\u0670\u06D6-\u06ED]/g, ""); });
@@ -9724,8 +9779,52 @@ function ntTick(){
     }
   }
 }
+/* Which recording says this phrase, if the app carries one. Absent, the
+   notification still arrives - with the phone's own sound, as before. */
+var ZAUDIO = {};
+function zikrHave(f){ return !!(f && ZAUDIO[f]); }
+/* one probe per file at startup: HEAD against our own origin, no network */
+function zikrScan(){
+  var pool = ZIKR.concat(DUROOD);
+  pool.forEach(function(z){
+    if (!z.f || ZAUDIO[z.f] !== undefined) return;
+    ZAUDIO[z.f] = false;
+    try {
+      fetch("zikr/" + z.f, { method:"HEAD" }).then(function(r){
+        ZAUDIO[z.f] = !!(r && r.ok);
+      }).catch(function(){});
+    } catch(e){}
+  });
+}
+/* The whole dhikr set, in the reader's language, for Android to hold.
+   It goes native for the same reason the daily reminder did: a setInterval
+   only runs while the app is open, which is the one time nobody needs it. */
+function ntZikrNative(){
+  var R = ntPlugin();
+  if (!R || !R.zikr) return false;
+  var every = +S.settings.zikrEvery || 0;
+  var pool = ZIKR.concat(DUROOD);
+  try {
+    R.zikr({
+      every: every,
+      items: !every ? [] : pool.map(function(z){
+        return { t:z.ar, b:(L.code === "ar" ? "" : (z.nm[L.code] || z.nm.en)),
+                 f:(ntVoiceOn() && zikrHave(z.f)) ? z.f : "" };
+      })
+    });
+  } catch(e){ return false; }
+  return true;
+}
 function ntSchedule(){
   clearInterval(NT.timer);
+  /* Android holds the dhikr alarm too now, so the page timer must not also
+     fire one - that is how a reader ends up reminded twice a minute apart */
+  if (ntZikrNative()){
+    if (!ntOn() || !S) return;
+    NT.timer = setInterval(ntTickDaily, 30000);
+    ntTickDaily();
+    return;
+  }
   /* where Android holds the alarm the page must not also fire one, or the
      reader is reminded twice */
   var native = ntNative();
@@ -9738,6 +9837,13 @@ function ntTickZikr(){
   var was = S.settings.notifyAt;
   S.settings.notifyAt = "";
   try { ntTick(); } finally { S.settings.notifyAt = was; }
+}
+/* the mirror of the above: Android has the dhikr, we keep the lesson */
+function ntTickDaily(){
+  if (!ntOn() || !S) return;
+  var was = S.settings.zikrEvery;
+  S.settings.zikrEvery = 0;
+  try { ntTick(); } finally { S.settings.zikrEvery = was; }
 }
 
 /* ---------- recording + phrase loop ----------
@@ -11796,6 +11902,7 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     if (S.settings.speed) RD.speed = +S.settings.speed || 1;
     if (S.settings.loops != null) RD.loops = +S.settings.loops ? +S.settings.loops : Infinity;
     if (S.settings.zikrEvery == null) S.settings.zikrEvery = 0;
+    try { zikrScan(); } catch(e){}
     if (S.settings.zikrVoice == null) S.settings.zikrVoice = true;
     if (!S.rev) S.rev = {};
     if (!S.hl) S.hl = {};

@@ -40,6 +40,16 @@ public class ReminderReceiver extends BroadcastReceiver {
     static final int    ALARM_ID  = 7311;
     static final int    NOTE_ID   = 7312;
 
+    /* the dhikr is its own alarm, its own channel and its own notification:
+       it repeats through the day and must never replace the daily lesson */
+    static final String ZCHANNEL  = "hifz-zikr";
+    static final String ACT_ZIKR  = "com.israfilhossen.hifz.ZIKR";
+    static final String KEY_ZEVERY = "zevery";
+    static final String KEY_ZITEMS = "zitems";
+    static final String KEY_ZAT    = "zat";
+    static final int    ZALARM_ID = 7321;
+    static final int    ZNOTE_ID  = 7322;
+
     @Override
     public void onReceive(Context ctx, Intent intent) {
         String action = intent == null ? null : intent.getAction();
@@ -50,8 +60,11 @@ public class ReminderReceiver extends BroadcastReceiver {
             SharedPreferences p = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
             int h = p.getInt(KEY_HOUR, -1), m = p.getInt(KEY_MIN, -1);
             if (h >= 0 && m >= 0) ReminderPlugin.schedule(ctx, h, m);
+            if (p.getInt(KEY_ZEVERY, 0) > 0) ReminderPlugin.scheduleZikr(ctx);
             return;
         }
+
+        if (ACT_ZIKR.equals(action)) { showZikr(ctx); ReminderPlugin.scheduleZikr(ctx); return; }
 
         show(ctx);
         /* an exact alarm fires once; ask for tomorrow's before this one ends */
@@ -61,6 +74,69 @@ public class ReminderReceiver extends BroadcastReceiver {
     }
 
     boolean post(Context ctx) { return show(ctx); }
+    boolean postZikr(Context ctx) { return showZikr(ctx); }
+
+    /** One dhikr, then the next one next time.
+     *
+     *  The phrases, their meanings and the name of the sound file for each all
+     *  come from the web layer, because the app speaks five languages and this
+     *  side of the bridge knows none of them. The index rotates in prefs so a
+     *  reader hears the whole set through the day rather than the same phrase
+     *  every hour. Silent between the hours the reader asked for quiet. */
+    private boolean showZikr(Context ctx) {
+        SharedPreferences p = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        int every = p.getInt(KEY_ZEVERY, 0);
+        if (every <= 0) return false;
+
+        int hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
+        if (hour < 5 || hour >= 22) return false;      /* the night is not for pinging */
+
+        String raw = p.getString(KEY_ZITEMS, "");
+        if (raw == null || raw.length() == 0) return false;
+        String title, body, file = "";
+        try {
+            JSONArray arr = new JSONArray(raw);
+            if (arr.length() == 0) return false;
+            int at = p.getInt(KEY_ZAT, 0) % arr.length();
+            JSONObject o = arr.getJSONObject(at);
+            title = o.optString("t", "");
+            body  = o.optString("b", "");
+            file  = o.optString("f", "");
+            p.edit().putInt(KEY_ZAT, (at + 1) % arr.length()).apply();
+        } catch (JSONException e) { return false; }
+        if (title.length() == 0) return false;
+
+        NotificationManager nm =
+                (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (nm == null) return false;
+        boolean spoken = ZikrSound.play(ctx, file);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel ch = new NotificationChannel(
+                    ZCHANNEL, "Dhikr", NotificationManager.IMPORTANCE_DEFAULT);
+            ch.setDescription("A short dhikr through the day");
+            /* the recording is the sound; a chime on top of it is two sounds */
+            if (spoken) ch.setSound(null, null);
+            nm.createNotificationChannel(ch);
+        }
+
+        Intent open = new Intent(ctx, MainActivity.class);
+        open.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) flags |= PendingIntent.FLAG_IMMUTABLE;
+        PendingIntent pi = PendingIntent.getActivity(ctx, 2, open, flags);
+
+        Notification.Builder b = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                ? new Notification.Builder(ctx, ZCHANNEL) : new Notification.Builder(ctx);
+        b.setSmallIcon(R.drawable.ic_stat_play)
+         .setContentTitle(title)
+         .setContentIntent(pi)
+         .setAutoCancel(true);
+        if (spoken && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) b.setSound(null);
+        if (body.length() > 0) b.setContentText(body);
+
+        try { nm.notify(ZNOTE_ID, b.build()); return true; }
+        catch (SecurityException e) { return false; }
+    }
 
     /** How long since the app was opened, and what to say about it.
      *

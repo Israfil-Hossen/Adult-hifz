@@ -68,6 +68,57 @@ public class ReminderPlugin extends Plugin {
         }
     }
 
+    static PendingIntent zPending(Context ctx) {
+        Intent i = new Intent(ctx, ReminderReceiver.class).setAction(ReminderReceiver.ACT_ZIKR);
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) flags |= PendingIntent.FLAG_IMMUTABLE;
+        return PendingIntent.getBroadcast(ctx, ReminderReceiver.ZALARM_ID, i, flags);
+    }
+
+    /** The dhikr alarm: the next one, `every` minutes out.
+     *
+     *  The web layer used to run this on a setInterval, which meant it only
+     *  ever fired while the app was open and being looked at - the one moment
+     *  a reminder is not needed. Inexact on purpose: a dhikr does not care
+     *  about the minute, and letting Android batch it costs no battery. */
+    static void scheduleZikr(Context ctx) {
+        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+        if (am == null) return;
+        SharedPreferences p = ctx.getSharedPreferences(ReminderReceiver.PREFS, Context.MODE_PRIVATE);
+        int every = p.getInt(ReminderReceiver.KEY_ZEVERY, 0);
+        PendingIntent pi = zPending(ctx);
+        if (every <= 0) { am.cancel(pi); return; }
+        long when = System.currentTimeMillis() + every * 60000L;
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, when, pi);
+            } else {
+                am.set(AlarmManager.RTC_WAKEUP, when, pi);
+            }
+        } catch (SecurityException ignored) {}
+    }
+
+    /** zikr({every, items:[{t,b,f}]}): the phrases and how often. */
+    @PluginMethod
+    public void zikr(PluginCall call) {
+        Context ctx = getContext();
+        Integer every = call.getInt("every");
+        JSArray items = call.getArray("items");
+        SharedPreferences.Editor e =
+                ctx.getSharedPreferences(ReminderReceiver.PREFS, Context.MODE_PRIVATE).edit();
+        e.putInt(ReminderReceiver.KEY_ZEVERY, every == null ? 0 : every);
+        e.putString(ReminderReceiver.KEY_ZITEMS, items == null ? "" : items.toString());
+        e.apply();
+        scheduleZikr(ctx);
+        call.resolve(new JSObject().put("every", every == null ? 0 : every));
+    }
+
+    /** Fire one now, so a reader can hear what they just switched on. */
+    @PluginMethod
+    public void zikrNow(PluginCall call) {
+        call.resolve(new JSObject().put("shown", new ReminderReceiver().postZikr(getContext())));
+    }
+
     @PluginMethod
     public void set(PluginCall call) {
         Integer hour = call.getInt("hour"), minute = call.getInt("minute");
