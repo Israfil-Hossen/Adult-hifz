@@ -1,24 +1,33 @@
 # Play Store upload — version 1.0.8
 
-Everything in this folder is ready to paste or upload, except two things: the
-screenshots, which have to be taken on the phone (see `screenshots/README.md`),
-and the bundle itself, which is a build output and is kept out of git. Build it
-with `cd android && ./gradlew bundleRelease`, then copy
-`android/app/build/outputs/bundle/release/app-release.aab` in here.
+Everything in this folder is ready to paste or upload except the screenshots,
+which have to be taken on the phone (see `screenshots/README.md`).
+
+The bundle is built and signed and sitting here, but it is a build output and
+git does not carry it — rebuild it any time with `cd android && ./gradlew
+bundleRelease`, then copy `android/app/build/outputs/bundle/release/app-release.aab`
+back in.
+
+Signature checked against the published key: SHA-256
+`F1:8D:AB:AA:3C:D6:38:7C:C8:B2:14:FA:30:1E:A0:8D:54:FF:34:76:F9:3C:5B:FD:06:42:8C:BE:D8:CC:47:FA`
+— the same fingerprint as `adult-hifz.jks`, which is what makes this an update
+to the existing listing rather than a new app.
 
 ## The build
 
 | | |
 |---|---|
-| File | `app-release.aab` — build it, see above |
-| Size | about 12 MB |
-| versionCode | **3** |
+| File | `app-release.aab` — in this folder, built and signed |
+| Size | 12.0 MB |
+| versionCode | **4** |
 | versionName | **1.0.8** |
 | Signed with | `adult-hifz.jks` — the same key as the previous release |
 | Package | `com.israfilhossen.hifz` |
 
-The versionCode rises with every upload; Play refuses a duplicate. 1.0.5 was
-prepared but never published, so this release carries everything since 1.0.4.
+The versionCode rises with every upload; Play refuses a duplicate. What this
+tree has built, in order: 1 (1.0.4), 2 (1.0.5), 3 (1.0.6), 4 (1.0.8). If Play
+Console already shows 4 on a release, raise `versionCode` in
+`android/app/build.gradle` and build again — nothing else has to change.
 Signing with the same keystore is what lets this update the existing listing
 instead of becoming a new app — keep that `.jks` and its passwords backed up
 off this machine, or this listing can never be updated again.

@@ -1,9 +1,9 @@
-Memorise from the mushaf itself: select ayat - across two pages if you need to - and tap the tick; hold it for the whole page.
+Works offline. Every screen now opens with no connection — only recitation audio needs the network, or download a juz once and keep it.
 
-Listen mode plays a surah, juz or page range straight through, turning pages itself, and keeps playing with the screen off. 28 reciters, sleep timer.
+Play today's lesson on repeat: once, three, five, seven times, or endlessly. It keeps going with the screen off, all day.
 
-Download a surah for offline use - text, translation and recitation.
-Turn any page into translation only.
-A short guided tour on first run.
+A rest day no longer shuts the mushaf — open it, set a lesson from the page, and the day counts it.
 
-Fixed: the repeat count, and a crash when granting the microphone.
+The evening reminder speaks differently after a day away.
+
+Hijri date on every phone. Playback speed. Double-tap a word for its meaning.
