@@ -29,7 +29,7 @@
              the app closed and comes back after a restart -->
         <receiver
             android:name=".ReminderReceiver"
-            android:exported="false"
+            android:exported="true"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -67,7 +67,6 @@
     <!-- SCHEDULE_EXACT_ALARM is requested, not required: where it is refused the
          reminder still arrives, within a quarter of an hour instead of on the minute -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <!-- a phone with no microphone can still memorise: do not hide the app from it -->
     <uses-feature android:name="android.hardware.microphone" android:required="false" />

@@ -97,6 +97,39 @@ public class ReminderPlugin extends Plugin {
         call.resolve(new JSObject().put("set", false));
     }
 
+    /** Fire it right now. A daily alarm cannot be debugged by waiting a day:
+        this proves the whole chain - permission, channel, notification - in
+        one tap, and says so if any link is missing. */
+    @PluginMethod
+    public void testNow(PluginCall call) {
+        Context ctx = getContext();
+        SharedPreferences.Editor e =
+                ctx.getSharedPreferences(ReminderReceiver.PREFS, Context.MODE_PRIVATE).edit();
+        e.putString(ReminderReceiver.KEY_TITLE, call.getString("title", "Today's lesson"));
+        e.putString(ReminderReceiver.KEY_BODY, call.getString("body", ""));
+        e.apply();
+        boolean shown = new ReminderReceiver().post(ctx);
+        call.resolve(new JSObject().put("shown", shown));
+    }
+
+    /** What the phone will actually allow, so the screen can stop guessing. */
+    @PluginMethod
+    public void status(PluginCall call) {
+        Context ctx = getContext();
+        boolean exact = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+            exact = am != null && am.canScheduleExactAlarms();
+        }
+        boolean allowed = androidx.core.app.NotificationManagerCompat.from(ctx).areNotificationsEnabled();
+        SharedPreferences pr = ctx.getSharedPreferences(ReminderReceiver.PREFS, Context.MODE_PRIVATE);
+        call.resolve(new JSObject()
+                .put("exact", exact)
+                .put("allowed", allowed)
+                .put("hour", pr.getInt(ReminderReceiver.KEY_HOUR, -1))
+                .put("minute", pr.getInt(ReminderReceiver.KEY_MIN, -1)));
+    }
+
     /** Whether this phone will let us fire on the minute, so the page can say so. */
     @PluginMethod
     public void exactAllowed(PluginCall call) {

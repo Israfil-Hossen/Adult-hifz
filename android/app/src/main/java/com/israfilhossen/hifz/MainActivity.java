@@ -28,6 +28,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(AudioKeepAlivePlugin.class);
         registerPlugin(ReminderPlugin.class);
         registerPlugin(AudioStorePlugin.class);
+        registerPlugin(ScreenPlugin.class);
         super.onCreate(savedInstanceState);
 
         /* Android 15 forces edge-to-edge on anything targeting SDK 35+, and at

@@ -54,10 +54,12 @@ public class ReminderReceiver extends BroadcastReceiver {
         if (h >= 0 && m >= 0) ReminderPlugin.schedule(ctx, h, m);
     }
 
-    private void show(Context ctx) {
+    boolean post(Context ctx) { return show(ctx); }
+
+    private boolean show(Context ctx) {
         NotificationManager nm =
                 (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (nm == null) return;
+        if (nm == null) return false;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel ch = new NotificationChannel(
@@ -88,6 +90,7 @@ public class ReminderReceiver extends BroadcastReceiver {
             b.setContentText(body).setStyle(new Notification.BigTextStyle().bigText(body));
         }
 
-        try { nm.notify(NOTE_ID, b.build()); } catch (SecurityException ignored) { }
+        try { nm.notify(NOTE_ID, b.build()); return true; }
+        catch (SecurityException e) { return false; }
     }
 }
