@@ -2599,6 +2599,12 @@ html[dir="rtl"] .trlt,html[lang="ur"] .trlt,html[lang="ar"] .trlt{direction:rtl;
 .wmnsame button:hover{background:rgba(95,127,82,.14)}
 .wmean b{font-size:21px}
 .wmnlbl{text-align:center}
+.wdmean{padding:12px 16px 24px;text-align:center}
+.wdar{font-size:34px;line-height:1.9;color:var(--ink);direction:rtl}
+.wdm{font-size:19px;line-height:1.6;color:var(--verdigris);margin-top:4px}
+.wdmean .wmnvk{display:inline-block;margin-top:14px;opacity:.7}
+.wmplay{border:none;background:none;color:var(--verdigris);cursor:pointer;padding:4px}
+.wmplay svg{width:22px;height:22px}
 .wmnvk{font-family:var(--mono);font-size:11.5px;color:var(--verdigris);direction:ltr;display:inline-block}
 .wmnhint{text-align:center;font-size:11.5px;opacity:.55;margin:-2px 0 8px}
 /* word-for-word grid — right to left, meaning under each word */
@@ -8893,9 +8899,14 @@ async function rdPaint(p, isTodayPage){
         /* a tap is how a page gets held, scrolled past and brushed against.
            It no longer writes anything. */
       };
-      /* hold a word to ask about it: the meaning opens, and marking it is a
-         button in there rather than the thing a stray thumb does */
-      var lt = null, moved = false;
+      /* two taps ask what the ayah says; a hold asks about the one word and
+         offers to mark it. Ask and mark are different questions, so they are
+         different gestures. */
+      w.ondblclick = function(){
+        if (RD.pick || RD.phrase) return;
+        rdWordMean(pg, w);
+      };
+      var lt = null, moved = false, taps = 0, tapAt = 0;
       var openWord = function(){
         var hk = w.dataset.vk + "#" + (w.dataset.wi || 0);
         RD.selW = { vk:w.dataset.vk, wi:+(w.dataset.wi || 0), hk:hk };
@@ -8914,11 +8925,20 @@ async function rdPaint(p, isTodayPage){
       w.addEventListener("pointerdown", function(){
         if (RD.pick || RD.phrase) return;
         moved = false;
-        lt = setTimeout(function(){ lt = null; if (!moved) openWord(); }, 420);
+        var now = Date.now();
+        taps = (now - tapAt < 400) ? taps + 1 : 1;
+        tapAt = now;
+        lt = setTimeout(function(){ lt = null; if (!moved && taps < 2) openWord(); }, 420);
       });
       w.addEventListener("pointermove", function(){ moved = true; });
       ["pointerup","pointerleave","pointercancel"].forEach(function(ev){
         w.addEventListener(ev, function(){ if (lt){ clearTimeout(lt); lt = null; } });
+      });
+      /* dblclick is not dependable on a touch WebView, so the second tap is
+         counted here and the gesture works either way */
+      w.addEventListener("pointerup", function(){
+        if (RD.pick || RD.phrase || moved) return;
+        if (taps === 2){ taps = 0; rdWordMean(pg, w); }
       });
     });
   } catch(e){
@@ -9072,6 +9092,29 @@ function wmDragWire(){
   ["pointerup","pointercancel"].forEach(function(ev){
     grip.addEventListener(ev, function(){ if (on){ on = false; save(); } });
   });
+}
+/* one word, one meaning, nothing to decide */
+function rdWordMean(pg, el){
+  var mn = document.getElementById("rd-mean");
+  if (!mn || !el) return;
+  var vk = el.dataset.vk, fam = RD.fonts[RD.page] || "";
+  var m = (el.dataset.m || "").trim();
+  /* the word as the page prints it, minus the ayah number riding on it */
+  var face = el.innerHTML.replace(/<sup[\s\S]*?<\/sup>/g, "");
+  mn.classList.remove("wmtop");
+  mn.innerHTML =
+    '<div class="wmbar"><button class="wmx" aria-label="' + uit("close") + '">\u2715</button>' +
+    '<i class="gr"></i>' +
+    '<button class="wmplay" aria-label="' + esc(L.rd.playAll) + '">' + RIC.play + '</button></div>' +
+    '<div class="wdmean">' +
+      '<div class="wdar"' + (fam ? ' style="font-family:\'' + fam + '\'"' : '') + '>' + face + '</div>' +
+      '<div class="wdm">' + esc(m || "\u2014") + '</div>' +
+      '<span class="wmnvk">' + ayLabel(vk) + '</span>' +
+    '</div>';
+  mn.classList.add("on");
+  mn.scrollTop = 0;
+  var x = mn.querySelector(".wmx");     if (x) x.onclick = rdMeanClose;
+  var pl = mn.querySelector(".wmplay"); if (pl) pl.onclick = function(){ rdPlay([vk], 1, true); };
 }
 function rdMeanClose(){
   var mnc = document.getElementById("rd-mean");
