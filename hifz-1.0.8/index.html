@@ -2428,6 +2428,11 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .dlnm i{font-style:normal;font-size:11.5px;color:var(--ink-3)}
 .dlar{font-family:var(--arabic);font-size:14px;color:var(--ink-2)}
 .dlay{flex:none;font-size:11.5px;color:var(--ink-3);white-space:nowrap}
+/* text on the device, some recitation still missing - a state the old
+   single flag could not express, so it showed as never downloaded */
+.dlgot.part{background:var(--gold,#b8860b);border:none;cursor:pointer;padding:0}
+.dlrow.part{opacity:.92}
+.dlpart{font-style:normal;font-size:11.5px;color:var(--ink-3);font-weight:600}
 .dlfoot{margin-top:14px}
 .dlbar{height:6px;border-radius:999px;background:var(--paper-2);overflow:hidden;margin:10px 0 6px}
 .dlbar i{display:block;height:100%;background:var(--verdigris);width:0;transition:width .25s}
@@ -5439,26 +5444,69 @@ var DLL = {
   bn:{ q:"সূরার নম্বর বা নাম খুঁজুন", ayat:"আয়াত {0}", pgs:"পৃষ্ঠা {0}–{1}",
        picked:"{0}টি সূরা বাছা", none:"কিছু বাছা হয়নি", clear:"বাছাই মুছুন",
        surah:"সূরা", juz:"পারা", all:"পুরো কুরআন", nores:"কিছু পাওয়া যায়নি",
+       page:"এই পাতা", sabaq:"আজকের সবক", part:"লেখা আছে · {0}টি আয়াতের অডিও বাকি", retry:"বাকিটুকু আনুন",
+       busy:"এখন নামছে — শেষ হলে আবার চাপুন", leaveQ:"ডাউনলোড চলছে। থামাবেন?", pageDone:"পাতা {0} নামানো হলো", noSabaq:"আজকের কোনো সবক ঠিক করা নেই",
        have:"নামানো আছে", del:"মুছুন", delQ:"{0} ডিভাইস থেকে মুছবেন?", title:"নামানো" },
   en:{ q:"Search surah no or name", ayat:"Ayat: {0}", pgs:"Pages {0}–{1}",
        picked:"{0} surahs selected", none:"Nothing selected", clear:"Clear",
        surah:"Surah", juz:"Juz", all:"Whole Qur\u2019an", nores:"Nothing found",
+       page:"This page", sabaq:"Today’s lesson", part:"Text ready · {0} ayat without audio", retry:"Fetch the rest",
+       busy:"Downloading — press again when it finishes", leaveQ:"A download is running. Stop it?", pageDone:"Page {0} is on the device", noSabaq:"No lesson is set for today",
        have:"On this device", del:"Delete", delQ:"Remove {0} from the device?", title:"Downloads" },
   ur:{ q:"سورہ نمبر یا نام تلاش کریں", ayat:"آیات: {0}", pgs:"صفحات {0}–{1}",
        picked:"{0} سورتیں منتخب", none:"کچھ منتخب نہیں", clear:"صاف کریں",
        surah:"سورہ", juz:"پارہ", all:"مکمل قرآن", nores:"کچھ نہیں ملا",
+       page:"یہ صفحہ", sabaq:"آج کا سبق", part:"متن موجود · {0} آیات کی آواز باقی", retry:"باقی لائیں",
+       busy:"ابھی ڈاؤن لوڈ ہو رہا ہے — مکمل ہونے پر دوبارہ دبائیں", leaveQ:"ڈاؤن لوڈ جاری ہے۔ روک دیں؟", pageDone:"صفحہ {0} ڈیوائس پر آ گیا", noSabaq:"آج کا کوئی سبق مقرر نہیں",
        have:"ڈیوائس پر موجود", del:"مٹائیں", delQ:"{0} ڈیوائس سے ہٹائیں؟", title:"ڈاؤن لوڈ" },
   zh:{ q:"搜索苏拉编号或名称", ayat:"节数：{0}", pgs:"第 {0}–{1} 页",
        picked:"已选 {0} 章", none:"未选择", clear:"清除",
        surah:"苏拉", juz:"卷", all:"全本古兰经", nores:"未找到",
+       page:"本页", sabaq:"今日功课", part:"文字已备 · {0} 节缺诵读", retry:"把剩下的取回",
+       busy:"正在下载 —— 完成后再点", leaveQ:"下载进行中。要停止吗？", pageDone:"第 {0} 页已存入本机", noSabaq:"今天还没定功课",
        have:"已在设备上", del:"删除", delQ:"从设备移除 {0}？", title:"下载" },
   ar:{ q:"ابحث برقم السورة أو اسمها", ayat:"الآيات: {0}", pgs:"الصفحات {0}–{1}",
        picked:"{0} سور مختارة", none:"لم يُختر شيء", clear:"مسح",
        surah:"سورة", juz:"جزء", all:"المصحف كامل", nores:"لا نتائج",
+       page:"هذه الصفحة", sabaq:"درس اليوم", part:"النص جاهز · {0} آيات بلا صوت", retry:"أحضِر الباقي",
+       busy:"التنزيل جارٍ — اضغط مرة أخرى عند انتهائه", leaveQ:"هناك تنزيل جارٍ. أوقفه؟", pageDone:"صفحة {0} على الجهاز", noSabaq:"لا درس محدَّد لليوم",
        have:"على الجهاز", del:"احذف", delQ:"إزالة {0} من الجهاز؟", title:"التنزيلات" },
 };
 function dlL(){ return DLL[L.code] || DLL.en; }
 var DL = { sel:{}, q:"", ix:null };
+
+/* What the device actually holds for a surah.
+
+   S.dls[sn] was a flag: 1 or nothing. That could not say the one thing a
+   reader most needs to know - that the text is there and only some recitation
+   is missing - so a surah with a single ayah the CDN would not serve looked
+   exactly like a surah never downloaded at all. It now holds either 1 (all of
+   it) or {m:N} (the pages are there, N ayat have no audio). The old 1s still
+   read as complete, which is what they were. */
+function dlState(sn){
+  var v = S.dls && S.dls[sn];
+  if (!v) return "";
+  return (v === 1 || v.m === 0) ? "full" : "part";
+}
+function dlMiss(sn){
+  var v = S.dls && S.dls[sn];
+  return (v && typeof v === "object" && v.m) ? v.m : 0;
+}
+function dlMark(sn, audioMissed){
+  S.dls[sn] = audioMissed ? { m:audioMissed } : 1;
+}
+/* Which surahs a run of pages covers completely. A juz ends mid-surah far more
+   often than not, and half a surah is not a surah on the device. */
+function dlSurahsIn(pageSet){
+  var sp = (DL.ix && DL.ix.surah) || {}, out = [];
+  for (var sn = 1; sn <= 114; sn++){
+    var r = knSurahPages(sp, sn), all = true;
+    if (!r || !r.a) continue;
+    for (var pp = r.a; pp <= r.b; pp++) if (!pageSet[pp]){ all = false; break; }
+    if (all) out.push(sn);
+  }
+  return out;
+}
 
 function dlOpen(){
   var el = document.getElementById("dlsheet");
@@ -5478,8 +5526,11 @@ async function dlRender(){
   var sp = DL.ix.surah || {};
   var q = String(DL.q || "").trim().toLowerCase();
 
-  var haveN = 0;
-  for (var hn = 1; hn <= 114; hn++) if (S.dls[hn]) haveN++;
+  var haveN = 0, partN = 0;
+  for (var hn = 1; hn <= 114; hn++){
+    var st0 = dlState(hn);
+    if (st0 === "full") haveN++; else if (st0 === "part") partN++;
+  }
   var rows = "";
   for (var sn = 1; sn <= 114; sn++){
     var nm = surahName(sn), ar = (typeof SURAH_AR !== "undefined" && SURAH_AR[sn - 1]) || "";
@@ -5487,23 +5538,29 @@ async function dlRender(){
       var hay = (sn + " " + nm + " " + ar).toLowerCase();
       if (hay.indexOf(q) < 0) continue;
     }
-    var r = knSurahPages(sp, sn), got = !!S.dls[sn];
-    rows += '<label class="dlrow' + (got ? " got" : "") + '"><input type="checkbox" data-dls="' + sn + '"' +
+    var r = knSurahPages(sp, sn), st = dlState(sn), got = st === "full", part = st === "part";
+    rows += '<label class="dlrow' + (got ? " got" : (part ? " part" : "")) + '"><input type="checkbox" data-dls="' + sn + '"' +
       (DL.sel[sn] ? " checked" : "") + (got ? " disabled" : "") + '>' +
       '<span class="dlnum">' + n(sn) + '</span>' +
       '<span class="dlnm"><b>' + esc(nm) + (ar ? ' <span class="dlar">' + esc(ar) + '</span>' : '') + '</b>' +
-      '<i>' + fmt(T.pgs, n(r.a), n(r.b)) + ' · ' + fmt(T.ayat, n(AYAHS[sn - 1] || 0)) + '</i></span>' +
-      (got ? '<span class="dlgot">✓</span><button type="button" class="dlx" data-dldel="' + sn + '" aria-label="' + esc(T.del) + '">✕</button>'
-           : '<span class="dlay">☁</span>') +
+      '<i>' + (part ? esc(fmt(T.part, n(dlMiss(sn))))
+                    : fmt(T.pgs, n(r.a), n(r.b)) + ' · ' + fmt(T.ayat, n(AYAHS[sn - 1] || 0))) + '</i></span>' +
+      (got  ? '<span class="dlgot">✓</span><button type="button" class="dlx" data-dldel="' + sn + '" aria-label="' + esc(T.del) + '">✕</button>'
+       : part ? '<button type="button" class="dlgot part" data-dlfix="' + sn + '" title="' + esc(T.retry) + '">◐</button>' +
+                '<button type="button" class="dlx" data-dldel="' + sn + '" aria-label="' + esc(T.del) + '">✕</button>'
+       : '<span class="dlay">☁</span>') +
       '</label>';
   }
   if (!rows) rows = '<p class="idx-empty">' + T.nores + '</p>';
 
   var picked = Object.keys(DL.sel).filter(function(k){ return DL.sel[k]; });
   body.innerHTML =
-    '<div class="dlhead"><span>' + T.have + '</span><b>' + n(haveN) + ' / ' + n(114) + '</b></div>' +
+    '<div class="dlhead"><span>' + T.have + '</span><b>' + n(haveN) +
+      (partN ? ' <i class="dlpart">+' + n(partN) + ' \u25d0</i>' : '') + ' / ' + n(114) + '</b></div>' +
     '<div class="dlbar dltotal"><i style="width:' + Math.round(haveN / 114 * 100) + '%"></i></div>' +
     '<div class="dlquick">' +
+      '<button class="knchip" data-dlq="page">' + T.page + '</button>' +
+      '<button class="knchip" data-dlq="sabaq">' + T.sabaq + '</button>' +
       '<button class="knchip" data-dlq="juz">' + T.juz + '</button>' +
       '<button class="knchip" data-dlq="all">' + T.all + '</button>' +
       (picked.length ? '<button class="knchip" data-dlq="clear">' + T.clear + '</button>' : '') +
@@ -5511,7 +5568,8 @@ async function dlRender(){
     '<input type="search" id="dl-q" placeholder="' + esc(T.q) + '" value="' + esc(DL.q) + '">' +
     '<div class="dllist">' + rows + '</div>' +
     '<div class="dlfoot">' +
-      '<label class="chk"><input type="checkbox" id="dl-audio" checked> ' + L.dlg.audio + '</label>' +
+      '<label class="chk"><input type="checkbox" id="dl-audio"' +
+        (DL.audio === false ? '' : ' checked') + '> ' + L.dlg.audio + '</label>' +
       '<div class="dlbar"><i id="dl-bar-i" style="width:0%"></i></div>' +
       '<div class="hint" id="rd-prog2">' +
         (picked.length ? fmt(T.picked, n(picked.length)) : T.none) + '</div>' +
@@ -5521,6 +5579,8 @@ async function dlRender(){
       '<div class="hint">' + esc(mushafName()) + ' \u00b7 ' + L.dlg.warn + '</div>' +
     '</div>';
 
+  var ac = document.getElementById("dl-audio");
+  if (ac) ac.onchange = function(){ DL.audio = this.checked; };
   var qi = document.getElementById("dl-q");
   if (qi) qi.oninput = function(){
     DL.q = this.value;
@@ -5536,14 +5596,24 @@ async function dlRender(){
     };
   });
   qa("#dl-body [data-dlq]").forEach(function(b){
-    b.onclick = function(){
-      var k = b.dataset.dlq;
+    b.onclick = async function(){
+      var k = b.dataset.dlq, T2 = dlL();
       if (k === "clear"){ DL.sel = {}; dlRender(); return; }
+      if (RD.busy){ dlProg(T2.busy); return; }
       var au = document.getElementById("dl-audio");
       var withAudio = !au || au.checked;
-      if (k === "all"){ dlPages(dlSeq(1, TOTAL_PAGES), withAudio); return; }
-      var r = juzRange(juzOf(RD.page || 1));
-      dlPages(dlSeq(r[0], r[1]), withAudio);
+      var list = null;
+      if (k === "all") list = dlSeq(1, TOTAL_PAGES);
+      else if (k === "juz"){ var r = juzRange(juzOf(RD.page || 1)); list = dlSeq(r[0], r[1]); }
+      else if (k === "page") list = [RD.page || S.settings.lastPage || 1];
+      else if (k === "sabaq"){
+        var ps = (day(TODAY).sabaq.pages || []);
+        if (!ps.length){ dlProg(T2.noSabaq); return; }
+        list = ps.slice();
+      }
+      if (!list || !list.length) return;
+      var res = await dlPages(list, withAudio);
+      dlRecord(res, list, k === "page" ? list[0] : 0);
     };
   });
   var go = document.getElementById("dl-go");
@@ -5557,15 +5627,20 @@ async function dlRender(){
     });
     var list = Object.keys(pages).map(Number).sort(function(a, b){ return a - b; });
     if (!list.length) return;
+    if (RD.busy){ dlProg(dlL().busy); return; }
     var res = await dlPages(list, !au || au.checked);
-    /* a surah counts as on the device only when nothing in its run was missed */
-    if (res && !res.missed && !res.stopped){
-      chosen.forEach(function(k){ S.dls[k] = 1; });
-      DL.sel = {};
-      save();
-      dlRender();
-    }
+    dlRecord(res, list, 0, chosen);
   };
+  qa("#dl-body [data-dlfix]").forEach(function(b){
+    b.onclick = async function(ev){
+      ev.preventDefault();
+      if (RD.busy){ dlProg(dlL().busy); return; }
+      var sn3 = +b.dataset.dlfix, sp3 = (DL.ix && DL.ix.surah) || {};
+      var r3 = knSurahPages(sp3, sn3), lst = dlSeq(r3.a, r3.b);
+      var res3 = await dlPages(lst, true);
+      dlRecord(res3, lst, 0, [sn3]);
+    };
+  });
   var st = document.getElementById("dl-stop");
   if (st) st.onclick = function(){ RD.dlStop = true; };
   qa("#dl-body [data-dldel]").forEach(function(b){
@@ -5577,6 +5652,53 @@ async function dlRender(){
     };
   });
 }
+/* Writes down what actually arrived.
+
+   Every path here used to ignore its own result: the juz and whole-Qur'an
+   chips recorded nothing at all, so a reader could download a whole juz and
+   watch the counter stay at zero; and the surah picker demanded that not one
+   file out of hundreds be missing before it marked anything, so one ayah the
+   CDN would not serve threw away the other four surahs too. Both are the same
+   mistake - judging a batch instead of each surah - and this is the one place
+   that judgement is now made. */
+function dlRecord(res, list, singlePage, chosen){
+  if (!res){ dlProg(dlL().busy); return; }
+  var pageSet = {};
+  list.forEach(function(p){ pageSet[p] = 1; });
+  var per = res.perPage || {};
+  /* a surah is on the device when every page of it came down; the audio it is
+     still missing is counted, not held against it */
+  var cover = chosen && chosen.length ? chosen.slice() : dlSurahsIn(pageSet);
+  var sp = (DL.ix && DL.ix.surah) || {}, marked = 0;
+  cover.forEach(function(sn){
+    var r = knSurahPages(sp, sn);
+    if (!r || !r.a) return;
+    var pagesOk = true, miss = 0;
+    for (var pp = r.a; pp <= r.b; pp++){
+      if (!pageSet[pp]){ pagesOk = false; break; }
+      var d = per[pp];
+      if (!d){ pagesOk = false; break; }        /* stopped before reaching it */
+      if (d.page){ pagesOk = false; break; }
+      miss += d.audio || 0;
+    }
+    if (pagesOk){ dlMark(sn, miss); marked++; }
+  });
+  if (marked){
+    if (chosen && chosen.length) DL.sel = {};
+    save();
+  }
+  dlRender();
+  /* the redraw rewrites the progress line, so what happened is said after it,
+     never before */
+  if (singlePage && !res.stopped && !(per[singlePage] && per[singlePage].page)){
+    dlProg(fmt(dlL().pageDone, n(singlePage)), 100);
+  } else if (res.audioMissed){
+    dlProg(L.dlg.done + " · " + fmt(L.dlg.missed, n(res.audioMissed)), 100);
+  } else if (!res.stopped){
+    dlProg(L.dlg.done, 100);
+  }
+}
+
 /* removes a surah's cached audio and page fonts. A font page shared with a
    neighbouring surah simply downloads again the next time it is read - cheaper
    than tracking shared ownership of six hundred pages. */
@@ -5605,6 +5727,11 @@ function dlSeq(a, b){
   return out;
 }
 function dlClose(){
+  if (RD.busy){
+    if (!confirm(dlL().leaveQ)) return;
+    RD.dlStop = true;
+    return;
+  }
   var el = document.getElementById("dlsheet");
   if (el) el.hidden = true;
 }
@@ -9466,14 +9593,20 @@ async function dlRange(p0, p1, mushafId, withAudio){
   if (!def){ RD.busy = false; return; }
   var pageList = Array.isArray(p0) ? p0.slice() : dlSeq(p0, p1);
   var total = pageList.length, done = 0, missed = 0;
+  /* A page that would not come down and an ayah with no recording are not the
+     same failure, and lumping them together is what made a whole batch vanish
+     over one missing audio file. Counted apart, and per page, so the caller can
+     say which surah is on the device and which is only half there. */
+  var pageMissed = 0, audioMissed = 0, perPage = {};
   try {
     for (var pi2 = 0; pi2 < pageList.length; pi2++){
       var p = pageList[pi2];
-      if (RD.dlStop){ dlProg(L.dlg.stopped); return { missed:missed, stopped:true }; }
+      if (RD.dlStop){ dlProg(L.dlg.stopped); return { missed:missed, pageMissed:pageMissed, audioMissed:audioMissed, perPage:perPage, stopped:true }; }
+      var badPage = 0, badAudio = 0;
       try {
         if (v === "nast"){ if (p === p0) await rdFetch(NAST_URL); }
         else await rdFetch(QCF_BASE + v + "/woff2/p" + p + ".woff2");
-      } catch(e){ missed++; }
+      } catch(e){ missed++; pageMissed++; badPage = 1; }
       if (withAudio){
         /* Which ayat are on this page comes from the pack already installed with
            the app. This used to ask quran.com, and on the filtered connections
@@ -9483,7 +9616,7 @@ async function dlRange(p0, p1, mushafId, withAudio){
         var keys = [];
         try { var pgd = await rdLoadPage(p); keys = (pgd && pgd.keys) || []; } catch(e){}
         for (var i = 0; i < keys.length; i++){
-          if (RD.dlStop){ dlProg(L.dlg.stopped); return { missed:missed, stopped:true }; }
+          if (RD.dlStop){ dlProg(L.dlg.stopped); return { missed:missed, pageMissed:pageMissed, audioMissed:audioMissed, perPage:perPage, stopped:true }; }
           var got = await asSave(keys[i]);
           if (!got){
             /* no native store (the web build): the cache is all there is */
@@ -9493,16 +9626,17 @@ async function dlRange(p0, p1, mushafId, withAudio){
               catch(e){}
             }
           }
-          if (!got) missed++;
+          if (!got){ missed++; audioMissed++; badAudio++; }
         }
       }
+      perPage[p] = { page:badPage, audio:badAudio };
       done++;
       dlProg(fmt(L.dlg.ing, n(Math.round(done / total * 100)), n(done), n(total)),
              done / total * 100);
     }
     dlProg(L.dlg.done + (missed ? " · " + fmt(L.dlg.missed, n(missed)) : ""), 100);
-    return { missed:missed, stopped:false };
-    rdWarmAudio(RD.pages[RD.page]);
+    return { missed:missed, pageMissed:pageMissed, audioMissed:audioMissed,
+             perPage:perPage, stopped:false };
   } finally { RD.busy = false; RD.dlStop = false; }
 }
 async function rdDownloadJuz(){
@@ -11993,7 +12127,16 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     var tr=document.getElementById('tour');
     if(tr&&tr.classList.contains('on')){ tourEnd(); return true; }
     var dl=document.getElementById('dlsheet');
-    if(dl&&!dl.hidden){ dl.hidden=true; return true; }
+    if(dl&&!dl.hidden){
+      /* leaving mid-download hid the only progress line and the only place the
+         result gets written down, so the files arrived and nothing said so */
+      if(RD.busy){
+        if(!confirm(dlL().leaveQ)) return true;
+        RD.dlStop=true;
+        return true;
+      }
+      dlClose(); return true;
+    }
     var ln=document.getElementById('listen');
     if(ln&&!ln.hidden){ lsClose(); return true; }
     var dg=document.getElementById('diag');
