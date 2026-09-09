@@ -7,4 +7,8 @@
     <string name="playback_channel">Recitation</string>
     <string name="playback_running">Reciting</string>
     <string name="playback_stop">Stop</string>
+    <string name="playback_play">Play</string>
+    <string name="playback_pause">Pause</string>
+    <string name="playback_prev">Previous ayah</string>
+    <string name="playback_next">Next ayah</string>
 </resources>

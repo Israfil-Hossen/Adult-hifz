@@ -36,6 +36,13 @@ public class AudioKeepAlivePlugin extends Plugin {
             PlaybackService.QUEUE = q;
             PlaybackService.INDEX = 0;
             PlaybackService.LOOP = readQueue(call.getArray("loop"));
+            /* what the notification and the lock screen will say: one line per
+               ayah, written by the web layer because only it knows the surah
+               names in the reader's language */
+            PlaybackService.LABELS = readStrings(call.getArray("labels"));
+            PlaybackService.RECITER = call.getString("reciter", "");
+            Integer pos = call.getInt("posMs");
+            PlaybackService.POS_MS = pos == null ? 0 : pos;
             Integer rep = call.getInt("repeat");
             PlaybackService.REPEAT = rep == null ? 0 : rep;
             PlaybackService.PASSES = 0;
@@ -60,6 +67,13 @@ public class AudioKeepAlivePlugin extends Plugin {
         }
     }
 
+    private static java.util.List<String> readStrings(JSArray arr) throws Exception {
+        java.util.List<String> out = new ArrayList<>();
+        if (arr == null) return out;
+        for (int i = 0; i < arr.length(); i++) out.add(String.valueOf(arr.get(i)));
+        return out;
+    }
+
     /* a list of per-ayah source lists, in the order the web layer would try them */
     private static List<List<String>> readQueue(JSArray arr) throws Exception {
         List<List<String>> q = new ArrayList<>();
@@ -82,6 +96,7 @@ public class AudioKeepAlivePlugin extends Plugin {
         o.put("passes", PlaybackService.PASSES);
         o.put("repeat", PlaybackService.REPEAT);
         o.put("done", PlaybackService.DONE);
+        o.put("posMs", PlaybackService.POS_MS);
         call.resolve(o);
     }
 
@@ -104,7 +119,9 @@ public class AudioKeepAlivePlugin extends Plugin {
         try {
             PlaybackService.QUEUE = new ArrayList<>();
             PlaybackService.LOOP = new ArrayList<>();
+            PlaybackService.LABELS = new ArrayList<>();
             PlaybackService.REPEAT = 0;
+            PlaybackService.POS_MS = 0;
             PlaybackService.PLAYING = false;
             getContext().stopService(new Intent(getContext(), PlaybackService.class));
         } catch (Exception ignored) {}
