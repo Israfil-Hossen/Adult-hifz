@@ -2441,6 +2441,15 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .tronly{padding:6px 2px 10px}
 .trline{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--rule)}
 .trline:last-child{border-bottom:none}
+/* the ayah the voice has reached. Light enough to read through, strong
+   enough to find at a glance while the page scrolls past. */
+.trline.now,.trrow.now{background:var(--verd-soft);
+  border-radius:8px;box-shadow:inset 3px 0 0 var(--verdigris)}
+.trline.now{padding-left:8px;padding-right:8px}
+.trrow.now{padding:6px 8px;margin:0 -8px}
+@media (prefers-reduced-motion:no-preference){
+  .trline,.trrow{transition:background .25s ease}
+}
 .trlk{flex:0 0 auto;min-width:42px;font-family:var(--mono);font-size:11.5px;
   color:var(--verdigris);padding-top:3px;direction:ltr;text-align:start}
 .trlt{margin:0;flex:1;font-size:15px;line-height:1.75;color:var(--ink);direction:ltr;text-align:start}
@@ -2848,7 +2857,12 @@ footer b{color:var(--ink-2)}
 body.mushaf .fab{display:none}
 /* ===== পাতাই পর্দা: টুলবার নিচে, বাকিটা পাতার ===== */
 body.mushaf #v-mushaf h2,body.mushaf .rdlegend,body.mushaf .rdnote,
-body.mushaf #rd-tr,body.mushaf #rd-rec{display:none!important}
+body.mushaf #rd-rec{display:none!important}
+/* #rd-tr used to be hidden here too, which quietly killed the setting it
+   exists for: "translation below the page" is a mushaf setting, and the mushaf
+   was the one place it could never appear. The page still comes first - the
+   strip sits under it and scrolls with it. */
+body.mushaf #rd-tr{margin-top:10px}
 /* with the tab bar gone the only thing to leave room for is the floating control
    row, so the page claims everything else */
 body.mushaf #v-mushaf{padding-top:6px;padding-bottom:calc(126px + env(safe-area-inset-bottom))}
@@ -6915,6 +6929,19 @@ document.addEventListener("visibilitychange", function(){
 });
 window.addEventListener("pagehide", rdMarkWhere);
 function rdClear(cls){ qa(".qline .w." + cls).forEach(function(e){ e.classList.remove(cls); }); }
+/* The meaning of what is being recited, lit as it is recited.
+
+   Listening with the translation on, the reader had no way to tell which line
+   the voice had reached: the Arabic lit up and the Bengali beside it sat
+   uniformly grey. Both places the translation appears take the mark - the
+   strip below the page and the translation-only page - because the reader who
+   asked for this is reading the meaning, not the Arabic. */
+function rdTrLight(vk){
+  qa(".trline.now, .trrow.now").forEach(function(e){ e.classList.remove("now"); });
+  if (!vk) return;
+  qa('.trline[data-vk="' + vk + '"], .trrow[data-vk="' + vk + '"]')
+    .forEach(function(e){ e.classList.add("now"); });
+}
 function rdStop(){
   RD.tok = (RD.tok || 0) + 1;              /* in-flight handlers become no-ops */
   clearTimeout(RD.watch);
@@ -6923,6 +6950,7 @@ function rdStop(){
   if (rdRaf){ cancelAnimationFrame(rdRaf); rdRaf = null; }
   RD.queue = []; RD.left = 0; RD.words = null; RD.wi = -1; RD.turning = false;
   rdClear("on"); rdClear("now");
+  rdTrLight(null);
   rdSyncBtns();
 }
 function rdMicToggle(){
@@ -7343,6 +7371,7 @@ function rdNext(){
     if (S.settings.audioHost !== srcs[si].h){ S.settings.audioHost = srcs[si].h; try { save(); } catch(e){} }
     rdClear("on");
     els.forEach(function(e){ e.classList.add("on"); });
+    rdTrLight(vk);
     rdSyncBtns();
   });
   a.onplay = step(rdSyncBtns);
@@ -9245,7 +9274,9 @@ async function rdPaint(p, isTodayPage){
       /* every ayah on this page, in the reader's own language, numbered so the
          place is never lost */
       h = '<div class="tronly">' + pg.keys.map(function(k){
-        return '<div class="trline"><span class="trlk">' + ayLabel(k) + '</span>' +
+        /* the ayah this line carries: without it nothing can find the line the
+           recitation has reached, which is why the translation never lit up */
+        return '<div class="trline" data-vk="' + k + '"><span class="trlk">' + ayLabel(k) + '</span>' +
                '<p class="trlt">' + esc((pg.tr && pg.tr[k]) || "\u2026") + '</p></div>';
       }).join("") + '</div>';
     }
@@ -9304,7 +9335,7 @@ async function rdPaint(p, isTodayPage){
         tb.style.display = "block";
         tb.innerHTML = '<h4>' + L.rd.tr + ' · ' + L.rd.trBy + '</h4>' +
           rdSelKeys(pg).map(function(k){
-            return '<div class="trrow"><span class="trk">' + ayLabel(k) + '</span><span>' +
+            return '<div class="trrow" data-vk="' + k + '"><span class="trk">' + ayLabel(k) + '</span><span>' +
               esc((pg.tr && pg.tr[k]) || "…") + '</span></div>';
           }).join("");
       }
@@ -9346,7 +9377,17 @@ async function rdPaint(p, isTodayPage){
         if (RD.pick || RD.phrase) return;
         rdWordMean(pg, w);
       };
-      var lt = null, moved = false, taps = 0, tapAt = 0;
+      /* A finger is never still.
+
+         This used to set moved on any pointermove at all, and both gestures
+         test it - so one pixel of the tremor every hand has cancelled the hold
+         and cancelled the second tap. On a mouse that never happens, and the
+         synthetic events used to test this send no pointermove either, which is
+         why it passed every check here and failed on every real phone.
+
+         Movement is a drag past a threshold, not any movement. */
+      var SLOP = 10;
+      var lt = null, moved = false, taps = 0, tapAt = 0, px = 0, py = 0;
       var openWord = function(){
         var hk = w.dataset.vk + "#" + (w.dataset.wi || 0);
         RD.selW = { vk:w.dataset.vk, wi:+(w.dataset.wi || 0), hk:hk };
@@ -9362,16 +9403,23 @@ async function rdPaint(p, isTodayPage){
         }
         if (wordSound()) rdPlay([w.dataset.vk], 1, true);
       };
-      w.addEventListener("pointerdown", function(){
+      w.addEventListener("pointerdown", function(e){
         if (RD.pick || RD.phrase) return;
         moved = false;
+        px = e.clientX; py = e.clientY;
         var now = Date.now();
         taps = (now - tapAt < 400) ? taps + 1 : 1;
         tapAt = now;
         lt = setTimeout(function(){ lt = null; if (!moved && taps < 2) openWord(); }, 420);
       });
-      w.addEventListener("pointermove", function(){ moved = true; });
-      ["pointerup","pointerleave","pointercancel"].forEach(function(ev){
+      w.addEventListener("pointermove", function(e){
+        if (moved) return;
+        if (Math.abs(e.clientX - px) > SLOP || Math.abs(e.clientY - py) > SLOP) moved = true;
+      });
+      /* pointerleave is not a cancel: a word is about 33px wide and a fingertip
+         covers more than that, so the pointer crosses the edge on almost every
+         press. Only a real drag or the system taking the gesture away counts. */
+      ["pointerup","pointercancel"].forEach(function(ev){
         w.addEventListener(ev, function(){ if (lt){ clearTimeout(lt); lt = null; } });
       });
       /* dblclick is not dependable on a touch WebView, so the second tap is
