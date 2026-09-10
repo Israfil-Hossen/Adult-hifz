@@ -3505,6 +3505,24 @@ input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet
 .lspair{display:flex;gap:12px;flex-wrap:wrap}
 .lspair label{flex:1 1 130px;display:flex;flex-direction:column;gap:5px;
   font-size:12px;color:var(--ink-3)}
+.lsform{padding:14px 16px 20px;display:flex;flex-direction:column;gap:6px}
+.lslab2{font-size:12px;color:var(--ink-3);margin-top:10px}
+.lsform > select{width:100%;padding:12px;border:1px solid var(--rule);border-radius:12px;
+  background:var(--card);font:inherit;font-size:15px;color:var(--ink)}
+.lsmodes{display:flex;gap:10px;margin:14px 0 4px;flex-wrap:wrap}
+.lsradio{flex:1 1 140px;display:flex;align-items:center;gap:9px;padding:12px 14px;
+  border:1px solid var(--rule);border-radius:14px;cursor:pointer;font-size:14px}
+.lsradio.on{border-color:var(--verdigris);background:var(--verd-soft)}
+.lsradio input{accent-color:var(--verdigris);width:18px;height:18px;flex:none}
+.lssep{margin:18px 0 2px;padding-top:14px;border-top:1px solid var(--rule);
+  font-size:12px;color:var(--ink-3)}
+.lsform .lspair select{width:100%;padding:11px;border:1px solid var(--rule);border-radius:12px;
+  background:var(--card);font:inherit;font-size:15px;color:var(--ink)}
+.lsresume{margin-top:16px;padding:11px;border:1px dashed var(--rule);border-radius:12px;
+  background:none;font:inherit;font-size:13px;color:var(--ink-2);cursor:pointer;text-align:start}
+.lsgo{display:flex;gap:10px;align-items:center;width:100%}
+.lsgo .go{flex:1}
+.lswhat{width:100%;margin-top:9px;font-size:13px;color:var(--ink-2);text-align:center}
 .lssearch{flex:0 0 auto;padding:8px 14px 4px}
 .lssearch:empty{display:none}
 .lssearch input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:999px;
@@ -11373,195 +11391,197 @@ function lsFoot(){
   var T = lsL(), f = document.getElementById("ls-foot");
   if (!f) return;
   var live = !!(rdAudio && !rdAudio.paused);
-  var opts = [0, 10, 20, 30, 45, 60];
+  /* one button, and it says what it will play - not "the selection", which
+     meant something chosen on a different screen entirely */
   f.innerHTML =
-    '<div class="lsrow"><div class="lstransport">' +
-      '<button class="abtn go" id="ls-play">' + (live ? L.rd.pause : L.rd.playAll) + '</button>' +
-      '<button class="abtn" id="ls-stop"' + (rdAudio ? "" : " disabled") + '>' + L.rd.stop + '</button>' +
-      '<span class="lsnow">' + esc(lsNowText()) + '</span>' +
-    '</div></div>' +
-    '<div class="lsrow"><span class="lslab">' + L.rd.reciter + '</span>' +
-      '<select id="ls-qari">' + RECITERS.map(function(r){
-        return '<option value="' + r.id + '"' + (S.settings.reciter === r.id ? " selected" : "") + '>' +
-          esc(r.nm[L.code] || r.nm.en) + '</option>';
-      }).join("") + '</select></div>' +
-    /* Two counts, not one: how many times each ayah is said before moving on,
-       and how many times the whole run comes round again. They are different
-       questions and a reader memorising asks the first one far more often. */
-    '<div class="lsrow"><span class="lslab">' + T.repH + '</span>' +
-      '<div class="lspair">' +
-        '<label>' + esc(T.repAyah) + '<select id="ls-repa">' +
-          [0,1,2,3,4,5,7,10].map(function(v){
-            return '<option value="' + v + '"' + ((RD.ayahRep || 0) === v ? " selected" : "") +
-                   '>' + n(v) + '</option>'; }).join("") + '</select></label>' +
-        '<label>' + esc(T.repAll) + '<select id="ls-repall">' +
-          [1,3,5,7,0].map(function(v){
-            var cur = (RD.loops === Infinity) ? 0 : RD.loops;
-            return '<option value="' + v + '"' + (cur === v ? " selected" : "") + '>' +
-                   esc(v === 0 ? barL().endless : n(v)) + '</option>'; }).join("") + '</select></label>' +
-      '</div></div>' +
-    '<div class="lsrow"><label class="lsw"><span>' + esc(T.trHear) + '</span>' +
-      '<input type="checkbox" id="lsp-trh"' + (RD.trAudio ? " checked" : "") + '></label></div>' +
-    '<div class="lsrow" style="display:none"><span class="lslab">' + L.rd.loop + '</span>' +
-      '<div class="knchips" style="margin:0">' + [1, 3, 5, 7, Infinity].map(function(v){
-        return '<button class="knchip' + (RD.loops === v ? " f" : "") + '" data-lsloop="' +
-          (v === Infinity ? 0 : v) + '">' +
-          esc(v === Infinity ? barL().endless : (v === 1 ? barL().once : fmt(barL().times, n(v)))) +
-          '</button>';
-      }).join("") + '</div></div>' +
-    '<div class="lsrow"><span class="lslab">' + T.sleep + '</span>' +
-      '<div class="knchips" style="margin:0">' + opts.map(function(m){
-        return '<button class="knchip' + ((RD.sleepFor || 0) === m ? " f" : "") + '" data-lssleep="' + m + '">' +
-          (m ? fmt(T.min, n(m)) : T.off) + '</button>';
-      }).join("") + '</div></div>';
-  var ra = document.getElementById("ls-repa");
-  if (ra) ra.onchange = function(){
-    RD.ayahRep = +this.value || 0; RD.ayahLeft = RD.ayahRep;
-    S.settings.ayahRep = RD.ayahRep; try { save(); } catch(e){}
+    '<div class="lsgo">' +
+      '<button class="abtn go" id="ls-play">\u25b6 ' + esc(T.go) + '</button>' +
+      '<button class="abtn" id="ls-stop"' + (rdAudio ? "" : " disabled") + '>' + esc(L.rd.stop) + '</button>' +
+    '</div>' +
+    '<div class="lswhat">' + esc(lsWhat()) + '</div>';
+  var pl = document.getElementById("ls-play");
+  if (pl) pl.onclick = function(){
+    if (live){ rdTogglePause(); lsFoot(); return; }
+    lsPlayChoice();
   };
-  var rl = document.getElementById("ls-repall");
-  if (rl) rl.onchange = function(){
-    var v = +this.value;
-    RD.loops = v ? v : Infinity; S.settings.loops = v;
-    if (rdAudio) RD.left = RD.loops;
-    try { save(); } catch(e){}
-  };
-  var lpt = document.getElementById("lsp-trh");
-  if (lpt) lpt.onchange = function(){
-    RD.trAudio = this.checked;
-    S.settings.trAudio = this.checked ? 1 : 0;
-    try { save(); } catch(e){}
-  };
-  qa("#ls-foot [data-lsloop]").forEach(function(b){
-    b.onclick = function(){
-      var v = +b.dataset.lsloop;
-      RD.loops = v ? v : Infinity;
-      S.settings.loops = v;
-      try { save(); } catch(e){}
-      if (rdAudio) RD.left = RD.loops;
-      lsFoot();
-    };
-  });
-  qa("#ls-foot [data-lssleep]").forEach(function(b){
-    b.onclick = function(){ lsSleepSet(+b.dataset.lssleep); };
-  });
-  var pb = document.getElementById("ls-play");
-  if (pb) pb.onclick = lsResume;
-  var sb = document.getElementById("ls-stop");
-  if (sb) sb.onclick = function(){ rdStop(); lsFoot(); };
-  var q = document.getElementById("ls-qari");
-  if (q) q.onchange = function(){
-    S.settings.reciter = this.value;
-    save();
-    /* the audio host that answered last is remembered per network, not per
-       reciter - a new voice must be allowed to find its own host */
-    S.settings.audioHost = "";
-    renderSettings();
-    /* mid-recitation the change lands on the next ayah, which is where a voice
-       can change without cutting a word in half */
-  };
+  var st = document.getElementById("ls-stop");
+  if (st) st.onclick = function(){ rdStop(); lsFoot(); };
+}
+/* the sentence under the button: exactly what pressing it will play */
+function lsWhat(){
+  var T = lsL();
+  if (LSP.mode === "surah"){
+    return n(LSP.surah) + ". " + surahName(LSP.surah) + " \u00b7 " +
+           L.rd.ay + " " + n(LSP.a) + "\u2013" + n(LSP.b);
+  }
+  return fmt(L.phase.page, n(LSP.p0)) + "\u2013" + n(LSP.p1);
+}
+/* and pressing it plays that, and nothing else */
+async function lsPlayChoice(){
+  var sp = (DL.ix && DL.ix.surah) || {};
+  if (LSP.mode === "surah"){
+    var r = knSurahPages(sp, LSP.surah);
+    var keys = ayRange(LSP.surah + ":" + LSP.a, LSP.surah + ":" + LSP.b);
+    lsClose();
+    RD.cont = false; RD.stopAt = 0;
+    if (RD.sleepFor) RD.sleepAt = Date.now() + RD.sleepFor * 60000;
+    openMushaf(r.a);
+    try {
+      try { await rdLoadFont(r.a); } catch(e){}
+      await rdLoadPage(r.a);
+      rdPlay(keys, RD.loops || 1);
+    } catch(e){ rdStop(); }
+    return;
+  }
+  lsPlay(Math.min(LSP.p0, LSP.p1), Math.max(LSP.p0, LSP.p1));
+}
+/* Choose, then play.
+
+   The screen used to do two unrelated things at once. Tapping a surah started
+   it immediately - no range, no warning, no way to say "from here to there" -
+   while the big button played whatever was selected back on the mushaf page,
+   which is not something this screen ever showed. A reader could not tell what
+   either would do, and said so.
+
+   So it is a form now, exactly as drawn: pick where from, pick the two ends,
+   pick how it should repeat, then press play. Nothing makes a sound until the
+   play button is pressed. */
+var LSP = { mode:"surah", surah:2, a:1, b:0, p0:1, p1:1 };
+
+function lsAyahOptions(sn, sel){
+  var total = AYAHS[sn - 1] || 1, out = "";
+  for (var i = 1; i <= total; i++){
+    out += '<option value="' + i + '"' + (i === sel ? " selected" : "") + '>' +
+           L.rd.ay + " " + n(i) + '</option>';
+  }
+  return out;
 }
 async function lsRender(){
   var T = lsL(), body = document.getElementById("ls-body");
   if (!body) return;
-  document.getElementById("ls-ttl").textContent = T.ttl;
+  document.getElementById("ls-ttl").textContent = T.ttl2 || T.ttl;
   document.getElementById("ls-close").setAttribute("aria-label", uit("back"));
-  /* juz, page and resume have no list to search - clear it so an empty box is
-     not left hanging over them */
   var sh = document.getElementById("ls-search");
-  if (sh && LS.tab !== "surah") sh.innerHTML = "";
+  if (sh) sh.innerHTML = "";
   var tabs = document.getElementById("ls-tabs");
-  tabs.innerHTML = [["surah", T.surah], ["juz", T.juz], ["page", T.page], ["resume", T.resume]]
-    .map(function(o){
-      return '<button class="idx-tab" data-ls="' + o[0] + '" aria-selected="' + (LS.tab === o[0]) + '">' + o[1] + '</button>';
-    }).join("");
-  qa("#ls-tabs .idx-tab").forEach(function(b){
-    b.onclick = function(){ LS.tab = b.dataset.ls; lsRender(); };
+  if (tabs) tabs.innerHTML = "";
+
+  if (!DL.ix){ try { DL.ix = await mushafIndex(); } catch(e){ DL.ix = { surah:{}, start:{} }; } }
+  var sp = (DL.ix && DL.ix.surah) || {};
+  if (!LSP.b) LSP.b = AYAHS[LSP.surah - 1] || 1;
+
+  var surahOpts = "";
+  for (var sn = 1; sn <= 114; sn++){
+    surahOpts += '<option value="' + sn + '"' + (sn === LSP.surah ? " selected" : "") + '>' +
+      n(sn) + ". " + esc(surahName(sn)) + '</option>';
+  }
+  var pageOpts = function(sel){
+    var o = "";
+    for (var i = 1; i <= TOTAL_PAGES; i++)
+      o += '<option value="' + i + '"' + (i === sel ? " selected" : "") + '>' +
+           fmt(L.phase.page, n(i)) + '</option>';
+    return o;
+  };
+
+  body.innerHTML =
+    '<div class="lsform">' +
+      '<label class="lslab2">' + esc(T.pickQari) + '</label>' +
+      '<select id="lf-qari">' + RECITERS.map(function(r){
+        return '<option value="' + r.id + '"' + (S.settings.reciter === r.id ? " selected" : "") +
+               '>' + esc(r.nm[L.code] || r.nm.en) + '</option>'; }).join("") + '</select>' +
+
+      '<div class="lsmodes">' +
+        '<label class="lsradio' + (LSP.mode === "surah" ? " on" : "") + '">' +
+          '<input type="radio" name="lsmode" value="surah"' + (LSP.mode === "surah" ? " checked" : "") + '>' +
+          '<span>' + esc(T.fromSurah) + '</span></label>' +
+        '<label class="lsradio' + (LSP.mode === "page" ? " on" : "") + '">' +
+          '<input type="radio" name="lsmode" value="page"' + (LSP.mode === "page" ? " checked" : "") + '>' +
+          '<span>' + esc(T.fromPage) + '</span></label>' +
+      '</div>' +
+
+      (LSP.mode === "surah"
+        ? '<label class="lslab2">' + esc(T.surah) + '</label>' +
+          '<select id="lf-surah">' + surahOpts + '</select>' +
+          '<div class="lspair">' +
+            '<label>' + esc(T.start) + '<select id="lf-a">' + lsAyahOptions(LSP.surah, LSP.a) + '</select></label>' +
+            '<label>' + esc(T.until) + '<select id="lf-b">' + lsAyahOptions(LSP.surah, LSP.b) + '</select></label>' +
+          '</div>'
+        : '<div class="lspair">' +
+            '<label>' + esc(T.start) + '<select id="lf-p0">' + pageOpts(LSP.p0) + '</select></label>' +
+            '<label>' + esc(T.until) + '<select id="lf-p1">' + pageOpts(LSP.p1) + '</select></label>' +
+          '</div>') +
+
+      '<div class="lssep">' + esc(T.repH) + '</div>' +
+      '<div class="lspair">' +
+        '<label>' + esc(T.repAyah) + '<select id="lf-repa">' +
+          [0,1,2,3,4,5,7,10].map(function(v){
+            return '<option value="' + v + '"' + ((RD.ayahRep || 0) === v ? " selected" : "") +
+                   '>' + n(v) + '</option>'; }).join("") + '</select></label>' +
+        '<label>' + esc(T.repAll) + '<select id="lf-repall">' +
+          [1,3,5,7,0].map(function(v){
+            var cur = (RD.loops === Infinity) ? 0 : RD.loops;
+            return '<option value="' + v + '"' + (cur === v ? " selected" : "") + '>' +
+                   esc(v === 0 ? barL().endless : n(v)) + '</option>'; }).join("") + '</select></label>' +
+      '</div>' +
+      '<label class="lsw"><span>' + esc(T.trHear) + '</span>' +
+        '<input type="checkbox" id="lf-trh"' + (RD.trAudio ? " checked" : "") + '></label>' +
+      '<label class="lslab2">' + esc(T.sleep) + '</label>' +
+      '<select id="lf-sleep">' + [0,10,20,30,45,60].map(function(m){
+        return '<option value="' + m + '"' + ((RD.sleepFor || 0) === m ? " selected" : "") + '>' +
+               (m ? fmt(T.min, n(m)) : T.off) + '</option>'; }).join("") + '</select>' +
+      (S.settings.lastPlayed
+        ? '<button class="lsresume" id="lf-resume">' + esc(fmt(T.at, L.rd.ay + " " + ayLabel(S.settings.lastPlayed))) + '</button>'
+        : '') +
+    '</div>';
+
+  var on = function(id, ev, fn){ var e = document.getElementById(id); if (e) e[ev] = fn; };
+  on("lf-qari", "onchange", function(){
+    S.settings.reciter = this.value; S.settings.audioHost = ""; save();
+  });
+  qa('input[name="lsmode"]').forEach(function(r){
+    r.onchange = function(){ LSP.mode = this.value; lsRender(); };
+  });
+  on("lf-surah", "onchange", function(){
+    LSP.surah = +this.value; LSP.a = 1; LSP.b = AYAHS[LSP.surah - 1] || 1; lsRender();
+  });
+  /* the line under the button is the promise this screen makes, so it is
+     rewritten the moment either end moves */
+  on("lf-a", "onchange", function(){
+    LSP.a = +this.value;
+    if (LSP.b < LSP.a){ LSP.b = LSP.a; lsRender(); } else lsFoot();
+  });
+  on("lf-b", "onchange", function(){
+    LSP.b = +this.value;
+    if (LSP.b < LSP.a){ LSP.a = LSP.b; lsRender(); } else lsFoot();
+  });
+  on("lf-p0", "onchange", function(){
+    LSP.p0 = +this.value;
+    if (LSP.p1 < LSP.p0){ LSP.p1 = LSP.p0; lsRender(); } else lsFoot();
+  });
+  on("lf-p1", "onchange", function(){
+    LSP.p1 = +this.value;
+    if (LSP.p1 < LSP.p0){ LSP.p0 = LSP.p1; lsRender(); } else lsFoot();
+  });
+  on("lf-repa", "onchange", function(){
+    RD.ayahRep = +this.value || 0; RD.ayahLeft = RD.ayahRep;
+    S.settings.ayahRep = RD.ayahRep; save();
+  });
+  on("lf-repall", "onchange", function(){
+    var v = +this.value; RD.loops = v ? v : Infinity; S.settings.loops = v;
+    if (rdAudio) RD.left = RD.loops; save();
+  });
+  on("lf-trh", "onchange", function(){
+    RD.trAudio = this.checked; S.settings.trAudio = this.checked ? 1 : 0; save();
+  });
+  on("lf-sleep", "onchange", function(){ lsSleepSet(+this.value); });
+  on("lf-resume", "onclick", async function(){
+    var last = S.settings.lastPlayed;
+    var ix = await mushafIndex(), st = ix.start || {}, q = String(last).split(":");
+    lsPlay(knPageOf(st, +q[0], +q[1]), TOTAL_PAGES, last);
   });
   lsFoot();
-
-  if (LS.tab === "juz"){
-    body.innerHTML = '<div class="knchips">' + Array.from({ length:30 }, function(_, i){
-      return '<button class="knchip" data-lsjuz="' + (i + 1) + '">' + n(i + 1) + '</button>';
-    }).join("") + '</div><p class="idx-empty" style="padding:0 14px">' + T.hint + '</p>';
-    qa("#ls-body [data-lsjuz]").forEach(function(b){
-      b.onclick = function(){ var r = juzRange(+b.dataset.lsjuz); lsPlay(r[0], r[1]); };
-    });
-    return;
-  }
-
-  if (LS.tab === "page"){
-    body.innerHTML = '<div class="knform">' +
-      '<div><label>' + T.from + '</label><input type="number" id="ls-p0" min="1" max="' + TOTAL_PAGES + '" value="' + (RD.page || 1) + '"></div>' +
-      '<div><label>' + T.to + '</label><input type="number" id="ls-p1" min="1" max="' + TOTAL_PAGES + '" value="' + TOTAL_PAGES + '"></div>' +
-      '<button class="abtn go" id="ls-pgo">' + T.play + '</button></div>' +
-      '<p class="idx-empty" style="padding:0 14px">' + T.hint + '</p>';
-    document.getElementById("ls-pgo").onclick = function(){
-      var a = +document.getElementById("ls-p0").value || 1;
-      var b = +document.getElementById("ls-p1").value || TOTAL_PAGES;
-      lsPlay(Math.min(a, b), Math.max(a, b));
-    };
-    return;
-  }
-
-  if (LS.tab === "resume"){
-    var last = S.settings.lastPlayed;
-    if (!last){
-      body.innerHTML = '<p class="idx-empty">' + T.none + '</p>';
-      return;
-    }
-    body.innerHTML = '<div class="knform">' +
-      '<div style="flex:1 1 100%"><label>' + fmt(T.at, L.rd.ay + " " + ayLabel(last)) + '</label></div>' +
-      '<button class="abtn go" id="ls-rgo">' + T.play + '</button></div>';
-    document.getElementById("ls-rgo").onclick = async function(){
-      var ix = await mushafIndex(), st = ix.start || {}, q = String(last).split(":");
-      var p = knPageOf(st, +q[0], +q[1]);
-      lsPlay(p, TOTAL_PAGES, last);
-    };
-    return;
-  }
-
-  body.innerHTML = '<p class="idx-empty">' + ((L.rd && L.rd.loading) || "…") + '</p>';
-  var ix2;
-  try { ix2 = await mushafIndex(); } catch(e){ ix2 = { surah:{}, start:{} }; }
-  var sp = ix2.surah || {};
-  var rows = "";
-  for (var s = 1; s <= 114; s++){
-    var r = knSurahPages(sp, s);
-    /* what a search has to be able to match: the number in plain digits as
-       well as the reader's own, the name in their language, and the Arabic.
-       Matching the rendered text alone meant "36" found nothing on a Bengali
-       phone, because the row says the number in Bengali digits. */
-    var arNm = (typeof SURAH_AR !== "undefined" && SURAH_AR[s - 1]) || "";
-    rows += '<div class="knrow" data-lssurah="' + s + '" data-a="' + r.a + '" data-b="' + r.b +
-      '" data-find="' + esc((s + " " + n(s) + " " + surahName(s) + " " + arNm).toLowerCase()) + '">' +
-      '<span>' + n(s) + '. ' + esc(surahName(s)) + '</span>' +
-      '<span class="pgs">' + n(r.a) + '–' + n(r.b) + '</span></div>';
-  }
-  body.innerHTML = rows;
-  /* pinned above the list rather than scrolling with it: a search that leaves
-     the screen the moment you scroll is not a search */
-  var host = document.getElementById("ls-search");
-  if (host) host.innerHTML = '<input type="search" id="ls-q" placeholder="' + esc(T.find) + '">';
-  qa("#ls-body [data-lssurah]").forEach(function(b){
-    b.onclick = function(){
-      lsPlay(+b.dataset.a, +b.dataset.b, b.dataset.lssurah + ":1");
-    };
-  });
-  var q3 = document.getElementById("ls-q");
-  if (q3) q3.oninput = function(){
-    var v = this.value.trim().toLowerCase();
-    /* a reader typing digits gets what they meant whichever numerals they use */
-    var v2 = v.replace(/[٠-٩]/g, function(d){ return String(d.charCodeAt(0) - 0x0660); })
-              .replace(/[۰-۹]/g, function(d){ return String(d.charCodeAt(0) - 0x06f0); })
-              .replace(/[০-৯]/g, function(d){ return String(d.charCodeAt(0) - 0x09e6); });
-    qa("#ls-body [data-lssurah]").forEach(function(row){
-      var hay = row.dataset.find || row.textContent.toLowerCase();
-      row.style.display = (!v || hay.indexOf(v) > -1 || hay.indexOf(v2) > -1) ? "" : "none";
-    });
-  };
 }
-
+;
 var KNL = {
   bn:{ ttl:"আগে যা মুখস্থ", firm:"পাকা", weak:"দুর্বল", off:"বাদ দিন", mark:"ট্যাপ করলে যা বসবে",
        juz:"পারা", surah:"সূরা", page:"পৃষ্ঠা", ayah:"আয়াত", from:"থেকে", to:"পর্যন্ত", add:"বসান",
