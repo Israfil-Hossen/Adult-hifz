@@ -3492,7 +3492,18 @@ input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet
    locked aspect ratio; the buttons that want a different size still say so,
    and their rule outranks this one. */
 .ricc{width:21px;height:21px;aspect-ratio:1;flex:0 0 auto;display:block}
-.rdfab,.sbbtn.go{aspect-ratio:1}
+/* A round button has to be square, and a flex row stretches its children to
+   the tallest one by default - which made the green button 34 wide and 44 tall
+   with a 50% radius on it, so it drew as an egg. aspect-ratio cannot help when
+   both width and height are already given: what it needed was to stop being
+   stretched, and to stop carrying side padding inside a fixed width. */
+.rdcard .rdfab,.rdcard .sbbtn.go{align-self:center;padding:0;
+  width:38px;min-width:38px;height:38px;min-height:38px;flex:0 0 38px}
+body.mushaf .rdcard .rdfab{width:38px;min-width:38px;height:38px;min-height:38px}
+@media (max-width:400px){
+  .rdcard .rdfab,.rdcard .sbbtn.go{width:34px;min-width:34px;height:34px;min-height:34px;flex:0 0 34px}
+  body.mushaf .rdcard .rdfab{width:34px;min-width:34px;height:34px;min-height:34px}
+}
 .rdfab .ricc circle[fill="#F7F1E3"]{fill:#66784E}
 .rdfab .ricc circle[stroke="#66784E"]{stroke:#F7F1E3}
 .rdfab .ricc circle[fill="#66784E"]{fill:#F7F1E3}
