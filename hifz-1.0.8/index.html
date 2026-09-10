@@ -3486,9 +3486,13 @@ input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet
    grows it down the page instead of across it */
 .lslab{flex:0 0 auto;min-width:0;font-size:12px;letter-spacing:.04em;
   color:var(--ink-3);background:none;padding:0;margin:0;box-shadow:none}
-/* an icon that carries its own colours must not be re-coloured by the button
-   it sits in, except on the one button whose ground is already green */
-.ricc{width:100%;height:100%;display:block}
+/* An icon must never be stretched. width/height:100% made every drawing take
+   the shape of whatever button held it, so a circle became an oval on any
+   button that was not square - which is most of them. A fixed size and a
+   locked aspect ratio; the buttons that want a different size still say so,
+   and their rule outranks this one. */
+.ricc{width:21px;height:21px;aspect-ratio:1;flex:0 0 auto;display:block}
+.rdfab,.sbbtn.go{aspect-ratio:1}
 .rdfab .ricc circle[fill="#F7F1E3"]{fill:#66784E}
 .rdfab .ricc circle[stroke="#66784E"]{stroke:#F7F1E3}
 .rdfab .ricc circle[fill="#66784E"]{fill:#F7F1E3}
@@ -6603,81 +6607,117 @@ function ric(d, extra){
 }
 /* The icons the reading panels wear.
 
-   They were all one weight of hairline in one colour - correct, legible, and
-   completely flat. A reader looking at the panel could not tell the book from
-   the target from the test without reading the label under it. So they are
-   drawn now: a filled body in a colour that belongs to the thing, the outline
-   kept on top so the shape still reads at 24px, and each one built from the
-   app's own palette rather than a stock set.
+   The first set was one hairline weight in one colour: correct, legible, and
+   impossible to tell apart at a glance. The second had colour but was still
+   built from the same thin outlines, so it read as tinted line-art rather than
+   as objects.
 
-   Two colours each at most. More than that and they stop being icons. */
+   These are drawn as things. Each has a body with weight to it, a darker edge
+   where an object would catch its own shadow, and one accent that says what it
+   is - pages in a book, the grille of a microphone, the ring of a target.
+   Two colours and their soft tint, no more; anything busier stops working at
+   the 21 pixels these are actually rendered at.
+
+   Every shape is centred in a 24-box and none of them touch its edge, so a
+   row of them sits on one optical line instead of jittering. */
 function ricc(body){
   return '<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" ' +
     'stroke-linejoin="round" class="ricc">' + body + '</svg>';
 }
-/* the palette, as literals: an SVG inside innerHTML cannot see a CSS variable
-   that is defined on :root through a shadow of its own */
-var IC = { green:"#66784E", greenS:"#CBD8BC", brass:"#B36A38", brassS:"#EBD5BE",
-           maroon:"#9C4530", maroonS:"#EBCFC6", ink:"#3B4034", paper:"#F7F1E3",
-           sky:"#4A6B84", skyS:"#C9DAE6" };
+var IC = { green:"#5F7A45", greenD:"#3E5230", greenS:"#CBD9BA",
+           brass:"#B0682F", brassD:"#7E4A20", brassS:"#F0DAC0",
+           maroon:"#9C4530", maroonD:"#6E2F20", maroonS:"#EFCFC5",
+           sky:"#3F6B87", skyD:"#2A4A5E", skyS:"#C9DEEA",
+           ink:"#3B4034", paper:"#FBF7EC" };
 var RIC = {
-  prev:    ricc('<path d="M15 5l-7 7 7 7" stroke="' + IC.ink + '" stroke-width="2"/>'),
-  next:    ricc('<path d="M9 5l7 7-7 7" stroke="' + IC.ink + '" stroke-width="2"/>'),
-  paper:   ricc('<circle cx="12" cy="12" r="9" fill="' + IC.brassS + '" stroke="' + IC.brass + '" stroke-width="1.6"/>' +
+  prev:    ricc('<path d="M14.5 5.5L8 12l6.5 6.5" stroke="' + IC.ink + '" stroke-width="2.2"/>'),
+  next:    ricc('<path d="M9.5 5.5L16 12l-6.5 6.5" stroke="' + IC.ink + '" stroke-width="2.2"/>'),
+
+  /* the mushaf: a bound volume seen slightly open, pages showing */
+  book:    ricc('<path d="M12 6.2C10.2 4.9 8 4.4 5.4 4.6a1 1 0 0 0-.9 1v12.1a1 1 0 0 0 1.1 1c2.3-.2 4.4.3 6.4 1.5V6.2z" fill="' + IC.greenS + '"/>' +
+                '<path d="M12 6.2c1.8-1.3 4-1.8 6.6-1.6a1 1 0 0 1 .9 1v12.1a1 1 0 0 1-1.1 1c-2.3-.2-4.4.3-6.4 1.5V6.2z" fill="' + IC.green + '"/>' +
+                '<path d="M12 6.2C10.2 4.9 8 4.4 5.4 4.6a1 1 0 0 0-.9 1v12.1a1 1 0 0 0 1.1 1c2.3-.2 4.4.3 6.4 1.5 2-1.2 4.1-1.7 6.4-1.5a1 1 0 0 0 1.1-1V5.6a1 1 0 0 0-.9-1c-2.6-.2-4.8.3-6.6 1.6z" stroke="' + IC.greenD + '" stroke-width="1.3"/>' +
+                '<path d="M12 6.2v14.1" stroke="' + IC.greenD + '" stroke-width="1.3"/>' +
+                '<path d="M6.9 8.3h3.3M6.9 11h3.3" stroke="' + IC.greenD + '" stroke-width="1.1" opacity=".65"/>'),
+
+  /* memorised: a disc with the tick cut into it */
+  mem:     ricc('<circle cx="12" cy="12" r="9.2" fill="' + IC.green + '"/>' +
+                '<circle cx="12" cy="12" r="9.2" stroke="' + IC.greenD + '" stroke-width="1.2"/>' +
+                '<path d="M7.4 12.3l3.1 3.1 6.1-6.6" stroke="' + IC.paper + '" stroke-width="2.4"/>'),
+
+  /* the target: three rings and a centre, the way a target is actually drawn */
+  target:  ricc('<circle cx="12" cy="12" r="9.2" fill="' + IC.paper + '" stroke="' + IC.greenD + '" stroke-width="1.4"/>' +
+                '<circle cx="12" cy="12" r="6" fill="' + IC.greenS + '" stroke="' + IC.green + '" stroke-width="1.4"/>' +
+                '<circle cx="12" cy="12" r="2.7" fill="' + IC.green + '"/>'),
+
+  /* headphones: a band and two real earcups */
+  listen:  ricc('<path d="M4.6 15.4v-3.1a7.4 7.4 0 0 1 14.8 0v3.1" stroke="' + IC.greenD + '" stroke-width="2"/>' +
+                '<rect x="2.2" y="13.4" width="5.4" height="8" rx="2.6" fill="' + IC.green + '" stroke="' + IC.greenD + '" stroke-width="1.1"/>' +
+                '<rect x="16.4" y="13.4" width="5.4" height="8" rx="2.6" fill="' + IC.green + '" stroke="' + IC.greenD + '" stroke-width="1.1"/>'),
+
+  /* a microphone with a grille, on a stand */
+  mic:     ricc('<rect x="8.7" y="2.4" width="6.6" height="11.6" rx="3.3" fill="' + IC.maroon + '" stroke="' + IC.maroonD + '" stroke-width="1.1"/>' +
+                '<path d="M10.3 6h3.4M10.3 8.4h3.4M10.3 10.8h3.4" stroke="' + IC.maroonS + '" stroke-width="1"/>' +
+                '<path d="M5.8 11.6a6.2 6.2 0 0 0 12.4 0" stroke="' + IC.maroonD + '" stroke-width="1.9"/>' +
+                '<path d="M12 17.9v3.2M9.2 21.1h5.6" stroke="' + IC.maroonD + '" stroke-width="1.9"/>'),
+
+  /* the test: a numbered card with a question on it */
+  test:    ricc('<rect x="4.2" y="3" width="15.6" height="18" rx="2.4" fill="' + IC.brassS + '" stroke="' + IC.brassD + '" stroke-width="1.3"/>' +
+                '<path d="M9.6 9.5a2.5 2.5 0 1 1 3.2 2.4c-.7.2-1 .7-1 1.3v.5" stroke="' + IC.brassD + '" stroke-width="1.9"/>' +
+                '<circle cx="11.8" cy="16.6" r="1" fill="' + IC.brassD + '"/>'),
+
+  /* a mistake, flagged */
+  flag:    ricc('<path d="M5.6 21.6V3.2" stroke="' + IC.maroonD + '" stroke-width="2"/>' +
+                '<path d="M5.6 4.1h10.8l-2.1 3.5 2.1 3.6H5.6z" fill="' + IC.maroon + '" stroke="' + IC.maroonD + '" stroke-width="1.1"/>'),
+
+  /* eyes closed: a lid drawn down over the eye */
+  blind:   ricc('<path d="M2.6 12.4s3.7-5.6 9.4-5.6 9.4 5.6 9.4 5.6" fill="' + IC.skyS + '" stroke="' + IC.skyD + '" stroke-width="1.4"/>' +
+                '<path d="M2.6 12.4h18.8" stroke="' + IC.skyD + '" stroke-width="1.6"/>' +
+                '<path d="M5.4 15.4l-1.5 2M9.6 16.6l-.7 2.2M14.4 16.6l.7 2.2M18.6 15.4l1.5 2" stroke="' + IC.skyD + '" stroke-width="1.5"/>'),
+
+  /* the curtain, with folds */
+  curtain: ricc('<rect x="3.2" y="4.2" width="17.6" height="15.6" rx="2.2" fill="' + IC.maroonS + '" stroke="' + IC.maroonD + '" stroke-width="1.3"/>' +
+                '<path d="M3.2 7.6h17.6" stroke="' + IC.maroonD + '" stroke-width="1.6"/>' +
+                '<path d="M7.4 7.6v12.2M12 7.6v12.2M16.6 7.6v12.2" stroke="' + IC.maroon + '" stroke-width="1.2" opacity=".8"/>'),
+
+  /* the glimpse: a stopwatch */
+  glimpse: ricc('<circle cx="12" cy="13.6" r="7.6" fill="' + IC.skyS + '" stroke="' + IC.skyD + '" stroke-width="1.4"/>' +
+                '<path d="M12 13.6V9.4" stroke="' + IC.skyD + '" stroke-width="2"/>' +
+                '<rect x="9.7" y="1.6" width="4.6" height="2.2" rx="1.1" fill="' + IC.skyD + '"/>' +
+                '<path d="M12 3.8v2.2" stroke="' + IC.skyD + '" stroke-width="1.8"/>'),
+
+  /* the page of meaning: a sheet with script on it */
+  ayah:    ricc('<rect x="4.4" y="2.8" width="15.2" height="18.4" rx="2.2" fill="' + IC.greenS + '" stroke="' + IC.greenD + '" stroke-width="1.3"/>' +
+                '<path d="M7.8 8h8.4M7.8 11.6h8.4M7.8 15.2h5.2" stroke="' + IC.green + '" stroke-width="1.5"/>'),
+
+  index:   ricc('<rect x="3.2" y="4" width="17.6" height="16" rx="2.2" fill="' + IC.brassS + '" stroke="' + IC.brassD + '" stroke-width="1.3"/>' +
+                '<path d="M6.8 8.6h10.4M6.8 12h10.4M6.8 15.4h6.4" stroke="' + IC.brass + '" stroke-width="1.5"/>'),
+
+  play:    ricc('<circle cx="12" cy="12" r="9.2" fill="' + IC.green + '" stroke="' + IC.greenD + '" stroke-width="1.2"/>' +
+                '<path d="M10 7.9l6.4 4.1-6.4 4.1z" fill="' + IC.paper + '"/>'),
+  pause:   ricc('<circle cx="12" cy="12" r="9.2" fill="' + IC.green + '" stroke="' + IC.greenD + '" stroke-width="1.2"/>' +
+                '<rect x="8.6" y="7.8" width="2.5" height="8.4" rx="1.1" fill="' + IC.paper + '"/>' +
+                '<rect x="12.9" y="7.8" width="2.5" height="8.4" rx="1.1" fill="' + IC.paper + '"/>'),
+  stop:    ricc('<circle cx="12" cy="12" r="9.2" fill="' + IC.maroon + '" stroke="' + IC.maroonD + '" stroke-width="1.2"/>' +
+                '<rect x="8.3" y="8.3" width="7.4" height="7.4" rx="1.5" fill="' + IC.paper + '"/>'),
+
+  loop:    ricc('<path d="M3.6 12.6V11a3.8 3.8 0 0 1 3.8-3.8h12.2" stroke="' + IC.green + '" stroke-width="2"/>' +
+                '<path d="M16.8 3.6l3.6 3.6-3.6 3.6" fill="' + IC.green + '" stroke="' + IC.green + '" stroke-width="1.6"/>' +
+                '<path d="M20.4 11.4V13a3.8 3.8 0 0 1-3.8 3.8H4.4" stroke="' + IC.green + '" stroke-width="2"/>' +
+                '<path d="M7.2 13.2l-3.6 3.6 3.6 3.6" fill="' + IC.green + '" stroke="' + IC.green + '" stroke-width="1.6"/>'),
+
+  speed:   ricc('<path d="M3.6 16.4a8.4 8.4 0 1 1 16.8 0z" fill="' + IC.brassS + '" stroke="' + IC.brassD + '" stroke-width="1.3"/>' +
+                '<path d="M12 16.4l4.6-5" stroke="' + IC.brassD + '" stroke-width="2.2"/>' +
+                '<circle cx="12" cy="16.4" r="1.7" fill="' + IC.brassD + '"/>'),
+
+  sound:   ricc('<path d="M4 9.4v5.2h3.4L12.8 18.6V5.4L7.4 9.4z" fill="' + IC.green + '" stroke="' + IC.greenD + '" stroke-width="1.1"/>' +
+                '<path d="M15.8 9.2a4.4 4.4 0 0 1 0 5.6M18.3 6.8a7.8 7.8 0 0 1 0 10.4" stroke="' + IC.green + '" stroke-width="1.7"/>'),
+  mute:    ricc('<path d="M4 9.4v5.2h3.4L12.8 18.6V5.4L7.4 9.4z" fill="' + IC.ink + '" opacity=".55"/>' +
+                '<path d="M16 9.6l5 4.8M21 9.6l-5 4.8" stroke="' + IC.maroon + '" stroke-width="2"/>'),
+
+  paper:   ricc('<circle cx="12" cy="12" r="9" fill="' + IC.brassS + '" stroke="' + IC.brassD + '" stroke-width="1.3"/>' +
                 '<path d="M12 3a9 9 0 0 0 0 18z" fill="' + IC.brass + '"/>'),
-  curtain: ricc('<rect x="3" y="4" width="18" height="16" rx="2.5" fill="' + IC.maroonS + '" stroke="' + IC.maroon + '" stroke-width="1.6"/>' +
-                '<path d="M3 9.5h18M3 14.5h18" stroke="' + IC.maroon + '" stroke-width="1.4"/>'),
-  blind:   ricc('<path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6z" fill="' + IC.skyS + '" stroke="' + IC.sky + '" stroke-width="1.6"/>' +
-                '<circle cx="12" cy="12" r="2.6" fill="' + IC.sky + '"/>' +
-                '<path d="M4 4l16 16" stroke="' + IC.maroon + '" stroke-width="2"/>'),
-  glimpse: ricc('<circle cx="12" cy="13.5" r="7.5" fill="' + IC.skyS + '" stroke="' + IC.sky + '" stroke-width="1.6"/>' +
-                '<path d="M12 13.5V9.5" stroke="' + IC.sky + '" stroke-width="2"/>' +
-                '<path d="M9.5 2.5h5" stroke="' + IC.sky + '" stroke-width="2"/>'),
-  mem:     ricc('<circle cx="12" cy="12" r="9.5" fill="' + IC.green + '"/>' +
-                '<path d="M17.5 8.5L10.5 15.8 6.8 12" stroke="' + IC.paper + '" stroke-width="2.2"/>'),
-  listen:  ricc('<path d="M4 15.5v-3.5a8 8 0 0 1 16 0v3.5" stroke="' + IC.green + '" stroke-width="1.9"/>' +
-                '<rect x="2" y="13.5" width="5.2" height="7.5" rx="2.4" fill="' + IC.green + '"/>' +
-                '<rect x="16.8" y="13.5" width="5.2" height="7.5" rx="2.4" fill="' + IC.green + '"/>'),
-  play:    ricc('<circle cx="12" cy="12" r="9.5" fill="' + IC.green + '"/>' +
-                '<path d="M10 8.2l6.2 3.8-6.2 3.8z" fill="' + IC.paper + '"/>'),
-  pause:   ricc('<circle cx="12" cy="12" r="9.5" fill="' + IC.green + '"/>' +
-                '<path d="M9.7 8v8M14.3 8v8" stroke="' + IC.paper + '" stroke-width="2.4"/>'),
-  stop:    ricc('<circle cx="12" cy="12" r="9.5" fill="' + IC.maroon + '"/>' +
-                '<rect x="8.4" y="8.4" width="7.2" height="7.2" rx="1.4" fill="' + IC.paper + '"/>'),
-  loop:    ricc('<path d="M3.5 12.5V11a4 4 0 0 1 4-4h13" stroke="' + IC.green + '" stroke-width="1.9"/>' +
-                '<path d="M17.5 3l4 4-4 4" stroke="' + IC.green + '" stroke-width="1.9"/>' +
-                '<path d="M20.5 11.5V13a4 4 0 0 1-4 4h-13" stroke="' + IC.green + '" stroke-width="1.9"/>' +
-                '<path d="M6.5 13l-4 4 4 4" stroke="' + IC.green + '" stroke-width="1.9"/>'),
-  speed:   ricc('<circle cx="12" cy="12" r="9.5" fill="' + IC.brassS + '" stroke="' + IC.brass + '" stroke-width="1.6"/>' +
-                '<path d="M12 12l4.5-3.2" stroke="' + IC.brass + '" stroke-width="2.2"/>' +
-                '<circle cx="12" cy="12" r="1.6" fill="' + IC.brass + '"/>'),
-  /* the meaning: a page with a line of script on it */
-  ayah:    ricc('<rect x="4" y="3" width="16" height="18" rx="2.5" fill="' + IC.greenS + '" stroke="' + IC.green + '" stroke-width="1.6"/>' +
-                '<path d="M7.5 8.5h9M7.5 12h9M7.5 15.5h5.5" stroke="' + IC.green + '" stroke-width="1.5"/>'),
-  menu:    ricc('<path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17" stroke="' + IC.ink + '" stroke-width="2"/>'),
-  index:   ricc('<rect x="3" y="4" width="18" height="16" rx="2.5" fill="' + IC.brassS + '" stroke="' + IC.brass + '" stroke-width="1.6"/>' +
-                '<path d="M6.5 9h11M6.5 12.5h11M6.5 16h7" stroke="' + IC.brass + '" stroke-width="1.5"/>'),
-  sound:   ricc('<path d="M4 9.5v5h3.6L13 18.5V5.5L7.6 9.5z" fill="' + IC.green + '"/>' +
-                '<path d="M16.4 9a4.6 4.6 0 0 1 0 6" stroke="' + IC.green + '" stroke-width="1.9"/>'),
-  mute:    ricc('<path d="M4 9.5v5h3.6L13 18.5V5.5L7.6 9.5z" fill="' + IC.ink + '"/>' +
-                '<path d="M16.5 10l4.5 4M21 10l-4.5 4" stroke="' + IC.maroon + '" stroke-width="2"/>'),
-  /* the microphone: a body you can see, not an outline of one */
-  mic:     ricc('<rect x="8.6" y="2.5" width="6.8" height="12" rx="3.4" fill="' + IC.maroon + '"/>' +
-                '<path d="M5.5 11.5a6.5 6.5 0 0 0 13 0" stroke="' + IC.maroon + '" stroke-width="1.9"/>' +
-                '<path d="M12 18v3M9 21.2h6" stroke="' + IC.maroon + '" stroke-width="1.9"/>'),
-  /* the mushaf: a bound book, its spine on the reading side */
-  book:    ricc('<path d="M5 4.6A1.6 1.6 0 0 1 6.6 3H19.4v15H6.6A1.6 1.6 0 0 0 5 19.6z" fill="' + IC.greenS + '" stroke="' + IC.green + '" stroke-width="1.6"/>' +
-                '<path d="M5 19.6A1.6 1.6 0 0 1 6.6 18H19.4v3H6.6A1.6 1.6 0 0 1 5 19.6z" fill="' + IC.green + '"/>' +
-                '<path d="M8.5 7.5h8M8.5 10.8h8M8.5 14h5" stroke="' + IC.green + '" stroke-width="1.4"/>'),
-  test:    ricc('<circle cx="12" cy="12" r="9.5" fill="' + IC.brass + '"/>' +
-                '<path d="M9.4 9.3a2.6 2.6 0 1 1 3.3 2.5c-.7.2-1 .7-1 1.3v.5" stroke="' + IC.paper + '" stroke-width="2"/>' +
-                '<circle cx="12" cy="16.6" r="1.05" fill="' + IC.paper + '"/>'),
-  flag:    ricc('<path d="M5.2 21.5V3" stroke="' + IC.maroon + '" stroke-width="2"/>' +
-                '<path d="M5.2 4h11l-2 3.4 2 3.5h-11z" fill="' + IC.maroon + '"/>'),
-  /* the green button on the bar: the one thing that is a target */
-  target:  ricc('<circle cx="12" cy="12" r="9" fill="' + IC.paper + '" stroke="' + IC.green + '" stroke-width="1.8"/>' +
-                '<circle cx="12" cy="12" r="5" fill="none" stroke="' + IC.green + '" stroke-width="1.8"/>' +
-                '<circle cx="12" cy="12" r="2" fill="' + IC.green + '"/>')
+  menu:    ricc('<path d="M3.6 6.6h16.8M3.6 12h16.8M3.6 17.4h16.8" stroke="' + IC.ink + '" stroke-width="2.1"/>')
 };
 async function mushafIndex(){
   var def = mushafDef();
