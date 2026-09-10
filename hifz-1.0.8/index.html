@@ -8123,6 +8123,8 @@ function rdSheetDef(which){
      selected. How many times is a list below, not a chip counted up to. */
   if (which === "listen") return [B.listen, [
     ["playpick",  function(){ return B.hearAny; }, RIC.book],
+    ["phrase",    function(){ return L.rec.phrase; }, RIC.loop, null,
+                  function(){ return !!RD.phrase; }],
     ["playday",   function(){ return B.hearDay; }, RIC.listen,
                   function(){ return sabaqLabel(); }],
     ["playpause", function(){ return (rdAudio && !rdAudio.paused) ? L.rd.pause
@@ -8135,13 +8137,17 @@ function rdSheetDef(which){
     ["blind",   function(){ return L.mu.blind; },    RIC.blind, null,
                 function(){ return !!RD.blind; }],
     ["curtain", function(){ return L.mu.curtain; },  RIC.curtain, null,
-                function(){ return !!RD.curtainOn; }]
+                function(){ return !!RD.curtainOn; }],
+    ["glimpse", function(){ return L.mu.glimpse; },  RIC.glimpse],
+    ["mut",     function(){ return L.mut.find; },    RIC.ayah]
   ]];
   return [B.book, [
     ["tr3",      function(){ return L.rd.tr; },        RIC.ayah,
                  function(){ return RD.trOnly ? B.trOnly : (RD.tr === false ? B.trOff : B.trUnder); },
                  function(){ return RD.trOnly || RD.tr !== false; }],
     ["focus",    function(){ return L.rd.focus; },     RIC.glimpse],
+    ["pick",     function(){ return L.rd.pick; },      RIC.ayah, null,
+                 function(){ return !!RD.pick; }],
     ["_pickmushaf", function(){ return uit("mushafPick"); }, RIC.book]
   ].concat(Object.keys(S.hl || {}).length
     ? [["_clearhl", function(){ return uit("clearHl"); }, RIC.blind]] : [])];
@@ -8282,6 +8288,9 @@ function rdSheetOpen(which){
         return;
       }
       if (k === "lsheet" || k === "tsheet"){ rdSheetOpen(k === "lsheet" ? "listen" : "test"); return; }
+      /* picking on the page and looping a phrase are both done with the panel
+         out of the way - they ask the reader to touch the words next */
+      if (k === "pick" || k === "phrase"){ rdVeilClose(); rdAct(k); return; }
       rdVeilClose();
       if (k.charAt(0) === "_"){
         for (var i = 0; i < DOTS.length; i++){
