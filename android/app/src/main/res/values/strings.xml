@@ -11,4 +11,5 @@
     <string name="playback_pause">Pause</string>
     <string name="playback_prev">Previous ayah</string>
     <string name="playback_next">Next ayah</string>
+    <string name="download_channel">Downloads</string>
 </resources>

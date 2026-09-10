@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
+import androidx.activity.OnBackPressedCallback;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -64,6 +66,14 @@ public class MainActivity extends BridgeActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             ask.add(Manifest.permission.POST_NOTIFICATIONS);
         }
+        /* Android 10 and older need the old write permission to put recitation
+           in Music/, where it outlives the app; from 11 on no permission is
+           needed for that at all */
+        if (Build.VERSION.SDK_INT <= 29 &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ask.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
         if (!ask.isEmpty()) {
             ActivityCompat.requestPermissions(this, ask.toArray(new String[0]), 7301);
         }
@@ -74,6 +84,27 @@ public class MainActivity extends BridgeActivity {
                 WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return WindowInsetsCompat.CONSUMED;
+        });
+
+        /* The Back key never reached the app. Capacitor on its own hands Back
+           to Android, which sends the whole app to the background - so the
+           page's own rule (close whatever is on top first: the download
+           screen, the drawer, a panel) only ever ran in a desktop browser.
+           On a phone, Back left the app mid-download and looked broken.
+
+           Now the page is asked first. It answers "handled" when it closed
+           something; only when there is nothing left to close does Back leave,
+           and then the app is moved behind, not ended - so it comes back
+           exactly where it was. */
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                WebView wv = getBridge() == null ? null : getBridge().getWebView();
+                if (wv == null) { moveTaskToBack(true); return; }
+                wv.evaluateJavascript(
+                    "(function(){try{return window.hifzBack&&window.hifzBack()?'y':'n'}catch(e){return 'n'}})()",
+                    r -> { if (r == null || !r.contains("y")) moveTaskToBack(true); });
+            }
         });
     }
 }

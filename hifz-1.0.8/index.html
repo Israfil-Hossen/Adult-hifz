@@ -2453,7 +2453,10 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .dljuz[hidden]{display:none}
 .dljlab{font-size:12px;color:var(--ink-3);margin-bottom:9px}
 .dljuz .knchip{min-width:42px;padding:8px 6px}
-.dlpages{margin-top:4px;font-size:12.5px;color:var(--ink-3)}\n.dlpart{font-style:normal;font-size:11.5px;color:var(--ink-3);font-weight:600}
+.dlpages{margin-top:4px;font-size:12.5px;color:var(--ink-3)}
+.dlbg{color:var(--verdigris);font-weight:600}
+.dlprev{margin-top:8px}
+.dlpart{font-style:normal;font-size:11.5px;color:var(--ink-3);font-weight:600}
 .dlfoot{margin-top:14px}
 .dlbar{height:6px;border-radius:999px;background:var(--paper-2);overflow:hidden;margin:10px 0 6px}
 .dlbar i{display:block;height:100%;background:var(--verdigris);width:0;transition:width .25s}
@@ -5563,31 +5566,31 @@ function sgL(){ return SGL[L.code] || SGL.en; }
    search, and a bar that says how far it has got. Juz and the whole Qur'an stay
    as one-tap shortcuts, because a page-based reader still thinks in juz. */
 var DLL = {
-  bn:{ q:"সূরার নম্বর বা নাম খুঁজুন", pagesHave:"পাতা {0} / {1}", pagesGot:"{0}টি পাতা নামানো হলো", starting:"{0}টি পাতা নামছে…", whichJuz:"কোন পারা?", thisPageN:"এই পাতা ({0})", ayat:"আয়াত {0}", pgs:"পৃষ্ঠা {0}–{1}",
+  bn:{ ing:"ডাউনলোড হচ্ছে", prog:"{0}% · {1} / {2}টি ফাইল", prep:"তালিকা তৈরি হচ্ছে…", bg:"অ্যাপ থেকে বের হলেও ডাউনলোড চলবে — নোটিফিকেশনে দেখা যাবে", tPage:"পাতা {0}", tSurahs:"{0}টি সূরা", prevQ:"এই ফোনে আগের ডাউনলোড করা তিলাওয়াত পাওয়া গেছে। আবার জুড়ে দিতে ফাইল দেখার অনুমতি দেবেন?", prevBtn:"আগের ডাউনলোড খুঁজুন", prevNone:"আগের কোনো ডাউনলোড পাওয়া যায়নি", prevGot:"আগের ডাউনলোড জোড়া হচ্ছে", q:"সূরার নম্বর বা নাম খুঁজুন", pagesHave:"পাতা {0} / {1}", pagesGot:"{0}টি পাতা নামানো হলো", starting:"{0}টি পাতা নামছে…", whichJuz:"কোন পারা?", thisPageN:"এই পাতা ({0})", ayat:"আয়াত {0}", pgs:"পৃষ্ঠা {0}–{1}",
        picked:"{0}টি সূরা বাছা", none:"কিছু বাছা হয়নি", clear:"বাছাই মুছুন",
        surah:"সূরা", juz:"পারা", all:"পুরো কুরআন", nores:"কিছু পাওয়া যায়নি",
        page:"এই পাতা", sabaq:"আজকের সবক", part:"লেখা আছে · {0}টি আয়াতের অডিও বাকি", retry:"বাকিটুকু আনুন",
        busy:"এখন নামছে — শেষ হলে আবার চাপুন", leaveQ:"ডাউনলোড চলছে। থামাবেন?", pageDone:"পাতা {0} নামানো হলো", noSabaq:"আজকের কোনো সবক ঠিক করা নেই",
        have:"নামানো আছে", del:"মুছুন", delQ:"{0} ডিভাইস থেকে মুছবেন?", title:"নামানো" },
-  en:{ q:"Search surah no or name", pagesHave:"Pages {0} / {1}", pagesGot:"{0} pages are on the device", starting:"Fetching {0} pages…", whichJuz:"Which juz?", thisPageN:"This page ({0})", ayat:"Ayat: {0}", pgs:"Pages {0}–{1}",
+  en:{ ing:"Downloading", prog:"{0}% · {1} / {2} files", prep:"Preparing the list…", bg:"The download carries on if you leave the app — it shows in the notifications", tPage:"Page {0}", tSurahs:"{0} surahs", prevQ:"Recitation downloaded earlier is on this phone. Allow access to the files to connect it again?", prevBtn:"Find earlier downloads", prevNone:"No earlier downloads were found", prevGot:"Connecting earlier downloads", q:"Search surah no or name", pagesHave:"Pages {0} / {1}", pagesGot:"{0} pages are on the device", starting:"Fetching {0} pages…", whichJuz:"Which juz?", thisPageN:"This page ({0})", ayat:"Ayat: {0}", pgs:"Pages {0}–{1}",
        picked:"{0} surahs selected", none:"Nothing selected", clear:"Clear",
        surah:"Surah", juz:"Juz", all:"Whole Qur\u2019an", nores:"Nothing found",
        page:"This page", sabaq:"Today’s lesson", part:"Text ready · {0} ayat without audio", retry:"Fetch the rest",
        busy:"Downloading — press again when it finishes", leaveQ:"A download is running. Stop it?", pageDone:"Page {0} is on the device", noSabaq:"No lesson is set for today",
        have:"On this device", del:"Delete", delQ:"Remove {0} from the device?", title:"Downloads" },
-  ur:{ q:"سورہ نمبر یا نام تلاش کریں", pagesHave:"صفحات {0} / {1}", pagesGot:"{0} صفحے آ گئے", starting:"{0} صفحے آ رہے ہیں…", whichJuz:"کون سا پارہ؟", thisPageN:"یہ صفحہ ({0})", ayat:"آیات: {0}", pgs:"صفحات {0}–{1}",
+  ur:{ ing:"ڈاؤن لوڈ ہو رہا ہے", prog:"{0}% · {1} / {2} فائلیں", prep:"فہرست تیار ہو رہی ہے…", bg:"ایپ سے نکلنے پر بھی ڈاؤن لوڈ چلتا رہے گا — نوٹیفکیشن میں نظر آئے گا", tPage:"صفحہ {0}", tSurahs:"{0} سورتیں", prevQ:"اس فون پر پہلے ڈاؤن لوڈ کی گئی تلاوت موجود ہے۔ دوبارہ جوڑنے کے لیے فائلوں تک رسائی دیں؟", prevBtn:"پچھلے ڈاؤن لوڈ تلاش کریں", prevNone:"کوئی پچھلا ڈاؤن لوڈ نہیں ملا", prevGot:"پچھلے ڈاؤن لوڈ جوڑے جا رہے ہیں", q:"سورہ نمبر یا نام تلاش کریں", pagesHave:"صفحات {0} / {1}", pagesGot:"{0} صفحے آ گئے", starting:"{0} صفحے آ رہے ہیں…", whichJuz:"کون سا پارہ؟", thisPageN:"یہ صفحہ ({0})", ayat:"آیات: {0}", pgs:"صفحات {0}–{1}",
        picked:"{0} سورتیں منتخب", none:"کچھ منتخب نہیں", clear:"صاف کریں",
        surah:"سورہ", juz:"پارہ", all:"مکمل قرآن", nores:"کچھ نہیں ملا",
        page:"یہ صفحہ", sabaq:"آج کا سبق", part:"متن موجود · {0} آیات کی آواز باقی", retry:"باقی لائیں",
        busy:"ابھی ڈاؤن لوڈ ہو رہا ہے — مکمل ہونے پر دوبارہ دبائیں", leaveQ:"ڈاؤن لوڈ جاری ہے۔ روک دیں؟", pageDone:"صفحہ {0} ڈیوائس پر آ گیا", noSabaq:"آج کا کوئی سبق مقرر نہیں",
        have:"ڈیوائس پر موجود", del:"مٹائیں", delQ:"{0} ڈیوائس سے ہٹائیں؟", title:"ڈاؤن لوڈ" },
-  zh:{ q:"搜索苏拉编号或名称", pagesHave:"页 {0} / {1}", pagesGot:"已存入 {0} 页", starting:"正在取 {0} 页…", whichJuz:"哪一卷？", thisPageN:"本页（{0}）", ayat:"节数：{0}", pgs:"第 {0}–{1} 页",
+  zh:{ ing:"正在下载", prog:"{0}% · {1} / {2} 个文件", prep:"正在准备清单…", bg:"离开应用后下载仍会继续 —— 可在通知栏查看", tPage:"第 {0} 页", tSurahs:"{0} 章", prevQ:"本机上有以前下载的诵读。允许读取这些文件以重新连接吗？", prevBtn:"查找以前的下载", prevNone:"没有找到以前的下载", prevGot:"正在重新连接以前的下载", q:"搜索苏拉编号或名称", pagesHave:"页 {0} / {1}", pagesGot:"已存入 {0} 页", starting:"正在取 {0} 页…", whichJuz:"哪一卷？", thisPageN:"本页（{0}）", ayat:"节数：{0}", pgs:"第 {0}–{1} 页",
        picked:"已选 {0} 章", none:"未选择", clear:"清除",
        surah:"苏拉", juz:"卷", all:"全本古兰经", nores:"未找到",
        page:"本页", sabaq:"今日功课", part:"文字已备 · {0} 节缺诵读", retry:"把剩下的取回",
        busy:"正在下载 —— 完成后再点", leaveQ:"下载进行中。要停止吗？", pageDone:"第 {0} 页已存入本机", noSabaq:"今天还没定功课",
        have:"已在设备上", del:"删除", delQ:"从设备移除 {0}？", title:"下载" },
-  ar:{ q:"ابحث برقم السورة أو اسمها", pagesHave:"الصفحات {0} / {1}", pagesGot:"{0} صفحة على الجهاز", starting:"جارٍ جلب {0} صفحة…", whichJuz:"أي جزء؟", thisPageN:"هذه الصفحة ({0})", ayat:"الآيات: {0}", pgs:"الصفحات {0}–{1}",
+  ar:{ ing:"جارٍ التنزيل", prog:"{0}% · {1} / {2} ملف", prep:"جارٍ تجهيز القائمة…", bg:"يستمر التنزيل إذا غادرت التطبيق — ويظهر في الإشعارات", tPage:"صفحة {0}", tSurahs:"{0} سور", prevQ:"على هذا الهاتف تلاوة نُزّلت من قبل. هل تسمح بالوصول إلى الملفات لربطها من جديد؟", prevBtn:"ابحث عن التنزيلات السابقة", prevNone:"لم يُعثر على تنزيلات سابقة", prevGot:"جارٍ ربط التنزيلات السابقة", q:"ابحث برقم السورة أو اسمها", pagesHave:"الصفحات {0} / {1}", pagesGot:"{0} صفحة على الجهاز", starting:"جارٍ جلب {0} صفحة…", whichJuz:"أي جزء؟", thisPageN:"هذه الصفحة ({0})", ayat:"الآيات: {0}", pgs:"الصفحات {0}–{1}",
        picked:"{0} سور مختارة", none:"لم يُختر شيء", clear:"مسح",
        surah:"سورة", juz:"جزء", all:"المصحف كامل", nores:"لا نتائج",
        page:"هذه الصفحة", sabaq:"درس اليوم", part:"النص جاهز · {0} آيات بلا صوت", retry:"أحضِر الباقي",
@@ -5723,8 +5726,11 @@ async function dlRender(){
         (picked.length ? fmt(T.picked, n(picked.length)) : T.none) + '</div>' +
       '<div class="act"><button class="abtn go" id="dl-go">\u2193 ' + L.dlg.go + '</button>' +
       '<button class="abtn" id="dl-stop">' + L.dlg.stop + '</button></div>' +
+      '<div class="hint dlbg" id="dl-bg" hidden>' + esc(T.bg) + '</div>' +
       '<div class="hint">' + L.dlg.have + '</div>' +
       '<div class="hint">' + esc(mushafName()) + ' \u00b7 ' + L.dlg.warn + '</div>' +
+      (asPlugin() && !haveN && !partN && !dlPageCount()
+        ? '<button type="button" class="knchip dlprev" id="dl-prev">' + esc(T.prevBtn) + '</button>' : '') +
     '</div>';
 
   var ac = document.getElementById("dl-audio");
@@ -5747,7 +5753,7 @@ async function dlRender(){
     b.onclick = async function(){
       var k = b.dataset.dlq, T2 = dlL();
       if (k === "clear"){ DL.sel = {}; dlRender(); return; }
-      if (RD.busy){ dlProg(T2.busy); return; }
+      if (dlBusy()){ dlProg(T2.busy); return; }
       var au = document.getElementById("dl-audio");
       var withAudio = !au || au.checked;
       var list = null;
@@ -5767,20 +5773,19 @@ async function dlRender(){
       if (!list || !list.length) return;
       /* the first page can take seconds on a poor line; say something now */
       dlProg(fmt(T2.starting, n(list.length)), 0);
-      var res = await dlPages(list, withAudio);
-      dlRecord(res, list, k === "page" ? list[0] : 0);
+      var ttl = k === "all" ? T2.all : k === "sabaq" ? T2.sabaq : fmt(T2.tPage, n(list[0]));
+      await dlStart(list, withAudio, k === "page" ? list[0] : 0, null, ttl);
     };
   });
   qa("#dl-body [data-dljuz]").forEach(function(b){
     b.onclick = async function(){
       var T3 = dlL();
-      if (RD.busy){ dlProg(T3.busy); return; }
+      if (dlBusy()){ dlProg(T3.busy); return; }
       var au2 = document.getElementById("dl-audio");
       var jn = +b.dataset.dljuz, r = juzRange(jn), list = dlSeq(r[0], r[1]);
       var jb = document.getElementById("dl-juz"); if (jb) jb.hidden = true;
       dlProg(fmt(T3.starting, n(list.length)), 0);
-      var res = await dlPages(list, !au2 || au2.checked);
-      dlRecord(res, list, 0);
+      await dlStart(list, !au2 || au2.checked, 0, null, T3.juz + " " + n(jn));
     };
   });
   var go = document.getElementById("dl-go");
@@ -5794,22 +5799,25 @@ async function dlRender(){
     });
     var list = Object.keys(pages).map(Number).sort(function(a, b){ return a - b; });
     if (!list.length) return;
-    if (RD.busy){ dlProg(dlL().busy); return; }
-    var res = await dlPages(list, !au || au.checked);
-    dlRecord(res, list, 0, chosen);
+    if (dlBusy()){ dlProg(dlL().busy); return; }
+    var ttl2 = chosen.length === 1 ? surahName(chosen[0]) : fmt(dlL().tSurahs, n(chosen.length));
+    await dlStart(list, !au || au.checked, 0, chosen, ttl2);
   };
   qa("#dl-body [data-dlfix]").forEach(function(b){
     b.onclick = async function(ev){
       ev.preventDefault();
-      if (RD.busy){ dlProg(dlL().busy); return; }
+      if (dlBusy()){ dlProg(dlL().busy); return; }
       var sn3 = +b.dataset.dlfix, sp3 = (DL.ix && DL.ix.surah) || {};
       var r3 = knSurahPages(sp3, sn3), lst = dlSeq(r3.a, r3.b);
-      var res3 = await dlPages(lst, true);
-      dlRecord(res3, lst, 0, [sn3]);
+      await dlStart(lst, true, 0, [sn3], surahName(sn3));
     };
   });
   var st = document.getElementById("dl-stop");
-  if (st) st.onclick = function(){ RD.dlStop = true; };
+  if (st) st.onclick = function(){ dlStopNow(); };
+  var pvb = document.getElementById("dl-prev");
+  if (pvb) pvb.onclick = function(){ S.settings.prevAsked = 0; asReconnect(false); };
+  /* reopened mid-download: the line picks up where the service is */
+  if (DLJ.running){ dlBg(true); dlWatch(); }
   qa("#dl-body [data-dldel]").forEach(function(b){
     b.onclick = function(ev){
       ev.preventDefault();
@@ -5865,6 +5873,9 @@ function dlRecord(res, list, singlePage, chosen){
      never before */
   if (singlePage && !res.stopped && !(per[singlePage] && per[singlePage].page)){
     dlProg(fmt(dlL().pageDone, n(singlePage)), 100);
+  } else if (res.stopped){
+    /* stopped halfway is still worth a sentence: what did arrive stays */
+    dlProg(L.dlg.stopped + (pagesGot ? " · " + fmt(dlL().pagesGot, n(pagesGot)) : ""), 0);
   } else if (pagesGot && !marked){
     /* a run of pages that completed no surah still did something, and the
        reader is owed the number */
@@ -5883,6 +5894,12 @@ function dlRecord(res, list, singlePage, chosen){
 async function dlDelete(sn){
   delete S.dls[sn];
   save();
+  var A = asPlugin();
+  if (A && A.remove){
+    var ks = [];
+    for (var ai = 1; ai <= (AYAHS[sn - 1] || 0); ai++) ks.push(sn + ":" + ai);
+    try { await A.remove({ reciter:S.settings.reciter || "", keys:ks }); } catch(e){}
+  }
   try {
     var c = await rdCache(); if (!c) return;
     var sp = ((DL.ix && DL.ix.surah) || {}), r = knSurahPages(sp, sn);
@@ -5904,12 +5921,11 @@ function dlSeq(a, b){
   for (var i = a; i <= b; i++) out.push(i);
   return out;
 }
+/* Closing this screen used to ask whether to stop the download, and then
+   stay put - the download lived here, so there was nowhere to go. It runs in
+   the phone's own service now: the screen closes, the notification carries on,
+   and the result is written down whenever the app next looks. */
 function dlClose(){
-  if (RD.busy){
-    if (!confirm(dlL().leaveQ)) return;
-    RD.dlStop = true;
-    return;
-  }
   var el = document.getElementById("dlsheet");
   if (el) el.hidden = true;
 }
@@ -6630,6 +6646,16 @@ async function rdLoadFont(p){
   var blob = null;
   try { blob = await rdFetch(dataUrl("fonts/qcf/" + v + "/p" + p + ".woff2")); }
   catch(e){ blob = null; }
+  /* a page the download service fetched lives as a file, not in the cache */
+  if (!blob){
+    var dirs = await asDirs();
+    if (dirs && dirs.files){
+      try {
+        var fr = await fetch(asSrc(dirs.files + "/qcf/" + v + "/p" + p + ".woff2"));
+        if (fr.ok){ blob = await fr.blob(); if (!blob || !blob.size) blob = null; }
+      } catch(e){ blob = null; }
+    }
+  }
   if (!blob){
     try { blob = await rdFetch(QCF_BASE + v + "/woff2/p" + p + ".woff2"); }
     catch(e){ blob = null; }
@@ -7009,7 +7035,9 @@ function wakeOff(){
    before closing should reopen on Today. */
 function rdMarkWhere(){
   if (!S || !S.settings) return;
-  S.settings.lastView = document.body.classList.contains("mushaf") ? "mushaf" : "";
+  var dls = document.getElementById("dlsheet");
+  S.settings.lastView = (dls && !dls.hidden) ? "dl"
+                      : document.body.classList.contains("mushaf") ? "mushaf" : "";
   S.settings.lastAt = Date.now();
   try { ntSeen(); } catch(e){}
   try { save(); } catch(e){}
@@ -7045,6 +7073,179 @@ async function asSave(vk){
     });
     return !!(r && r.saved);
   } catch(e){ return false; }
+}
+var AS_DIRS = null;
+async function asDirs(){
+  if (AS_DIRS) return AS_DIRS;
+  var A = asPlugin();
+  if (!A || !A.where) return null;
+  try { AS_DIRS = await A.where(); } catch(e){ AS_DIRS = null; }
+  return AS_DIRS;
+}
+
+/* The download, handed to the phone.
+
+   The list is built here - which pages, which ayat, which addresses to try -
+   and the native service does the rest, with its own progress line and Stop
+   in the notification shade. The page only watches: while it is open it reads
+   the progress once a second, and whenever it comes back it asks how the last
+   one ended and writes that down. */
+var DLJ = { running:false, id:"", t:0 };
+function dlBusy(){ return RD.busy || DLJ.running; }
+async function dlStart(list, withAudio, singlePage, chosen, title){
+  var A = asPlugin(), T = dlL();
+  if (!A || !A.start){
+    /* the web build: the old loop, in the page */
+    var res0 = await dlPages(list, withAudio);
+    dlRecord(res0, list, singlePage, chosen);
+    return;
+  }
+  if (dlBusy()){ dlProg(T.busy); return; }
+  DLJ.running = true;
+  dlProg(T.prep, 0);
+  try {
+    var def = mushafDef(), v = qcfVer(), c = await rdCache(), tasks = [];
+    for (var i = 0; i < list.length; i++){
+      var pn = list[i];
+      if (!def.nast){
+        var fu = QCF_BASE + v + "/woff2/p" + pn + ".woff2";
+        var hit = null;
+        try { hit = c ? await c.match(fu) : null; } catch(e){ hit = null; }
+        if (!hit) tasks.push({ k:"f", key:v + "/" + pn, page:pn, urls:[fu] });
+      }
+      if (withAudio){
+        var keys = [];
+        try { var pgd = await rdLoadPage(pn); keys = (pgd && pgd.keys) || []; } catch(e){}
+        keys.forEach(function(k){
+          tasks.push({ k:"a", key:k, page:pn, urls:audioSrcs(k).map(function(x){ return x.u; }) });
+        });
+      }
+    }
+    var id = "j" + Date.now();
+    var r = await A.start({
+      id:id, reciter:S.settings.reciter || "", title:title || T.title,
+      txt:{ ing:T.ing, done:L.dlg.done, stopped:L.dlg.stopped, stop:L.dlg.stop, missed:L.dlg.missed },
+      meta:JSON.stringify({ list:list, single:singlePage || 0, chosen:chosen || null }),
+      pages:list, tasks:tasks
+    });
+    if (!r || !r.started){ DLJ.running = false; dlProg(T.busy); dlCheckJob(); return; }
+    DLJ.id = id;
+    dlWatch();
+  } catch(e){
+    DLJ.running = false;
+    dlProg(L.dlg.stopped);
+  }
+}
+function dlStopNow(){
+  if (DLJ.running){ var A = asPlugin(); if (A && A.stop) A.stop().catch(function(){}); }
+  RD.dlStop = true;
+}
+function dlBg(on){
+  var b = document.getElementById("dl-bg");
+  if (b) b.hidden = !on;
+}
+function dlWatch(){
+  clearTimeout(DLJ.t);
+  var A = asPlugin();
+  if (!A || !A.status) return;
+  A.status().then(function(st){
+    if (!st || !st.state || st.state === "none"){ DLJ.running = false; dlBg(false); return; }
+    if (st.state === "running"){
+      DLJ.running = true; DLJ.id = st.id;
+      var tot = st.total || 0, dn = st.done || 0, pct = tot ? dn / tot * 100 : 0;
+      dlProg(fmt(dlL().prog, n(Math.round(pct)), n(dn), n(tot)), pct);
+      dlBg(true);
+      if (document.visibilityState !== "hidden") DLJ.t = setTimeout(dlWatch, 1000);
+      return;
+    }
+    dlFinish(st);
+  }).catch(function(){ DLJ.t = setTimeout(dlWatch, 2000); });
+}
+/* the page came back: whatever happened while it was away gets written down */
+function dlCheckJob(){ if (asPlugin()) dlWatch(); }
+function dlFinish(st){
+  var A = asPlugin(), meta = {};
+  try { meta = JSON.parse(st.meta || "{}"); } catch(e){ meta = {}; }
+  var per = {}, pp = st.perPage || {};
+  Object.keys(pp).forEach(function(k){ per[+k] = pp[k]; });
+  var res = { perPage:per, audioMissed:st.audioMissed || 0, pageMissed:st.pageMissed || 0,
+              missed:(st.audioMissed || 0) + (st.pageMissed || 0), stopped:st.state === "stopped" };
+  DLJ.running = false; dlBg(false);
+  var go = function(){
+    if (meta.list && meta.list.length){
+      dlRecord(res, meta.list, meta.single || 0, meta.chosen || null);
+      if (res.stopped && !Object.keys(per).length) dlProg(L.dlg.stopped, 0);
+    }
+    if (A && A.ack) A.ack({ id:st.id }).catch(function(){});
+    /* a page open in the mushaf picks up the files that just arrived */
+    try { if (document.body.classList.contains("mushaf") && RD.page) rdWarmAudio(RD.pages[RD.page]); } catch(e){}
+  };
+  /* surahs are judged against the page index, so it has to be there first */
+  if (!DL.ix) mushafIndex().then(function(ix){ DL.ix = ix; go(); }, function(){ DL.ix = { surah:{}, start:{} }; go(); });
+  else go();
+}
+
+/* A reinstall finding what the last one left.
+
+   Recitation is kept in Music/Adult Hifz, which an uninstall does not touch.
+   A fresh install can see that folder but not the files in it until the
+   reader allows it - so it asks once, in plain words, and only when there is
+   a folder to find and nothing of its own recorded yet. Every surah that is
+   complete there, and every page whose ayat are all there, is connected
+   again; the page fonts, which could not be kept, come back with it. */
+async function asReconnectAuto(tries){
+  var ob = document.getElementById("ob"), tr = document.getElementById("tour");
+  if ((ob && ob.classList.contains("on")) || (tr && tr.classList.contains("on"))){
+    /* not over the welcome or the tour; wait for them to finish */
+    if ((tries || 0) < 60) setTimeout(function(){ asReconnectAuto((tries || 0) + 1); }, 5000);
+    return;
+  }
+  var any = Object.keys(S.dls || {}).length || dlPageCount();
+  if (any || S.settings.prevAsked) return;
+  asReconnect(true);
+}
+async function asReconnect(auto){
+  var A = asPlugin(), T = dlL();
+  if (!A || !A.previous || dlBusy()) return;
+  var pv = {};
+  try { pv = await A.previous(); } catch(e){ return; }
+  if (auto && !pv.folder) return;
+  if (!pv.canRead && !(pv.visible > 0)){
+    if (!confirm(T.prevQ)){ S.settings.prevAsked = 1; save(); return; }
+    var g = {};
+    try { g = await A.askRead(); } catch(e){ g = {}; }
+    if (!g || !g.granted){ S.settings.prevAsked = 1; save(); if (!auto) dlProg(T.prevNone); return; }
+  }
+  S.settings.prevAsked = 1; save();
+  var r = {};
+  try { r = await A.scan({ reciter:S.settings.reciter || "" }); } catch(e){ r = {}; }
+  var have = {}, anyKey = false;
+  (r.keys || []).forEach(function(k){ have[k] = 1; anyKey = true; });
+  if (!anyKey){ if (!auto) dlProg(T.prevNone); return; }
+  if (!DL.ix){ try { DL.ix = await mushafIndex(); } catch(e){ DL.ix = { surah:{}, start:{} }; } }
+  var sp = DL.ix.surah || {}, full = [], pages = {};
+  for (var sn = 1; sn <= 114; sn++){
+    var cnt = AYAHS[sn - 1] || 0, got = 0;
+    for (var a = 1; a <= cnt; a++) if (have[sn + ":" + a]) got++;
+    if (!got) continue;
+    var rg = knSurahPages(sp, sn);
+    if (got === cnt && dlState(sn) !== "full"){
+      full.push(sn);
+      if (rg && rg.a) for (var q = rg.a; q <= rg.b; q++) pages[q] = 1;
+    } else if (rg && rg.a){
+      /* part of a surah - a juz, a page: keep each page whose ayat are all here */
+      for (var q2 = rg.a; q2 <= rg.b; q2++){
+        if (pages[q2]) continue;
+        try {
+          var pg = await rdLoadPage(q2), ks = (pg && pg.keys) || [];
+          if (ks.length && ks.every(function(k){ return have[k]; })) pages[q2] = 1;
+        } catch(e){}
+      }
+    }
+  }
+  var list = Object.keys(pages).map(Number).sort(function(x, y){ return x - y; });
+  if (!list.length){ if (!auto) dlProg(T.prevNone); return; }
+  dlStart(list, true, 0, full, T.prevGot);
 }
 function ntPlugin(){
   try { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Reminder; }
@@ -7246,6 +7447,7 @@ document.addEventListener("visibilitychange", function(){
   if (document.visibilityState === "hidden"){ kaHandoff(); rdMarkWhere(); return; }
   kaTakeBack();
   if (rdAudio && !rdAudio.paused) wakeOn();
+  try { dlCheckJob(); } catch(e){}
 });
 window.addEventListener("pagehide", rdMarkWhere);
 function rdClear(cls){ qa(".qline .w." + cls).forEach(function(e){ e.classList.remove(cls); }); }
@@ -10269,6 +10471,15 @@ async function dlRange(p0, p1, mushafId, withAudio){
   } finally { RD.busy = false; RD.dlStop = false; }
 }
 async function rdDownloadJuz(){
+  if (asPlugin()){
+    /* the same service as the download screen, so it too survives Back and Home */
+    var jj = juzOf(RD.page), rr = juzRange(jj);
+    var pr = document.getElementById("rd-prog");
+    if (dlBusy()){ if (pr) pr.textContent = dlL().busy; return; }
+    if (pr) pr.textContent = dlL().bg;
+    await dlStart(dlSeq(rr[0], rr[1]), true, 0, null, dlL().juz + " " + n(jj));
+    return;
+  }
   if (RD.busy) return;
   RD.busy = true;
   var prog = document.getElementById("rd-prog");
@@ -12858,7 +13069,15 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
        not the tool. Someone opening this in a ten-minute gap needs to know what
        to do now, and the mushaf is one tap away from there. */
     openMushaf(S.settings.lastPage || 0);
+  } else if (S.settings.lastView === "dl" && S.settings.lastAt &&
+             (Date.now() - S.settings.lastAt) < 90 * 60 * 1000){
+    /* someone who left from the download screen comes back to it */
+    dlOpen();
   }
+  /* a download that finished - or was cut short - while the app was away is
+     written down now; one still running is picked up again */
+  setTimeout(function(){ try { dlCheckJob(); } catch(e){} }, 1200);
+  setTimeout(function(){ try { asReconnectAuto(0); } catch(e){} }, 5000);
 
   Sync.init();
   if (Cloud.on()) Cloud.pull(true);
@@ -12908,16 +13127,8 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     var tr=document.getElementById('tour');
     if(tr&&tr.classList.contains('on')){ tourEnd(); return true; }
     var dl=document.getElementById('dlsheet');
-    if(dl&&!dl.hidden){
-      /* leaving mid-download hid the only progress line and the only place the
-         result gets written down, so the files arrived and nothing said so */
-      if(RD.busy){
-        if(!confirm(dlL().leaveQ)) return true;
-        RD.dlStop=true;
-        return true;
-      }
-      dlClose(); return true;
-    }
+    /* a download no longer lives on this screen, so leaving it is only leaving it */
+    if(dl&&!dl.hidden){ dlClose(); return true; }
     var ln=document.getElementById('listen');
     if(ln&&!ln.hidden){ lsClose(); return true; }
     var dg=document.getElementById('diag');
@@ -12947,6 +13158,9 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     if(document.body.classList.contains('mushaf')){ goView('today',true); return true; }
     return false;
   }
+  /* the phone's Back key asks this first (MainActivity); in a browser the
+     history entry below does the same job */
+  window.hifzBack = back;
   history.pushState({h:1},'');
   addEventListener('popstate',function(){ if(back()) history.pushState({h:1},''); });
   document.addEventListener('gesturestart',function(e){e.preventDefault();});

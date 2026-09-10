@@ -51,6 +51,27 @@ off this machine, or this listing can never be updated again.
 Bengali listing: **Store listings → Add language → বাংলা (bn-BD)**, then paste
 from `listing-bn-BD/`.
 
+## App content → Foreground service permissions (new with the next release)
+
+Downloads now run in their own foreground service, so Play will ask about
+`FOREGROUND_SERVICE_DATA_SYNC` when the next bundle is uploaded. Tick
+**Data sync** and paste:
+
+> The user taps "Download" to save Quran recitation audio and page fonts for
+> offline memorisation (a surah, a juz, or the whole Quran — often hundreds of
+> files). The download must continue when the user leaves the app, and it shows
+> a progress notification with a Stop button. It starts only when the user
+> asks, and ends when the files are saved or the user stops it.
+
+Play may also ask for a short video: screen-record tapping a juz download,
+pressing Home, and pulling down the notification showing its progress and Stop.
+
+The existing **Media playback** declaration (recitation that keeps playing with
+the screen off) stays as it is.
+
+`READ_MEDIA_AUDIO` needs no form: it is used once, after a reinstall, to find
+recitation the app saved earlier in Music/Adult Hifz.
+
 ## Category and contact
 
 | Field | Value |
