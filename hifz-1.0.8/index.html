@@ -156,7 +156,7 @@ window.HIFZ_LANG_en = {
         sabaq:"Today", sabaqi:"This week", manzil:"Older", firm:"Firm", weak:"Weak", swipe:"Swipe to turn the page" },
   nav: { today:"Today", mushaf:"Mushaf", drill:"Practice", routine:"Method", progress:"Progress", settings:"Settings" },
   rd: { title:"The page", pageLbl:"Page", prev:"Previous", next:"Next", hide:"Cover the lines", show:"Uncover",
-        loop:"Repeat", speed:"Speed", cont:"Keep playing into the next page", meaning:"Word meanings", dl:"Download this juz", dling:"Downloading {0}%",
+        loop:"Repeat", speed:"Speed", yourTurn:"Your turn - say it back", cont:"Keep playing into the next page", meaning:"Word meanings", dl:"Download this juz", dling:"Downloading {0}%",
         dlDone:"This juz is on your device", tap:"Tap any word, the ayah plays and its meaning shows below.",
         todayHi:"Today's lines are bright; the rest of the page is dimmed.",
         loading:"Loading the page…", err:"Could not load the page. Check your connection and try again.",
@@ -583,7 +583,7 @@ window.HIFZ_LANG_bn = {
         sabaq:"আজ", sabaqi:"এই সপ্তাহ", manzil:"পুরোনো", firm:"পাকা", weak:"দুর্বল", swipe:"পাতা উলটাতে সোয়াইপ করুন" },
   nav: { today:"আজ", mushaf:"মুসহাফ", drill:"অভ্যাস", routine:"রুটিন", progress:"অগ্রগতি", settings:"সেটিংস" },
   rd: { title:"পৃষ্ঠা", pageLbl:"পৃষ্ঠা", prev:"আগের", next:"পরের", hide:"লাইন ঢাকুন", show:"খুলুন",
-        loop:"পুনরাবৃত্তি", speed:"গতি", cont:"পরের পাতায়ও বাজতে থাকুক", meaning:"শব্দার্থ", dl:"এই পারাটা নামান", dling:"নামছে {0}%",
+        loop:"পুনরাবৃত্তি", speed:"গতি", yourTurn:"এখন আপনি — বলুন", cont:"পরের পাতায়ও বাজতে থাকুক", meaning:"শব্দার্থ", dl:"এই পারাটা নামান", dling:"নামছে {0}%",
         dlDone:"এই পারা আপনার ডিভাইসে আছে", tap:"যেকোনো শব্দে ট্যাপ করুন, আয়াতটি বাজবে, নিচে অর্থ দেখাবে।",
         todayHi:"আজকের লাইনগুলো উজ্জ্বল, পৃষ্ঠার বাকিটা ম্লান।",
         loading:"পৃষ্ঠা আসছে…", err:"পৃষ্ঠাটা আনা গেল না। ইন্টারনেট দেখে আবার চেষ্টা করুন।",
@@ -1012,7 +1012,7 @@ window.HIFZ_LANG_ur = {
         sabaq:"آج", sabaqi:"اس ہفتے", manzil:"پرانا", firm:"پکی", weak:"کمزور", swipe:"صفحہ بدلنے کے لیے سوائپ کریں" },
   nav: { today:"آج", mushaf:"مصحف", drill:"مشق", routine:"طریقہ", progress:"پیش رفت", settings:"ترتیبات" },
   rd: { title:"صفحہ", pageLbl:"صفحہ", prev:"پچھلا", next:"اگلا", hide:"سطریں ڈھانپیں", show:"کھولیں",
-        loop:"تکرار", speed:"رفتار", cont:"اگلے صفحے پر بھی چلتا رہے", meaning:"لفظی معنی", dl:"یہ پارہ ڈاؤن لوڈ کریں", dling:"ڈاؤن لوڈ {0}%",
+        loop:"تکرار", speed:"رفتار", yourTurn:"اب آپ — دہرائیں", cont:"اگلے صفحے پر بھی چلتا رہے", meaning:"لفظی معنی", dl:"یہ پارہ ڈاؤن لوڈ کریں", dling:"ڈاؤن لوڈ {0}%",
         dlDone:"یہ پارہ آپ کے آلے میں محفوظ ہے", tap:"کسی بھی لفظ پر ٹیپ کریں، آیت چلے گی اور نیچے معنی آئے گا۔",
         todayHi:"آج کی سطریں روشن، باقی صفحہ مدھم۔",
         loading:"صفحہ آ رہا ہے…", err:"صفحہ نہیں آ سکا۔ کنکشن دیکھ کر دوبارہ کوشش کریں۔",
@@ -1429,7 +1429,7 @@ window.HIFZ_LANG_zh = {
         sabaq:"今天", sabaqi:"本周", manzil:"较早", firm:"已熟", weak:"薄弱", swipe:"滑动翻页" },
   nav: { today:"今天", mushaf:"经本", drill:"练习", routine:"方法", progress:"进度", settings:"设置" },
   rd: { title:"页面", pageLbl:"页", prev:"上一页", next:"下一页", hide:"遮住行", show:"显示",
-        loop:"重复", speed:"速度", cont:"继续播放下一页", meaning:"逐词释义", dl:"下载本卷", dling:"下载中 {0}%",
+        loop:"重复", speed:"速度", yourTurn:"该你了 —— 请背诵", cont:"继续播放下一页", meaning:"逐词释义", dl:"下载本卷", dling:"下载中 {0}%",
         dlDone:"本卷已存在设备上", tap:"点任意一个词，播放该节，下方显示词义。",
         todayHi:"今天的行是亮的，页面其余部分变暗。",
         loading:"正在载入页面…", err:"页面载入失败，请检查网络后重试。",
@@ -3486,6 +3486,25 @@ input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet
    grows it down the page instead of across it */
 .lslab{flex:0 0 auto;min-width:0;font-size:12px;letter-spacing:.04em;
   color:var(--ink-3);background:none;padding:0;margin:0;box-shadow:none}
+.rdspeed{min-width:52px;padding:0 10px;font-size:13px;font-weight:600}\n.rdspeed i{font-style:normal}\n.lschips{padding:12px 16px 16px;border-top:1px solid var(--rule);margin-top:6px}
+.lsbig{display:inline-block;padding:11px 18px;margin:0 8px 12px 0;border-radius:999px;
+  border:1px solid var(--verdigris);background:transparent;color:var(--verdigris);
+  font:inherit;font-size:14px;cursor:pointer}
+.lsbig.on{background:var(--verd-soft);border-color:transparent;color:var(--ink)}
+.lsw{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:11px 0;border-top:1px solid var(--rule);font-size:14px;cursor:pointer}
+.lsw span{flex:1}
+.lsw input{flex:none;width:44px;height:26px;appearance:none;-webkit-appearance:none;
+  border-radius:999px;background:var(--rule);position:relative;cursor:pointer;
+  transition:background .18s}
+.lsw input:checked{background:var(--verdigris)}
+.lsw input::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:20px;height:20px;
+  border-radius:50%;background:#fff;transition:transform .18s}
+.lsw input:checked::after{transform:translateX(18px)}
+[dir="rtl"] .lsw input:checked::after{transform:translateX(-18px)}
+.lspair{display:flex;gap:12px;flex-wrap:wrap}
+.lspair label{flex:1 1 130px;display:flex;flex-direction:column;gap:5px;
+  font-size:12px;color:var(--ink-3)}
 .lssearch{flex:0 0 auto;padding:8px 14px 4px}
 .lssearch:empty{display:none}
 .lssearch input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:999px;
@@ -3722,7 +3741,7 @@ window.HIFZ_LANG_ar = {
         sabaq:"اليوم", sabaqi:"هذا الأسبوع", manzil:"الأقدم", firm:"متقن", weak:"ضعيف", swipe:"اسحب لتقليب الصفحة" },
   nav: { today:"اليوم", mushaf:"المصحف", drill:"التمرين", routine:"المنهج", progress:"التقدّم", settings:"الإعدادات" },
   rd: { title:"الصفحة", pageLbl:"صفحة", prev:"السابقة", next:"التالية", hide:"استر الأسطر", show:"أظهر",
-        loop:"التكرار", speed:"السرعة", cont:"يواصل إلى الصفحة التالية", meaning:"معاني الكلمات", dl:"نزّل هذا الجزء", dling:"جارٍ التنزيل {0}%",
+        loop:"التكرار", speed:"السرعة", yourTurn:"دورك — ردّد", cont:"يواصل إلى الصفحة التالية", meaning:"معاني الكلمات", dl:"نزّل هذا الجزء", dling:"جارٍ التنزيل {0}%",
         dlDone:"هذا الجزء محفوظ في جهازك", tap:"انقر أي كلمة، تُتلى الآية ويظهر معناها أدناه.",
         todayHi:"أسطر اليوم واضحة، وبقية الصفحة باهتة.",
         loading:"جارٍ تحميل الصفحة…", err:"تعذّر تحميل الصفحة. تحقق من الاتصال وحاول مجددًا.",
@@ -6307,6 +6326,18 @@ function audioCands(vk, rec){
     u:"https://cdn.islamic.network/quran/audio/128/" + AUDIO_NET[rec] + "/" + ayahGlobal(vk) + ".mp3" });
   return out;
 }
+/* The meaning, read aloud.
+
+   everyayah carries an English recitation of the translation beside the Arabic
+   one, ayah for ayah under the same numbering, so "play the meaning after each
+   ayah" costs one more URL and no new machinery. It is English wherever the
+   app is: no one records the Bengali. */
+var TR_AUDIO_BASE = "https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/";
+function trAudioSrc(vk){
+  var q = String(vk).split(":");
+  var pad = function(n, w){ n = String(n); while (n.length < w) n = "0" + n; return n; };
+  return TR_AUDIO_BASE + pad(q[0], 3) + pad(q[1], 3) + ".mp3";
+}
 function audioSrcs(vk){
   var rec = S.settings.reciter, cands = audioCands(vk, rec);
   if (rec !== "Alafasy_128kbps") cands = cands.concat(audioCands(vk, "Alafasy_128kbps"));
@@ -6318,7 +6349,10 @@ function audioSrcs(vk){
   cands.forEach(function(c){ if (!seen[c.u]){ seen[c.u] = 1; list.push(c); } });
   return list;
 }
-var RD = { page:0, hide:0, curtain:0, curtainOn:false, blind:false, loops:1, speed:1, files:{}, pages:{}, fonts:{}, blobs:{}, busy:false, queue:[], qi:0, left:0, cont:false, stopAt:0, sleepAt:0, sleepFor:0, ka:false, turning:false, resumeAt:0 };
+var RD = { page:0, hide:0, curtain:0, curtainOn:false, blind:false, loops:1, speed:1, files:{}, pages:{}, fonts:{}, blobs:{}, busy:false, queue:[], qi:0, left:0, cont:false, stopAt:0, sleepAt:0, sleepFor:0, ka:false, turning:false, resumeAt:0,
+  /* three things that happen between one ayah and the next: hear it again,
+     hear what it means, or say it yourself into the gap. */
+  ayahRep:0, ayahLeft:0, trAudio:false, selfRecite:false, midAyah:null };
 var rdAudio = null;
 /* ONE audio element for the whole session. A fresh install has no media
    engagement, so Chrome (and the WebView the APK runs in) refuses play() on any
@@ -6983,6 +7017,8 @@ function rdStop(){
   wakeOff();
   if (rdRaf){ cancelAnimationFrame(rdRaf); rdRaf = null; }
   RD.queue = []; RD.left = 0; RD.words = null; RD.wi = -1; RD.turning = false;
+  RD.midAyah = null; RD.ayahLeft = 0;
+  clearTimeout(RD.gapT);
   rdClear("on"); rdClear("now");
   rdTrLight(null);
   rdSyncBtns();
@@ -7035,6 +7071,24 @@ function rdSyncBtns(){
       navigator.mediaSession.playbackState = live ? "playing" : (rdAudio ? "paused" : "none");
   } catch(e){}
   document.body.classList.toggle("playing", live);
+  /* the bar wears the face that matches what is happening */
+  try {
+    var grp = document.querySelector(".rdcard .rdgrp.rdset");
+    if (grp){
+      var want = (rdAudio ? "play" : "read");
+      if (grp.dataset.face !== want){
+        grp.dataset.face = want;
+        grp.innerHTML = rdBarControls(barL());
+        rdWireBar(grp);
+      } else if (rdAudio){
+        var pb = grp.querySelector('[data-rd="pause"],[data-rd="play"]');
+        if (pb){
+          pb.dataset.rd = live ? "pause" : "play";
+          pb.innerHTML = live ? RIC.pause : RIC.play;
+        }
+      }
+    }
+  } catch(e){}
   /* Held whenever a recitation is running - and whenever the mushaf is open at
      all. Reciting from memory makes no sound, so the old rule let the screen go
      dark in the middle of the one activity this app exists for. */
@@ -7240,6 +7294,8 @@ function rdPlay(keys, loops, noFollow){
   /* a fresh recitation was never handed to Android; leaving the flag raised
      from a previous one would block the next handoff entirely */
   KAH.active = false; RD.resumeAt = 0;
+  RD.ayahLeft = RD.ayahRep; RD.midAyah = "start";
+  clearTimeout(RD.gapT);
   rdNext();
 }
 /* Reciting stops at the page edge because the queue was always one page's ayat.
@@ -7296,7 +7352,74 @@ async function rdTurnToAyah(vk){
   RD.turning = false;
   rdNext();
 }
+/* Between one ayah and the next.
+
+   Three things can be owed when an ayah finishes: hearing it again, hearing
+   what it means, and a silence long enough to say it back. They happen in that
+   order, and each has to happen exactly once - the first attempt tested "have
+   we played the meaning" against a flag that was still true afterwards, so the
+   meaning played for ever and the recitation never moved on.
+
+   So the state is named, and every path out of it is written down:
+
+     played    - the ayah itself just ended
+     tr        - its meaning is playing now
+     tr-done   - the meaning has been heard
+     gap       - the reader's own turn is running
+     gap-done  - that turn is over
+     null      - nothing is owed; the queue may move
+*/
+function rdGap(){
+  RD.midAyah = "gap";
+  var wait = Math.max(1200, Math.min(20000, RD.lastAyahMs || 3000));
+  clearTimeout(RD.gapT);
+  rdMsg2(L.rd.yourTurn || "");
+  RD.gapT = setTimeout(function(){ RD.midAyah = "gap-done"; rdNext(); }, wait);
+  return true;
+}
+function rdBetween(vk){
+  var ph = RD.midAyah, clear = function(){
+    RD.midAyah = null; RD.ayahLeft = RD.ayahRep; return false;
+  };
+  if (ph === "played"){
+    /* again, first: repetition is what the ayah is for */
+    if (RD.ayahLeft > 0){ RD.ayahLeft--; RD.qi--; return false; }
+    if (RD.trAudio){ RD.midAyah = "tr"; rdSpeakMeaning(vk); return true; }
+    if (RD.selfRecite) return rdGap();
+    return clear();
+  }
+  if (ph === "tr-done"){
+    if (RD.selfRecite) return rdGap();
+    return clear();
+  }
+  if (ph === "gap-done") return clear();
+  return false;                     /* start, tr, gap: nothing to decide */
+}
+/* the meaning, in the same element, then on to whatever comes next */
+function rdSpeakMeaning(vk){
+  var a = rdEle();
+  rdWipe(a);
+  rdAudio = a;
+  a.playbackRate = RD.speed;
+  var done = function(){
+    if (RD.midAyah !== "tr") return;      /* a stop, or a second ending */
+    RD.midAyah = "tr-done";
+    rdNext();
+  };
+  a.onended = done;
+  a.onerror = done;               /* no recording for it: carry on rather than stall */
+  try { a.src = trAudioSrc(vk); var pr = a.play(); if (pr && pr.catch) pr.catch(done); }
+  catch(e){ done(); }
+}
+function rdMsg2(t){
+  var e = document.getElementById("rd-prog");
+  if (e && t) e.textContent = t;
+}
 function rdNext(){
+  /* whatever the ayah just ended still owes, before the queue moves at all */
+  if (RD.midAyah && RD.midAyah !== "start" && RD.qi > 0){
+    if (rdBetween(RD.queue[RD.qi - 1])) return;
+  }
   if (RD.qi >= RD.queue.length){
     RD.left--; RD.qi = 0;
     if (RD.left <= 0){
@@ -7403,7 +7526,12 @@ function rdNext(){
       try { if (at < (a.duration || 0)) a.currentTime = at; } catch(e){}
     }
   });
-  a.onended = step(rdNext);
+  a.onended = step(function(){
+    /* the gap for saying it back is as long as the ayah itself */
+    try { RD.lastAyahMs = Math.round((a.duration || 3) * 1000 / (RD.speed || 1)); } catch(e){}
+    RD.midAyah = "played";
+    rdNext();
+  });
   a.onplaying = step(function(){
     clearTimeout(RD.watch);
     if (S.settings.audioHost !== srcs[si].h){ S.settings.audioHost = srcs[si].h; try { save(); } catch(e){} }
@@ -7487,6 +7615,34 @@ function rdSelTouches(pg){
   for (var i = 0; i < keys.length; i++) if (rdKeyIdx(pg, keys[i]) >= 0) return true;
   return false;
 }
+/* The bar has two faces.
+
+   Reading: the mushaf, the tick, and the green button that holds everything
+   else. Playing: pause, stop, what it means, how fast - because those are the
+   four a hand goes for while a recitation is running, and hunting for them
+   inside a panel while the voice carries on is the wrong shape entirely.
+*/
+function rdWireBar(scope){
+  var root = scope || document.querySelector(".rdcard") || document;
+  Array.prototype.slice.call(root.querySelectorAll("[data-rd]")).forEach(function(b){
+    b.onclick = function(){ rdAct(b.dataset.rd, b); };
+  });
+}
+function rdBarControls(BL){
+  var live = !!(rdAudio && !rdAudio.paused), any = !!rdAudio;
+  if (!any){
+    return '<button class="rdic t" data-rd="book" title="' + BL.book + '" aria-label="' + BL.book + '">' + RIC.book + '</button>' +
+      '<button class="rdic t rdmem" data-rd="memtog" title="' + L.mu.mem + '" aria-label="' + L.mu.mem + '" aria-pressed="' + (rdMemState(RD.pages[RD.page]) ? "true" : "false") + '">' + RIC.mem + '</button>' +
+      '<button class="rdic rdfab" data-rd="do" title="' + BL.practice + '" aria-label="' + BL.practice + '">' + RIC.target + '</button>';
+  }
+  var trOn = RD.trOnly || RD.tr !== false;
+  return '<button class="rdic t" data-rd="' + (live ? "pause" : "play") + '" title="' +
+      esc(live ? L.rd.pause : L.rd.playAll) + '" aria-label="' + esc(live ? L.rd.pause : L.rd.playAll) + '">' +
+      (live ? RIC.pause : RIC.play) + '</button>' +
+    '<button class="rdic t" data-rd="stop" title="' + esc(L.rd.stop) + '" aria-label="' + esc(L.rd.stop) + '">' + RIC.stop + '</button>' +
+    '<button class="rdic t' + (trOn ? " on" : "") + '" data-rd="tr3" title="' + esc(L.rd.tr) + '" aria-label="' + esc(L.rd.tr) + '">' + RIC.ayah + '</button>' +
+    '<button class="rdic rdspeed" data-rd="speedc" title="' + esc(L.rd.speed) + '" aria-label="' + esc(L.rd.speed) + '"><i>' + n(RD.speed || 1) + '\u00d7</i></button>';
+}
 /* Pressing play on the reader is a memorising act: these lines, this page, stop
    at the end. A listening session may have left the page-crossing on, so it is
    put back here rather than left for the reader to notice and undo. */
@@ -7549,11 +7705,7 @@ function renderMushaf(){
           do between them; speed was tuning, not memorising. */
        '<div class="rdhead">' +
          '<span class="rdprog" id="rd-prog"></span>' +
-         '<div class="rdgrp rdset">' +
-           '<button class="rdic t" data-rd="book" title="' + BL.book + '" aria-label="' + BL.book + '">' + RIC.book + '</button>' +
-           '<button class="rdic t rdmem" data-rd="memtog" title="' + L.mu.mem + '" aria-label="' + L.mu.mem + '" aria-pressed="' + (rdMemState(RD.pages[RD.page]) ? "true" : "false") + '">' + RIC.mem + '</button>' +
-           '<button class="rdic rdfab" data-rd="do" title="' + BL.practice + '" aria-label="' + BL.practice + '">' + RIC.target + '</button>' +
-         '</div>' +
+         '<div class="rdgrp rdset">' + rdBarControls(BL) + '</div>' +
        '</div>' +
        '<div class="rdtools' + (RD.more ? "" : " tight") + '">' +
          chip("hide",   "▨", Rd.cover,        RD.hide) +
@@ -7988,6 +8140,22 @@ function rdAct(k, b){
   else if (k === "lsheet"){ rdSheetOpen("listen"); }
   else if (k === "tsheet"){ rdSheetOpen("test"); }
   else if (k === "book"){ rdSheetOpen("book"); }
+  else if (k === "stop"){ rdStop(); renderMushaf(); }
+  else if (k === "tr3"){
+    if (RD.trOnly){ RD.trOnly = false; RD.tr = false; }
+    else if (RD.tr === false){ RD.tr = true; }
+    else { RD.trOnly = true; RD.tr = true; }
+    renderMushaf();
+  }
+  else if (k === "speedc"){
+    var SPB = [0.5, 0.75, 1, 1.25, 1.5, 2];
+    var iB = SPB.indexOf(+RD.speed);
+    RD.speed = SPB[(iB < 0 ? 2 : iB + 1) % SPB.length];
+    S.settings.speed = RD.speed;
+    try { save(); } catch(e){}
+    if (rdAudio) rdAudio.playbackRate = RD.speed;
+    renderMushaf();
+  }
   else if (k === "mistakes"){
     /* today this is the page-level weak mark the exam already sets; marking the
        ayah itself is the next piece of work, and this button is where it lands */
@@ -8132,15 +8300,14 @@ function rdSheetDef(which){
      lesson on the page; "play the selection" left them wondering what was
      selected. How many times is a list below, not a chip counted up to. */
   if (which === "listen") return [B.listen, [
-    ["playpick",  function(){ return B.hearAny; }, RIC.book],
-    ["phrase",    function(){ return L.rec.phrase; }, RIC.loop, null,
-                  function(){ return !!RD.phrase; }],
-    ["playday",   function(){ return B.hearDay; }, RIC.listen,
-                  function(){ return sabaqLabel(); }],
     ["playpause", function(){ return (rdAudio && !rdAudio.paused) ? L.rd.pause
                     : (RD.sel ? B.hearSabaq : B.hearPage); },
                   (rdAudio && !rdAudio.paused) ? RIC.pause : RIC.play,
-                  function(){ return n(RD.speed || 1) + "\u00d7"; }, null, "speed"]
+                  function(){ return n(RD.speed || 1) + "\u00d7"; }, null, "speed"],
+    ["playday",   function(){ return B.hearDay; }, RIC.listen,
+                  function(){ return sabaqLabel(); }],
+    ["phrase",    function(){ return L.rec.phrase; }, RIC.loop, null,
+                  function(){ return !!RD.phrase; }]
   ]];
   if (which === "test") return [B.test, [
     ["exam",    function(){ return L.ex.open; },     RIC.test],
@@ -8195,6 +8362,33 @@ function rdSheetOpen(which){
      sheet read as empty. */
   if (which === "listen"){
     var T = lsL(), B = barL(), opts = [0, 10, 20, 30, 45, 60];
+    /* Two ways out of this panel and two things that change how it plays -
+       laid out the way the reader drew it: the choices first, the switches
+       under them, and everything else behind "more options". */
+    var top = document.createElement("div");
+    top.className = "lschips";
+    top.innerHTML =
+      '<button class="lsbig" data-lsx="many">' + esc(T.manyPages) + '</button>' +
+      '<button class="lsbig on" data-lsx="more">' + esc(T.more) + '</button>' +
+      '<label class="lsw"><span>' + esc(T.selfRec) + '</span>' +
+        '<input type="checkbox" id="ls-self"' + (RD.selfRecite ? " checked" : "") + '></label>' +
+      '<label class="lsw"><span>' + esc(T.trHear) + '</span>' +
+        '<input type="checkbox" id="ls-trh"' + (RD.trAudio ? " checked" : "") + '></label>';
+    sh.appendChild(top);
+    top.querySelector('[data-lsx="many"]').onclick = function(){
+      rdVeilClose();
+      /* several pages in a row: keep going past the edge of this one */
+      RD.cont = true; RD.stopAt = 0;
+      var pg2 = RD.pages[RD.page];
+      if (pg2) rdPlay(pg2.keys.slice(), RD.loops);
+    };
+    top.querySelector('[data-lsx="more"]').onclick = function(){ rdVeilClose(); lsOpen(); };
+    var sc1 = top.querySelector("#ls-self");
+    sc1.onchange = function(){ RD.selfRecite = this.checked;
+      S.settings.selfRecite = this.checked ? 1 : 0; try { save(); } catch(e){} };
+    var sc2 = top.querySelector("#ls-trh");
+    sc2.onchange = function(){ RD.trAudio = this.checked;
+      S.settings.trAudio = this.checked ? 1 : 0; try { save(); } catch(e){} };
     var ex = document.createElement("div");
     ex.className = "shx";
     var LPS = [1, 3, 5, 7, Infinity];
@@ -11113,27 +11307,27 @@ function drawerFill(){
    a mushaf only to listen, and for them the page is not a unit of anything — so
    this picks a surah, a juz or a run of pages and plays straight through it. */
 var LSL = {
-  bn:{ ttl:"শুধু শুনুন", surah:"সূরা", juz:"পারা", page:"পৃষ্ঠা", resume:"যেখানে ছিলেন",
+  bn:{ ttl:"শুধু শুনুন", ttl2:"তেলাওয়াত শুনুন", pickQari:"ক্বারী নির্বাচন", fromPage:"পৃষ্ঠা থেকে তেলাওয়াত", fromSurah:"সূরা তেলাওয়াত", start:"শুরু", until:"পর্যন্ত", repH:"পুনরাবৃত্তি সেটিংস", repAyah:"আয়াত পুনরাবৃত্তি", repAll:"সমস্তটার পুনরাবৃত্তি", selfRec:"প্রতিটি আয়াতের পরে নিজে তেলাওয়াত করুন", trHear:"প্রতিটি আয়াতের পরে অর্থ শুনুন", go:"অডিও প্লে", manyPages:"একাধিক পৃষ্ঠা শুনুন", more:"আরও অপশন", surah:"সূরা", juz:"পারা", page:"পৃষ্ঠা", resume:"যেখানে ছিলেন",
        find:"সূরা খুঁজুন…",
        from:"থেকে", to:"পর্যন্ত", play:"শুনুন", sleep:"পরে থামুক", off:"বন্ধ", min:"{0} মিনিট",
        none:"এখনো কিছু শোনা হয়নি", at:"শেষ শুনেছিলেন · {0}", open:"শুধু শুনুন",
        hint:"পাতা নিজেই উলটাবে। থামাতে ■ চাপুন।" },
-  en:{ ttl:"Listen", surah:"Surah", juz:"Juz", page:"Pages", resume:"Where you were",
+  en:{ ttl:"Listen", ttl2:"Listen to the recitation", pickQari:"Choose a reciter", fromPage:"Recite from a page", fromSurah:"Recite a surah", start:"From", until:"Until", repH:"Repeat settings", repAyah:"Repeat each ayah", repAll:"Repeat the whole thing", selfRec:"Recite it yourself after each ayah", trHear:"Hear the meaning after each ayah", go:"Play", manyPages:"Listen to several pages", more:"More options", surah:"Surah", juz:"Juz", page:"Pages", resume:"Where you were",
        find:"Find a surah…",
        from:"From", to:"To", play:"Listen", sleep:"Stop after", off:"Off", min:"{0} min",
        none:"Nothing played yet", at:"You stopped at {0}", open:"Listen only",
        hint:"The pages turn themselves. Press ■ to stop." },
-  ur:{ ttl:"صرف سنیں", surah:"سورہ", juz:"پارہ", page:"صفحات", resume:"جہاں تھے",
+  ur:{ ttl:"صرف سنیں", ttl2:"تلاوت سنیے", pickQari:"قاری منتخب کریں", fromPage:"صفحے سے تلاوت", fromSurah:"سورہ کی تلاوت", start:"سے", until:"تک", repH:"تکرار کی ترتیبات", repAyah:"ہر آیت کی تکرار", repAll:"پورے کی تکرار", selfRec:"ہر آیت کے بعد خود پڑھیں", trHear:"ہر آیت کے بعد معنی سنیں", go:"چلائیں", manyPages:"کئی صفحے سنیں", more:"مزید آپشنز", surah:"سورہ", juz:"پارہ", page:"صفحات", resume:"جہاں تھے",
        find:"سورہ تلاش کریں…",
        from:"سے", to:"تک", play:"سنیں", sleep:"بعد میں رکے", off:"بند", min:"{0} منٹ",
        none:"ابھی کچھ نہیں سنا", at:"آپ یہاں رکے تھے · {0}", open:"صرف سنیں",
        hint:"صفحے خود پلٹیں گے۔ روکنے کے لیے ■ دبائیں۔" },
-  zh:{ ttl:"只听", surah:"苏拉", juz:"卷", page:"页", resume:"上次听到",
+  zh:{ ttl:"只听", ttl2:"听诵读", pickQari:"选择诵者", fromPage:"从页诵读", fromSurah:"诵读整章", start:"从", until:"到", repH:"重复设置", repAyah:"每节重复", repAll:"全部重复", selfRec:"每节之后自己诵一遍", trHear:"每节之后听释义", go:"播放", manyPages:"连续听多页", more:"更多选项", surah:"苏拉", juz:"卷", page:"页", resume:"上次听到",
        find:"搜索章节…",
        from:"从", to:"到", play:"播放", sleep:"稍后停止", off:"关闭", min:"{0} 分钟",
        none:"还没有播放过", at:"上次停在 {0}", open:"只听",
        hint:"书页会自动翻。按 ■ 停止。" },
-  ar:{ ttl:"للاستماع فقط", surah:"سورة", juz:"جزء", page:"صفحات", resume:"حيث توقفت",
+  ar:{ ttl:"للاستماع فقط", ttl2:"استمع إلى التلاوة", pickQari:"اختر القارئ", fromPage:"التلاوة من صفحة", fromSurah:"تلاوة سورة", start:"من", until:"إلى", repH:"إعدادات التكرار", repAyah:"تكرار كل آية", repAll:"تكرار الكل", selfRec:"اقرأها بنفسك بعد كل آية", trHear:"اسمع المعنى بعد كل آية", go:"شغّل", manyPages:"استمع إلى عدة صفحات", more:"خيارات أخرى", surah:"سورة", juz:"جزء", page:"صفحات", resume:"حيث توقفت",
        find:"ابحث عن سورة…",
        from:"من", to:"إلى", play:"استمع", sleep:"التوقف بعد", off:"إيقاف", min:"{0} دقيقة",
        none:"لم يُشغَّل شيء بعد", at:"توقفت عند {0}", open:"للاستماع فقط",
@@ -11213,9 +11407,26 @@ function lsFoot(){
         return '<option value="' + r.id + '"' + (S.settings.reciter === r.id ? " selected" : "") + '>' +
           esc(r.nm[L.code] || r.nm.en) + '</option>';
       }).join("") + '</select></div>' +
-    /* How many times, in the picker as well as on the page. Choosing a surah
-       to listen to and not being able to say "again" was half a control. */
-    '<div class="lsrow"><span class="lslab">' + L.rd.loop + '</span>' +
+    /* Two counts, not one: how many times each ayah is said before moving on,
+       and how many times the whole run comes round again. They are different
+       questions and a reader memorising asks the first one far more often. */
+    '<div class="lsrow"><span class="lslab">' + T.repH + '</span>' +
+      '<div class="lspair">' +
+        '<label>' + esc(T.repAyah) + '<select id="ls-repa">' +
+          [0,1,2,3,4,5,7,10].map(function(v){
+            return '<option value="' + v + '"' + ((RD.ayahRep || 0) === v ? " selected" : "") +
+                   '>' + n(v) + '</option>'; }).join("") + '</select></label>' +
+        '<label>' + esc(T.repAll) + '<select id="ls-repall">' +
+          [1,3,5,7,0].map(function(v){
+            var cur = (RD.loops === Infinity) ? 0 : RD.loops;
+            return '<option value="' + v + '"' + (cur === v ? " selected" : "") + '>' +
+                   esc(v === 0 ? barL().endless : n(v)) + '</option>'; }).join("") + '</select></label>' +
+      '</div></div>' +
+    '<div class="lsrow"><label class="lsw"><span>' + esc(T.selfRec) + '</span>' +
+      '<input type="checkbox" id="lsp-self"' + (RD.selfRecite ? " checked" : "") + '></label>' +
+      '<label class="lsw"><span>' + esc(T.trHear) + '</span>' +
+      '<input type="checkbox" id="lsp-trh"' + (RD.trAudio ? " checked" : "") + '></label></div>' +
+    '<div class="lsrow" style="display:none"><span class="lslab">' + L.rd.loop + '</span>' +
       '<div class="knchips" style="margin:0">' + [1, 3, 5, 7, Infinity].map(function(v){
         return '<button class="knchip' + (RD.loops === v ? " f" : "") + '" data-lsloop="' +
           (v === Infinity ? 0 : v) + '">' +
@@ -11227,6 +11438,27 @@ function lsFoot(){
         return '<button class="knchip' + ((RD.sleepFor || 0) === m ? " f" : "") + '" data-lssleep="' + m + '">' +
           (m ? fmt(T.min, n(m)) : T.off) + '</button>';
       }).join("") + '</div></div>';
+  var ra = document.getElementById("ls-repa");
+  if (ra) ra.onchange = function(){
+    RD.ayahRep = +this.value || 0; RD.ayahLeft = RD.ayahRep;
+    S.settings.ayahRep = RD.ayahRep; try { save(); } catch(e){}
+  };
+  var rl = document.getElementById("ls-repall");
+  if (rl) rl.onchange = function(){
+    var v = +this.value;
+    RD.loops = v ? v : Infinity; S.settings.loops = v;
+    if (rdAudio) RD.left = RD.loops;
+    try { save(); } catch(e){}
+  };
+  [["lsp-self", "selfRecite"], ["lsp-trh", "trAudio"]].forEach(function(pair){
+    var el = document.getElementById(pair[0]);
+    if (!el) return;
+    el.onchange = function(){
+      RD[pair[1]] = this.checked;
+      S.settings[pair[1] === "selfRecite" ? "selfRecite" : "trAudio"] = this.checked ? 1 : 0;
+      try { save(); } catch(e){}
+    };
+  });
   qa("#ls-foot [data-lsloop]").forEach(function(b){
     b.onclick = function(){
       var v = +b.dataset.lsloop;
@@ -12284,6 +12516,9 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     if (S.settings.notifyAt == null) S.settings.notifyAt = "";
     if (S.settings.speed) RD.speed = +S.settings.speed || 1;
     if (S.settings.loops != null) RD.loops = +S.settings.loops ? +S.settings.loops : Infinity;
+    if (S.settings.ayahRep != null) RD.ayahRep = +S.settings.ayahRep || 0;
+    RD.selfRecite = !!S.settings.selfRecite;
+    RD.trAudio = !!S.settings.trAudio;
     if (S.settings.zikrEvery == null) S.settings.zikrEvery = 0;
     try { zikrScan(); } catch(e){}
     if (S.settings.zikrVoice == null) S.settings.zikrVoice = true;
