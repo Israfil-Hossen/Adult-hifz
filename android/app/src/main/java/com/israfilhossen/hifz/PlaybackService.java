@@ -74,6 +74,17 @@ public class PlaybackService extends Service {
     static volatile int PASSES = 0;
     static volatile long STOP_AT = 0;
     static volatile boolean DONE = false;
+    /* Showing the notification while the PAGE plays.
+
+       The service used to exist only once the app went dark, so a recitation
+       started with the app open had no notification at all - nothing on the
+       lock screen, nothing to pause from, until the reader happened to
+       minimise. In this mode the service owns no audio: it shows the media
+       notification, and every button on it is passed back to the web layer,
+       which is still the thing making the sound. */
+    static volatile boolean NOTE_ONLY = false;
+    /* what the page most recently said is happening */
+    static volatile boolean PAGE_PLAYING = true;
     /* What the notification says: one line per ayah, written by the web layer
        because only it knows the surah names in the reader's language. */
     static volatile List<String> LABELS = new ArrayList<>();
@@ -139,7 +150,15 @@ public class PlaybackService extends Service {
 
         startForeground(NOTE_ID, buildNotification());
 
+        if (intent != null && intent.getBooleanExtra("note", false)) {
+            /* the page is the player; we are only its face in the shade */
+            NOTE_ONLY = true;
+            paused = !PAGE_PLAYING;
+            pushState();
+            return START_NOT_STICKY;
+        }
         if (intent != null && intent.getBooleanExtra("play", false)) {
+            NOTE_ONLY = false;
             paused = false;
             requestFocus();
             playCurrent();
@@ -163,6 +182,7 @@ public class PlaybackService extends Service {
     /* ---------------------------------------------------------- transport */
 
     private void doPlay() {
+        if (NOTE_ONLY){ AudioKeepAlivePlugin.tell("play"); paused = false; pushState(); return; }
         if (mp != null && paused) {
             paused = false;
             requestFocus();
@@ -174,6 +194,7 @@ public class PlaybackService extends Service {
     }
 
     private void doPause() {
+        if (NOTE_ONLY){ AudioKeepAlivePlugin.tell("pause"); paused = true; pushState(); return; }
         if (mp == null) return;
         try {
             if (mp.isPlaying()) mp.pause();
@@ -185,6 +206,7 @@ public class PlaybackService extends Service {
     }
 
     private void skip(int by) {
+        if (NOTE_ONLY){ AudioKeepAlivePlugin.tell(by > 0 ? "next" : "prev"); return; }
         int next = INDEX + by;
         if (next < 0) next = 0;
         if (next >= QUEUE.size()) {
@@ -200,6 +222,7 @@ public class PlaybackService extends Service {
     }
 
     private void stopEverything() {
+        if (NOTE_ONLY){ AudioKeepAlivePlugin.tell("stop"); NOTE_ONLY = false; }
         PLAYING = false;
         DONE = true;
         REPEAT = 0;

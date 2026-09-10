@@ -29,6 +29,55 @@ import java.util.List;
 @CapacitorPlugin(name = "AudioKeepAlive")
 public class AudioKeepAlivePlugin extends Plugin {
 
+    /* the one live instance, so the service can pass a button press back */
+    private static AudioKeepAlivePlugin SELF;
+
+    @Override
+    public void load() { SELF = this; }
+
+    /** A transport button was pressed while the page owns the audio. */
+    static void tell(String what) {
+        AudioKeepAlivePlugin me = SELF;
+        if (me == null) return;
+        JSObject o = new JSObject();
+        o.put("action", what);
+        me.notifyListeners("transport", o);
+    }
+
+    /** note({labels, reciter, index, playing}): show the media notification for
+     *  a recitation the PAGE is playing. No audio changes hands. */
+    @PluginMethod
+    public void note(PluginCall call) {
+        try {
+            PlaybackService.LABELS = readStrings(call.getArray("labels"));
+            PlaybackService.RECITER = call.getString("reciter", "");
+            Integer at = call.getInt("index");
+            PlaybackService.INDEX = at == null ? 0 : at;
+            Boolean pl = call.getBoolean("playing", Boolean.TRUE);
+            PlaybackService.PAGE_PLAYING = pl == null || pl;
+            PlaybackService.DONE = false;
+
+            Intent i = new Intent(getContext(), PlaybackService.class);
+            i.putExtra("note", true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                getContext().startForegroundService(i);
+            } else {
+                getContext().startService(i);
+            }
+        } catch (Exception ignored) {}
+        call.resolve();
+    }
+
+    /** the page stopped: take the notification down */
+    @PluginMethod
+    public void noteStop(PluginCall call) {
+        try {
+            PlaybackService.NOTE_ONLY = false;
+            getContext().stopService(new Intent(getContext(), PlaybackService.class));
+        } catch (Exception ignored) {}
+        call.resolve();
+    }
+
     @PluginMethod
     public void handoff(PluginCall call) {
         try {
