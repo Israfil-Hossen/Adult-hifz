@@ -1781,6 +1781,14 @@ body.night{
   --sg-bar:#1E211C; --sg-card:#23261F; --sg-line:#32362C;
 }
 body.night .top{background:var(--bar)!important;color:var(--ink)}
+/* The drawer carried a hardcoded #FBFAF5, so night dressed its header and left
+   the body a sheet of white with faint grey text on it - the one panel in the
+   app the theme could not reach. */
+body.night .drawer{background:var(--card);color:var(--ink)}
+body.night .drawer-it,body.night .drawer-nav .dwnav{color:var(--ink)}
+body.night .drawer-lbl{color:var(--ink-3)}
+body.night .drawer-it .dwval{color:var(--ink-3)}
+body.night .drawer-nav .dwnav[aria-current="true"]{background:rgba(143,166,120,.18)}
 body.night .drawer-hd{background:#1E231B}
 body.night .paper,body.night #rd-paper{background:var(--card)}
 /* these carry a hardcoded #fff rather than a token, so the theme cannot reach
@@ -2298,18 +2306,18 @@ main.wrap{width:100%}
   </div>
   <div class="drawer-bd">
     <nav class="drawer-nav" id="drawer-nav"></nav>
-    <button class="drawer-it" id="dw-index"><i>☰</i><span id="dw-index-l">Mushaf index</span></button>
-    <button class="drawer-it" id="dw-listen"><i>♪</i><span id="dw-listen-l">Listen only</span></button>
-    <button class="drawer-it" id="dw-dl"><i>↓</i><span id="dw-dl-l">Downloads</span></button>
+    <button class="drawer-it" id="dw-index"><i data-dwic="index"></i><span id="dw-index-l">Mushaf index</span></button>
+    <button class="drawer-it" id="dw-listen"><i data-dwic="listen"></i><span id="dw-listen-l">Listen only</span></button>
+    <button class="drawer-it" id="dw-dl"><i data-dwic="dl"></i><span id="dw-dl-l">Downloads</span></button>
 
     <div class="drawer-lbl dwgrp" id="dw-look-l">Appearance</div>
-    <button class="drawer-it" id="dw-paper"><i>☀</i><span id="dw-paper-l">Paper colour</span><span class="dwval" id="dw-paper-v"></span></button>
-    <button class="drawer-it" id="dw-night"><i>☾</i><span id="dw-night-l">Night colours</span><span class="dwval" id="dw-night-v"></span></button>
+    <button class="drawer-it" id="dw-paper"><i data-dwic="paper"></i><span id="dw-paper-l">Paper colour</span><span class="dwval" id="dw-paper-v"></span></button>
+    <button class="drawer-it" id="dw-night"><i data-dwic="night"></i><span id="dw-night-l">Night colours</span><span class="dwval" id="dw-night-v"></span></button>
 
     <div class="drawer-lbl dwgrp" id="dw-app-l">App</div>
     <nav class="drawer-nav" id="drawer-nav2"></nav>
-    <button class="drawer-it" id="dw-cloud"><i>↥</i><span id="dw-cloud-l">Backup and sync</span></button>
-    <button class="drawer-it" id="dw-contact"><i>✉</i><span id="dw-contact-l">Contact</span></button>
+    <button class="drawer-it" id="dw-cloud"><i data-dwic="cloud"></i><span id="dw-cloud-l">Backup and sync</span></button>
+    <button class="drawer-it" id="dw-contact"><i data-dwic="contact"></i><span id="dw-contact-l">Contact</span></button>
 
     <div class="drawer-lang">
       <div class="drawer-lbl" id="drawer-lang-l">Language</div>
@@ -3418,7 +3426,9 @@ input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet
 .drawer-it{display:flex;align-items:center;gap:12px;width:100%;padding:12px 8px;border:0;
   background:transparent;font:inherit;font-size:15px;color:var(--ink);text-align:start;cursor:pointer;border-radius:12px}
 .drawer-it:active{background:rgba(95,127,82,.12)}
-.drawer-it i{font-style:normal;font-size:16px;color:var(--verdigris);width:20px;text-align:center}
+.drawer-it i{font-style:normal;font-size:16px;color:var(--verdigris);width:22px;
+  display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px}
+.drawer-it i svg{width:21px;height:21px;display:block}
 .drawer-it .sw{margin-inline-start:auto;width:38px;height:22px;border-radius:999px;background:var(--sg-line);
   display:inline-flex;align-items:center;padding:0 3px;transition:background .15s}
 .drawer-it .sw::after{content:"";width:16px;height:16px;border-radius:999px;background:#fff;transition:transform .15s}
@@ -4990,14 +5000,28 @@ function renderChrome(){
       window.scrollTo({ top:0, behavior:"smooth" });
     };
   });
+  /* the same hand as the reading panels: a body with weight, a darker edge,
+     one accent. The drawer was the last place still wearing hairlines. */
   var NAV_IC = {
-    today:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M4.9 4.9l1.4 1.4M2 12h2M20 12h2M17.7 6.3l1.4-1.4"/><path d="M8 16a4 4 0 0 1 8 0"/><path d="M3 20h18"/></svg>',
-    mushaf:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-1.5-1.3-3.5-2-6-2-1 0-2 .1-2.8.3A1 1 0 0 0 3 5.2v12.3a1 1 0 0 0 1.3.9C5 18.2 5.9 18 7 18c2 0 3.7.6 5 1.7"/><path d="M12 6c1.5-1.3 3.5-2 6-2 1 0 2 .1 2.8.3a1 1 0 0 1 .7.9v12.3a1 1 0 0 1-1.3.9c-.7-.2-1.6-.4-2.7-.4-2 0-3.7.6-5 1.7"/><path d="M12 6v13.7"/></svg>',
-    drill:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>',
-    routine:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>',
-    progress: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="5" rx="1"/><rect x="12" y="8" width="3" height="9" rx="1"/><rect x="17" y="5" width="3" height="12" rx="1"/></svg>',
-    settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h6M14 18h6"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="12" cy="18" r="2"/></svg>'
+    today:    ricc('<circle cx="12" cy="13.6" r="4.6" fill="' + IC.brass + '"/>' +
+                   '<path d="M12 3.4v2.4M4.8 6.2l1.7 1.7M2.6 13.6h2.4M19 13.6h2.4M19.2 6.2l-1.7 1.7" stroke="' + IC.brass + '" stroke-width="1.9"/>' +
+                   '<path d="M3.4 20.4h17.2" stroke="' + IC.brassD + '" stroke-width="1.9"/>'),
+    mushaf:   RIC.book,
+    drill:    RIC.target,
+    routine:  ricc('<path d="M3.4 12a8.6 8.6 0 0 1 14.4-6.4l2.8 2.6" stroke="' + IC.sky + '" stroke-width="2"/>' +
+                   '<path d="M20.6 3.4v5.2h-5.2" stroke="' + IC.sky + '" stroke-width="2"/>' +
+                   '<path d="M20.6 12a8.6 8.6 0 0 1-14.4 6.4L3.4 15.8" stroke="' + IC.skyD + '" stroke-width="2"/>' +
+                   '<path d="M3.4 20.6v-5.2h5.2" stroke="' + IC.skyD + '" stroke-width="2"/>'),
+    progress: ricc('<path d="M3.4 3.4v17.2h17.2" stroke="' + IC.ink + '" stroke-width="1.9"/>' +
+                   '<rect x="6.6" y="12.4" width="3.4" height="5.6" rx="1.1" fill="' + IC.greenS + '" stroke="' + IC.green + '" stroke-width="1.2"/>' +
+                   '<rect x="11.5" y="8.6" width="3.4" height="9.4" rx="1.1" fill="' + IC.green + '"/>' +
+                   '<rect x="16.4" y="5" width="3.4" height="13" rx="1.1" fill="' + IC.greenD + '"/>'),
+    settings: ricc('<path d="M3.6 6.6h8.2M16.4 6.6h4M3.6 12h2.2M10.4 12h10M3.6 17.4h5.6M13.8 17.4h6.6" stroke="' + IC.ink + '" stroke-width="1.9"/>' +
+                   '<circle cx="14.1" cy="6.6" r="2.4" fill="' + IC.brassS + '" stroke="' + IC.brassD + '" stroke-width="1.5"/>' +
+                   '<circle cx="8.1" cy="12" r="2.4" fill="' + IC.brassS + '" stroke="' + IC.brassD + '" stroke-width="1.5"/>' +
+                   '<circle cx="11.5" cy="17.4" r="2.4" fill="' + IC.brassS + '" stroke="' + IC.brassD + '" stroke-width="1.5"/>')
   };
+
   var dn = document.getElementById("drawer-nav");
   if (dn){
     dn.innerHTML = ["today","mushaf","drill","progress"].map(function(v){
@@ -7069,13 +7093,27 @@ function kaNote(){
   if (KAH.active) return;                 /* the native player has it; it draws its own */
   try {
     var from = Math.max(0, RD.qi - 1);
+    var dur = 0, at = 0;
+    try { dur = Math.round((rdAudio.duration || 0) * 1000);
+          at  = Math.round((rdAudio.currentTime || 0) * 1000); } catch(e){}
     KA.note({ labels:RD.queue.slice(from).map(kaLabel),
               reciter:kaReciter(),
               index:0,
+              durMs:isFinite(dur) ? dur : 0,
+              atMs:isFinite(at) ? at : 0,
               playing:!!(rdAudio && !rdAudio.paused) });
   } catch(e){}
 }
+/* the line has to move, so it is redrawn once a second while a recitation runs */
+function kaNoteTick(){
+  clearInterval(KAH.tick);
+  KAH.tick = setInterval(function(){
+    if (!rdAudio || rdAudio.paused || KAH.active){ clearInterval(KAH.tick); return; }
+    kaNote();
+  }, 1000);
+}
 function kaNoteStop(){
+  clearInterval(KAH.tick);
   var KA = kaPlugin();
   if (!KA || !KA.noteStop) return;
   try { KA.noteStop(); } catch(e){}
@@ -7473,7 +7511,7 @@ function rdPlay(keys, loops, noFollow){
   KAH.active = false; RD.resumeAt = 0;
   RD.ayahLeft = RD.ayahRep; RD.midAyah = "start";
   rdNext();
-  try { kaNote(); } catch(e){}
+  try { kaNote(); kaNoteTick(); } catch(e){}
 }
 /* Reciting stops at the page edge because the queue was always one page's ayat.
    Someone who only wants to listen has no use for that edge — carry on into the
@@ -12485,11 +12523,36 @@ function syncDrawerNav(){
     b.setAttribute("aria-current", b.dataset.go === v ? "true" : "false");
   });
 }
+/* the drawer's small buttons carried single characters - a musical note, an
+   arrow, an envelope - which sat at a different weight and colour from every
+   other icon in the app. Same hand as the rest now. */
+var DW_IC = null;
+function drawerIcons(){
+  if (!DW_IC){
+    DW_IC = {
+      index:   RIC.index,
+      listen:  RIC.listen,
+      dl:      ricc('<path d="M12 3.4v11" stroke="' + IC.green + '" stroke-width="2.1"/>' +
+                    '<path d="M7.4 10l4.6 4.6L16.6 10" stroke="' + IC.green + '" stroke-width="2.1"/>' +
+                    '<path d="M4.4 17.6v1.8a1.6 1.6 0 0 0 1.6 1.6h12a1.6 1.6 0 0 0 1.6-1.6v-1.8" stroke="' + IC.greenD + '" stroke-width="2"/>'),
+      paper:   RIC.paper,
+      night:   ricc('<path d="M20 14.6A8.6 8.6 0 0 1 9.4 4a8.6 8.6 0 1 0 10.6 10.6z" fill="' + IC.skyS + '" stroke="' + IC.skyD + '" stroke-width="1.4"/>'),
+      cloud:   ricc('<path d="M7 18.4a4.2 4.2 0 0 1 .5-8.4A5.6 5.6 0 0 1 18 10.6a3.9 3.9 0 0 1-.5 7.8z" fill="' + IC.skyS + '" stroke="' + IC.skyD + '" stroke-width="1.3"/>' +
+                    '<path d="M12 20.4v-7M9.2 15.8L12 13l2.8 2.8" stroke="' + IC.skyD + '" stroke-width="1.8"/>'),
+      contact: ricc('<rect x="2.8" y="5" width="18.4" height="14" rx="2.2" fill="' + IC.brassS + '" stroke="' + IC.brassD + '" stroke-width="1.3"/>' +
+                    '<path d="M3.6 6.6L12 13l8.4-6.4" stroke="' + IC.brassD + '" stroke-width="1.5"/>')
+    };
+  }
+  qa("#drawer [data-dwic]").forEach(function(i){
+    var k = i.dataset.dwic;
+    if (DW_IC[k] && i.innerHTML.indexOf("svg") < 0) i.innerHTML = DW_IC[k];
+  });
+}
 function drawerOpen(){
   var d = document.getElementById("drawer"), s = document.getElementById("drawer-scrim");
   if (!d) return;
   syncDrawerNav();
-  drawerFill(); d.hidden = false; s.hidden = false;
+  drawerFill(); drawerIcons(); d.hidden = false; s.hidden = false;
 }
 function drawerClose(){
   var d = document.getElementById("drawer"), s = document.getElementById("drawer-scrim");

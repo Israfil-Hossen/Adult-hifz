@@ -85,6 +85,11 @@ public class PlaybackService extends Service {
     static volatile boolean NOTE_ONLY = false;
     /* what the page most recently said is happening */
     static volatile boolean PAGE_PLAYING = true;
+    /* how long the ayah runs and how far in we are. Without a length the
+       shade draws the progress line and never fills it, which is what a
+       reader saw: transport working, the bar under it blank end to end. */
+    static volatile long DUR_MS = 0;
+    static volatile long AT_MS = 0;
     /* What the notification says: one line per ayah, written by the web layer
        because only it knows the surah names in the reader's language. */
     static volatile List<String> LABELS = new ArrayList<>();
@@ -291,14 +296,20 @@ public class PlaybackService extends Service {
     /** Notification, lock screen and headset all read from the session. */
     private void pushState() {
         if (session == null) return;
-        session.setMetadata(new MediaMetadataCompat.Builder()
+        long dur = NOTE_ONLY ? DUR_MS : 0;
+        if (!NOTE_ONLY) { try { if (mp != null) dur = mp.getDuration(); } catch (Exception ignored) {} }
+        MediaMetadataCompat.Builder md = new MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentLabel())
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, RECITER == null ? "" : RECITER)
-                .build());
-        long pos = 0;
-        try { if (mp != null) pos = mp.getCurrentPosition(); } catch (Exception ignored) {}
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, RECITER == null ? "" : RECITER);
+        /* a length only when there really is one: an unknown duration draws no
+           bar at all, which is better than one that never moves */
+        if (dur > 0) md.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, dur);
+        session.setMetadata(md.build());
+        long pos = NOTE_ONLY ? AT_MS : 0;
+        if (!NOTE_ONLY) { try { if (mp != null) pos = mp.getCurrentPosition(); } catch (Exception ignored) {} }
         session.setPlaybackState(new PlaybackStateCompat.Builder()
-                .setActions(PlaybackStateCompat.ACTION_PLAY
+                .setActions(PlaybackStateCompat.ACTION_SEEK_TO
+                        | PlaybackStateCompat.ACTION_PLAY
                         | PlaybackStateCompat.ACTION_PAUSE
                         | PlaybackStateCompat.ACTION_PLAY_PAUSE
                         | PlaybackStateCompat.ACTION_STOP

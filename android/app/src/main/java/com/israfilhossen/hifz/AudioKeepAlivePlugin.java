@@ -55,6 +55,10 @@ public class AudioKeepAlivePlugin extends Plugin {
             PlaybackService.INDEX = at == null ? 0 : at;
             Boolean pl = call.getBoolean("playing", Boolean.TRUE);
             PlaybackService.PAGE_PLAYING = pl == null || pl;
+            Double dur = call.getDouble("durMs");
+            PlaybackService.DUR_MS = dur == null ? 0L : dur.longValue();
+            Double at2 = call.getDouble("atMs");
+            PlaybackService.AT_MS = at2 == null ? 0L : at2.longValue();
             PlaybackService.DONE = false;
 
             Intent i = new Intent(getContext(), PlaybackService.class);
