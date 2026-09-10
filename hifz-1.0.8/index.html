@@ -9330,7 +9330,11 @@ async function rdPaint(p, isTodayPage){
     rdWarmAudio(pg);
     var tb = document.getElementById("rd-tr");
     if (tb){
-      if (RD.tr === false) tb.style.display = "none";
+      /* The strip is "translation below the page". In translation-only mode the
+         page IS the translation, so showing the strip as well printed the same
+         ayat twice, once above and once below - which is what un-hiding this
+         strip did the moment it was let out of the CSS that used to hide it. */
+      if (RD.tr === false || RD.trOnly) tb.style.display = "none";
       else {
         tb.style.display = "block";
         tb.innerHTML = '<h4>' + L.rd.tr + ' · ' + L.rd.trBy + '</h4>' +
