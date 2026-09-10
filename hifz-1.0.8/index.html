@@ -3505,6 +3505,13 @@ input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet
 .lspair{display:flex;gap:12px;flex-wrap:wrap}
 .lspair label{flex:1 1 130px;display:flex;flex-direction:column;gap:5px;
   font-size:12px;color:var(--ink-3)}
+/* the one-tap panel is short - a translation and one button - so it sizes
+   itself rather than sitting inside the tall word-by-word sheet's cap */
+.wmean.on:has(.aymean){max-height:60dvh}
+.aymean{padding:20px 4px 26px}
+.aymk{font-size:12.5px;color:var(--verdigris);font-weight:600;margin-bottom:9px}
+.aymt{font-size:16px;line-height:1.85;color:var(--ink)}
+.aymore{margin-top:16px}
 .lsform{padding:14px 16px 20px;display:flex;flex-direction:column;gap:6px}
 .lslab2{font-size:12px;color:var(--ink-3);margin-top:10px}
 .lsform > select{width:100%;padding:12px;border:1px solid var(--rule);border-radius:12px;
@@ -7036,6 +7043,7 @@ function rdStop(){
   if (rdRaf){ cancelAnimationFrame(rdRaf); rdRaf = null; }
   RD.queue = []; RD.left = 0; RD.words = null; RD.wi = -1; RD.turning = false;
   RD.midAyah = null; RD.ayahLeft = 0;
+  clearTimeout(RD.tapT);
   rdClear("on"); rdClear("now");
   rdTrLight(null);
   rdSyncBtns();
@@ -9641,31 +9649,36 @@ async function rdPaint(p, isTodayPage){
          why it passed every check here and failed on every real phone.
 
          Movement is a drag past a threshold, not any movement. */
+      /* Three gestures, three different questions.
+
+         A tap asks what this ayah means - the commonest question, so it gets
+         the commonest gesture and answers with the translation alone.
+
+         Two taps ask for the ayah itself: it plays, and the panel opens with
+         every word and its meaning under it.
+
+         A hold marks the one word. Marking is the only one of the three that
+         writes anything, so it gets the gesture nobody makes by accident.
+      */
       var SLOP = 10;
-      var lt = null, moved = false, taps = 0, tapAt = 0, px = 0, py = 0;
-      var openWord = function(){
+      var lt = null, moved = false, taps = 0, tapAt = 0, px = 0, py = 0, held = false;
+      var markWord = function(){
+        held = true;
         var hk = w.dataset.vk + "#" + (w.dataset.wi || 0);
-        RD.selW = { vk:w.dataset.vk, wi:+(w.dataset.wi || 0), hk:hk };
-        rdSelPanel(pg);
-        var mn = document.getElementById("rd-mean");
-        if (S && S.settings && S.settings.wmFollow === 0){ S.settings.wmFollow = 1; save(); }
-        if (mn && pg){
-          mn.innerHTML = rdMeanPanel(pg, w);
-          mn.classList.add("on");
-          mn.scrollTop = 0;
-          rdMeanWire();
-          wmSide(w);
-        }
-        if (wordSound()) rdPlay([w.dataset.vk], 1, true);
+        if (S.hl[hk]) delete S.hl[hk]; else S.hl[hk] = rdHlColor();
+        save();
+        w.classList.remove("hl", "hl-y", "hl-g", "hl-b", "hl-p");
+        if (S.hl[hk]) w.classList.add("hl", "hl-" + S.hl[hk]);
+        try { if (navigator.vibrate) navigator.vibrate(12); } catch(e){}
       };
       w.addEventListener("pointerdown", function(e){
         if (RD.pick || RD.phrase) return;
-        moved = false;
+        moved = false; held = false;
         px = e.clientX; py = e.clientY;
         var now = Date.now();
         taps = (now - tapAt < 400) ? taps + 1 : 1;
         tapAt = now;
-        lt = setTimeout(function(){ lt = null; if (!moved && taps < 2) openWord(); }, 420);
+        lt = setTimeout(function(){ lt = null; if (!moved) markWord(); }, 420);
       });
       w.addEventListener("pointermove", function(e){
         if (moved) return;
@@ -9677,11 +9690,14 @@ async function rdPaint(p, isTodayPage){
       ["pointerup","pointercancel"].forEach(function(ev){
         w.addEventListener(ev, function(){ if (lt){ clearTimeout(lt); lt = null; } });
       });
-      /* dblclick is not dependable on a touch WebView, so the second tap is
-         counted here and the gesture works either way */
       w.addEventListener("pointerup", function(){
-        if (RD.pick || RD.phrase || moved) return;
-        if (taps === 2){ taps = 0; rdWordMean(pg, w); }
+        if (RD.pick || RD.phrase || moved || held) return;
+        if (taps === 2){ taps = 0; rdAyahFull(pg, w); return; }
+        /* one tap: give it a moment in case a second one is coming */
+        clearTimeout(RD.tapT);
+        RD.tapT = setTimeout(function(){
+          if (taps === 1 && !moved && !held) rdAyahMean(pg, w);
+        }, 260);
       });
     });
   } catch(e){
@@ -9726,6 +9742,42 @@ function rdSameWord(t, notVk){
     });
   });
   return out.slice(0, 8);
+}
+/* One tap: what this ayah says, and nothing else. */
+function rdAyahMean(pg, el){
+  var vk = el.dataset.vk;
+  var mn = document.getElementById("rd-mean");
+  if (!mn || !pg) return;
+  var tr = (pg.tr && pg.tr[vk]) || "\u2026";
+  mn.innerHTML =
+    '<button class="wmx" aria-label="' + esc(uit("close")) + '">\u2715</button>' +
+    '<div class="aymean">' +
+      '<div class="aymk">' + esc(ayLabel(vk)) + '</div>' +
+      '<p class="aymt">' + esc(tr) + '</p>' +
+      '<button class="abtn aymore" data-ayfull="1">' + esc(L.rd.meaning) + '</button>' +
+    '</div>';
+  mn.classList.add("on");
+  mn.scrollTop = 0;
+  var x = mn.querySelector(".wmx");
+  if (x) x.onclick = rdMeanClose;
+  var more = mn.querySelector("[data-ayfull]");
+  if (more) more.onclick = function(){ rdAyahFull(pg, el); };
+}
+/* Two taps: the ayah itself, said aloud, with every word under it. */
+function rdAyahFull(pg, el){
+  var mn = document.getElementById("rd-mean");
+  if (!mn || !pg) return;
+  RD.selW = { vk:el.dataset.vk, wi:+(el.dataset.wi || 0),
+              hk:el.dataset.vk + "#" + (el.dataset.wi || 0) };
+  rdSelPanel(pg);
+  if (S && S.settings && S.settings.wmFollow === 0){ S.settings.wmFollow = 1; save(); }
+  mn.innerHTML = rdMeanPanel(pg, el);
+  mn.classList.add("on");
+  mn.scrollTop = 0;
+  rdMeanWire();
+  wmSide(el);
+  rdReadMode();
+  rdPlay([el.dataset.vk], 1, true);
 }
 function rdMeanPanel(pg, el){
   var vk = el.dataset.vk, fam = RD.fonts[RD.page] || "";
