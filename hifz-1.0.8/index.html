@@ -3542,13 +3542,6 @@ body.night .ricc{filter:saturate(1.15) brightness(1.12)}
 .lspair{display:flex;gap:12px;flex-wrap:wrap}
 .lspair label{flex:1 1 130px;display:flex;flex-direction:column;gap:5px;
   font-size:12px;color:var(--ink-3)}
-/* the one-tap panel is short - a translation and one button - so it sizes
-   itself rather than sitting inside the tall word-by-word sheet's cap */
-.wmean.on:has(.aymean){max-height:60dvh}
-.aymean{padding:20px 4px 26px}
-.aymk{font-size:12.5px;color:var(--verdigris);font-weight:600;margin-bottom:9px}
-.aymt{font-size:16px;line-height:1.85;color:var(--ink)}
-.aymore{margin-top:16px}
 .lsform{padding:14px 16px 20px;display:flex;flex-direction:column;gap:6px}
 .lslab2{font-size:12px;color:var(--ink-3);margin-top:10px}
 .lsform > select{width:100%;padding:12px;border:1px solid var(--rule);border-radius:12px;
@@ -9901,18 +9894,18 @@ async function rdPaint(p, isTodayPage){
          why it passed every check here and failed on every real phone.
 
          Movement is a drag past a threshold, not any movement. */
-      /* Three gestures, three different questions.
+      /* Three gestures, three different questions, and nothing more.
 
-         A tap asks what this ayah means - the commonest question, so it gets
-         the commonest gesture and answers with the translation alone.
+         One tap: this word, and what it means. Only the word - an earlier
+         version answered with the whole ayah's translation, which is not what
+         a finger on one word is asking.
 
-         Two taps ask for the ayah itself: it plays, and the panel opens with
-         every word and its meaning under it.
+         Two taps: the whole ayah, word by word, and it plays.
 
          A hold marks the one word. Marking is the only one of the three that
          writes anything, so it gets the gesture nobody makes by accident.
       */
-      var SLOP = 10;
+      var SLOP = 10, TAP_WIN = 300;
       var lt = null, moved = false, taps = 0, tapAt = 0, px = 0, py = 0, held = false;
       var markWord = function(){
         held = true;
@@ -9928,7 +9921,10 @@ async function rdPaint(p, isTodayPage){
         moved = false; held = false;
         px = e.clientX; py = e.clientY;
         var now = Date.now();
-        taps = (now - tapAt < 400) ? taps + 1 : 1;
+        /* the same window both ways: a second tap inside it is a double tap,
+           and the single tap waits exactly that long before it answers - so
+           a quick second tap never flashes the one-word panel first */
+        taps = (now - tapAt < TAP_WIN) ? taps + 1 : 1;
         tapAt = now;
         lt = setTimeout(function(){ lt = null; if (!moved) markWord(); }, 420);
       });
@@ -9948,8 +9944,8 @@ async function rdPaint(p, isTodayPage){
         /* one tap: give it a moment in case a second one is coming */
         clearTimeout(RD.tapT);
         RD.tapT = setTimeout(function(){
-          if (taps === 1 && !moved && !held) rdAyahMean(pg, w);
-        }, 260);
+          if (taps === 1 && !moved && !held) rdWordMean(pg, w);
+        }, TAP_WIN);
       });
     });
   } catch(e){
@@ -9994,26 +9990,6 @@ function rdSameWord(t, notVk){
     });
   });
   return out.slice(0, 8);
-}
-/* One tap: what this ayah says, and nothing else. */
-function rdAyahMean(pg, el){
-  var vk = el.dataset.vk;
-  var mn = document.getElementById("rd-mean");
-  if (!mn || !pg) return;
-  var tr = (pg.tr && pg.tr[vk]) || "\u2026";
-  mn.innerHTML =
-    '<button class="wmx" aria-label="' + esc(uit("close")) + '">\u2715</button>' +
-    '<div class="aymean">' +
-      '<div class="aymk">' + esc(ayLabel(vk)) + '</div>' +
-      '<p class="aymt">' + esc(tr) + '</p>' +
-      '<button class="abtn aymore" data-ayfull="1">' + esc(L.rd.meaning) + '</button>' +
-    '</div>';
-  mn.classList.add("on");
-  mn.scrollTop = 0;
-  var x = mn.querySelector(".wmx");
-  if (x) x.onclick = rdMeanClose;
-  var more = mn.querySelector("[data-ayfull]");
-  if (more) more.onclick = function(){ rdAyahFull(pg, el); };
 }
 /* Two taps: the ayah itself, said aloud, with every word under it. */
 function rdAyahFull(pg, el){
