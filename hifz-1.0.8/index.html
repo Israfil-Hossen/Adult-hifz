@@ -11617,7 +11617,7 @@ var TRL = {
        s8t:"المصحف", s8b:"أظهر الترجمة أو أخفها، واقرأ في هدوء، واختر طبعة أخرى." }
 };
 function trL(){ return TRL[L.code] || TRL.en; }
-var TOUR = { i:0, on:false };
+var TOUR = { i:0, on:false, track:null };
 function tourSteps(){
   var T = trL();
   return [
@@ -11645,6 +11645,7 @@ function tourStart(){
 }
 function tourEnd(){
   TOUR.on = false;
+  clearInterval(TOUR.track);
   try { rdVeilClose(); } catch(e){}
   var el = document.getElementById("tour");
   if (el) el.classList.remove("on");
@@ -11683,22 +11684,59 @@ async function tourGo(i){
     if (target && target.getBoundingClientRect().width > 0) break;
     await new Promise(function(r){ setTimeout(r, 50); });
   }
+  /* A panel that slides up from the bottom has its full width the instant it
+     exists, so the wait above ends while it is still halfway through the
+     journey - and the spotlight was cut where the row was passing, not where
+     it came to rest.
+
+     Waiting on the animation is not enough either: the row keeps moving for a
+     little after, and a rect read too early left the hole parked over the
+     reading bar for both panel steps. So the position is read until it stops
+     changing - two readings that agree is a row that has landed. A plain timer
+     throughout: requestAnimationFrame never fires on a page that is not being
+     drawn, and a tour that waits for a frame that never comes is worse than a
+     spotlight a few pixels out. */
+
   if (!TOUR.on) return;
 
   var hole = document.getElementById("tour-hole");
   var card = document.getElementById("tour-card");
   if (!hole || !card) return;
 
+  /* The spotlight follows its control rather than being stamped once.
+
+     A panel slides up from the bottom, and every attempt to guess the moment
+     it lands was wrong in a different way: measure on the animation's end and
+     the row is still settling, measure when two readings agree and they agree
+     first at the position it started from. Both left the hole parked over the
+     reading bar while the card talked about a row in the panel.
+
+     So it is re-read for a short while instead. Whenever the row comes to
+     rest, the hole is already there, and no timing has to be guessed at all. */
+  clearInterval(TOUR.track);
   if (target){
-    var r = target.getBoundingClientRect(), pad = 7;
-    /* set with priority: the spotlight has to win over every layout rule in a
-       ten-thousand-line stylesheet, and a silently clamped hole points at the
-       wrong control - worse than no tour at all */
-    hole.style.setProperty("top", Math.max(2, r.top - pad) + "px", "important");
-    hole.style.setProperty("left", Math.max(2, r.left - pad) + "px", "important");
-    hole.style.setProperty("width", (r.width + pad * 2) + "px", "important");
-    hole.style.setProperty("height", (r.height + pad * 2) + "px", "important");
-    hole.style.setProperty("display", "block", "important");
+    var place = function(){
+      if (!TOUR.on || !target.isConnected) return;
+      var r = target.getBoundingClientRect(), pad = 7;
+      if (!r.width && !r.height) return;
+      /* set with priority: the spotlight has to win over every layout rule in a
+         ten-thousand-line stylesheet, and a silently clamped hole points at the
+         wrong control - worse than no tour at all */
+      hole.style.setProperty("top", Math.max(2, r.top - pad) + "px", "important");
+      hole.style.setProperty("left", Math.max(2, r.left - pad) + "px", "important");
+      hole.style.setProperty("width", (r.width + pad * 2) + "px", "important");
+      hole.style.setProperty("height", (r.height + pad * 2) + "px", "important");
+      hole.style.setProperty("display", "block", "important");
+    };
+    place();
+    /* for as long as this step is the one on screen. A rect read every tenth
+       of a second costs nothing, and it removes the last thing that had to be
+       guessed: when the layout finally settles. */
+    var mine = TOUR.i;
+    TOUR.track = setInterval(function(){
+      if (!TOUR.on || TOUR.i !== mine){ clearInterval(TOUR.track); return; }
+      place();
+    }, 100);
   } else {
     hole.style.display = "none";
   }
