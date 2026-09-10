@@ -3463,6 +3463,7 @@ input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet
 .knq button[aria-pressed="true"]{border-color:var(--verdigris);background:rgba(95,127,82,.14);
   color:var(--verdigris);font-weight:700}
 .knchips{display:flex;flex-wrap:wrap;gap:8px;padding:14px}
+.lsrow .knchips{padding:0}
 .knchip{min-width:52px;padding:9px 10px;border:1px solid var(--rule);border-radius:14px;
   background:var(--card);font:inherit;font-size:14px;color:var(--ink-2);cursor:pointer;text-align:center}
 .knchip.f{border-color:var(--verdigris);background:rgba(95,127,82,.16);color:var(--verdigris);font-weight:700}
@@ -3477,11 +3478,21 @@ input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet
 .knform input,.knform select{padding:10px 12px;border:1px solid var(--rule);border-radius:999px;
   background:var(--card);font:inherit;font-size:15px;color:var(--ink);min-width:90px}
 .knfoot{padding:12px 14px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--rule);
-  background:var(--card);display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}
+  background:var(--card);display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+  /* it may not grow into the list's room, and it minds its own overflow */
+  flex:0 0 auto;max-height:42vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .knfoot .sum{flex:1;min-width:150px;color:var(--ink-2)}
+/* in the column rows a caption is a caption, not a panel: flex:1 there
+   grows it down the page instead of across it */
+.lslab{flex:0 0 auto;min-width:0;font-size:12px;letter-spacing:.04em;
+  color:var(--ink-3);background:none;padding:0;margin:0;box-shadow:none}
+.lssearch{flex:0 0 auto;padding:8px 14px 4px}
+.lssearch:empty{display:none}
+.lssearch input{width:100%;padding:10px 14px;border:1px solid var(--rule);border-radius:999px;
+  background:var(--card);font-family:inherit;font-size:14px;color:var(--ink)}
 .idx-q{margin:8px 14px 0;padding:10px 14px;border:1px solid var(--rule);border-radius:999px;
   font:inherit;font-size:14px;background:var(--card);color:var(--ink)}
-.idx-body{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+.idx-body{flex:1 1 0;min-height:120px;overflow-y:auto;-webkit-overflow-scrolling:touch;
   padding-bottom:calc(20px + env(safe-area-inset-bottom))}
 .idx-tbl{width:100%;border-collapse:collapse}
 .idx-tbl th{position:sticky;top:0;z-index:1;background:var(--brass-soft);color:var(--ink);
@@ -3556,6 +3567,7 @@ button:active,.tab:active,.tbtn:active{opacity:.72;transition:opacity .06s}
     <span style="width:40px"></span>
   </div>
   <div class="idx-tabs" id="ls-tabs"></div>
+  <div class="lssearch" id="ls-search"></div>
   <div class="idx-body" id="ls-body"></div>
   <div class="knfoot" id="ls-foot"></div>
 </div>
@@ -11196,21 +11208,21 @@ function lsFoot(){
       '<button class="abtn" id="ls-stop"' + (rdAudio ? "" : " disabled") + '>' + L.rd.stop + '</button>' +
       '<span class="lsnow">' + esc(lsNowText()) + '</span>' +
     '</div></div>' +
-    '<div class="lsrow"><span class="sum">' + L.rd.reciter + '</span>' +
+    '<div class="lsrow"><span class="lslab">' + L.rd.reciter + '</span>' +
       '<select id="ls-qari">' + RECITERS.map(function(r){
         return '<option value="' + r.id + '"' + (S.settings.reciter === r.id ? " selected" : "") + '>' +
           esc(r.nm[L.code] || r.nm.en) + '</option>';
       }).join("") + '</select></div>' +
     /* How many times, in the picker as well as on the page. Choosing a surah
        to listen to and not being able to say "again" was half a control. */
-    '<div class="lsrow"><span class="sum">' + L.rd.loop + '</span>' +
+    '<div class="lsrow"><span class="lslab">' + L.rd.loop + '</span>' +
       '<div class="knchips" style="margin:0">' + [1, 3, 5, 7, Infinity].map(function(v){
         return '<button class="knchip' + (RD.loops === v ? " f" : "") + '" data-lsloop="' +
           (v === Infinity ? 0 : v) + '">' +
           esc(v === Infinity ? barL().endless : (v === 1 ? barL().once : fmt(barL().times, n(v)))) +
           '</button>';
       }).join("") + '</div></div>' +
-    '<div class="lsrow"><span class="sum">' + T.sleep + '</span>' +
+    '<div class="lsrow"><span class="lslab">' + T.sleep + '</span>' +
       '<div class="knchips" style="margin:0">' + opts.map(function(m){
         return '<button class="knchip' + ((RD.sleepFor || 0) === m ? " f" : "") + '" data-lssleep="' + m + '">' +
           (m ? fmt(T.min, n(m)) : T.off) + '</button>';
@@ -11249,6 +11261,10 @@ async function lsRender(){
   if (!body) return;
   document.getElementById("ls-ttl").textContent = T.ttl;
   document.getElementById("ls-close").setAttribute("aria-label", uit("back"));
+  /* juz, page and resume have no list to search - clear it so an empty box is
+     not left hanging over them */
+  var sh = document.getElementById("ls-search");
+  if (sh && LS.tab !== "surah") sh.innerHTML = "";
   var tabs = document.getElementById("ls-tabs");
   tabs.innerHTML = [["surah", T.surah], ["juz", T.juz], ["page", T.page], ["resume", T.resume]]
     .map(function(o){
@@ -11317,8 +11333,11 @@ async function lsRender(){
       '<span>' + n(s) + '. ' + esc(surahName(s)) + '</span>' +
       '<span class="pgs">' + n(r.a) + '–' + n(r.b) + '</span></div>';
   }
-  body.innerHTML = '<input type="search" id="ls-q" placeholder="' + esc(T.find) +
-                   '" style="width:calc(100% - 28px);margin:0 14px 10px">' + rows;
+  body.innerHTML = rows;
+  /* pinned above the list rather than scrolling with it: a search that leaves
+     the screen the moment you scroll is not a search */
+  var host = document.getElementById("ls-search");
+  if (host) host.innerHTML = '<input type="search" id="ls-q" placeholder="' + esc(T.find) + '">';
   qa("#ls-body [data-lssurah]").forEach(function(b){
     b.onclick = function(){
       lsPlay(+b.dataset.a, +b.dataset.b, b.dataset.lssurah + ":1");
