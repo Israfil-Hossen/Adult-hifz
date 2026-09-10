@@ -7539,7 +7539,6 @@ function renderMushaf(){
          '<span class="rdprog" id="rd-prog"></span>' +
          '<div class="rdgrp rdset">' +
            '<button class="rdic t" data-rd="book" title="' + BL.book + '" aria-label="' + BL.book + '">' + RIC.book + '</button>' +
-           '<button class="rdic t" data-rd="veil" title="' + BL.veil + '" aria-label="' + BL.veil + '" aria-pressed="' + (RD.blind ? "true" : "false") + '">' + RIC.blind + '</button>' +
            '<button class="rdic t rdmem" data-rd="memtog" title="' + L.mu.mem + '" aria-label="' + L.mu.mem + '" aria-pressed="' + (rdMemState(RD.pages[RD.page]) ? "true" : "false") + '">' + RIC.mem + '</button>' +
            '<button class="rdic rdfab" data-rd="do" title="' + BL.practice + '" aria-label="' + BL.practice + '">' + RIC.target + '</button>' +
          '</div>' +
@@ -7977,7 +7976,6 @@ function rdAct(k, b){
   else if (k === "lsheet"){ rdSheetOpen("listen"); }
   else if (k === "tsheet"){ rdSheetOpen("test"); }
   else if (k === "book"){ rdSheetOpen("book"); }
-  else if (k === "veil"){ RD.blind = !RD.blind; renderMushaf(); }
   else if (k === "mistakes"){
     /* today this is the page-level weak mark the exam already sets; marking the
        ayah itself is the next piece of work, and this button is where it lands */
@@ -8031,7 +8029,7 @@ function rdAct(k, b){
 }
 var BARL = {
   bn:{ trOff:"বন্ধ", trUnder:"পাতার নিচে", trOnly:"শুধু অনুবাদ", practice:"অনুশীলন", listen:"শুনুন", recite:"তিলাওয়াত", test:"পরীক্ষা",
-       mistakes:"ভুল", book:"মুসহাফ", veil:"ঢাকুন",
+       mistakes:"ভুল", book:"মুসহাফ",
        hearSabaq:"সবক শুনুন", hearPage:"পুরো পাতা শুনুন", once:"একবার", times:"{0} বার", endless:"অবিরাম",
        hearDay:"আজকের সব শুনুন", pageN:"পৃ. {0}", noDay:"আজকের কোনো সবক ঠিক করা নেই",
        hearAny:"অন্য কিছু শুনুন",
@@ -8039,28 +8037,28 @@ var BARL = {
        weakOn:"এই পাতা দুর্বল বলে রাখলাম",
        weakOff:"দুর্বলের চিহ্ন তুলে নিলাম" },
   en:{ trOff:"Off", trUnder:"Below the page", trOnly:"Only translation", practice:"Practise", listen:"Listen", recite:"Recite", test:"Test",
-       mistakes:"Mistakes", book:"Mushaf", veil:"Cover",
+       mistakes:"Mistakes", book:"Mushaf",
        hearSabaq:"Play the lesson", hearPage:"Play the page", once:"Once", times:"{0} times", endless:"Endless",
        hearDay:"Play all of today", pageN:"p. {0}", noDay:"No lesson is set for today",
        hearAny:"Listen to something else",
        edition:"Mushaf and text size",
        weakOn:"Page marked weak", weakOff:"Weak mark removed" },
   ur:{ trOff:"بند", trUnder:"صفحے کے نیچے", trOnly:"صرف ترجمہ", practice:"مشق", listen:"سنیے", recite:"تلاوت", test:"امتحان",
-       mistakes:"غلطیاں", book:"مصحف", veil:"ڈھانپیں",
+       mistakes:"غلطیاں", book:"مصحف",
        hearSabaq:"سبق سنیے", hearPage:"پورا صفحہ سنیے", once:"ایک بار", times:"{0} بار", endless:"لامحدود",
        hearDay:"آج کا پورا سبق سنیے", pageN:"ص {0}", noDay:"آج کا کوئی سبق مقرر نہیں",
        hearAny:"کچھ اور سنیے",
        edition:"مصحف اور تحریر کا سائز",
        weakOn:"یہ صفحہ کمزور نشان زد", weakOff:"نشان ہٹا دیا" },
   zh:{ trOff:"关闭", trUnder:"页面下方", trOnly:"仅译文", practice:"练习", listen:"聊听", recite:"诵读", test:"测试",
-       mistakes:"错处", book:"经本", veil:"遮住",
+       mistakes:"错处", book:"经本",
        hearSabaq:"播放今日功课", hearPage:"播放整页", once:"一遍", times:"{0} 遍", endless:"不限次",
        hearDay:"播放今天全部", pageN:"第 {0} 页", noDay:"今天还没定功课",
        hearAny:"听别的",
        edition:"经本与字号",
        weakOn:"已标为薄弱", weakOff:"已取消标记" },
   ar:{ trOff:"مغلق", trUnder:"أسفل الصفحة", trOnly:"الترجمة فقط", practice:"تمرين", listen:"استمع", recite:"تلاوة", test:"اختبار",
-       mistakes:"الأخطاء", book:"المصحف", veil:"استر",
+       mistakes:"الأخطاء", book:"المصحف",
        hearSabaq:"استمع إلى الدرس", hearPage:"استمع إلى الصفحة", once:"مرة", times:"{0} مرات", endless:"بلا توقف",
        hearDay:"استمع إلى درس اليوم كاملاً", pageN:"ص {0}", noDay:"لا درس محدَّد لليوم",
        hearAny:"استمع إلى غير ذلك",
