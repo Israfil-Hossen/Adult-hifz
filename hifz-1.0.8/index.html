@@ -2448,7 +2448,12 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
    single flag could not express, so it showed as never downloaded */
 .dlgot.part{background:var(--gold,#b8860b);border:none;cursor:pointer;padding:0}
 .dlrow.part{opacity:.92}
-.dlpart{font-style:normal;font-size:11.5px;color:var(--ink-3);font-weight:600}
+.dljuz{margin:10px 0 4px;padding:12px;border:1px solid var(--rule);border-radius:14px;
+  background:var(--card)}
+.dljuz[hidden]{display:none}
+.dljlab{font-size:12px;color:var(--ink-3);margin-bottom:9px}
+.dljuz .knchip{min-width:42px;padding:8px 6px}
+.dlpages{margin-top:4px;font-size:12.5px;color:var(--ink-3)}\n.dlpart{font-style:normal;font-size:11.5px;color:var(--ink-3);font-weight:600}
 .dlfoot{margin-top:14px}
 .dlbar{height:6px;border-radius:999px;background:var(--paper-2);overflow:hidden;margin:10px 0 6px}
 .dlbar i{display:block;height:100%;background:var(--verdigris);width:0;transition:width .25s}
@@ -5565,31 +5570,31 @@ function sgL(){ return SGL[L.code] || SGL.en; }
    search, and a bar that says how far it has got. Juz and the whole Qur'an stay
    as one-tap shortcuts, because a page-based reader still thinks in juz. */
 var DLL = {
-  bn:{ q:"সূরার নম্বর বা নাম খুঁজুন", ayat:"আয়াত {0}", pgs:"পৃষ্ঠা {0}–{1}",
+  bn:{ q:"সূরার নম্বর বা নাম খুঁজুন", pagesHave:"পাতা {0} / {1}", pagesGot:"{0}টি পাতা নামানো হলো", starting:"{0}টি পাতা নামছে…", whichJuz:"কোন পারা?", thisPageN:"এই পাতা ({0})", ayat:"আয়াত {0}", pgs:"পৃষ্ঠা {0}–{1}",
        picked:"{0}টি সূরা বাছা", none:"কিছু বাছা হয়নি", clear:"বাছাই মুছুন",
        surah:"সূরা", juz:"পারা", all:"পুরো কুরআন", nores:"কিছু পাওয়া যায়নি",
        page:"এই পাতা", sabaq:"আজকের সবক", part:"লেখা আছে · {0}টি আয়াতের অডিও বাকি", retry:"বাকিটুকু আনুন",
        busy:"এখন নামছে — শেষ হলে আবার চাপুন", leaveQ:"ডাউনলোড চলছে। থামাবেন?", pageDone:"পাতা {0} নামানো হলো", noSabaq:"আজকের কোনো সবক ঠিক করা নেই",
        have:"নামানো আছে", del:"মুছুন", delQ:"{0} ডিভাইস থেকে মুছবেন?", title:"নামানো" },
-  en:{ q:"Search surah no or name", ayat:"Ayat: {0}", pgs:"Pages {0}–{1}",
+  en:{ q:"Search surah no or name", pagesHave:"Pages {0} / {1}", pagesGot:"{0} pages are on the device", starting:"Fetching {0} pages…", whichJuz:"Which juz?", thisPageN:"This page ({0})", ayat:"Ayat: {0}", pgs:"Pages {0}–{1}",
        picked:"{0} surahs selected", none:"Nothing selected", clear:"Clear",
        surah:"Surah", juz:"Juz", all:"Whole Qur\u2019an", nores:"Nothing found",
        page:"This page", sabaq:"Today’s lesson", part:"Text ready · {0} ayat without audio", retry:"Fetch the rest",
        busy:"Downloading — press again when it finishes", leaveQ:"A download is running. Stop it?", pageDone:"Page {0} is on the device", noSabaq:"No lesson is set for today",
        have:"On this device", del:"Delete", delQ:"Remove {0} from the device?", title:"Downloads" },
-  ur:{ q:"سورہ نمبر یا نام تلاش کریں", ayat:"آیات: {0}", pgs:"صفحات {0}–{1}",
+  ur:{ q:"سورہ نمبر یا نام تلاش کریں", pagesHave:"صفحات {0} / {1}", pagesGot:"{0} صفحے آ گئے", starting:"{0} صفحے آ رہے ہیں…", whichJuz:"کون سا پارہ؟", thisPageN:"یہ صفحہ ({0})", ayat:"آیات: {0}", pgs:"صفحات {0}–{1}",
        picked:"{0} سورتیں منتخب", none:"کچھ منتخب نہیں", clear:"صاف کریں",
        surah:"سورہ", juz:"پارہ", all:"مکمل قرآن", nores:"کچھ نہیں ملا",
        page:"یہ صفحہ", sabaq:"آج کا سبق", part:"متن موجود · {0} آیات کی آواز باقی", retry:"باقی لائیں",
        busy:"ابھی ڈاؤن لوڈ ہو رہا ہے — مکمل ہونے پر دوبارہ دبائیں", leaveQ:"ڈاؤن لوڈ جاری ہے۔ روک دیں؟", pageDone:"صفحہ {0} ڈیوائس پر آ گیا", noSabaq:"آج کا کوئی سبق مقرر نہیں",
        have:"ڈیوائس پر موجود", del:"مٹائیں", delQ:"{0} ڈیوائس سے ہٹائیں؟", title:"ڈاؤن لوڈ" },
-  zh:{ q:"搜索苏拉编号或名称", ayat:"节数：{0}", pgs:"第 {0}–{1} 页",
+  zh:{ q:"搜索苏拉编号或名称", pagesHave:"页 {0} / {1}", pagesGot:"已存入 {0} 页", starting:"正在取 {0} 页…", whichJuz:"哪一卷？", thisPageN:"本页（{0}）", ayat:"节数：{0}", pgs:"第 {0}–{1} 页",
        picked:"已选 {0} 章", none:"未选择", clear:"清除",
        surah:"苏拉", juz:"卷", all:"全本古兰经", nores:"未找到",
        page:"本页", sabaq:"今日功课", part:"文字已备 · {0} 节缺诵读", retry:"把剩下的取回",
        busy:"正在下载 —— 完成后再点", leaveQ:"下载进行中。要停止吗？", pageDone:"第 {0} 页已存入本机", noSabaq:"今天还没定功课",
        have:"已在设备上", del:"删除", delQ:"从设备移除 {0}？", title:"下载" },
-  ar:{ q:"ابحث برقم السورة أو اسمها", ayat:"الآيات: {0}", pgs:"الصفحات {0}–{1}",
+  ar:{ q:"ابحث برقم السورة أو اسمها", pagesHave:"الصفحات {0} / {1}", pagesGot:"{0} صفحة على الجهاز", starting:"جارٍ جلب {0} صفحة…", whichJuz:"أي جزء؟", thisPageN:"هذه الصفحة ({0})", ayat:"الآيات: {0}", pgs:"الصفحات {0}–{1}",
        picked:"{0} سور مختارة", none:"لم يُختر شيء", clear:"مسح",
        surah:"سورة", juz:"جزء", all:"المصحف كامل", nores:"لا نتائج",
        page:"هذه الصفحة", sabaq:"درس اليوم", part:"النص جاهز · {0} آيات بلا صوت", retry:"أحضِر الباقي",
@@ -5607,6 +5612,20 @@ var DL = { sel:{}, q:"", ix:null };
    exactly like a surah never downloaded at all. It now holds either 1 (all of
    it) or {m:N} (the pages are there, N ayat have no audio). The old 1s still
    read as complete, which is what they were. */
+/* Pages, as well as surahs.
+
+   The only thing this screen counted was complete surahs, and a page or a juz
+   almost never completes one - a juz ends mid-surah far more often than not.
+   So a reader pressed "juz", twenty-one pages came down, and the counter still
+   read 0 / 114 with no tick anywhere. Nothing had gone wrong; nothing said
+   anything had gone right either, which is the same thing to the person
+   holding the phone. */
+function dlPageDone(pn){ return !!(S.dlp && S.dlp[pn]); }
+function dlPageCount(){
+  var n = 0, d = S.dlp || {};
+  for (var k in d) if (d[k]) n++;
+  return n;
+}
 function dlState(sn){
   var v = S.dls && S.dls[sn];
   if (!v) return "";
@@ -5681,12 +5700,24 @@ async function dlRender(){
   body.innerHTML =
     '<div class="dlhead"><span>' + T.have + '</span><b>' + n(haveN) +
       (partN ? ' <i class="dlpart">+' + n(partN) + ' \u25d0</i>' : '') + ' / ' + n(114) + '</b></div>' +
+    '<div class="dlpages">' + esc(fmt(T.pagesHave, n(dlPageCount()), n(TOTAL_PAGES))) + '</div>' +
     '<div class="dlbar dltotal"><i style="width:' + Math.round(haveN / 114 * 100) + '%"></i></div>' +
     '<div class="dlquick">' +
-      '<button class="knchip" data-dlq="page">' + T.page + '</button>' +
+      /* a button that will not say what it acts on is a button nobody can
+         trust: "juz" downloaded whichever one the mushaf happened to be open
+         at, and never said which. It asks now, and the page chip carries its
+         own number. */
+      '<button class="knchip" data-dlq="page">' +
+        esc(fmt(T.thisPageN, n(RD.page || S.settings.lastPage || 1))) + '</button>' +
       '<button class="knchip" data-dlq="sabaq">' + T.sabaq + '</button>' +
-      '<button class="knchip" data-dlq="juz">' + T.juz + '</button>' +
+      '<button class="knchip" data-dlq="juz">' + T.juz + ' …</button>' +
       '<button class="knchip" data-dlq="all">' + T.all + '</button>' +
+    '</div>' +
+    '<div class="dljuz" id="dl-juz" hidden><div class="dljlab">' + esc(T.whichJuz) + '</div>' +
+      '<div class="knchips" style="padding:0">' + Array.from({length:30}, function(_, i){
+        var jr = juzRange(i + 1);
+        return '<button class="knchip" data-dljuz="' + (i + 1) + '">' + n(i + 1) + '</button>';
+      }).join("") + '</div>' +
       (picked.length ? '<button class="knchip" data-dlq="clear">' + T.clear + '</button>' : '') +
     '</div>' +
     '<input type="search" id="dl-q" placeholder="' + esc(T.q) + '" value="' + esc(DL.q) + '">' +
@@ -5728,7 +5759,12 @@ async function dlRender(){
       var withAudio = !au || au.checked;
       var list = null;
       if (k === "all") list = dlSeq(1, TOTAL_PAGES);
-      else if (k === "juz"){ var r = juzRange(juzOf(RD.page || 1)); list = dlSeq(r[0], r[1]); }
+      else if (k === "juz"){
+        /* show the thirty and let the reader say which */
+        var jb = document.getElementById("dl-juz");
+        if (jb) jb.hidden = !jb.hidden;
+        return;
+      }
       else if (k === "page") list = [RD.page || S.settings.lastPage || 1];
       else if (k === "sabaq"){
         var ps = (day(TODAY).sabaq.pages || []);
@@ -5736,8 +5772,22 @@ async function dlRender(){
         list = ps.slice();
       }
       if (!list || !list.length) return;
+      /* the first page can take seconds on a poor line; say something now */
+      dlProg(fmt(T2.starting, n(list.length)), 0);
       var res = await dlPages(list, withAudio);
       dlRecord(res, list, k === "page" ? list[0] : 0);
+    };
+  });
+  qa("#dl-body [data-dljuz]").forEach(function(b){
+    b.onclick = async function(){
+      var T3 = dlL();
+      if (RD.busy){ dlProg(T3.busy); return; }
+      var au2 = document.getElementById("dl-audio");
+      var jn = +b.dataset.dljuz, r = juzRange(jn), list = dlSeq(r[0], r[1]);
+      var jb = document.getElementById("dl-juz"); if (jb) jb.hidden = true;
+      dlProg(fmt(T3.starting, n(list.length)), 0);
+      var res = await dlPages(list, !au2 || au2.checked);
+      dlRecord(res, list, 0);
     };
   });
   var go = document.getElementById("dl-go");
@@ -5792,6 +5842,12 @@ function dlRecord(res, list, singlePage, chosen){
   var per = res.perPage || {};
   /* a surah is on the device when every page of it came down; the audio it is
      still missing is counted, not held against it */
+  /* every page that actually arrived, whatever surah it belongs to */
+  if (!S.dlp) S.dlp = {};
+  var pagesGot = 0;
+  Object.keys(per).forEach(function(pn){
+    if (!per[pn].page){ S.dlp[pn] = 1; pagesGot++; }
+  });
   var cover = chosen && chosen.length ? chosen.slice() : dlSurahsIn(pageSet);
   var sp = (DL.ix && DL.ix.surah) || {}, marked = 0;
   cover.forEach(function(sn){
@@ -5807,7 +5863,7 @@ function dlRecord(res, list, singlePage, chosen){
     }
     if (pagesOk){ dlMark(sn, miss); marked++; }
   });
-  if (marked){
+  if (marked || pagesGot){
     if (chosen && chosen.length) DL.sel = {};
     save();
   }
@@ -5816,6 +5872,11 @@ function dlRecord(res, list, singlePage, chosen){
      never before */
   if (singlePage && !res.stopped && !(per[singlePage] && per[singlePage].page)){
     dlProg(fmt(dlL().pageDone, n(singlePage)), 100);
+  } else if (pagesGot && !marked){
+    /* a run of pages that completed no surah still did something, and the
+       reader is owed the number */
+    dlProg(fmt(dlL().pagesGot, n(pagesGot)) +
+           (res.audioMissed ? " \u00b7 " + fmt(L.dlg.missed, n(res.audioMissed)) : ""), 100);
   } else if (res.audioMissed){
     dlProg(L.dlg.done + " · " + fmt(L.dlg.missed, n(res.audioMissed)), 100);
   } else if (!res.stopped){
