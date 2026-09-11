@@ -9,7 +9,9 @@ const A = () => wrap(R.rehalSvg('green'));
 
 // B - the open mushaf held inside a heart of gold: learning it by heart
 const HEART = 'M256 452 C118 360 34 276 52 170 C68 88 176 58 256 146 C336 58 444 88 460 170 C478 276 394 360 256 452 Z';
-const B = () => wrap(
+/* bg false: the heart alone on transparency, for the adaptive foreground and
+   the splash */
+const B = (bg = true) => wrap(
   R.defs('green') +
   '<defs>' +
     '<radialGradient id="bgB" cx="50%" cy="42%" r="72%"><stop offset="0" stop-color="#2F6B50"/><stop offset="0.6" stop-color="#17412F"/><stop offset="1" stop-color="#0B261B"/></radialGradient>' +
@@ -17,7 +19,7 @@ const B = () => wrap(
     '<linearGradient id="goldB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE7A1"/><stop offset="0.3" stop-color="#D9B042"/><stop offset="0.55" stop-color="#F6DA7C"/><stop offset="0.8" stop-color="#A67C1A"/><stop offset="1" stop-color="#E7C565"/></linearGradient>' +
     '<clipPath id="heartClip"><path d="' + HEART + '"/></clipPath>' +
   '</defs>' +
-  '<rect width="512" height="512" fill="url(#bgB)"/>' +
+  (bg ? '<rect width="512" height="512" fill="url(#bgB)"/>' : '') +
   '<path d="' + HEART + '" fill="#000" opacity="0.45" filter="url(#soft)" transform="translate(0 10)"/>' +
   '<path d="' + HEART + '" fill="url(#velvet)"/>' +
   '<ellipse cx="256" cy="230" rx="170" ry="120" fill="url(#glow)" clip-path="url(#heartClip)"/>' +

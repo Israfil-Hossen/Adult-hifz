@@ -1892,9 +1892,9 @@ input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
    .top-in .brand > span, which clips every header span to keep the bar one line. */
 .brand .mark{font-family:var(--arabic);font-size:23px;color:var(--brass);line-height:1.45}
 .top-in .brand > span.mark{overflow:visible}
-/* the mark is the app icon itself now, not a word in a display face */
-.brand .mark svg{width:28px;height:28px;display:block;border-radius:7px}
-.sig svg{width:34px;height:34px;display:block;border-radius:8px}
+/* the mark is the app icon itself - the heart with the mushaf - not a word in a display face */
+.brand .mark img{width:30px;height:30px;display:block;border-radius:8px}
+.sig img{width:36px;height:36px;display:block;border-radius:9px}
 .brand .nm{font-family:var(--display);font-size:19px}
 .brand .dt{font-family:var(--mono);font-size:10.5px;color:#8A939C;letter-spacing:.08em;display:block;margin-top:1px}
 .streak{text-align:end;flex:none}
@@ -2285,7 +2285,7 @@ main.wrap{width:100%}
   <div class="wrap top-in">
     <button class="appbtn" id="drawer-open" aria-label="Menu"><span class="bars"></span></button>
     <div class="brand">
-      <span class="mark"><svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="24" fill="#244F3F"/><path d="M54 36C46 24 24 24 22 44C21 60 38 72 54 88Z" fill="#F4E9CF"/><path d="M54 36C62 24 84 24 86 44C87 60 70 72 54 88Z" fill="#E6D3A6"/><path d="M54 36V88" stroke="#C9A227" stroke-width="2.4"/><path d="M31 45C37 42 44 43 49 47M30 53C37 50 44 51 49 55M59 47C64 43 71 42 77 45M59 55C64 51 71 50 78 53" stroke="#9C7A22" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M22 44C21 60 38 72 54 88C70 72 87 60 86 44" stroke="#D4AF37" stroke-width="4" fill="none"/></svg></span>
+      <span class="mark"><img src="icon-192.png" alt=""></span>
       <span><span class="nm" id="hdr-name"></span><span class="dt" id="hdr-date"></span></span>
     </div>
     <div class="streak">
@@ -10429,7 +10429,7 @@ function rdMeanWire(){
     };
   });
 }
-var BRAND_TILE = '<svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="24" fill="#244F3F"/><path d="M54 36C46 24 24 24 22 44C21 60 38 72 54 88Z" fill="#F4E9CF"/><path d="M54 36C62 24 84 24 86 44C87 60 70 72 54 88Z" fill="#E6D3A6"/><path d="M54 36V88" stroke="#C9A227" stroke-width="2.4"/><path d="M31 45C37 42 44 43 49 47M30 53C37 50 44 51 49 55M59 47C64 43 71 42 77 45M59 55C64 51 71 50 78 53" stroke="#9C7A22" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M22 44C21 60 38 72 54 88C70 72 87 60 86 44" stroke="#D4AF37" stroke-width="4" fill="none"/></svg>';
+var BRAND_TILE = '<img src="icon-192.png" alt="">';
 /* bindDlJuz went with the scope and juz dropdowns it wired. */
 function dlProg(txt, pct){
   ["rd-prog2","rd-prog"].forEach(function(id){
