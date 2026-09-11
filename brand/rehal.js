@@ -38,7 +38,7 @@ function pageText(lines, side) {
   }).join('');
 }
 
-function rehalSvg(bg) {
+function defs(bg) {
   const BG = bg === 'navy'
     ? ['#23365A', '#152440', '#0C1628']
     : ['#2F6B50', '#17412F', '#0C2A1E'];
@@ -60,6 +60,11 @@ function rehalSvg(bg) {
       '<stop offset="0" stop-color="#F3D77A"/><stop offset="0.5" stop-color="#C9A227"/><stop offset="1" stop-color="#8C6A14"/></linearGradient>' +
     '<filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="9"/></filter>' +
   '</defs>' +
+  '';
+}
+
+function scene() {
+  return '' +
   '<rect width="512" height="512" fill="url(#bg)"/>' +
   '<ellipse cx="256" cy="230" rx="220" ry="170" fill="url(#glow)"/>' +
 
@@ -76,6 +81,11 @@ function rehalSvg(bg) {
   '<circle cx="256" cy="353" r="9" fill="url(#gold)" stroke="#6B4A0C" stroke-width="2"/>' +
   '<rect x="114" y="446" width="60" height="16" rx="6" fill="url(#wood)" stroke="#4A2810" stroke-width="2"/><rect x="338" y="446" width="60" height="16" rx="6" fill="url(#wood)" stroke="#4A2810" stroke-width="2"/>' +
 
+  '';
+}
+
+function book() {
+  return '' +
   // ---- the book's shadow on the stand, then the cover, the page block, the pages
   '<path d="M256 318 C214 292 146 286 80 298 L256 330 L432 298 C366 286 298 292 256 318 Z" fill="#000" opacity="0.4" filter="url(#soft)"/>' +
   '<path d="M256 150 C220 122 146 112 70 126 L60 300 C144 288 214 294 256 320 C298 294 368 288 452 300 L442 126 C366 112 292 122 256 150 Z" fill="#1C4A33" stroke="url(#gold)" stroke-width="3"/>' +
@@ -102,9 +112,11 @@ function rehalSvg(bg) {
   '';
 }
 
+function rehalSvg(bg) { return defs(bg) + scene() + book(); }
+
 function svg(size, bg) {
   return Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size +
     '" viewBox="0 0 512 512">' + rehalSvg(bg) + '</svg>');
 }
 
-module.exports = { svg, rehalSvg };
+module.exports = { svg, rehalSvg, defs, book };
