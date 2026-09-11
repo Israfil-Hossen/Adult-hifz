@@ -1,0 +1,9 @@
+New name and logo: Quran: Adult Memorization.
+
+The Back button now works everywhere.
+
+Downloads keep going when you leave the app, with progress and a Stop button in the notification. Downloaded recitation is kept in the phone's Music folder, so reinstalling does not lose it.
+
+Tap a word for its meaning. Tap twice for the whole ayah word by word, with the colour following the recitation. Press and hold to highlight.
+
+Play, pause, skip and a progress bar in the notification while reciting.
