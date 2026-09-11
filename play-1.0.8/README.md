@@ -70,7 +70,7 @@ The existing **Media playback** declaration (recitation that keeps playing with
 the screen off) stays as it is.
 
 `READ_MEDIA_AUDIO` needs no form: it is used once, after a reinstall, to find
-recitation the app saved earlier in Music/Adult Hifz.
+recitation the app saved earlier in Music/Quran Hifz (or Music/Adult Hifz, its old name).
 
 ## Category and contact
 

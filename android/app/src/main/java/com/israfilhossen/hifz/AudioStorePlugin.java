@@ -120,7 +120,9 @@ public class AudioStorePlugin extends Plugin {
                     String k = keys.getString(i);
                     File s = HifzStore.sharedFile(reciter, k);
                     File p = HifzStore.privateFile(getContext(), reciter, k);
+                    File l = new File(new File(HifzStore.legacyRoot(), HifzStore.safe(reciter)), HifzStore.fileName(k));
                     if (s.exists() && s.delete()) gone++;
+                    if (l.exists() && l.delete()) gone++;
                     if (p.exists() && p.delete()) gone++;
                 }
             } catch (Exception ignored) { }
@@ -134,6 +136,7 @@ public class AudioStorePlugin extends Plugin {
         long[] t = new long[2];
         count(HifzStore.privateDir(getContext()), t, false);
         count(HifzStore.musicRoot(), t, true);
+        count(HifzStore.legacyRoot(), t, true);
         call.resolve(new JSObject().put("files", t[0]).put("bytes", t[1]));
     }
 
@@ -215,11 +218,12 @@ public class AudioStorePlugin extends Plugin {
         but not the files in it until the reader says yes. */
     @PluginMethod
     public void previous(PluginCall call) {
-        File root = HifzStore.musicRoot();
+        File root = HifzStore.musicRoot(), old = HifzStore.legacyRoot();
         long[] t = new long[2];
         count(root, t, true);
+        count(old, t, true);
         call.resolve(new JSObject()
-                .put("folder", root.isDirectory())
+                .put("folder", root.isDirectory() || old.isDirectory())
                 .put("canRead", HifzStore.canReadShared(getContext()))
                 .put("visible", t[0]));
     }
@@ -249,8 +253,12 @@ public class AudioStorePlugin extends Plugin {
     public void scan(PluginCall call) {
         String reciter = call.getString("reciter", "");
         JSArray keys = new JSArray();
-        File[] fs = HifzStore.sharedDir(reciter).listFiles();
-        if (fs != null) for (File f : fs) {
+        List<File> all = new ArrayList<>();
+        File[] a1 = HifzStore.sharedDir(reciter).listFiles();
+        File[] a2 = new File(HifzStore.legacyRoot(), HifzStore.safe(reciter)).listFiles();
+        if (a1 != null) java.util.Collections.addAll(all, a1);
+        if (a2 != null) java.util.Collections.addAll(all, a2);
+        for (File f : all) {
             String n = f.getName();
             if (n.length() == 10 && n.endsWith(".mp3") && f.length() > 0) {
                 try {

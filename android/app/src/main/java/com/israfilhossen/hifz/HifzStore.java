@@ -24,7 +24,7 @@ import java.util.UUID;
  * different key, which Android will only do after an uninstall. A reader who
  * had pulled down a whole juz lost all of it the first time that happened.
  *
- * So the audio now goes where the phone keeps music: Music/Adult Hifz/<reciter>/.
+ * So the audio now goes where the phone keeps music: Music/Quran Hifz/<reciter>/.
  * It stays there whatever happens to the app. A reinstall can read it again
  * with one permission, and nothing has to come down twice.
  *
@@ -36,6 +36,13 @@ final class HifzStore {
     private HifzStore() { }
 
     static File musicRoot() {
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),
+                "Quran Hifz");
+    }
+
+    /** the folder's name while the app was called Adult Hifz. Still read, and
+        emptied into the new one where the files are ours to move. */
+    static File legacyRoot() {
         return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),
                 "Adult Hifz");
     }
@@ -111,6 +118,8 @@ final class HifzStore {
     static File existing(Context c, String reciter, String key) {
         File s = sharedFile(reciter, key);
         if (ok(s)) return s;
+        File l = new File(new File(legacyRoot(), safe(reciter)), fileName(key));
+        if (ok(l)) return l;
         File p = privateFile(c, reciter, key);
         if (ok(p)) return p;
         return null;
@@ -208,6 +217,20 @@ final class HifzStore {
      */
     static void migrate(Context c) {
         if (!canWriteShared(c)) return;
+        /* Music/Adult Hifz -> Music/Quran Hifz: one disk, so a rename; a file
+           a previous install owns will not move and is simply read in place */
+        File[] olds = legacyRoot().listFiles();
+        if (olds != null) for (File rd : olds) {
+            File[] fs0 = rd.isDirectory() ? rd.listFiles() : null;
+            if (fs0 == null) continue;
+            File to = new File(musicRoot(), rd.getName());
+            if (!to.isDirectory() && !to.mkdirs()) break;
+            for (File f : fs0) {
+                File dest = new File(to, f.getName());
+                if (ok(dest)) continue;
+                f.renameTo(dest);
+            }
+        }
         File[] fs = privateDir(c).listFiles();
         if (fs == null) return;
         for (File f : fs) {

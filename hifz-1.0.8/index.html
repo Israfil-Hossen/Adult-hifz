@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Adult Hifz</title>
+<title>Quran: Adult Memorization</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#33414F">
@@ -1892,6 +1892,9 @@ input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
    .top-in .brand > span, which clips every header span to keep the bar one line. */
 .brand .mark{font-family:var(--arabic);font-size:23px;color:var(--brass);line-height:1.45}
 .top-in .brand > span.mark{overflow:visible}
+/* the mark is the app icon itself now, not a word in a display face */
+.brand .mark svg{width:28px;height:28px;display:block;border-radius:7px}
+.sig svg{width:34px;height:34px;display:block;border-radius:8px}
 .brand .nm{font-family:var(--display);font-size:19px}
 .brand .dt{font-family:var(--mono);font-size:10.5px;color:#8A939C;letter-spacing:.08em;display:block;margin-top:1px}
 .streak{text-align:end;flex:none}
@@ -2282,7 +2285,7 @@ main.wrap{width:100%}
   <div class="wrap top-in">
     <button class="appbtn" id="drawer-open" aria-label="Menu"><span class="bars"></span></button>
     <div class="brand">
-      <span class="mark">حفظ</span>
+      <span class="mark"><svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="24" fill="#244F3F"/><path d="M54 36C46 24 24 24 22 44C21 60 38 72 54 88Z" fill="#F4E9CF"/><path d="M54 36C62 24 84 24 86 44C87 60 70 72 54 88Z" fill="#E6D3A6"/><path d="M54 36V88" stroke="#C9A227" stroke-width="2.4"/><path d="M31 45C37 42 44 43 49 47M30 53C37 50 44 51 49 55M59 47C64 43 71 42 77 45M59 55C64 51 71 50 78 53" stroke="#9C7A22" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M22 44C21 60 38 72 54 88C70 72 87 60 86 44" stroke="#D4AF37" stroke-width="4" fill="none"/></svg></span>
       <span><span class="nm" id="hdr-name"></span><span class="dt" id="hdr-date"></span></span>
     </div>
     <div class="streak">
@@ -6359,7 +6362,7 @@ function openReport(){
 
   var h = '<div class="sheet-h"><div><div class="ti">' + Rp.title + '</div>' +
     '<div class="su">' + longDate(addDays(new Date(), -6)) + ' — ' + longDate(new Date()) + '</div></div>' +
-    '<div class="sig">حفظ</div></div>';
+    '<div class="sig">' + BRAND_TILE + '</div></div>';
 
   h += '<div class="grid4">' + vals.map(function(v, i){
     return '<div class="g4"><span class="v">' + v + '</span><span class="l">' + Rp.stats[i] + '</span></div>';
@@ -7187,7 +7190,7 @@ function dlFinish(st){
 
 /* A reinstall finding what the last one left.
 
-   Recitation is kept in Music/Adult Hifz, which an uninstall does not touch.
+   Recitation is kept in Music/Quran Hifz, which an uninstall does not touch.
    A fresh install can see that folder but not the files in it until the
    reader allows it - so it asks once, in plain words, and only when there is
    a folder to find and nothing of its own recorded yet. Every surah that is
@@ -10401,6 +10404,7 @@ function rdMeanWire(){
     };
   });
 }
+var BRAND_TILE = '<svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="24" fill="#244F3F"/><path d="M54 36C46 24 24 24 22 44C21 60 38 72 54 88Z" fill="#F4E9CF"/><path d="M54 36C62 24 84 24 86 44C87 60 70 72 54 88Z" fill="#E6D3A6"/><path d="M54 36V88" stroke="#C9A227" stroke-width="2.4"/><path d="M31 45C37 42 44 43 49 47M30 53C37 50 44 51 49 55M59 47C64 43 71 42 77 45M59 55C64 51 71 50 78 53" stroke="#9C7A22" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M22 44C21 60 38 72 54 88C70 72 87 60 86 44" stroke="#D4AF37" stroke-width="4" fill="none"/></svg>';
 /* bindDlJuz went with the scope and juz dropdowns it wired. */
 function dlProg(txt, pct){
   ["rd-prog2","rd-prog"].forEach(function(id){

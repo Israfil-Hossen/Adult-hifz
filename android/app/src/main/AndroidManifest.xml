@@ -88,7 +88,7 @@
          swiping the app away does not stop them -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
-    <!-- Recitation is kept in Music/Adult Hifz so an uninstall cannot take it.
+    <!-- Recitation is kept in Music/Quran Hifz so an uninstall cannot take it.
          Writing there needs nothing from Android 11 on; Android 10 and older
          need the old write permission. Reading back what a previous install
          left there is the one thing that is asked for, and only when there is

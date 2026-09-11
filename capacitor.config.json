@@ -1,6 +1,6 @@
 {
   "appId": "com.israfilhossen.hifz",
-  "appName": "Adult Hifz",
+  "appName": "Quran Hifz",
   "webDir": "hifz-1.0.8",
   "android": {
     "allowMixedContent": false,
