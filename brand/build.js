@@ -66,7 +66,7 @@ async function lockup(size, bg, textFill) {
   await save(await sharp(flat).resize(192).png().toBuffer(), 'hifz-1.0.8/icon-192.png');
   await save(await sharp(flat).resize(512).png().toBuffer(), 'hifz-1.0.8/icon-512.png');
   await save(await sharp(await heartOn(1024, GREEN, 0.72)).resize(512).png().toBuffer(), 'hifz-1.0.8/icon-maskable-512.png');
-  await save(await sharp(flat).resize(512).png().toBuffer(), 'play-1.0.8/graphics/icon-512.png');
+  await save(await sharp(flat).resize(512).png().toBuffer(), 'play-1.0.9/graphics/icon-512.png');
 
   // splash sources for capacitor-assets, and the in-app opening screen
   await save(await lockup(2732, PARCH, NAVY), 'assets/splash.png');
@@ -96,7 +96,7 @@ async function lockup(size, bg, textFill) {
       '<rect x="580" y="330" width="160" height="3" fill="' + GOLD + '"/>' +
       '</svg>') }, { input: await heart(hw * 1.2), left: 90, top: Math.round((H - hw * 1.2) / 2) }])
     .png().toBuffer();
-  await save(plate, 'play-1.0.8/graphics/feature-graphic-1024x500.png');
+  await save(plate, 'play-1.0.9/graphics/feature-graphic-1024x500.png');
 
   console.log(out.length + ' files written');
 })();

@@ -16,7 +16,6 @@ android/app/src/main/assets/public/
 android/app/src/main/assets/capacitor.config.json
 
 # server-side store written by sync.php at runtime
-release/sync-data/
 hifz-*/sync-data/
 
 # keystores and anything that signs a release must never be committed

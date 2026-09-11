@@ -74,11 +74,10 @@ Adult_Hifz/
 ├─ hifz-1.0.8/            THE APP. Everything else serves this folder.
 ├─ android/               Capacitor's Android wrapper. Mostly generated.
 ├─ assets/                Icon and splash SOURCES (1024px / 2732px).
-├─ brand/                 Logo pipeline + the fonts it sets the mark in.
-├─ release/               A near-duplicate of hifz-1.0.8 (deploy copy?). STALE:
-│                        same 189 files, but old icons and the old app name.
-│                        Nothing in the build references it. Confirm what it is
-│                        for before trusting or deleting it.
+├─ brand/                 Logo pipeline: concepts.js draws the mark, build.js
+│                        renders every icon, splash and Play graphic from it.
+├─ play-1.0.9/            The current Play upload: bundle, listing text, graphics,
+│                        and a step-by-step guide (README.md, in Bengali).
 ├─ capacitor.config.json  Tells Capacitor that webDir = hifz-1.0.8.
 ├─ package.json           Dev dependencies + the four scripts you actually use.
 └─ *.zip, *.bz2, *.json   Loose research/source data at the root. NOT shipped.

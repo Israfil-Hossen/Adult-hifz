@@ -59,7 +59,7 @@ npm run bundle
 | কী | কোথায় |
 |---|---|
 | আইকন ৫১২×৫১২ | `hifz-1.0.8/icon-512.png` |
-| ফিচার গ্রাফিক ১০২৪×৫০০ | `store/feature-graphic.png` |
+| ফিচার গ্রাফিক ১০২৪×৫০০ | `play-1.0.9/graphics/feature-graphic-1024x500.png` |
 | গোপনীয়তা নীতি | উপরের লিংক |
 | বিবরণ | নিচে |
 
