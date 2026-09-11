@@ -7610,7 +7610,26 @@ function rdTrack(){
     els[i].classList.add("now");
     RD.wi = i;
     rdMeanLive(els[i]);
+    rdGridFollow(els[i]);
     wmSide(els[i]);
+  }
+}
+/* Two taps open the whole ayah word by word and play it. The colour in that
+   list used to stay on the word that was tapped while the voice went on without
+   it; it now moves with the recitation, word by word, the way the page does. */
+function rdGridFollow(el){
+  var g = document.querySelector("#rd-mean.on .wmgrid");
+  if (!g || !el || g.dataset.vk !== el.dataset.vk) return;
+  var c = g.querySelector('.wmcell[data-wi="' + (el.dataset.wi || 0) + '"]');
+  if (!c || c.dataset.on === "1") return;
+  qa("#rd-mean .wmcell[data-on]").forEach(function(x){ x.removeAttribute("data-on"); });
+  c.dataset.on = "1";
+  /* a long ayah scrolls inside the panel; keep the word being said in sight */
+  var mn = document.getElementById("rd-mean");
+  if (mn){
+    var cr = c.getBoundingClientRect(), mr = mn.getBoundingClientRect();
+    if (cr.height && (cr.top < mr.top + 44 || cr.bottom > mr.bottom - 8))
+      mn.scrollTop += (cr.top - mr.top) - mr.height / 3;
   }
 }
 /* ---------- floating button: bubbles up, long-press turns into a mic ---------- */
@@ -10131,7 +10150,9 @@ async function rdPaint(p, isTodayPage){
            a quick second tap never flashes the one-word panel first */
         taps = (now - tapAt < TAP_WIN) ? taps + 1 : 1;
         tapAt = now;
-        lt = setTimeout(function(){ lt = null; if (!moved) markWord(); }, 420);
+        /* 700 ms, not 420: a thumb resting on a word while reading held it that
+           long without meaning anything, and words turned yellow on their own */
+        lt = setTimeout(function(){ lt = null; if (!moved) markWord(); }, 700);
       });
       w.addEventListener("pointermove", function(e){
         if (moved) return;
@@ -10221,10 +10242,14 @@ function rdMeanPanel(pg, el){
           '" aria-label="' + uit("sound") + '">' + (wordSound() ? RIC.sound : RIC.mute) + '</button>' +
           '<button class="wmbig" aria-label="' + uit("resize") + '">⤢</button></div>';
   /* the ayah word by word — each meaning directly under its own word */
-  var gws = ws.filter(function(w){ return !w.end && (w.m || w.g); });
+  /* each cell carries its word's place in the ayah (the same count the page
+     gives each word as data-wi), so the recitation can walk along the list */
+  var gws = [], here = +(el.dataset.wi || 0);
+  ws.forEach(function(w, i){ if (!w.end && (w.m || w.g)) gws.push({ w:w, i:i }); });
   if (gws.length){
-    h += '<div class="wmgrid' + (gws.length <= 5 ? " few" : "") + '">' + gws.map(function(w){
-      return '<span class="wmcell"' + (w.t === el.dataset.t ? ' data-on="1"' : '') + '>' +
+    h += '<div class="wmgrid' + (gws.length <= 5 ? " few" : "") + '" data-vk="' + esc(vk) + '">' + gws.map(function(o){
+      var w = o.w;
+      return '<span class="wmcell" data-wi="' + o.i + '"' + (o.i === here ? ' data-on="1"' : '') + '>' +
         '<span class="wmca" style="font-family:\'' + fam + '\'">' + w.g + '</span>' +
         '<span class="wmcb">' + esc(w.m || "—") + '</span></span>';
     }).join("") + '</div>';
