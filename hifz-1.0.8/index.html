@@ -78,11 +78,11 @@ window.HIFZ_LANG_en = {
   weekdays: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
 
   app: {
-    name: "Daily Companion",
-    title: "Hifz · Daily Companion",
+    name: "Quran Hifz",
+    title: "Quran: Adult Memorization",
     desc: "A research-based Qur'an memorization tracker for adults",
     streak: "day streak",
-    footer1: "Hifz · Daily Companion · <b>for adult learners</b>",
+    footer1: "Quran: Adult Memorization · <b>for adult learners</b>",
     footer2: "Built on memory research · your data stays on your device"
   },
 
@@ -505,11 +505,11 @@ window.HIFZ_LANG_bn = {
   weekdays: ["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"],
 
   app: {
-    name: "দৈনিক সঙ্গী",
-    title: "হিফজ · দৈনিক সঙ্গী",
+    name: "কুরআন হিফজ",
+    title: "কুরআন: প্রাপ্তবয়স্কদের হিফজ",
     desc: "প্রাপ্তবয়স্কদের জন্য গবেষণা-ভিত্তিক কোরআন হিফজ ট্র্যাকার",
     streak: "দিন ধারাবাহিক",
-    footer1: "হিফজ · দৈনিক সঙ্গী · <b>প্রাপ্তবয়স্কদের জন্য</b>",
+    footer1: "কুরআন: প্রাপ্তবয়স্কদের হিফজ · <b>প্রাপ্তবয়স্কদের জন্য</b>",
     footer2: "স্মৃতি-গবেষণার ভিত্তিতে সাজানো · ডেটা আপনার ডিভাইসেই থাকে"
   },
 
@@ -934,11 +934,11 @@ window.HIFZ_LANG_ur = {
   weekdays: ["اتوار","پیر","منگل","بدھ","جمعرات","جمعہ","ہفتہ"],
 
   app: {
-    name: "روزانہ ساتھی",
-    title: "حفظ · روزانہ ساتھی",
+    name: "قرآن حفظ",
+    title: "قرآن: بڑوں کا حفظ",
     desc: "بڑی عمر میں حفظ کرنے والوں کے لیے تحقیق پر مبنی ٹریکر",
     streak: "دن مسلسل",
-    footer1: "حفظ · روزانہ ساتھی · <b>بڑی عمر والوں کے لیے</b>",
+    footer1: "قرآن: بڑوں کا حفظ · <b>بڑی عمر والوں کے لیے</b>",
     footer2: "یادداشت کی تحقیق پر مبنی · آپ کا ڈیٹا آپ ہی کے آلے میں رہتا ہے"
   },
 
@@ -1351,11 +1351,11 @@ window.HIFZ_LANG_zh = {
   weekdays: ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"],
 
   app: {
-    name: "每日伴侣",
-    title: "背记古兰 · 每日伴侣",
+    name: "古兰背记",
+    title: "古兰经：成人背记",
     desc: "为成年学习者设计、以记忆科学为基础的古兰背记记录工具",
     streak: "天连续",
-    footer1: "背记古兰 · 每日伴侣 · <b>为成年学习者而作</b>",
+    footer1: "古兰经：成人背记 · <b>为成年学习者而作</b>",
     footer2: "基于记忆研究 · 数据只留在你自己的设备上"
   },
 
@@ -2701,6 +2701,8 @@ html[dir="rtl"] .trlt,html[lang="ur"] .trlt,html[lang="ar"] .trlt{direction:rtl;
 .rdtools{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
 .rdtools .rdmini,#rd-selbar .rdmini{display:inline-flex;align-items:center;gap:6px;padding:6px 12px}
 .rdmini .ic{font-size:14px;line-height:1}
+.rdmini .ic.ic-svg{width:15px;height:15px;flex:0 0 15px}
+.rdmini .ic.ic-svg .ricc{width:100%;height:100%;display:block}
 .rdmini b{font-weight:500}
 @media (max-width:620px){
   .rdtools .rdmini b{display:none}
@@ -2708,6 +2710,7 @@ html[dir="rtl"] .trlt,html[lang="ur"] .trlt,html[lang="ar"] .trlt{direction:rtl;
   .rdtools .rdmini.wide{width:auto;padding:0 13px}
   .rdtools .rdmini.wide b{display:inline}
   .rdmini .ic{font-size:16px}
+  .rdmini .ic.ic-svg{width:18px;height:18px;flex:0 0 18px}
 }
 .rdprog{font-family:var(--mono);font-size:12px;opacity:.8}
 /* it sits at order:6 in the reader row, so while empty it still claimed an even
@@ -3695,7 +3698,7 @@ button:active,.tab:active,.tbtn:active{opacity:.72;transition:opacity .06s}
 <script>
 "use strict";
 /* =========================================================
-   হিফজ · দৈনিক সঙ্গী  —  Hifz Daily Companion
+   কুরআন: প্রাপ্তবয়স্কদের হিফজ  —  Quran: Adult Memorization
    Single-file app. No server, no build step.
    All user-facing text lives in lang/*.js — never here.
    ========================================================= */
@@ -3724,11 +3727,11 @@ window.HIFZ_LANG_ar = {
   weekdays: ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"],
 
   app: {
-    name: "الرفيق اليومي",
-    title: "الحفظ · الرفيق اليومي",
+    name: "حفظ القرآن",
+    title: "القرآن: حفظ الكبار",
     desc: "برنامج لحفظ القرآن للكبار، مبني على أبحاث الذاكرة",
     streak: "يومًا متتاليًا",
-    footer1: "الحفظ · الرفيق اليومي · <b>للكبار</b>",
+    footer1: "القرآن: حفظ الكبار · <b>للكبار</b>",
     footer2: "مبني على أبحاث الذاكرة · بياناتك تبقى في جهازك"
   },
 
@@ -6835,7 +6838,29 @@ var RIC = {
 
   paper:   ricc('<circle cx="12" cy="12" r="9" fill="' + IC.brassS + '" stroke="' + IC.brassD + '" stroke-width="1.3"/>' +
                 '<path d="M12 3a9 9 0 0 0 0 18z" fill="' + IC.brass + '"/>'),
-  menu:    ricc('<path d="M3.6 6.6h16.8M3.6 12h16.8M3.6 17.4h16.8" stroke="' + IC.ink + '" stroke-width="2.1"/>')
+  menu:    ricc('<path d="M3.6 6.6h16.8M3.6 12h16.8M3.6 17.4h16.8" stroke="' + IC.ink + '" stroke-width="2.1"/>'),
+
+  /* covering the line to test recall: two bars already masked, one still plain */
+  hide:    ricc('<rect x="3.4" y="3.4" width="17.2" height="17.2" rx="2.2" fill="' + IC.paper + '" stroke="' + IC.brassD + '" stroke-width="1.3"/>' +
+                '<rect x="6.4" y="7" width="11.2" height="2.6" rx="1.1" fill="' + IC.brass + '"/>' +
+                '<rect x="6.4" y="11" width="11.2" height="2.6" rx="1.1" fill="' + IC.brass + '"/>' +
+                '<rect x="6.4" y="15" width="7.2" height="2.6" rx="1.1" fill="none" stroke="' + IC.brassD + '" stroke-width="1.2"/>'),
+
+  /* distraction-free: the page pulled out to its own corners */
+  expand:  ricc('<path d="M9 3.6H4.2V8.4M15 3.6h4.8v4.8M9 20.4H4.2v-4.8M15 20.4h4.8v-4.8" ' +
+                'fill="none" stroke="' + IC.ink + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'),
+
+  /* a phrase: two ends of the same line, picked together */
+  phrase:  ricc('<path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4" ' +
+                'fill="none" stroke="' + IC.green + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'),
+
+  /* look-alike ayahs: one passage traced over another */
+  mut:     ricc('<rect x="3.4" y="6.6" width="12.4" height="12.4" rx="2.4" fill="' + IC.skyS + '" stroke="' + IC.skyD + '" stroke-width="1.3"/>' +
+                '<rect x="8.4" y="3.2" width="12.4" height="12.4" rx="2.4" fill="none" stroke="' + IC.sky + '" stroke-width="1.7"/>'),
+
+  download:ricc('<path d="M12 3.4v11" stroke="' + IC.green + '" stroke-width="2.1"/>' +
+                '<path d="M7.4 10l4.6 4.6L16.6 10" fill="none" stroke="' + IC.green + '" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<path d="M4.4 17.6v1.8a1.6 1.6 0 0 0 1.6 1.6h12a1.6 1.6 0 0 0 1.6-1.6v-1.8" fill="none" stroke="' + IC.greenD + '" stroke-width="2" stroke-linecap="round"/>')
 };
 async function mushafIndex(){
   var def = mushafDef();
@@ -8169,9 +8194,12 @@ function renderMushaf(){
   }
   var BL = barL();
   var chip = function(k, ic, lab, on){
+    /* a drawn icon needs a box to sit in; a plain glyph (文, ×, ⋯) sizes off
+       its own font-size and would only shrink inside one */
+    var drawn = /^</.test(ic);
     return '<button class="rdmini" data-rd="' + k + '" title="' + lab + '" aria-label="' + lab + '"' +
       (on === undefined ? "" : ' aria-pressed="' + (on ? "true" : "false") + '"') +
-      '><span class="ic">' + ic + '</span><b>' + lab + '</b></button>';
+      '><span class="ic' + (drawn ? " ic-svg" : "") + '">' + ic + '</span><b>' + lab + '</b></button>';
   };
   if (!RD.sel) h += '<p class="rdnote">' + fmt(Rd.selNote, n(targetLines())) + ' ' + Rd.tap + '</p>';
   h += '<div class="glbar" id="rd-glimpse" style="display:none"></div>';
@@ -8186,16 +8214,16 @@ function renderMushaf(){
          '<div class="rdgrp rdset">' + rdBarControls(BL) + '</div>' +
        '</div>' +
        '<div class="rdtools' + (RD.more ? "" : " tight") + '">' +
-         chip("hide",   "▨", Rd.cover,        RD.hide) +
-         chip("pick",   "⌖", Rd.pick,         RD.pick) +
-         chip("focus",  "⤢", Rd.focus) +
+         chip("hide",   RIC.hide,     Rd.cover,        RD.hide) +
+         chip("pick",   RIC.target,   Rd.pick,         RD.pick) +
+         chip("focus",  RIC.expand,   Rd.focus) +
          '<span class="xtra">' +
-           chip("phrase", "↔", L.rec.phrase,  RD.phrase) +
-           chip("tr",     "文", Rd.tr,         RD.tr !== false) +
-           chip("exam",   "？", L.ex.open) +
-           chip("glimpse","⏱", L.mu.glimpse) +
-           chip("mut",    "≈", L.mut.find) +
-           chip("dl",     "↓", Rd.dl) +
+           chip("phrase", RIC.phrase,   L.rec.phrase,  RD.phrase) +
+           chip("tr",     "文",         Rd.tr,         RD.tr !== false) +
+           chip("exam",   RIC.test,     L.ex.open) +
+           chip("glimpse",RIC.glimpse,  L.mu.glimpse) +
+           chip("mut",    RIC.mut,      L.mut.find) +
+           chip("dl",     RIC.download, Rd.dl) +
          '</span>' +
          chip("more",   RD.more ? "×" : "⋯", RD.more ? Rd.less : Rd.more) +
        '</div>' +
@@ -11440,6 +11468,29 @@ function drJudge(g){
   renderDrill();
 }
 function drWords(vk){ return DR.pg ? exWordsOf(DR.pg, vk) : []; }
+/* A "mut" pair carries a word range, not text - {n:count, s:sourceAyah,
+   o:{ayah: [wordStart, wordEnd]}}, one-based and inclusive, from the
+   Mutashabihat pack (see data/mut/README or its own _format string). The
+   words themselves are wherever that ayah's page happens to be, which is
+   rarely the page open right now - so this loads that page first. Resolved
+   once per item and cached on it, because the same pair is shown again if
+   the reader gets it wrong. */
+async function mutSpanText(e){
+  if (e.g !== undefined) return;
+  try {
+    var ix = await mushafIndex(), q = String(e.vk).split(":");
+    var pn = knPageOf(ix.start || {}, +q[0], +q[1]);
+    await rdLoadFont(pn);
+    var pg = await rdLoadPage(pn);
+    var ws = exWordsOf(pg, e.vk);
+    /* the pack allows more than one matching spot per ayah; the first is the one
+       that put this ayah in this group to begin with */
+    var r = (e.span && e.span[0]) || [1, ws.length];
+    var slice = ws.slice(Math.max(0, r[0] - 1), r[1]);
+    e.g = slice.map(function(w){ return w.g; }).join(" ");
+    e.font = RD.fonts[pn] || "";
+  } catch(err){ e.g = ""; e.font = ""; }
+}
 function drSpans(ws, shown){
   return ws.map(function(w, i){
     return '<span' + (i < shown ? '' : ' class="dim"') + '>' + w.g + '</span>';
@@ -11458,8 +11509,15 @@ function renderDrill(){
 
   var it = DR.queue[DR.qi], q = "", sub = "", crit = "";
   if (it.t === "mut"){
-    var e = it.pair[it.i], f2 = RD.fonts[e.page] || fam;
-    q = '<div class="drq" style="font-family:\'' + f2 + '\'">' + e.g + '</div>';
+    var e = it.pair[it.i];
+    if (e.g === undefined){
+      mutSpanText(e).then(function(){
+        /* only if the reader is still on this same question */
+        if (DR.kind && DR.queue[DR.qi] === it) renderDrill();
+      });
+    }
+    var f2 = e.font || fam;
+    q = '<div class="drq" style="font-family:\'' + f2 + '\'">' + (e.g || "…") + '</div>';
     sub = D.mutQ;
     var opts = exShuffle(it.pair.map(function(x){ return x.vk; }));
     q += '<div class="dropt">' + opts.map(function(vk){

@@ -28,3 +28,7 @@ keystore.properties
 play-*/app-release.aab
 play-*/*.apk
 play-*.zip
+
+# a debug/test APK kept at the project root for easy access is a build
+# output too — rebuild any time with `cd android && ./gradlew assembleDebug`
+/*.apk
