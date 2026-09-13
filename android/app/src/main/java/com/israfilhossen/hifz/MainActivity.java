@@ -74,6 +74,21 @@ public class MainActivity extends BridgeActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             ask.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
+        /* Reading music that is already there - a previous install's downloads,
+           or last version's before the folder was renamed - needs its own
+           permission from Android 6 on. Without it, HifzStore.migrate() and
+           every "is this ayah already downloaded" check silently sees nothing:
+           not "no", just never granted the chance to look. The page only asked
+           for this itself when a reader had nothing downloaded yet (a fresh
+           install) - never on a plain update, which is exactly when there is
+           something old on disk worth finding. Asked here too, every launch
+           until it is answered, so an update gets the same chance a fresh
+           install does. */
+        if (Build.VERSION.SDK_INT >= 23 &&
+            ContextCompat.checkSelfPermission(this, HifzStore.readPermission())
+                != PackageManager.PERMISSION_GRANTED) {
+            ask.add(HifzStore.readPermission());
+        }
         if (!ask.isEmpty()) {
             ActivityCompat.requestPermissions(this, ask.toArray(new String[0]), 7301);
         }
