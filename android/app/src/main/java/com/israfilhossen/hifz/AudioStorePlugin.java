@@ -111,19 +111,30 @@ public class AudioStorePlugin extends Plugin {
 
     @PluginMethod
     public void remove(PluginCall call) {
-        String reciter = call.getString("reciter", "");
+        /* one reciter for an older caller, several for the download screen -
+           a surah can now hold more than one reciter's audio at once, and
+           deleting it means deleting all of them, not just whichever is
+           active in Settings right now */
+        List<String> reciters = new ArrayList<>();
+        JSArray recArr = call.getArray("reciters");
+        try {
+            if (recArr != null) for (int i = 0; i < recArr.length(); i++) reciters.add(recArr.getString(i));
+        } catch (Exception ignored) { }
+        if (reciters.isEmpty()) reciters.add(call.getString("reciter", ""));
         JSArray keys = call.getArray("keys");
         int gone = 0;
         if (keys != null) {
             try {
                 for (int i = 0; i < keys.length(); i++) {
                     String k = keys.getString(i);
-                    File s = HifzStore.sharedFile(reciter, k);
-                    File p = HifzStore.privateFile(getContext(), reciter, k);
-                    File l = new File(new File(HifzStore.legacyRoot(), HifzStore.safe(reciter)), HifzStore.fileName(k));
-                    if (s.exists() && s.delete()) gone++;
-                    if (l.exists() && l.delete()) gone++;
-                    if (p.exists() && p.delete()) gone++;
+                    for (String reciter : reciters) {
+                        File s = HifzStore.sharedFile(reciter, k);
+                        File p = HifzStore.privateFile(getContext(), reciter, k);
+                        File l = new File(new File(HifzStore.legacyRoot(), HifzStore.safe(reciter)), HifzStore.fileName(k));
+                        if (s.exists() && s.delete()) gone++;
+                        if (l.exists() && l.delete()) gone++;
+                        if (p.exists() && p.delete()) gone++;
+                    }
                 }
             } catch (Exception ignored) { }
         }
@@ -179,7 +190,7 @@ public class AudioStorePlugin extends Plugin {
                 if (u != null) for (int k = 0; k < u.length(); k++) us.add(u.getString(k));
                 j.tasks.add(new DownloadService.Task(
                         "f".equals(t.optString("k")), t.optString("key"), t.optInt("page"),
-                        us.toArray(new String[0])));
+                        us.toArray(new String[0]), t.optString("reciter", j.reciter)));
             }
         } catch (Exception e) {
             call.reject("bad job");

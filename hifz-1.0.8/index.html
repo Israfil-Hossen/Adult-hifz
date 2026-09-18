@@ -2460,6 +2460,9 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .dlprev{margin-top:8px}
 .dlpart{font-style:normal;font-size:11.5px;color:var(--ink-3);font-weight:600}
 .dlfoot{margin-top:14px}
+.dlrecrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.dlrecrow>span{font-size:13px;color:var(--ink-2)}
+.dlrecrow .knchip{max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dlbar{height:6px;border-radius:999px;background:var(--paper-2);overflow:hidden;margin:10px 0 6px}
 .dlbar i{display:block;height:100%;background:var(--verdigris);width:0;transition:width .25s}
 .notelog textarea{min-height:44px;height:44px;resize:none;overflow:hidden;transition:height .18s}
@@ -3028,7 +3031,10 @@ body.night .qline .w.hl-p{background:rgba(176,96,132,.30)}
    and the marked word keeps the bottom of the screen it was tapped from */
 body.mushaf.selw .rdcard{display:none!important}
 /* ---------- this page, ayah by ayah ---------- */
-.rdtrs{position:fixed;inset-inline:0;bottom:0;z-index:64;display:none;
+/* above .mxidx (95): a picker sheet like this one is as often opened from
+   inside a full-screen panel (Downloads) as from the reading page, and it
+   has to win either way */
+.rdtrs{position:fixed;inset-inline:0;bottom:0;z-index:96;display:none;
   flex-direction:column;max-height:68dvh;background:var(--card);
   border-radius:18px 18px 0 0;box-shadow:0 -10px 34px rgba(28,32,38,.30)}
 .rdtrs.on{display:flex}
@@ -3133,6 +3139,14 @@ body.night .ctfacts{background:rgba(255,255,255,.07)}
 .mfrow:hover{background:rgba(95,127,82,.12)}
 .mfrow.on{background:rgba(95,127,82,.20);font-weight:600}
 .mfrow.on .mfnm::after{content:" ✓";color:var(--verdigris)}
+/* the reciter picker reuses .mfrow but on a <label>, so the box it wraps
+   still answers a click or a screen reader - just not to the eye */
+.rcrow{display:flex;align-items:center}
+.rcrow input{position:absolute;opacity:0;width:1px;height:1px}
+.rdtrs .trs-ft{flex:0 0 auto;padding:12px 14px calc(12px + env(safe-area-inset-bottom));
+  border-top:1px solid rgba(33,43,54,.08)}
+.rdtrs .trs-ft .abtn{width:100%;justify-content:center}
+body.night .rdtrs .trs-ft{border-color:rgba(255,255,255,.10)}
 .mushafwarn{margin:8px 0 0;font-size:12.5px;color:var(--maroon);line-height:1.5}
 .pggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;padding:12px 2px}
 .pgcell{font-family:var(--mono);font-size:13px;padding:9px 0;border-radius:8px;cursor:pointer;
@@ -5576,31 +5590,36 @@ var DLL = {
        surah:"সূরা", juz:"পারা", all:"পুরো কুরআন", nores:"কিছু পাওয়া যায়নি",
        page:"এই পাতা", sabaq:"আজকের সবক", part:"লেখা আছে · {0}টি আয়াতের অডিও বাকি", retry:"বাকিটুকু আনুন",
        busy:"এখন নামছে — শেষ হলে আবার চাপুন", leaveQ:"ডাউনলোড চলছে। থামাবেন?", pageDone:"পাতা {0} নামানো হলো", noSabaq:"আজকের কোনো সবক ঠিক করা নেই",
-       have:"নামানো আছে", del:"মুছুন", delQ:"{0} ডিভাইস থেকে মুছবেন?", title:"নামানো" },
+       have:"নামানো আছে", del:"মুছুন", delQ:"{0} ডিভাইস থেকে মুছবেন?", title:"নামানো",
+       recPick:"কারী বাছুন", recAll:"সবাই", recN:"{0} জন কারী", recDone:"সম্পন্ন" },
   en:{ ing:"Downloading", prog:"{0}% · {1} / {2} files", prep:"Preparing the list…", bg:"The download carries on if you leave the app — it shows in the notifications", tPage:"Page {0}", tSurahs:"{0} surahs", prevQ:"Recitation downloaded earlier is on this phone. Allow access to the files to connect it again?", prevBtn:"Find earlier downloads", prevNone:"No earlier downloads were found", prevGot:"Connecting earlier downloads", q:"Search surah no or name", pagesHave:"Pages {0} / {1}", pagesGot:"{0} pages are on the device", starting:"Fetching {0} pages…", whichJuz:"Which juz?", thisPageN:"This page ({0})", ayat:"Ayat: {0}", pgs:"Pages {0}–{1}",
        picked:"{0} surahs selected", none:"Nothing selected", clear:"Clear",
        surah:"Surah", juz:"Juz", all:"Whole Qur\u2019an", nores:"Nothing found",
        page:"This page", sabaq:"Today’s lesson", part:"Text ready · {0} ayat without audio", retry:"Fetch the rest",
        busy:"Downloading — press again when it finishes", leaveQ:"A download is running. Stop it?", pageDone:"Page {0} is on the device", noSabaq:"No lesson is set for today",
-       have:"On this device", del:"Delete", delQ:"Remove {0} from the device?", title:"Downloads" },
+       have:"On this device", del:"Delete", delQ:"Remove {0} from the device?", title:"Downloads",
+       recPick:"Choose reciters", recAll:"All", recN:"{0} reciters", recDone:"Done" },
   ur:{ ing:"ڈاؤن لوڈ ہو رہا ہے", prog:"{0}% · {1} / {2} فائلیں", prep:"فہرست تیار ہو رہی ہے…", bg:"ایپ سے نکلنے پر بھی ڈاؤن لوڈ چلتا رہے گا — نوٹیفکیشن میں نظر آئے گا", tPage:"صفحہ {0}", tSurahs:"{0} سورتیں", prevQ:"اس فون پر پہلے ڈاؤن لوڈ کی گئی تلاوت موجود ہے۔ دوبارہ جوڑنے کے لیے فائلوں تک رسائی دیں؟", prevBtn:"پچھلے ڈاؤن لوڈ تلاش کریں", prevNone:"کوئی پچھلا ڈاؤن لوڈ نہیں ملا", prevGot:"پچھلے ڈاؤن لوڈ جوڑے جا رہے ہیں", q:"سورہ نمبر یا نام تلاش کریں", pagesHave:"صفحات {0} / {1}", pagesGot:"{0} صفحے آ گئے", starting:"{0} صفحے آ رہے ہیں…", whichJuz:"کون سا پارہ؟", thisPageN:"یہ صفحہ ({0})", ayat:"آیات: {0}", pgs:"صفحات {0}–{1}",
        picked:"{0} سورتیں منتخب", none:"کچھ منتخب نہیں", clear:"صاف کریں",
        surah:"سورہ", juz:"پارہ", all:"مکمل قرآن", nores:"کچھ نہیں ملا",
        page:"یہ صفحہ", sabaq:"آج کا سبق", part:"متن موجود · {0} آیات کی آواز باقی", retry:"باقی لائیں",
        busy:"ابھی ڈاؤن لوڈ ہو رہا ہے — مکمل ہونے پر دوبارہ دبائیں", leaveQ:"ڈاؤن لوڈ جاری ہے۔ روک دیں؟", pageDone:"صفحہ {0} ڈیوائس پر آ گیا", noSabaq:"آج کا کوئی سبق مقرر نہیں",
-       have:"ڈیوائس پر موجود", del:"مٹائیں", delQ:"{0} ڈیوائس سے ہٹائیں؟", title:"ڈاؤن لوڈ" },
+       have:"ڈیوائس پر موجود", del:"مٹائیں", delQ:"{0} ڈیوائس سے ہٹائیں؟", title:"ڈاؤن لوڈ",
+       recPick:"قاری منتخب کریں", recAll:"سب", recN:"{0} قاری", recDone:"مکمل" },
   zh:{ ing:"正在下载", prog:"{0}% · {1} / {2} 个文件", prep:"正在准备清单…", bg:"离开应用后下载仍会继续 —— 可在通知栏查看", tPage:"第 {0} 页", tSurahs:"{0} 章", prevQ:"本机上有以前下载的诵读。允许读取这些文件以重新连接吗？", prevBtn:"查找以前的下载", prevNone:"没有找到以前的下载", prevGot:"正在重新连接以前的下载", q:"搜索苏拉编号或名称", pagesHave:"页 {0} / {1}", pagesGot:"已存入 {0} 页", starting:"正在取 {0} 页…", whichJuz:"哪一卷？", thisPageN:"本页（{0}）", ayat:"节数：{0}", pgs:"第 {0}–{1} 页",
        picked:"已选 {0} 章", none:"未选择", clear:"清除",
        surah:"苏拉", juz:"卷", all:"全本古兰经", nores:"未找到",
        page:"本页", sabaq:"今日功课", part:"文字已备 · {0} 节缺诵读", retry:"把剩下的取回",
        busy:"正在下载 —— 完成后再点", leaveQ:"下载进行中。要停止吗？", pageDone:"第 {0} 页已存入本机", noSabaq:"今天还没定功课",
-       have:"已在设备上", del:"删除", delQ:"从设备移除 {0}？", title:"下载" },
+       have:"已在设备上", del:"删除", delQ:"从设备移除 {0}？", title:"下载",
+       recPick:"选择诵读者", recAll:"全部", recN:"{0} 位诵读者", recDone:"完成" },
   ar:{ ing:"جارٍ التنزيل", prog:"{0}% · {1} / {2} ملف", prep:"جارٍ تجهيز القائمة…", bg:"يستمر التنزيل إذا غادرت التطبيق — ويظهر في الإشعارات", tPage:"صفحة {0}", tSurahs:"{0} سور", prevQ:"على هذا الهاتف تلاوة نُزّلت من قبل. هل تسمح بالوصول إلى الملفات لربطها من جديد؟", prevBtn:"ابحث عن التنزيلات السابقة", prevNone:"لم يُعثر على تنزيلات سابقة", prevGot:"جارٍ ربط التنزيلات السابقة", q:"ابحث برقم السورة أو اسمها", pagesHave:"الصفحات {0} / {1}", pagesGot:"{0} صفحة على الجهاز", starting:"جارٍ جلب {0} صفحة…", whichJuz:"أي جزء؟", thisPageN:"هذه الصفحة ({0})", ayat:"الآيات: {0}", pgs:"الصفحات {0}–{1}",
        picked:"{0} سور مختارة", none:"لم يُختر شيء", clear:"مسح",
        surah:"سورة", juz:"جزء", all:"المصحف كامل", nores:"لا نتائج",
        page:"هذه الصفحة", sabaq:"درس اليوم", part:"النص جاهز · {0} آيات بلا صوت", retry:"أحضِر الباقي",
        busy:"التنزيل جارٍ — اضغط مرة أخرى عند انتهائه", leaveQ:"هناك تنزيل جارٍ. أوقفه؟", pageDone:"صفحة {0} على الجهاز", noSabaq:"لا درس محدَّد لليوم",
-       have:"على الجهاز", del:"احذف", delQ:"إزالة {0} من الجهاز؟", title:"التنزيلات" },
+       have:"على الجهاز", del:"احذف", delQ:"إزالة {0} من الجهاز؟", title:"التنزيلات",
+       recPick:"اختر القرّاء", recAll:"الكل", recN:"{0} قارئ", recDone:"تم" },
 };
 function dlL(){ return DLL[L.code] || DLL.en; }
 var DL = { sel:{}, q:"", ix:null };
@@ -5724,6 +5743,8 @@ async function dlRender(){
     '<input type="search" id="dl-q" placeholder="' + esc(T.q) + '" value="' + esc(DL.q) + '">' +
     '<div class="dllist">' + rows + '</div>' +
     '<div class="dlfoot">' +
+      '<div class="dlrecrow"><span>' + esc(T.recPick) + '</span>' +
+        '<button type="button" class="knchip" id="dl-recbtn"></button></div>' +
       '<label class="chk"><input type="checkbox" id="dl-audio"' +
         (DL.audio === false ? '' : ' checked') + '> ' + L.dlg.audio + '</label>' +
       '<div class="dlbar"><i id="dl-bar-i" style="width:0%"></i></div>' +
@@ -5740,6 +5761,9 @@ async function dlRender(){
 
   var ac = document.getElementById("dl-audio");
   if (ac) ac.onchange = function(){ DL.audio = this.checked; };
+  recPickSync();
+  var rcb = document.getElementById("dl-recbtn");
+  if (rcb) rcb.onclick = recPick;
   var qi = document.getElementById("dl-q");
   if (qi) qi.oninput = function(){
     DL.q = this.value;
@@ -5903,7 +5927,9 @@ async function dlDelete(sn){
   if (A && A.remove){
     var ks = [];
     for (var ai = 1; ai <= (AYAHS[sn - 1] || 0); ai++) ks.push(sn + ":" + ai);
-    try { await A.remove({ reciter:S.settings.reciter || "", keys:ks }); } catch(e){}
+    /* a surah downloaded in three qaris' voices needs all three removed, not
+       just whichever one happens to be playing today */
+    try { await A.remove({ reciter:S.settings.reciter || "", reciters:dlReciters(), keys:ks }); } catch(e){}
   }
   try {
     var c = await rdCache(); if (!c) return;
@@ -6484,8 +6510,8 @@ function trAudioSrc(vk){
   var pad = function(n, w){ n = String(n); while (n.length < w) n = "0" + n; return n; };
   return TR_AUDIO_BASE + pad(q[0], 3) + pad(q[1], 3) + ".mp3";
 }
-function audioSrcs(vk){
-  var rec = S.settings.reciter, cands = audioCands(vk, rec);
+function audioSrcsFor(vk, rec){
+  var cands = audioCands(vk, rec);
   if (rec !== "Alafasy_128kbps") cands = cands.concat(audioCands(vk, "Alafasy_128kbps"));
   /* the host that answered last time goes first, so after one success the app
      stops spending the watchdog on a host this network blocks */
@@ -6495,6 +6521,7 @@ function audioSrcs(vk){
   cands.forEach(function(c){ if (!seen[c.u]){ seen[c.u] = 1; list.push(c); } });
   return list;
 }
+function audioSrcs(vk){ return audioSrcsFor(vk, S.settings.reciter); }
 var RD = { page:0, hide:0, curtain:0, curtainOn:false, blind:false, loops:1, speed:1, files:{}, pages:{}, fonts:{}, blobs:{}, busy:false, queue:[], qi:0, left:0, cont:false, stopAt:0, sleepAt:0, sleepFor:0, ka:false, turning:false, resumeAt:0,
   /* three things that happen between one ayah and the next: hear it again,
      hear what it means, or say it yourself into the gap. */
@@ -7119,10 +7146,25 @@ async function asDirs(){
    one ended and writes that down. */
 var DLJ = { running:false, id:"", t:0 };
 function dlBusy(){ return RD.busy || DLJ.running; }
+/* Which reciters a download reaches for. One by default - whichever is
+   playing today - but the reader can pick several in the download screen so
+   a page or a whole juz comes down read by more than one qari at once, each
+   kept in that qari's own folder. */
+function dlReciters(){
+  var r = S.settings.dlReciters;
+  if (r && r.length) return r.filter(function(id){ return RECITERS.some(function(x){ return x.id === id; }); });
+  return [S.settings.reciter];
+}
+function dlRecName(id){
+  var r = RECITERS.filter(function(x){ return x.id === id; })[0];
+  return r ? (r.nm[L.code] || r.nm.en) : id;
+}
 async function dlStart(list, withAudio, singlePage, chosen, title){
   var A = asPlugin(), T = dlL();
+  var recs = dlReciters();
   if (!A || !A.start){
-    /* the web build: the old loop, in the page */
+    /* the web build: the old loop, in the page - one reciter, the active one,
+       since it has no native service to fan a job out across several */
     var res0 = await dlPages(list, withAudio);
     dlRecord(res0, list, singlePage, chosen);
     return;
@@ -7144,13 +7186,17 @@ async function dlStart(list, withAudio, singlePage, chosen, title){
         var keys = [];
         try { var pgd = await rdLoadPage(pn); keys = (pgd && pgd.keys) || []; } catch(e){}
         keys.forEach(function(k){
-          tasks.push({ k:"a", key:k, page:pn, urls:audioSrcs(k).map(function(x){ return x.u; }) });
+          recs.forEach(function(rec){
+            tasks.push({ k:"a", key:k, page:pn, reciter:rec, urls:audioSrcsFor(k, rec).map(function(x){ return x.u; }) });
+          });
         });
       }
     }
     var id = "j" + Date.now();
+    var ttl = title || T.title;
+    if (withAudio && recs.length > 1) ttl = ttl + " · " + fmt(T.recN, n(recs.length));
     var r = await A.start({
-      id:id, reciter:S.settings.reciter || "", title:title || T.title,
+      id:id, reciter:recs[0] || "", title:ttl,
       txt:{ ing:T.ing, done:L.dlg.done, stopped:L.dlg.stopped, stop:L.dlg.stop, missed:L.dlg.missed },
       meta:JSON.stringify({ list:list, single:singlePage || 0, chosen:chosen || null }),
       pages:list, tasks:tasks
@@ -11764,6 +11810,55 @@ function mushafPick(){
       mushafPickClose();
       drawerClose();
       mushafChoose(b.dataset.mf);
+    };
+  });
+}
+
+/* Who to download in. One box each, not one choice - a reader who wants
+   Husary for memorising and Sudais for listening can tick both, and each
+   ayah of each comes down into that reciter's own folder, so nothing has
+   to be fetched twice just because the active reciter changed since. */
+function recPickClose(){
+  var el = document.getElementById("rc-pick");
+  if (el) el.classList.remove("on");
+}
+function recPickSync(){
+  var btn = document.getElementById("dl-recbtn");
+  if (!btn) return;
+  var recs = dlReciters(), T = dlL();
+  btn.textContent = recs.length > 1 ? fmt(T.recN, n(recs.length)) : dlRecName(recs[0]);
+}
+function recPick(){
+  var el = document.getElementById("rc-pick");
+  if (!el){
+    el = document.createElement("div");
+    el.id = "rc-pick"; el.className = "rdtrs";
+    document.body.appendChild(el);
+  }
+  var picked = {};
+  dlReciters().forEach(function(id){ picked[id] = true; });
+  var T = dlL();
+  el.innerHTML = '<div class="trs-hd"><span class="trs-ttl">' + esc(T.recPick) +
+    '</span><button class="trs-x" aria-label="' + esc(uit("close")) + '">✕</button></div>' +
+    '<div class="trs-bd">' + RECITERS.map(function(r){
+      return '<label class="mfrow rcrow' + (picked[r.id] ? " on" : "") + '"><input type="checkbox" data-rc="' + r.id + '"' +
+        (picked[r.id] ? " checked" : "") + '><span class="mfnm">' + esc(r.nm[L.code] || r.nm.en) + '</span></label>';
+    }).join("") + '</div>' +
+    '<div class="trs-ft"><button class="abtn go" id="rc-done">' + esc(T.recDone) + '</button></div>';
+  el.classList.add("on");
+  el.querySelector(".trs-x").onclick = recPickClose;
+  el.querySelector("#rc-done").onclick = recPickClose;
+  qa("#rc-pick [data-rc]").forEach(function(cb){
+    cb.onchange = function(){
+      var ids = qa("#rc-pick [data-rc]").filter(function(x){ return x.checked; }).map(function(x){ return x.dataset.rc; });
+      /* the box the reader is reading from today stays in the list even if
+         they uncheck every other one - a download with nobody to read it
+         makes no sense, and there is always at least the one already playing */
+      if (!ids.length) ids = [S.settings.reciter];
+      S.settings.dlReciters = ids;
+      save();
+      cb.closest("label").classList.toggle("on", cb.checked);
+      recPickSync();
     };
   });
 }

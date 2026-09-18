@@ -55,8 +55,14 @@ public class DownloadService extends Service {
         final String key;
         final int page;
         final String[] urls;
-        Task(boolean font, String key, int page, String[] urls) {
+        /* which reciter this ayah is in - blank for a font task, which has none.
+           Carried per task, not per job, because one download can now cover
+           several reciters at once: each ayah of each reciter is its own task,
+           saved into that reciter's own folder. */
+        final String reciter;
+        Task(boolean font, String key, int page, String[] urls, String reciter) {
             this.font = font; this.key = key; this.page = page; this.urls = urls;
+            this.reciter = reciter;
         }
     }
 
@@ -209,8 +215,9 @@ public class DownloadService extends Service {
             out = HifzStore.fontFile(this, vp[0], t.page);
             if (HifzStore.ok(out)) return true;
         } else {
-            if (HifzStore.existing(this, j.reciter, t.key) != null) return true;
-            out = HifzStore.target(this, j.reciter, t.key);
+            String rec = t.reciter != null && t.reciter.length() > 0 ? t.reciter : j.reciter;
+            if (HifzStore.existing(this, rec, t.key) != null) return true;
+            out = HifzStore.target(this, rec, t.key);
         }
         for (String u : t.urls) {
             if (j.stop) return false;
