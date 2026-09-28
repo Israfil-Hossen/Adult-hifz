@@ -2460,6 +2460,12 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .dlprev{margin-top:8px}
 .dlpart{font-style:normal;font-size:11.5px;color:var(--ink-3);font-weight:600}
 .dlfoot{margin-top:14px}
+.lsnow{margin:0 0 16px;padding:14px 16px;border-radius:16px;background:rgba(95,127,82,.12);
+  border:1px solid rgba(95,127,82,.28)}
+.lsnowk{font-size:12.5px;color:var(--verdigris);font-weight:600;letter-spacing:.02em}
+.lsnowt{font-family:var(--display);font-size:19px;margin:4px 0 10px;color:var(--ink)}
+.lsnowb{display:flex;gap:8px;flex-wrap:wrap}
+.lsnowb .abtn{flex:1 1 auto;justify-content:center}
 .dlrecrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
 .dlrecrow>span{font-size:13px;color:var(--ink-2)}
 .dlrecrow .knchip{max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -5028,7 +5034,7 @@ function renderChrome(){
       qa(".view").forEach(function(x){ x.classList.remove("on"); });
       /* leaving the mushaf silences it: the recitation kept running under the
          other tabs with no visible way to stop it */
-      if (t.dataset.v !== "mushaf"){ if (typeof rdStop === "function") rdStop(); if (typeof rdMeanClose === "function") rdMeanClose(); }
+      if (t.dataset.v !== "mushaf"){ if (typeof rdStop === "function" && !RD.listen) rdStop(); if (typeof rdMeanClose === "function") rdMeanClose(); }
       document.getElementById("v-" + t.dataset.v).classList.add("on");
       document.body.classList.toggle("mushaf", t.dataset.v === "mushaf");
       if (t.dataset.v === "mushaf"){ if (S && S.settings && S.settings.focus) rdFocusIn(false); }
@@ -7586,6 +7592,9 @@ function rdStop(){
   try { kaNoteStop(); } catch(e){}
   rdClear("on"); rdClear("now");
   rdTrLight(null);
+  /* where a listening session stopped is worth keeping across an app kill -
+     written once here, not once per ayah */
+  if (RD.listen){ RD.listen = null; try { save(); } catch(e){} }
   rdSyncBtns();
 }
 function rdMicToggle(){
@@ -7630,7 +7639,7 @@ function rdMedia(vk){
 function rdSyncBtns(){
   var live = !!(rdAudio && !rdAudio.paused);
   var lsOpenNow = document.getElementById("listen");
-  if (lsOpenNow && !lsOpenNow.hidden && typeof lsFoot === "function") lsFoot();
+  if (lsOpenNow && !lsOpenNow.hidden && typeof lsFoot === "function"){ lsFoot(); lsNowSync(); }
   try {
     if ("mediaSession" in navigator)
       navigator.mediaSession.playbackState = live ? "playing" : (rdAudio ? "paused" : "none");
@@ -7869,6 +7878,9 @@ function fabWire(){
 }
 function rdPlay(keys, loops, noFollow){
   rdStop();
+  /* a session started from the Listen screen carries on while the reader goes
+     elsewhere; anything else (memorising on the page) is tied to the page */
+  RD.listen = RD.listenNext || null; RD.listenNext = null;
   /* a single tapped word keeps its full panel; a whole recitation only opens
      the sheet if the reader has not already waved it away */
   RD.follow = !noFollow && (!S || !S.settings || S.settings.wmFollow !== 0);
@@ -8022,6 +8034,9 @@ function rdNext(){
      memory only — the page turn already writes, and saving once an ayah would
      mean thousands of writes and sync pushes across one night of listening. */
   if (S && S.settings) S.settings.lastPlayed = vk;
+  /* a listening session keeps its own place, so memorising on the page in
+     between does not move where "carry on" picks up */
+  if (RD.listen && S && S.settings) S.settings.lastListenAt = vk;
   var tok = (RD.tok = (RD.tok || 0) + 1);
   rdClear("on"); rdClear("now");
   var els = qa('.qline .w[data-vk="' + vk + '"]');
@@ -8765,7 +8780,7 @@ function rdAct(k, b){
       else if (k === "blind"){ RD.blind = !RD.blind; renderMushaf(); }
       else if (k === "glimpse"){ rdGlimpse(); }
       else if (k === "dots"){ rdDotsOpen(b); }
-      else if (k === "listen"){ rdStop(); lsOpen(); }
+      else if (k === "listen"){ lsOpen(); }
       else if (k === "memtog"){
         if (RD.memHeld){ RD.memHeld = false; return; }
         if (pg) rdMarkMem(pg);
@@ -12025,27 +12040,27 @@ function drawerFill(){
    a mushaf only to listen, and for them the page is not a unit of anything — so
    this picks a surah, a juz or a run of pages and plays straight through it. */
 var LSL = {
-  bn:{ ttl:"শুধু শুনুন", ttl2:"তেলাওয়াত শুনুন", pickQari:"ক্বারী নির্বাচন", fromPage:"পৃষ্ঠা থেকে তেলাওয়াত", fromSurah:"সূরা তেলাওয়াত", start:"শুরু", until:"পর্যন্ত", repH:"পুনরাবৃত্তি সেটিংস", repAyah:"আয়াত পুনরাবৃত্তি", repAll:"সমস্তটার পুনরাবৃত্তি", trHear:"প্রতিটি আয়াতের পরে অর্থ শুনুন", go:"অডিও প্লে", manyPages:"একাধিক পৃষ্ঠা শুনুন", more:"আরও অপশন", surah:"সূরা", juz:"পারা", page:"পৃষ্ঠা", resume:"যেখানে ছিলেন",
+  bn:{ now:"এখন বাজছে", cont:"চালিয়ে যান", was:"যেখানে থেমেছিলেন", view:"পাতাটা দেখুন", ttl:"শুধু শুনুন", ttl2:"তেলাওয়াত শুনুন", pickQari:"ক্বারী নির্বাচন", fromPage:"পৃষ্ঠা থেকে তেলাওয়াত", fromSurah:"সূরা তেলাওয়াত", start:"শুরু", until:"পর্যন্ত", repH:"পুনরাবৃত্তি সেটিংস", repAyah:"আয়াত পুনরাবৃত্তি", repAll:"সমস্তটার পুনরাবৃত্তি", trHear:"প্রতিটি আয়াতের পরে অর্থ শুনুন", go:"অডিও প্লে", manyPages:"একাধিক পৃষ্ঠা শুনুন", more:"আরও অপশন", surah:"সূরা", juz:"পারা", page:"পৃষ্ঠা", resume:"যেখানে ছিলেন",
        find:"সূরা খুঁজুন…",
        from:"থেকে", to:"পর্যন্ত", play:"শুনুন", sleep:"পরে থামুক", off:"বন্ধ", min:"{0} মিনিট",
        none:"এখনো কিছু শোনা হয়নি", at:"শেষ শুনেছিলেন · {0}", open:"শুধু শুনুন",
        hint:"পাতা নিজেই উলটাবে। থামাতে ■ চাপুন।" },
-  en:{ ttl:"Listen", ttl2:"Listen to the recitation", pickQari:"Choose a reciter", fromPage:"Recite from a page", fromSurah:"Recite a surah", start:"From", until:"Until", repH:"Repeat settings", repAyah:"Repeat each ayah", repAll:"Repeat the whole thing", trHear:"Hear the meaning after each ayah", go:"Play", manyPages:"Listen to several pages", more:"More options", surah:"Surah", juz:"Juz", page:"Pages", resume:"Where you were",
+  en:{ now:"Now playing", cont:"Carry on", was:"Where you stopped", view:"Show the page", ttl:"Listen", ttl2:"Listen to the recitation", pickQari:"Choose a reciter", fromPage:"Recite from a page", fromSurah:"Recite a surah", start:"From", until:"Until", repH:"Repeat settings", repAyah:"Repeat each ayah", repAll:"Repeat the whole thing", trHear:"Hear the meaning after each ayah", go:"Play", manyPages:"Listen to several pages", more:"More options", surah:"Surah", juz:"Juz", page:"Pages", resume:"Where you were",
        find:"Find a surah…",
        from:"From", to:"To", play:"Listen", sleep:"Stop after", off:"Off", min:"{0} min",
        none:"Nothing played yet", at:"You stopped at {0}", open:"Listen only",
        hint:"The pages turn themselves. Press ■ to stop." },
-  ur:{ ttl:"صرف سنیں", ttl2:"تلاوت سنیے", pickQari:"قاری منتخب کریں", fromPage:"صفحے سے تلاوت", fromSurah:"سورہ کی تلاوت", start:"سے", until:"تک", repH:"تکرار کی ترتیبات", repAyah:"ہر آیت کی تکرار", repAll:"پورے کی تکرار", trHear:"ہر آیت کے بعد معنی سنیں", go:"چلائیں", manyPages:"کئی صفحے سنیں", more:"مزید آپشنز", surah:"سورہ", juz:"پارہ", page:"صفحات", resume:"جہاں تھے",
+  ur:{ now:"ابھی چل رہا ہے", cont:"جاری رکھیں", was:"جہاں رکے تھے", view:"صفحہ دیکھیں", ttl:"صرف سنیں", ttl2:"تلاوت سنیے", pickQari:"قاری منتخب کریں", fromPage:"صفحے سے تلاوت", fromSurah:"سورہ کی تلاوت", start:"سے", until:"تک", repH:"تکرار کی ترتیبات", repAyah:"ہر آیت کی تکرار", repAll:"پورے کی تکرار", trHear:"ہر آیت کے بعد معنی سنیں", go:"چلائیں", manyPages:"کئی صفحے سنیں", more:"مزید آپشنز", surah:"سورہ", juz:"پارہ", page:"صفحات", resume:"جہاں تھے",
        find:"سورہ تلاش کریں…",
        from:"سے", to:"تک", play:"سنیں", sleep:"بعد میں رکے", off:"بند", min:"{0} منٹ",
        none:"ابھی کچھ نہیں سنا", at:"آپ یہاں رکے تھے · {0}", open:"صرف سنیں",
        hint:"صفحے خود پلٹیں گے۔ روکنے کے لیے ■ دبائیں۔" },
-  zh:{ ttl:"只听", ttl2:"听诵读", pickQari:"选择诵者", fromPage:"从页诵读", fromSurah:"诵读整章", start:"从", until:"到", repH:"重复设置", repAyah:"每节重复", repAll:"全部重复", trHear:"每节之后听释义", go:"播放", manyPages:"连续听多页", more:"更多选项", surah:"苏拉", juz:"卷", page:"页", resume:"上次听到",
+  zh:{ now:"正在播放", cont:"继续", was:"上次停在", view:"查看这一页", ttl:"只听", ttl2:"听诵读", pickQari:"选择诵者", fromPage:"从页诵读", fromSurah:"诵读整章", start:"从", until:"到", repH:"重复设置", repAyah:"每节重复", repAll:"全部重复", trHear:"每节之后听释义", go:"播放", manyPages:"连续听多页", more:"更多选项", surah:"苏拉", juz:"卷", page:"页", resume:"上次听到",
        find:"搜索章节…",
        from:"从", to:"到", play:"播放", sleep:"稍后停止", off:"关闭", min:"{0} 分钟",
        none:"还没有播放过", at:"上次停在 {0}", open:"只听",
        hint:"书页会自动翻。按 ■ 停止。" },
-  ar:{ ttl:"للاستماع فقط", ttl2:"استمع إلى التلاوة", pickQari:"اختر القارئ", fromPage:"التلاوة من صفحة", fromSurah:"تلاوة سورة", start:"من", until:"إلى", repH:"إعدادات التكرار", repAyah:"تكرار كل آية", repAll:"تكرار الكل", trHear:"اسمع المعنى بعد كل آية", go:"شغّل", manyPages:"استمع إلى عدة صفحات", more:"خيارات أخرى", surah:"سورة", juz:"جزء", page:"صفحات", resume:"حيث توقفت",
+  ar:{ now:"يُتلى الآن", cont:"تابِع", was:"حيث توقفت", view:"اعرض الصفحة", ttl:"للاستماع فقط", ttl2:"استمع إلى التلاوة", pickQari:"اختر القارئ", fromPage:"التلاوة من صفحة", fromSurah:"تلاوة سورة", start:"من", until:"إلى", repH:"إعدادات التكرار", repAyah:"تكرار كل آية", repAll:"تكرار الكل", trHear:"اسمع المعنى بعد كل آية", go:"شغّل", manyPages:"استمع إلى عدة صفحات", more:"خيارات أخرى", surah:"سورة", juz:"جزء", page:"صفحات", resume:"حيث توقفت",
        find:"ابحث عن سورة…",
        from:"من", to:"إلى", play:"استمع", sleep:"التوقف بعد", off:"إيقاف", min:"{0} دقيقة",
        none:"لم يُشغَّل شيء بعد", at:"توقفت عند {0}", open:"للاستماع فقط",
@@ -12057,6 +12072,13 @@ function lsOpen(){
   var el = document.getElementById("listen");
   if (!el) return;
   drawerClose();
+  /* the form shows the last thing listened to, so plain ▶ repeats it rather
+     than falling back to Al-Baqarah */
+  var ll = S.settings.lastListen;
+  if (ll && !rdAudio){
+    if (ll.mode === "surah" && ll.surah){ LSP.mode = "surah"; LSP.surah = ll.surah; LSP.a = ll.a || 1; LSP.b = ll.b || 0; }
+    else if (ll.mode === "page" && ll.p0){ LSP.mode = "page"; LSP.p0 = ll.p0; LSP.p1 = ll.p1 || ll.p0; }
+  }
   el.hidden = false;
   lsRender();
 }
@@ -12088,8 +12110,13 @@ async function lsPlay(p0, p1, vk0){
     var keys = pg.keys.slice();
     /* a surah rarely begins where its page does — start on its first ayah */
     if (vk0){ var ix = keys.indexOf(vk0); if (ix > 0) keys = keys.slice(ix); }
+    if (!S.settings.lastListen || S.settings.lastListen.mode !== "page" || !vk0){
+      S.settings.lastListen = { mode:"page", p0:p0, p1:RD.stopAt };
+      save();
+    }
     /* the repeat the picker was set to, not a hardcoded one - choosing "endless"
        and then hearing it once is the control doing nothing */
+    RD.listenNext = S.settings.lastListen;
     rdPlay(keys, RD.loops || 1);
   } catch(e){ rdStop(); }
 }
@@ -12099,15 +12126,77 @@ function lsNowText(){
   if (S.settings.lastPlayed) return fmt(T.at, L.rd.ay + " " + ayLabel(S.settings.lastPlayed));
   return T.none;
 }
-/* resume without going back through the picker */
-function lsResume(){
-  if (rdAudio){ rdTogglePause(); lsFoot(); return; }
-  var last = S.settings.lastPlayed;
-  if (!last){ return; }
-  mushafIndex().then(function(ix){
-    var st = (ix && ix.start) || {}, q = String(last).split(":");
-    lsPlay(knPageOf(st, +q[0], +q[1]), TOTAL_PAGES, last);
-  }).catch(function(){});
+/* resume without going back through the picker - and stop where the session
+   it belongs to stopped: carrying on Al-Kahf from ayah 45 ends at 110, not at
+   the end of the Qur'an */
+function lsResumeInfo(){
+  var last = S.settings.lastListenAt, ll = S.settings.lastListen;
+  if (!last || !ll) return null;
+  var q = String(last).split(":"), sn = +q[0];
+  if (ll.mode === "surah"){
+    if (sn !== ll.surah || +q[1] >= ll.b) return null;   /* finished, or elsewhere */
+    return { vk:last, sn:sn };
+  }
+  return { vk:last, sn:sn };
+}
+async function lsResume(){
+  if (rdAudio){ rdTogglePause(); lsNowSync(); return; }
+  var r = lsResumeInfo(), ll = S.settings.lastListen;
+  if (!r) return;
+  var ix = await mushafIndex(), st = (ix && ix.start) || {}, q = r.vk.split(":");
+  var page = knPageOf(st, +q[0], +q[1]);
+  if (ll.mode === "surah"){
+    var keys = ayRange(r.vk, ll.surah + ":" + ll.b);
+    lsClose();
+    RD.cont = false; RD.stopAt = 0;
+    if (RD.sleepFor) RD.sleepAt = Date.now() + RD.sleepFor * 60000;
+    openMushaf(page);
+    try {
+      try { await rdLoadFont(page); } catch(e){}
+      await rdLoadPage(page);
+      RD.listenNext = ll;
+      rdPlay(keys, RD.loops || 1);
+    } catch(e){ rdStop(); }
+    return;
+  }
+  lsPlay(page, ll.p1 || TOTAL_PAGES, r.vk);
+}
+/* the card at the top of Listen: what is playing now, or where it stopped */
+function lsNowHTML(){
+  var T = lsL(), vk = null, live = false;
+  if (rdAudio && RD.listen){
+    vk = RD.queue[Math.max(0, RD.qi - 1)] || S.settings.lastListenAt;
+    live = !rdAudio.paused;
+    if (!vk) return "";
+    var q = vk.split(":");
+    return '<div class="lsnow" id="ls-now"><div class="lsnowk">' + esc(T.now) + '</div>' +
+      '<div class="lsnowt">' + n(+q[0]) + ". " + esc(surahName(+q[0])) + " \u00b7 " + L.rd.ay + " " + n(+q[1]) + '</div>' +
+      '<div class="lsnowb">' +
+        '<button class="abtn go" id="ls-np">' + (live ? "\u2016 " + esc(L.rd.pause) : "\u25b6 " + esc(L.rd.resume)) + '</button>' +
+        '<button class="abtn" id="ls-ns">' + esc(L.rd.stop) + '</button>' +
+        '<button class="abtn" id="ls-nv">' + esc(T.view) + '</button>' +
+      '</div></div>';
+  }
+  var r = lsResumeInfo();
+  if (!r) return "";
+  var q2 = r.vk.split(":");
+  return '<div class="lsnow" id="ls-now"><div class="lsnowk">' + esc(T.was) + '</div>' +
+    '<div class="lsnowt">' + n(+q2[0]) + ". " + esc(surahName(+q2[0])) + " \u00b7 " + L.rd.ay + " " + n(+q2[1]) + '</div>' +
+    '<div class="lsnowb"><button class="abtn go" id="ls-nr">\u25b6 ' + esc(T.cont) + '</button></div></div>';
+}
+function lsNowWire(){
+  var g = function(id){ return document.getElementById(id); };
+  if (g("ls-np")) g("ls-np").onclick = function(){ rdTogglePause(); lsNowSync(); };
+  if (g("ls-ns")) g("ls-ns").onclick = function(){ rdStop(); lsNowSync(); lsFoot(); };
+  if (g("ls-nv")) g("ls-nv").onclick = function(){ lsClose(); openMushaf(0); };
+  if (g("ls-nr")) g("ls-nr").onclick = function(){ lsResume(); };
+}
+/* keep the card honest while the recitation moves on */
+function lsNowSync(){
+  var box = document.getElementById("ls-nowbox");
+  if (!box) return;
+  box.innerHTML = lsNowHTML();
+  lsNowWire();
 }
 function lsFoot(){
   var T = lsL(), f = document.getElementById("ls-foot");
@@ -12147,10 +12236,16 @@ async function lsPlayChoice(){
     lsClose();
     RD.cont = false; RD.stopAt = 0;
     if (RD.sleepFor) RD.sleepAt = Date.now() + RD.sleepFor * 60000;
-    openMushaf(r.a);
+    S.settings.lastListen = { mode:"surah", surah:LSP.surah, a:LSP.a, b:LSP.b };
+    save();
+    /* start on the page of the first ayah asked for, not the surah's first page */
+    var ix0 = DL.ix || {}, q0 = keys[0].split(":");
+    var pStart = (ix0.start && LSP.a > 1) ? knPageOf(ix0.start, +q0[0], +q0[1]) : r.a;
+    openMushaf(pStart);
     try {
-      try { await rdLoadFont(r.a); } catch(e){}
-      await rdLoadPage(r.a);
+      try { await rdLoadFont(pStart); } catch(e){}
+      await rdLoadPage(pStart);
+      RD.listenNext = S.settings.lastListen;
       rdPlay(keys, RD.loops || 1);
     } catch(e){ rdStop(); }
     return;
@@ -12206,6 +12301,7 @@ async function lsRender(){
   };
 
   body.innerHTML =
+    '<div id="ls-nowbox">' + lsNowHTML() + '</div>' +
     '<div class="lsform">' +
       '<label class="lslab2">' + esc(T.pickQari) + '</label>' +
       '<select id="lf-qari">' + RECITERS.map(function(r){
@@ -12251,9 +12347,6 @@ async function lsRender(){
       '<select id="lf-sleep">' + [0,10,20,30,45,60].map(function(m){
         return '<option value="' + m + '"' + ((RD.sleepFor || 0) === m ? " selected" : "") + '>' +
                (m ? fmt(T.min, n(m)) : T.off) + '</option>'; }).join("") + '</select>' +
-      (S.settings.lastPlayed
-        ? '<button class="lsresume" id="lf-resume">' + esc(fmt(T.at, L.rd.ay + " " + ayLabel(S.settings.lastPlayed))) + '</button>'
-        : '') +
     '</div>';
 
   var on = function(id, ev, fn){ var e = document.getElementById(id); if (e) e[ev] = fn; };
@@ -12296,11 +12389,7 @@ async function lsRender(){
     RD.trAudio = this.checked; S.settings.trAudio = this.checked ? 1 : 0; save();
   });
   on("lf-sleep", "onchange", function(){ lsSleepSet(+this.value); });
-  on("lf-resume", "onclick", async function(){
-    var last = S.settings.lastPlayed;
-    var ix = await mushafIndex(), st = ix.start || {}, q = String(last).split(":");
-    lsPlay(knPageOf(st, +q[0], +q[1]), TOTAL_PAGES, last);
-  });
+  lsNowWire();
   lsFoot();
 }
 ;
@@ -13054,7 +13143,7 @@ function goView(v, noPush){
      they still need the view switch the tabs used to perform */
   qa(".tab").forEach(function(x){ x.setAttribute("aria-selected", "false"); });
   qa(".view").forEach(function(x){ x.classList.remove("on"); });
-  if (typeof rdStop === "function") rdStop();
+  if (typeof rdStop === "function" && !RD.listen) rdStop();
   if (typeof rdMeanClose === "function") rdMeanClose();
   if (v !== "mushaf" && typeof wakeOff === "function") wakeOff();
   var el = document.getElementById("v-" + v);
@@ -13377,7 +13466,7 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     }
     var card=document.querySelector('.rdcard.open');
     if(card){ card.classList.remove('open'); if(typeof rdFitSoon==='function') rdFitSoon(); return true; }
-    if(rdAudio){ rdStop(); return true; }
+    if(rdAudio && !RD.listen){ rdStop(); return true; }
     /* a screen opened from another screen goes back to it, not out of the app */
     if(typeof VSTACK!=='undefined' && VSTACK.length){
       var prev=VSTACK.pop();
