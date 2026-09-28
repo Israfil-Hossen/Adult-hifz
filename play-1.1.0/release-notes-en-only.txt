@@ -1,3 +1,4 @@
+<en-US>
 New name: Quran: Adult Memorization. Downloads keep going in the background.
 
 Choose several reciters at once in Downloads - each one's recitation is kept, ready to play offline.
@@ -7,3 +8,4 @@ Setting today's lesson from any page, Al-Kahf say, now stays exactly as chosen, 
 Listening carries on when you leave the Listen screen, and Listen shows what is playing or where you stopped.
 
 New sunnah reminders: Al-Kahf on Friday, Al-Mulk at night and more. Tap one to open the surah.
+</en-US>

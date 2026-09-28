@@ -76,7 +76,7 @@ Adult_Hifz/
 ├─ assets/                Icon and splash SOURCES (1024px / 2732px).
 ├─ brand/                 Logo pipeline: concepts.js draws the mark, build.js
 │                        renders every icon, splash and Play graphic from it.
-├─ play-1.0.9/            The current Play upload: bundle, listing text, graphics,
+├─ play-1.1.0/            The current Play upload: bundle, listing text, graphics,
 │                        and a step-by-step guide (README.md, in Bengali).
 ├─ capacitor.config.json  Tells Capacitor that webDir = hifz-1.0.8.
 ├─ package.json           Dev dependencies + the four scripts you actually use.
