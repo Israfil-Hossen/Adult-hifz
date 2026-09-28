@@ -1,0 +1,11 @@
+Much faster, more reliable downloads - and each reciter's files are always in that reciter's own voice.
+
+Downloaded surahs keep playing offline across pages and with the screen off.
+
+Add your own qari from a folder in Music/Quran Hifz. Delete several downloaded surahs at once.
+
+Speed, repeat and pause now work all through listening.
+
+Sunnah reminders: Al-Kahf on Friday, Al-Mulk at night and more.
+
+Backup to a file, and many fixes.

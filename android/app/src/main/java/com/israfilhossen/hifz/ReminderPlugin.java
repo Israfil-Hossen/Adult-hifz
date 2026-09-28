@@ -1,5 +1,6 @@
 package com.israfilhossen.hifz;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,6 +9,9 @@ import android.content.SharedPreferences;
 import android.os.Build;
 
 import com.getcapacitor.JSArray;
+import com.getcapacitor.PermissionState;
+import com.getcapacitor.annotation.Permission;
+import com.getcapacitor.annotation.PermissionCallback;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -28,8 +32,20 @@ import java.util.Calendar;
  * The words come from the web layer because the app speaks five languages and
  * Android has no idea which one is chosen.
  */
-@CapacitorPlugin(name = "Reminder")
+@CapacitorPlugin(
+    name = "Reminder",
+    permissions = { @Permission(strings = { Manifest.permission.POST_NOTIFICATIONS }, alias = "notify") }
+)
 public class ReminderPlugin extends Plugin {
+
+    /** When exact alarms are not allowed: still allowed through Doze, so a
+     *  07:00 reminder does not turn up at ten. (setWindow was held back.) */
+    static void loose(AlarmManager am, long when, PendingIntent pi) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, when, pi);
+            else am.set(AlarmManager.RTC_WAKEUP, when, pi);
+        } catch (Exception ignored) { }
+    }
 
     static PendingIntent pending(Context ctx) {
         Intent i = new Intent(ctx, ReminderReceiver.class);
@@ -60,14 +76,14 @@ public class ReminderPlugin extends Plugin {
            so fall back rather than fail. */
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !am.canScheduleExactAlarms()) {
-                am.setWindow(AlarmManager.RTC_WAKEUP, when, 15 * 60 * 1000L, pi);
+                loose(am, when, pi);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, when, pi);
             } else {
                 am.setExact(AlarmManager.RTC_WAKEUP, when, pi);
             }
         } catch (SecurityException e) {
-            am.setWindow(AlarmManager.RTC_WAKEUP, when, 15 * 60 * 1000L, pi);
+            loose(am, when, pi);
         }
     }
 
@@ -140,14 +156,14 @@ public class ReminderPlugin extends Plugin {
         long when = at.getTimeInMillis();
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !am.canScheduleExactAlarms()) {
-                am.setWindow(AlarmManager.RTC_WAKEUP, when, 15 * 60 * 1000L, pi);
+                loose(am, when, pi);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, when, pi);
             } else {
                 am.setExact(AlarmManager.RTC_WAKEUP, when, pi);
             }
         } catch (SecurityException e) {
-            am.setWindow(AlarmManager.RTC_WAKEUP, when, 15 * 60 * 1000L, pi);
+            loose(am, when, pi);
         }
     }
 
@@ -207,12 +223,21 @@ public class ReminderPlugin extends Plugin {
         Context ctx = getContext();
         Integer every = call.getInt("every");
         JSArray items = call.getArray("items");
-        SharedPreferences.Editor e =
-                ctx.getSharedPreferences(ReminderReceiver.PREFS, Context.MODE_PRIVATE).edit();
-        e.putInt(ReminderReceiver.KEY_ZEVERY, every == null ? 0 : every);
+        SharedPreferences sp = ctx.getSharedPreferences(ReminderReceiver.PREFS, Context.MODE_PRIVATE);
+        int was = sp.getInt(ReminderReceiver.KEY_ZEVERY, 0), now = every == null ? 0 : every;
+        SharedPreferences.Editor e = sp.edit();
+        e.putInt(ReminderReceiver.KEY_ZEVERY, now);
         e.putString(ReminderReceiver.KEY_ZITEMS, items == null ? "" : items.toString());
         e.apply();
-        scheduleZikr(ctx);
+        /* The page sends this every time it draws. Re-arming each time pushed the
+           next dhikr back to "now + interval" on every open, so someone who opens
+           the app more often than the interval never heard one. Only a changed
+           interval, or no alarm waiting, sets it again. */
+        int fl = PendingIntent.FLAG_NO_CREATE;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) fl |= PendingIntent.FLAG_IMMUTABLE;
+        boolean waiting = PendingIntent.getBroadcast(ctx, ReminderReceiver.ZALARM_ID,
+                new Intent(ctx, ReminderReceiver.class).setAction(ReminderReceiver.ACT_ZIKR), fl) != null;
+        if (was != now || !waiting || now <= 0) scheduleZikr(ctx);
         call.resolve(new JSObject().put("every", every == null ? 0 : every));
     }
 
@@ -240,6 +265,10 @@ public class ReminderPlugin extends Plugin {
            the receiver picks by day count and we never have to know the language. */
         JSArray away = call.getArray("away");
         e.putString(ReminderReceiver.KEY_AWAY, away == null ? "" : away.toString());
+        Integer rest = call.getInt("restDow");
+        e.putInt(ReminderReceiver.KEY_REST, rest == null ? -1 : rest);
+        e.putString(ReminderReceiver.KEY_DONE, call.getString("doneDay", ""));
+        e.putString(ReminderReceiver.KEY_BDAY, call.getString("bodyDay", ""));
         e.apply();
 
         schedule(ctx, hour, minute);
@@ -296,6 +325,64 @@ public class ReminderPlugin extends Plugin {
                 .put("allowed", allowed)
                 .put("hour", pr.getInt(ReminderReceiver.KEY_HOUR, -1))
                 .put("minute", pr.getInt(ReminderReceiver.KEY_MIN, -1)));
+    }
+
+    /** "Turn on notifications": the system question where it can still be
+     *  asked, the app's notification settings where it no longer can. */
+    @PluginMethod
+    public void askNotify(PluginCall call) {
+        Context ctx = getContext();
+        if (androidx.core.app.NotificationManagerCompat.from(ctx).areNotificationsEnabled()) {
+            call.resolve(new JSObject().put("allowed", true));
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= 33 && getPermissionState("notify") != PermissionState.GRANTED) {
+            requestPermissionForAlias("notify", call, "notifyDone");
+            return;
+        }
+        openNotifySettings();
+        call.resolve(new JSObject().put("allowed", false).put("settings", true));
+    }
+
+    @PermissionCallback
+    private void notifyDone(PluginCall call) {
+        boolean ok = androidx.core.app.NotificationManagerCompat.from(getContext()).areNotificationsEnabled();
+        /* refused before and not asked again by the system: the settings page
+           is the only way left, so go there rather than do nothing */
+        if (!ok) openNotifySettings();
+        call.resolve(new JSObject().put("allowed", ok).put("settings", !ok));
+    }
+
+    private void openNotifySettings() {
+        try {
+            Intent i = new Intent();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                i.setAction(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                 .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, getContext().getPackageName());
+            } else {
+                i.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                 .setData(android.net.Uri.parse("package:" + getContext().getPackageName()));
+            }
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(i);
+        } catch (Exception ignored) { }
+    }
+
+    /** "On the minute": Android 12+ keeps exact alarms behind a switch the
+     *  reader turns on in Settings; this opens that page. */
+    @PluginMethod
+    public void openExact(PluginCall call) {
+        boolean opened = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
+                Intent i = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                        android.net.Uri.parse("package:" + getContext().getPackageName()));
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(i);
+                opened = true;
+            } catch (Exception ignored) { }
+        }
+        call.resolve(new JSObject().put("opened", opened));
     }
 
     /** Whether this phone will let us fire on the minute, so the page can say so. */

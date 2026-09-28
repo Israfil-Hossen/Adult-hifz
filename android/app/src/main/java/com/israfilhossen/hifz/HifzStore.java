@@ -172,8 +172,15 @@ final class HifzStore {
      * (It cannot be written beside the final file: Music/ refuses anything that
      * does not end in an audio extension, a ".part" file included.)
      */
-    static boolean fetch(Context c, String url, File out) {
-        if (url == null || !(url.startsWith("http://") || url.startsWith("https://"))) return false;
+    static boolean fetch(Context c, String url, File out) { return get(c, url, out) == GOT; }
+
+    /** what one address did: the file, a clear "not here" from a server that
+        answered, or no answer at all - the last is a host this network cannot
+        reach, and the download stops asking it first */
+    static final int GOT = 1, NOT_HERE = 0, NO_ANSWER = -1;
+
+    static int get(Context c, String url, File out) {
+        if (url == null || !(url.startsWith("http://") || url.startsWith("https://"))) return NOT_HERE;
         File tmpDir = new File(c.getCacheDir(), "dl");
         if (!tmpDir.exists()) tmpDir.mkdirs();
         File part = new File(tmpDir, UUID.randomUUID().toString() + ".part");
@@ -182,26 +189,27 @@ final class HifzStore {
         OutputStream os = null;
         try {
             conn = (HttpURLConnection) new URL(url).openConnection();
-            conn.setConnectTimeout(15000);
+            conn.setConnectTimeout(10000);
             conn.setReadTimeout(20000);
             conn.setInstanceFollowRedirects(true);
-            if (conn.getResponseCode() / 100 != 2) return false;
+            int code = conn.getResponseCode();
+            if (code / 100 != 2) return code >= 500 ? NO_ANSWER : NOT_HERE;
             in = conn.getInputStream();
             os = new FileOutputStream(part);
             byte[] buf = new byte[16384];
             int n;
             long total = 0;
             while ((n = in.read(buf)) > 0) {
-                if (Thread.currentThread().isInterrupted()) return false;
+                if (Thread.currentThread().isInterrupted()) return NO_ANSWER;
                 os.write(buf, 0, n);
                 total += n;
             }
             os.flush();
             os.close(); os = null;
-            if (total <= 0) return false;
-            return place(part, out);
+            if (total <= 0) return NOT_HERE;
+            return place(part, out) ? GOT : NOT_HERE;
         } catch (Exception e) {
-            return false;
+            return NO_ANSWER;
         } finally {
             try { if (os != null) os.close(); } catch (Exception ignored) { }
             try { if (in != null) in.close(); } catch (Exception ignored) { }

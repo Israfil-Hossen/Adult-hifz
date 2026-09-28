@@ -149,7 +149,7 @@ public class AudioKeepAlivePlugin extends Plugin {
         o.put("passes", PlaybackService.PASSES);
         o.put("repeat", PlaybackService.REPEAT);
         o.put("done", PlaybackService.DONE);
-        o.put("posMs", PlaybackService.POS_MS);
+        o.put("posMs", PlaybackService.position());
         call.resolve(o);
     }
 

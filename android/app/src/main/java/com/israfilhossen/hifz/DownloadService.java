@@ -48,7 +48,9 @@ public class DownloadService extends Service {
     private static final int NOTE_ID = 7402;
     private static final int DONE_ID = 7403;
     private static final String PREFS = "hifz_dl";
-    private static final int THREADS = 3;
+    /* six at once: each file is small, so the time goes on waiting for the
+       server, not on the line - three left most of the connection idle */
+    private static final int THREADS = 6;
 
     static final class Task {
         final boolean font;
@@ -76,6 +78,12 @@ public class DownloadService extends Service {
         final AtomicInteger pageMissed = new AtomicInteger();
         /* per page: tasks left, font failed, audio failed */
         final Map<Integer, int[]> per = new HashMap<>();
+        /* per host: how many times in a row it gave no answer at all. A host
+           this network blocks cost ten seconds on every single file before
+           the next one was tried - hours, over a juz. Two silences and it
+           goes to the back of every list; one answer and it is forgiven. */
+        final java.util.concurrent.ConcurrentHashMap<String, AtomicInteger> silent =
+                new java.util.concurrent.ConcurrentHashMap<>();
         volatile boolean stop;
         volatile String state = "running";
     }
@@ -219,11 +227,37 @@ public class DownloadService extends Service {
             if (HifzStore.existing(this, rec, t.key) != null) return true;
             out = HifzStore.target(this, rec, t.key);
         }
-        for (String u : t.urls) {
+        /* the counts are read once, so the order cannot shift mid-sort while
+           other threads are still counting */
+        List<String> urls = new ArrayList<>();
+        int[] q0 = new int[t.urls.length];
+        for (int i = 0; i < q0.length; i++) q0[i] = Math.min(quiet(j, t.urls[i]), 2);
+        for (int pass = 0; pass <= 2; pass++)
+            for (int i = 0; i < q0.length; i++) if (q0[i] == pass) urls.add(t.urls[i]);
+        for (String u : urls) {
             if (j.stop) return false;
-            if (HifzStore.fetch(this, u, out)) return true;
+            int r = HifzStore.get(this, u, out);
+            AtomicInteger q = counter(j, u);
+            if (r == HifzStore.NO_ANSWER) q.incrementAndGet(); else q.set(0);
+            if (r == HifzStore.GOT) return true;
         }
         return false;
+    }
+
+    private static String host(String u) {
+        try { return new java.net.URL(u).getHost(); } catch (Exception e) { return ""; }
+    }
+
+    private static AtomicInteger counter(Job j, String u) {
+        String h = host(u);
+        AtomicInteger a = j.silent.get(h);
+        if (a == null) { j.silent.putIfAbsent(h, new AtomicInteger()); a = j.silent.get(h); }
+        return a;
+    }
+
+    private static int quiet(Job j, String u) {
+        AtomicInteger a = j.silent.get(host(u));
+        return a == null ? 0 : a.get();
     }
 
     private void tick(Job j, int f) {

@@ -1,0 +1,26 @@
+<en-US>
+Much faster, more reliable downloads - and each reciter's files are always in that reciter's own voice.
+
+Downloaded surahs keep playing offline across pages and with the screen off.
+
+Add your own qari from a folder in Music/Quran Hifz. Delete several downloaded surahs at once.
+
+Speed, repeat and pause now work all through listening.
+
+Sunnah reminders: Al-Kahf on Friday, Al-Mulk at night and more.
+
+Backup to a file, and many fixes.
+</en-US>
+<bn-BD>
+ডাউনলোড এখন অনেক দ্রুত ও নির্ভরযোগ্য — আর প্রত্যেক ক্বারীর ফাইল শুধু তাঁর নিজের কণ্ঠেই।
+
+নামানো সূরা অফলাইনে পাতা বদলেও, স্ক্রিন বন্ধেও বাজতে থাকে।
+
+Music/Quran Hifz-এর ফোল্ডার থেকে নিজের ক্বারী যোগ করুন। একাধিক নামানো সূরা একবারে মুছুন।
+
+গতি, পুনরাবৃত্তি আর থামানো এখন পুরো তিলাওয়াত জুড়ে কাজ করে।
+
+সুন্নাহ রিমাইন্ডার: শুক্রবার সূরা কাহাফ, রাতে সূরা মুলক ও আরও কিছু।
+
+ফাইলে ব্যাকআপ, আর অনেক সমস্যার সমাধান।
+</bn-BD>

@@ -99,6 +99,17 @@ public class PlaybackService extends Service {
     static volatile int POS_MS = 0;
 
     private MediaPlayer mp;
+    private static volatile PlaybackService self;
+
+    /** where in the current ayah the player is - read live while it plays;
+        POS_MS alone only held a value after a pause, so coming back to the
+        app always restarted the ayah from its beginning */
+    static int position() {
+        PlaybackService s = self;
+        try { if (s != null && s.mp != null && PLAYING) return s.mp.getCurrentPosition(); }
+        catch (Exception ignored) { }
+        return POS_MS;
+    }
     private int srcTry = 0;
     private AudioFocusRequest focusReq;
     private MediaSessionCompat session;
@@ -125,6 +136,7 @@ public class PlaybackService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        self = this;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel c = new NotificationChannel(
                     CHANNEL, getString(R.string.playback_channel), NotificationManager.IMPORTANCE_LOW);
@@ -215,9 +227,11 @@ public class PlaybackService extends Service {
         int next = INDEX + by;
         if (next < 0) next = 0;
         if (next >= QUEUE.size()) {
-            /* past the end is the same as finishing the pass */
-            if (REPEAT != 0 && !LOOP.isEmpty()) { next = 0; QUEUE = LOOP; }
-            else { stopEverything(); return; }
+            /* past the end is the same as finishing the pass - counted as one,
+               by the same code that counts a pass that played to its end */
+            INDEX = QUEUE.size(); srcTry = 0; POS_MS = 0; paused = false;
+            playCurrent();
+            return;
         }
         INDEX = next;
         srcTry = 0;
@@ -419,6 +433,7 @@ public class PlaybackService extends Service {
 
     @Override
     public void onDestroy() {
+        if (self == this) self = null;
         PLAYING = false;
         release();
         abandonFocus();

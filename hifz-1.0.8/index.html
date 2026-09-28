@@ -3443,7 +3443,7 @@ input,textarea,select,[contenteditable],.tr,.trbox,.paper,.wmean,.sheet,.exsheet
   box-shadow:0 6px 0 currentColor,0 -6px 0 currentColor}
 .tabs{background:var(--sg-bar);border-top:1px solid var(--sg-line)}
 /* হোমের মাটি — শান্ত ক্রিম, উপরে একটুখানি সবুজ আলো */
-#v-today{margin-inline:-16px;padding-inline:16px;
+#v-today{margin-inline:-16px;padding-inline:16px;width:auto;
   background:radial-gradient(120% 40% at 50% -8%, rgba(95,127,82,.14), rgba(95,127,82,0) 70%), #FBFAF5}
 .clcode{font-family:var(--mono);font-size:19px;letter-spacing:.06em;text-align:center;
   padding:14px 12px;border-radius:var(--r-md);background:var(--sg-card);color:var(--ink);word-break:break-all}
@@ -4315,6 +4315,17 @@ function longDate(d){ return n(d.getDate()) + " " + L.months[d.getMonth()] + " �
 function shortDate(d){ return n(d.getDate()) + " " + L.monthsShort[d.getMonth()]; }
 
 var TODAY = key(new Date());
+/* Android keeps the app alive for days. TODAY was fixed at launch, so a phone
+   left open overnight wrote the new day's lesson, ticks and minutes into
+   yesterday and broke the streak. Checked on return and once a minute. */
+function rollDay(){
+  var k = key(new Date());
+  if (k === TODAY) return false;
+  TODAY = k;
+  try { renderAll(); } catch(e){}
+  return true;
+}
+setInterval(function(){ try { rollDay(); } catch(e){} }, 60000);
 /* Mushaf editions — page count and lines per page differ by print, so every
    page/line calculation reads these instead of a fixed 604/15. */
 var MUSHAFS = [
@@ -4441,7 +4452,7 @@ function blankDay(){
 function defaults(){
   return { v:1,
     settings:{ lang:null, startDate:TODAY, startPage:1, restDay:5,
-               wordSound:1, tourDone:0, qari:"", mushaf:"", mushafId:"madani", reciter:"Husary_128kbps", manualLines:0, lastPage:0, hijriAdj:0, retention:0.9, paper:"pcream", notifyAt:"", awayNudge:1, zikrEvery:0, zikrVoice:true, focus:0, wmFollow:1, plain:0, lastView:"", lastAt:0, drive:null },
+               wordSound:1, tourDone:0, qari:"", mushaf:"", mushafId:"madani", reciter:"Husary_128kbps", manualLines:0, lastPage:0, hijriAdj:0, retention:0.9, paper:"pcream", notifyAt:"", awayNudge:1, zikrEvery:0, zikrVoice:true, focus:0, wmFollow:1, plain:0, lastView:"", lastAt:0, drive:null, obDone:0 },
     known:{}, days:{}, weak:{}, rev:{}, hl:{}, bm:{}, mem:{}, memp:{}, memg:{}, recs:{}, dls:{}, drill:{ items:{}, salat:{}, sess:{} }, updatedAt:Date.now() };
 }
 function day(k){ if (!S.days[k]) S.days[k] = blankDay(); return S.days[k]; }
@@ -4457,6 +4468,9 @@ var Cloud = {
   t:null, busy:false, lastAt:0,
   url:function(){
     var u = (window.HIFZ_CONFIG && window.HIFZ_CONFIG.syncUrl) || "";
+    /* in the app a relative address points inside the app itself - there is
+       no server there, so there is no cloud save */
+    if (u && isApp() && !/^https?:\/\//i.test(u)) return "";
     return u ? u : "";
   },
   code:function(){ return (S.settings && S.settings.cloudCode) || ""; },
@@ -4860,9 +4874,22 @@ function memorizedPages(){
 }
 /* where today's lesson starts: stay on the same page until its last
    line is done, only then move on to the next page */
+/* The start page was changed: from today the plan runs from there. Lessons
+   finished before that day no longer say where the next one begins, and
+   today's lesson - unless the reader set it or finished it - is worked out
+   again. It used to be read once, on the first day, and never again: the
+   onboarding page was ignored because today had already been filled in. */
+function planStartChanged(){
+  S.settings.startSetAt = TODAY;
+  var d = day(TODAY);
+  if (!d.sabaq.done && !d.sabaq.user){
+    d.sabaq.pages = []; d.sabaq.from = 0; d.sabaq.to = 0;
+    d.sabaq.ayahFrom = null; d.sabaq.ayahTo = null; d.sabaq.retry = false;
+  }
+}
 function nextSlot(){
-  var byDay = null;
-  var keys = Object.keys(S.days).filter(function(k){ return k <= TODAY && S.days[k].sabaq.done; }).sort();
+  var byDay = null, since = S.settings.startSetAt || "";
+  var keys = Object.keys(S.days).filter(function(k){ return k <= TODAY && k >= since && S.days[k].sabaq.done; }).sort();
   if (keys.length){
     var last = S.days[keys[keys.length - 1]].sabaq, ps = last.pages || [];
     if (ps.length){
@@ -4874,6 +4901,7 @@ function nextSlot(){
   }
   /* the marks on the page win when they run further than the checklist does */
   var byMem = memSlot();
+  if (byMem && since && String(byMem.date || "") < since) byMem = null;
   if (!byDay && !byMem) return { page: S.settings.startPage, from: 1 };
   if (!byDay) return byMem;
   if (!byMem) return byDay;
@@ -4911,7 +4939,8 @@ function manzilJuz(){
   var pool = [], seen = {};
   m.forEach(function(p){ if (recent[p]) return; var j = juzOf(p); if (!seen[j]){ seen[j] = true; pool.push(j); } });
   if (!pool.length) return 0;
-  return pool[Math.floor(daysBetween(S.settings.startDate, TODAY) / 7) % pool.length];
+  var wk = Math.floor(daysBetween(S.settings.startDate, TODAY) / 7);
+  return pool[((wk % pool.length) + pool.length) % pool.length];     /* a future start date too */
 }
 function weakPages(){
   return Object.keys(S.weak).filter(function(p){ return S.weak[p]; })
@@ -4944,6 +4973,8 @@ function streak(){
   for (var i = 0; i < 900; i++){
     var k = key(d);
     if (k === TODAY && dayScore(k) === 0){ d = addDays(d, -1); continue; }
+    /* the planned rest day, left alone, does not break a streak */
+    if (!S.days[k] && isRestDay(k)){ d = addDays(d, -1); continue; }
     if (dayScore(k) >= 0.5) c++; else break;
     d = addDays(d, -1);
   }
@@ -5147,6 +5178,8 @@ function renderOnboard(){
   document.getElementById("ob-go").onclick = async function(){
     S.settings.startDate = document.getElementById("ob-date").value || TODAY;
     S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +document.getElementById("ob-page").value || 1));
+    planStartChanged();
+    S.settings.obDone = 1;
     S.settings.restDay   = +document.getElementById("ob-rest").value;
     S.settings.notifyAt  = document.getElementById("ob-nt").value || "";
     await Store.set(S);
@@ -5252,16 +5285,22 @@ function renderToday(){
 
   /* d.sabaq.user: the reader set today's lesson themselves (☀). From then on
      it is theirs - neither a failed test nor the weekly line target rewrites it. */
+  /* "No" was taken back: yesterday's lesson is no longer today's */
+  if (!blocked && d.sabaq.retry && !d.sabaq.done && !d.sabaq.user){
+    d.sabaq.retry = false; d.sabaq.pages = []; d.sabaq.from = 0; d.sabaq.to = 0;
+    d.sabaq.ayahFrom = null; d.sabaq.ayahTo = null;
+  }
   if (blocked && prevPages.length && !d.sabaq.user){
     d.sabaq.pages = prevPages.slice();
     d.sabaq.from  = S.days[prev].sabaq.from || 1;
     d.sabaq.to    = S.days[prev].sabaq.to   || Math.min(LINES_PER_PAGE, (S.days[prev].sabaq.from || 1) + lines - 1);
+    d.sabaq.retry = true;
   } else if (!rest && (!d.sabaq.pages.length || !d.sabaq.from)){
     var slot = nextSlot();
     d.sabaq.pages = [slot.page];
     d.sabaq.from  = slot.from;
     d.sabaq.to    = Math.min(LINES_PER_PAGE, slot.from + lines - 1);
-  } else if (!rest && (d.sabaq.pages || []).length < 2 && !d.sabaq.user && !d.sabaq.ayahFrom){
+  } else if (!rest && !d.sabaq.done && (d.sabaq.pages || []).length < 2 && !d.sabaq.user && !d.sabaq.ayahFrom){
     var nto = Math.min(LINES_PER_PAGE, (d.sabaq.from || 1) + lines - 1);
     if (nto !== d.sabaq.to){ d.sabaq.to = nto; d.sabaq.ayahFrom = null; d.sabaq.ayahTo = null; }
   }
@@ -5373,13 +5412,19 @@ function bindToday(){
       if (k === "sabaq") d.sabaq.done = !d.sabaq.done;
       else if (k === "listen") d.listen = !d.listen;
       else if (k === "night") d.night = !d.night;
-      else if (k === "manzil"){ d.manzil.done = !d.manzil.done; d.manzil.juz = manzilJuz(); }
+      else if (k === "manzil"){
+        d.manzil.done = !d.manzil.done; d.manzil.juz = manzilJuz();
+        if (d.manzil.done && d.manzil.juz)
+          revTickDone(memorizedPages().filter(function(p){ return juzOf(p) === d.manzil.juz; }));
+      }
       else if (k === "salahX") d.salah = d.salah >= 2 ? 0 : 5;
       else if (k === "sabaqi"){
         var all = sabaqiQueue().map(function(x){ return x.page; }).concat(weakPages());
         d.sabaqi = d.sabaqi.length ? [] : all.filter(function(v,i,a){ return a.indexOf(v) === i; });
+        if (d.sabaqi.length){ revTickDone(d.sabaqi); d.rateAsk = 0; }
       }
       save(); renderToday(); renderChrome();
+      if (k === "sabaq") try { ntNative(); } catch(e){}
     };
   });
   qa("#v-today [data-blk]").forEach(function(b){
@@ -5391,13 +5436,18 @@ function bindToday(){
       for (var j = 0; j < nb; j++) if (!d.sabaq.blocks[j]) all = false;
       if (all) d.sabaq.done = true;
       save(); renderToday(); renderChrome();
+      try { ntNative(); } catch(e){}
     };
   });
   qa("#v-today [data-sq]").forEach(function(b){
     b.onclick = function(){
       var p = +b.dataset.sq, i = d.sabaqi.indexOf(p);
       if (i > -1){ d.sabaqi.splice(i, 1); d.rateAsk = 0; }
-      else { d.sabaqi.push(p); d.rateAsk = p; }
+      else {
+        /* a page left unrated when the next is ticked still counts as revised */
+        if (d.rateAsk && d.rateAsk !== p) revTickDone([d.rateAsk]);
+        d.sabaqi.push(p); d.rateAsk = p;
+      }
       save(); renderToday(); renderChrome();
     };
   });
@@ -5499,7 +5549,10 @@ function renderProgress(){
   }
   var dks = Object.keys(S.days).filter(function(k){ return S.days[k].sabaq.done; }).sort();
   var span = dks.length ? Math.max(1, daysBetween(dks[0], TODAY) + 1) : 1;
-  var rate = m.length / span, left = TOTAL_PAGES - m.length;
+  /* pages known before the app are not a pace; counting them promised a
+     finish in two days on the first day */
+  var km = knownMap(), mine = m.filter(function(p){ return !km[p]; }).length;
+  var rate = dks.length ? mine / span : 0, left = TOTAL_PAGES - m.length;
   var finish = rate > 0.02 ? addDays(new Date(), Math.round(left / rate)) : null;
 
   var totMin = 0, totErr = 0, nErr = 0;
@@ -5882,7 +5935,7 @@ async function dlRender(){
       for (var pp = r.a; pp <= r.b; pp++) pages[pp] = 1;
     });
     var list = Object.keys(pages).map(Number).sort(function(a, b){ return a - b; });
-    if (!list.length) return;
+    if (!list.length){ dlProg(dlL().none); return; }
     if (dlBusy()){ dlProg(dlL().busy); return; }
     var ttl2 = chosen.length === 1 ? surahName(chosen[0]) : fmt(dlL().tSurahs, n(chosen.length));
     await dlStart(list, !au || au.checked, 0, chosen, ttl2);
@@ -6083,6 +6136,7 @@ async function dlDeleteMany(list, prog){
     }
   } catch(e){}
   /* the page open in the mushaf forgets the files that just went */
+  RD.files = {}; RD.filesRec = null;
   try { if (document.body.classList.contains("mushaf") && RD.page) rdWarmAudio(RD.pages[RD.page]); } catch(e){}
 }
 function dlSeq(a, b){
@@ -6148,19 +6202,31 @@ function renderSettings(){
       (s.awayNudge === 0 ? "" : " checked") + '> ' + L.nt.awayH + '</label>' +
       '<div class="hint">' + L.nt.awayHint + '</div></div>' +
     '<div class="fld"><label>' + L.nt.h + '</label>' +
-      (ntOn() ? '<div class="hint">' + L.nt.allowed + '</div>'
-       : (ntCan() && Notification.permission === "denied"
-          ? '<div class="hint">' + (ntNat ? L.nt.deniedApp : L.nt.denied) + '</div>'
-          : '<button class="abtn" id="s-ntask">' + L.nt.allow + '</button>')) +
+      /* in the app the answer comes from Android - the WebView has no
+         Notification object, so this button used to do nothing there */
+      (ntNat
+        ? (NTN.allowed ? '<div class="hint">' + L.nt.allowed + '</div>'
+                       : '<button class="abtn" id="s-ntask">' + L.nt.allow + '</button>')
+        : (ntOn() ? '<div class="hint">' + L.nt.allowed + '</div>'
+           : (ntCan() && Notification.permission === "denied"
+              ? '<div class="hint">' + L.nt.denied + '</div>'
+              : '<button class="abtn" id="s-ntask">' + L.nt.allow + '</button>'))) +
       (ntNat ? '' : '<div class="hint">' + L.nt.note + '</div>') + '</div>' +
+    (ntNat && NTN.exact === false
+      ? '<div class="fld"><label>' + esc(fxL().exactH) + '</label><div class="hint">' + esc(fxL().exactOff) + '</div>' +
+          '<div class="act"><button class="abtn" id="s-exact">' + esc(fxL().exactBtn) + '</button></div></div>'
+      : '') +
     '<div class="fld"><label for="s-zikr">' + L.nt.zikr + '</label><select id="s-zikr">' +
       '<option value="0"' + (!s.zikrEvery ? " selected" : "") + '>' + L.nt.zikrOff + '</option>' +
       [15,30,60,120].map(function(v){
         return '<option value="' + v + '"' + (+s.zikrEvery === v ? " selected" : "") + '>' + fmt(L.nt.zikrN, n(v)) + '</option>';
       }).join("") + '</select><div class="hint">' + L.nt.zikrHint + '</div></div>' +
-    '<div class="fld"><label class="chk"><input type="checkbox" id="s-zkvoice"' +
-      (s.zikrVoice !== false ? " checked" : "") + '>' + L.nt.voice + '</label>' +
-      '<div class="act"><button class="abtn" id="s-zktest">' + L.nt.voiceTest + '</button></div></div>' +
+    /* the spoken dhikr needs its recordings; until they ship, no switch that does nothing */
+    (Object.keys(ZAUDIO).some(function(k){ return ZAUDIO[k]; })
+      ? '<div class="fld"><label class="chk"><input type="checkbox" id="s-zkvoice"' +
+          (s.zikrVoice !== false ? " checked" : "") + '>' + L.nt.voice + '</label>' +
+          '<div class="act"><button class="abtn" id="s-zktest">' + L.nt.voiceTest + '</button></div></div>'
+      : '') +
     '<div class="fld"><label>' + esc(snL().h) + '</label>' +
       '<div class="hint" style="margin:0 0 8px">' + esc(snL().hint) + '</div>' +
       SUNNAH.map(function(x, i){
@@ -6177,12 +6243,14 @@ function renderSettings(){
 
   /* 4 - the app itself */
   h += grp(G.app) + '<div class="log">' +
+    /* "install as an app" means nothing inside the installed app */
+    (isApp() ? '' :
     '<div class="fld"><label>' + L.ins.h + '</label>' +
       (insStandalone() ? '<div class="hint">' + L.ins.done + '</div>'
        : (INS.evt ? '<button class="abtn go" id="s-install" style="margin-bottom:8px">' + L.ins.btn + '</button>' +
                     '<div class="hint">' + L.ins.hint + '</div>'
                   : '<div class="hint">' + L.ins.ios + '<br>' + L.ins.hint + '</div>')) +
-      '</div>' +
+      '</div>') +
     '<div class="fld"><label>' + L.cn.h + '</label>' +
       '<label class="chk"><input type="checkbox" id="s-cn"' + (cnMode() ? " checked" : "") + '> ' +
       L.cn.lab + '</label><div class="hint">' + L.cn.hint + '</div></div>' +
@@ -6195,7 +6263,7 @@ function renderSettings(){
     '<div class="fld"><label>' + T.backupLabel + '</label>' +
       '<div class="act"><button class="abtn go" id="s-exp">' + T.exp + '</button>' +
       '<button class="abtn" id="s-imp">' + T.imp + '</button>' +
-      '<input type="file" id="s-file" accept="application/json" hidden></div>' +
+      '<input type="file" id="s-file" accept=".json,application/json,text/plain" hidden></div>' +
       '<div class="hint">' + T.backupHint + '</div></div>' +
     '<div class="fld"><label>' + T.danger + '</label>' +
       '<div class="act"><button class="abtn danger" id="s-reset">' + T.reset + '</button></div></div>' +
@@ -6242,8 +6310,16 @@ function renderSettings(){
   recScan(false);
 
   on("s-date", "onchange", function(){ S.settings.startDate = this.value || TODAY; save(); renderAll(); });
-  on("s-page", "onchange", function(){ S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); save(); renderAll(); });
-  on("s-rest", "onchange", function(){ S.settings.restDay = +this.value; save(); renderAll(); });
+  on("s-page", "onchange", function(){ S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); planStartChanged(); save(); renderAll(); });
+  on("s-rest", "onchange", function(){
+    S.settings.restDay = +this.value;
+    /* today became the rest day: a lesson the app filled in is not owed */
+    var dt = day(TODAY);
+    if (isRestDay(TODAY) && !dt.sabaq.user && !dt.sabaq.done){
+      dt.sabaq.pages = []; dt.sabaq.from = 0; dt.sabaq.to = 0; dt.sabaq.ayahFrom = null; dt.sabaq.ayahTo = null;
+    }
+    save(); renderAll();
+  });
   on("s-away", "onchange", function(){
     S.settings.awayNudge = this.checked ? 1 : 0; save();
     /* the words travel with the alarm, so the alarm has to be set again */
@@ -6276,7 +6352,12 @@ function renderSettings(){
     } catch(e){ say.textContent = L.nt.testNo; }
   });
   on("s-zikr", "onchange", function(){ S.settings.zikrEvery = +this.value; save(); ntSchedule(); });
-  on("s-zkvoice", "onchange", function(){ S.settings.zikrVoice = this.checked; save(); });
+  on("s-zkvoice", "onchange", function(){ S.settings.zikrVoice = this.checked; save(); ntSchedule(); });
+  on("s-exact", "onclick", function(){
+    var R = ntPlugin();
+    if (R && R.openExact) R.openExact().catch(function(){});
+  });
+  if (ntNat) ntStatusRefresh();
   var snSet = function(id, k, v){
     if (!S.settings.sunnah) S.settings.sunnah = {};
     var o = S.settings.sunnah[id] || (S.settings.sunnah[id] = {});
@@ -6316,11 +6397,7 @@ function renderSettings(){
   on("s-oldday", "onchange", function(){ S.settings.oldPerDay = +this.value; save(); renderAll(); });
 
   on("s-exp", "onclick", function(){
-    var blob = new Blob([JSON.stringify(S, null, 2)], { type:"application/json" });
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "hifz-backup-" + TODAY + ".json";
-    a.click(); URL.revokeObjectURL(a.href);
+    saveOut("hifz-backup-" + TODAY + ".json", "application/json", JSON.stringify(S, null, 2));
   });
   on("s-imp", "onclick", function(){ g("s-file").click(); });
   on("s-file", "onchange", function(){
@@ -6330,8 +6407,16 @@ function renderSettings(){
       try {
         var o = JSON.parse(r.result);
         if (!o.settings || !o.days) throw new Error("bad");
-        S = o; if (!S.weak) S.weak = {};
-        save(); renderAll(); alert(L.set.restored);
+        /* this phone's own cloud code stays: a backup from another phone
+           must not start writing over that phone's server copy */
+        var code = S.settings.cloudCode, drive = S.settings.drive;
+        S = o;
+        normalizeState();
+        S.settings.cloudCode = code; S.settings.drive = drive;
+        RD.files = {}; RD.filesRec = null;
+        save();
+        setLang(S.settings.lang || L.code, false).then(function(){ renderAll(); }, function(){ renderAll(); });
+        alert(L.set.restored);
       } catch(e){ alert(L.set.badFile); }
     };
     r.readAsText(f);
@@ -6339,7 +6424,8 @@ function renderSettings(){
   on("s-reset", "onclick", function(){
     if (confirm(T.confirmReset)){
       var lang = S.settings.lang;
-      S = defaults(); S.settings.lang = lang;
+      S = defaults(); S.settings.lang = lang; S.settings.obDone = 0;
+      applyMushaf(); memBust();
       save(); renderAll();
       renderOnboard();
       document.getElementById("ob").classList.add("on");
@@ -6650,24 +6736,39 @@ var RECITERS = [
 var RD_CACHE = "hifz-mushaf-v1";
 var QCF_BASE = "https://cdn.jsdelivr.net/gh/quran/quran.com-frontend-next@master/public/fonts/quran/hafs/";
 function qcfVer(){ return mushafDef().qcf || "v2"; }
+/* page fonts shipped inside the app (fonts/qcf/<v>/) - never downloaded */
+var QCF_BUNDLED = { v1:1 };
 var AUDIO_BASE = "https://everyayah.com/data/";
 var AUDIO_ALT  = "https://cdn.islamic.network/quran/audio/128/ar.alafasy/";
 /* Three independent hosts, not one. Which of them answers depends on the
    network, not on the app: the laptop that played fine was on a VPN, the phone
    with the APK was not, and a single host made that look like "audio is
    broken". Each reciter is mapped onto every host that carries him. */
-var AUDIO_NET = { Alafasy_128kbps:"ar.alafasy", Husary_128kbps:"ar.husary",
-  Minshawy_Murattal_128kbps:"ar.minshawi", Abdul_Basit_Murattal_64kbps:"ar.abdulbasitmurattal",
-  Ayman_Sowaid_64kbps:"ar.husary",
-  "Abu_Bakr_Ash-Shaatree_128kbps":"ar.shaatree", Hudhaify_128kbps:"ar.hudhaify",
-  Muhammad_Ayyoub_128kbps:"ar.muhammadayyoub", Muhammad_Jibreel_128kbps:"ar.muhammadjibreel",
-  Ahmed_ibn_Ali_al_Ajamy_128kbps:"ar.ahmedajamy", Husary_Mujawwad_64kbps:"ar.husarymujawwad" };
-var AUDIO_QCDN = { Alafasy_128kbps:"Alafasy/mp3", Husary_128kbps:"Husary/mp3",
-  Minshawy_Murattal_128kbps:"Minshawy_Murattal/mp3", Abdul_Basit_Murattal_64kbps:"AbdulBaset/Murattal/mp3",
-  Ayman_Sowaid_64kbps:"Husary/mp3",
+/* Every address here is the SAME voice as the reciter it is filed under -
+   checked one by one. Two of them used to be wrong: Ayman Suwayd's fallbacks
+   pointed at al-Husary, so a reader on a network that blocks everyayah got
+   al-Husary's recitation saved into Ayman's folder and never knew; and three
+   addresses answered "not found" for every ayah. (value = "bitrate/edition") */
+var AUDIO_NET = { Alafasy_128kbps:"128/ar.alafasy", Husary_128kbps:"128/ar.husary",
+  Minshawy_Murattal_128kbps:"128/ar.minshawi", Abdul_Basit_Murattal_64kbps:"64/ar.abdulbasitmurattal",
+  "Abu_Bakr_Ash-Shaatree_128kbps":"128/ar.shaatree", Hudhaify_128kbps:"128/ar.hudhaify",
+  Muhammad_Ayyoub_128kbps:"128/ar.muhammadayyoub", Muhammad_Jibreel_128kbps:"128/ar.muhammadjibreel",
+  Ahmed_ibn_Ali_al_Ajamy_128kbps:"128/ar.ahmedajamy", Husary_Mujawwad_64kbps:"128/ar.husarymujawwad" };
+var AUDIO_QCDN = { Alafasy_128kbps:"Alafasy/mp3",
+  Minshawy_Murattal_128kbps:"Minshawi/Murattal/mp3", Minshawy_Mujawwad_192kbps:"Minshawi/Mujawwad/mp3",
+  Abdul_Basit_Murattal_64kbps:"AbdulBaset/Murattal/mp3",
   "Abdurrahmaan_As-Sudais_192kbps":"Sudais/mp3", "Saood_ash-Shuraym_128kbps":"Shuraym/mp3",
   "Abu_Bakr_Ash-Shaatree_128kbps":"Shatri/mp3", Hani_Rifai_192kbps:"Rifai/mp3",
   Muhammad_Jibreel_128kbps:"Jibreel/mp3", Abdul_Basit_Mujawwad_128kbps:"AbdulBaset/Mujawwad/mp3" };
+/* quranicaudio keeps a byte-for-byte copy of everyayah for these reciters:
+   the same files under the same names, on a different network */
+var AUDIO_MIRROR = "https://mirrors.quranicaudio.com/everyayah/";
+var AUDIO_MIRRORED = { Ayman_Sowaid_64kbps:1, Husary_128kbps:1, Minshawy_Murattal_128kbps:1,
+  Abdul_Basit_Murattal_64kbps:1, Alafasy_128kbps:1, "Abdurrahmaan_As-Sudais_192kbps":1,
+  "Saood_ash-Shuraym_128kbps":1, "Abu_Bakr_Ash-Shaatree_128kbps":1, Hudhaify_128kbps:1,
+  Muhammad_Ayyoub_128kbps:1, Hani_Rifai_192kbps:1, Ghamadi_40kbps:1, "Yasser_Ad-Dussary_128kbps":1,
+  Muhammad_Jibreel_128kbps:1, Mohammad_al_Tablaway_128kbps:1, Abdul_Basit_Mujawwad_128kbps:1,
+  Minshawy_Mujawwad_192kbps:1 };
 function ayahGlobal(vk){
   var q = String(vk || "").split(":"), s = +q[0] || 1, a = +q[1] || 1, n2 = 0;
   for (var i = 0; i < s - 1; i++) n2 += (AYAHS[i] || 0);
@@ -6675,9 +6776,10 @@ function ayahGlobal(vk){
 }
 function audioCands(vk, rec){
   var f = ayahFile(vk), out = [{ h:"everyayah", u:AUDIO_BASE + rec + "/" + f }];
+  if (AUDIO_MIRRORED[rec]) out.push({ h:"quranicaudio", u:AUDIO_MIRROR + rec + "/" + f });
   if (AUDIO_QCDN[rec]) out.push({ h:"qurancdn", u:"https://audio.qurancdn.com/" + AUDIO_QCDN[rec] + "/" + f });
   if (AUDIO_NET[rec]) out.push({ h:"islamic.network",
-    u:"https://cdn.islamic.network/quran/audio/128/" + AUDIO_NET[rec] + "/" + ayahGlobal(vk) + ".mp3" });
+    u:"https://cdn.islamic.network/quran/audio/" + AUDIO_NET[rec] + "/" + ayahGlobal(vk) + ".mp3" });
   return out;
 }
 /* The meaning, read aloud.
@@ -6695,8 +6797,10 @@ function trAudioSrc(vk){
 function audioSrcsFor(vk, rec){
   /* the reader's own qari lives only in their folder: no address, no stand-in */
   if (recCustom(rec)) return [];
+  /* only this reciter's own addresses. It used to fall back to Alafasy, so a
+     gap in one voice was quietly read - and downloaded, into this reciter's
+     folder, for good - in another. For memorising, the voice is the lesson. */
   var cands = audioCands(vk, rec);
-  if (rec !== "Alafasy_128kbps") cands = cands.concat(audioCands(vk, "Alafasy_128kbps"));
   /* the host that answered last time goes first, so after one success the app
      stops spending the watchdog on a host this network blocks */
   var pref = S.settings.audioHost;
@@ -6756,6 +6860,60 @@ var MQL = {
        xq:"从手机删除 {0} 章已下载的诵读？", xing:"正在删除… {0} / {1}", xdone:"已删除 {0} 章", xempty:"没有可删除的下载" }
 };
 function mqL(){ return MQL[L.code] || MQL.en; }
+var FXL = {
+  bn:{ exactH:"ঠিক সময়ে রিমাইন্ডার", exactOff:"এই ফোন রিমাইন্ডার কিছুটা দেরিতে দিতে পারে। ঠিক সময়ে পেতে “অ্যালার্ম ও রিমাইন্ডার” অনুমতি চালু করুন।", exactOk:"রিমাইন্ডার ঠিক সময়ে আসবে", exactBtn:"অনুমতি চালু করুন",
+       saved:"সেভ হয়েছে: {0}", saveFail:"ফাইল সেভ করা গেল না",
+       mushafWarn:"মুসহাফ বদলালে পৃষ্ঠা নম্বরও বদলে যায়। আপনার সবক, মুখস্থ চিহ্ন আর রিভিশন আগের পৃষ্ঠা নম্বরেই থাকবে — নতুন মুসহাফে সেগুলো অন্য লেখায় পড়তে পারে। তবুও বদলাবেন?" },
+  en:{ exactH:"Reminders on time", exactOff:"This phone may deliver reminders a little late. To get them on the minute, turn on the “Alarms & reminders” permission.", exactOk:"Reminders will arrive on time", exactBtn:"Turn it on",
+       saved:"Saved: {0}", saveFail:"The file could not be saved",
+       mushafWarn:"Page numbers change with the mushaf. Your lessons, memorised marks and revision stay on the old page numbers — in the new mushaf they may land on different text. Change anyway?" },
+  ar:{ exactH:"تذكيرات في وقتها", exactOff:"قد يصل التذكير متأخرًا قليلًا على هذا الهاتف. لتصله في الدقيقة نفسها فعّل إذن «المنبّهات والتذكيرات».", exactOk:"ستصل التذكيرات في وقتها", exactBtn:"فعّله",
+       saved:"حُفظ: {0}", saveFail:"تعذّر حفظ الملف",
+       mushafWarn:"أرقام الصفحات تتغيّر مع المصحف. دروسك وعلامات الحفظ والمراجعة تبقى على أرقام الصفحات القديمة — وقد تقع في المصحف الجديد على نصّ آخر. هل تغيّر مع ذلك؟" },
+  ur:{ exactH:"وقت پر یاد دہانی", exactOff:"یہ فون یاد دہانی کچھ دیر سے دے سکتا ہے۔ ٹھیک وقت پر پانے کے لیے “الارم اور یاد دہانیاں” کی اجازت آن کریں۔", exactOk:"یاد دہانیاں وقت پر آئیں گی", exactBtn:"آن کریں",
+       saved:"محفوظ ہو گیا: {0}", saveFail:"فائل محفوظ نہیں ہو سکی",
+       mushafWarn:"مصحف بدلنے سے صفحہ نمبر بدل جاتے ہیں۔ آپ کے سبق، حفظ کے نشان اور دہرائی پرانے صفحہ نمبروں پر رہیں گے — نئے مصحف میں وہ کسی اور متن پر پڑ سکتے ہیں۔ پھر بھی بدلیں؟" },
+  zh:{ exactH:"准时提醒", exactOff:"这部手机的提醒可能会稍晚送达。若要准时，请开启“闹钟和提醒”权限。", exactOk:"提醒会准时送达", exactBtn:"去开启",
+       saved:"已保存：{0}", saveFail:"文件未能保存",
+       mushafWarn:"换版本后页码会变。你的功课、已背标记和复习仍按旧页码 —— 在新版本中可能对应别的经文。仍要更换吗？" }
+};
+function fxL(){ return FXL[L.code] || FXL.en; }
+/* the installed Android app, as opposed to the same page in a browser */
+function isApp(){
+  try { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); }
+  catch(e){ return false; }
+}
+/* A file the reader asked for. In the app: saved to Download/Quran Hifz and
+   offered to the share sheet (the WebView ignores <a download>, so "export"
+   used to do nothing at all). In a browser: the ordinary download. */
+async function saveOut(name, mime, text, blob){
+  var SC = null;
+  try { SC = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Screen; } catch(e){}
+  if (SC && SC.share){
+    try {
+      var arg = { name:name, mime:mime };
+      if (text != null) arg.text = text;
+      else {
+        arg.base64 = await new Promise(function(ok, no){
+          var fr = new FileReader();
+          fr.onload = function(){ ok(String(fr.result).split(",")[1] || ""); };
+          fr.onerror = no;
+          fr.readAsDataURL(blob);
+        });
+      }
+      var r = await SC.share(arg);
+      if (r && r.saved) alert(fmt(fxL().saved, r.where));
+      else if (!r || !r.shared) alert(fxL().saveFail);
+      return;
+    } catch(e){ alert(fxL().saveFail); return; }
+  }
+  var b = blob || new Blob([text], { type:mime });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(b);
+  a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ try { URL.revokeObjectURL(a.href); } catch(e){} }, 4000);
+}
 var AYAH_TOTAL = 6236, RC_CAN = true, RC_T = 0;
 function recBuiltin(id){ return RECITERS.some(function(r){ return r.id === id; }); }
 function recMine(){ return (S && S.settings && S.settings.myQari) || []; }
@@ -6901,15 +7059,33 @@ async function rdCache(){ try { return await caches.open(RD_CACHE); } catch(e){ 
 /* Recitations already downloaded are turned into blob URLs for the open page.
    Without this the "include the recitation" download filled the cache and the
    reader still went to the network every time — useless on a blocked network. */
+/* Which ayat of the current reciter are on the phone, and where.
+
+   This was emptied on every page turn and filled again a moment later - and
+   a recitation carrying on to the next page asked for its first ayah in that
+   moment, found nothing, went to the network, and offline stopped with
+   "needs the internet" on a juz that had been downloaded. It now holds every
+   file found so far for this reciter and is only cleared when the reciter
+   changes or a surah is deleted. */
+function rdFilesMine(){
+  if (RD.filesRec !== S.settings.reciter){ RD.files = {}; RD.filesRec = S.settings.reciter; }
+  return RD.files;
+}
+async function rdFilesFill(keys){
+  var F = rdFilesMine(), need = (keys || []).filter(function(k){ return !F[k]; });
+  if (!need.length || !asPlugin()) return;
+  var rec = RD.filesRec, have = await asHave(need);
+  if (RD.filesRec !== rec) return;                  /* the reciter changed meanwhile */
+  Object.keys(have).forEach(function(k){ RD.files[k] = have[k]; });
+}
 async function rdWarmAudio(pg){
   var c = await rdCache();
   Object.keys(RD.blobs || {}).forEach(function(k){ try { URL.revokeObjectURL(RD.blobs[k]); } catch(e){} });
   RD.blobs = {};
-  RD.files = {};
+  rdFilesMine();
   if (!pg || !pg.keys) return;
   /* files first: they are the copy that survives the screen going off */
-  var have = await asHave(pg.keys);
-  Object.keys(have).forEach(function(k){ RD.files[k] = have[k]; });
+  await rdFilesFill(pg.keys);
   if (Object.keys(RD.files).length){
     var d0 = document.getElementById("rd-dl");
     if (d0) d0.setAttribute("data-have", "1");
@@ -7056,7 +7232,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "1.1.1";
+var APP_VER = "1.1.2";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -7492,7 +7668,9 @@ async function dlStart(list, withAudio, singlePage, chosen, title){
     var def = mushafDef(), v = qcfVer(), c = await rdCache(), tasks = [];
     for (var i = 0; i < list.length; i++){
       var pn = list[i];
-      if (!def.nast){
+      /* the 1405 Madani fonts are inside the app: fetching all 604 again cost
+         ~60 MB, and one that would not come down marked its surah missing */
+      if (!def.nast && !QCF_BUNDLED[v]){
         var fu = QCF_BASE + v + "/woff2/p" + pn + ".woff2";
         var hit = null;
         try { hit = c ? await c.match(fu) : null; } catch(e){ hit = null; }
@@ -7657,7 +7835,10 @@ function ntNative(){
       title: L.nt.dailyTitle,
       body: fmt(L.nt.dailyBody, n(d.sabaq.pages[0] || S.settings.startPage),
                 n(d.sabaq.from || 1), n(d.sabaq.to || LINES_PER_PAGE)),
-      away: ntAway()
+      away: ntAway(),
+      restDow: S.settings.restDay,
+      doneDay: d.sabaq.done ? TODAY : "",
+      bodyDay: TODAY
     });
   } catch(e){ return false; }
   return true;
@@ -7772,12 +7953,13 @@ function kaNoteStop(){
     KA.addListener("transport", function(e){
       var a = e && e.action;
       if (a === "play" || a === "pause"){ if (rdAudio) rdTogglePause(); }
-      else if (a === "next"){ if (RD.queue.length) rdNext(); }
-      else if (a === "prev"){ RD.qi = Math.max(0, RD.qi - 2); rdNext(); }
+      else if (a === "next"){ rdSkip(1); }
+      else if (a === "prev"){ rdSkip(-1); }
       else if (a === "stop"){ rdStop(); }
     });
   } catch(e){}
 })();
+var KA_MAX = 3000;
 function kaHandoff(){
   var KA = kaPlugin();
   if (!KA || !KA.handoff || !rdAudio || rdAudio.paused || !RD.queue.length) return;
@@ -7789,56 +7971,97 @@ function kaHandoff(){
      started the whole thing over. Ten ayat in, the reader put the phone in
      their pocket and heard ayah one. Hand over once. */
   if (KAH.active) return;
-  /* the ayah now sounding, then everything still to come */
-  var from = Math.max(0, RD.qi - 1);
-  var rest = RD.queue.slice(from);
-  if (!rest.length) return;
-  /* The repeat count travels with the queue. A reader who set the lesson to
-     play endlessly meant endlessly in their pocket - that is the whole reason
-     they asked for it - so the passes still owed go native too, and the sleep
-     timer goes with them so it can still end the day. */
-  var more = (RD.left === Infinity) ? -1 : Math.max(0, (RD.left || 1) - 1);
-  KAH.active = true; KAH.base = from;
-  try { rdAudio.pause(); } catch(e){}
-  /* the part of this ayah already heard does not need hearing again */
-  var posMs = 0;
-  try { posMs = Math.max(0, Math.round((rdAudio.currentTime || 0) * 1000)); } catch(e){}
-  KA.handoff({ queue:rest.map(kaSrcs),
-               loop:more ? RD.queue.map(kaSrcs) : [],
-               labels:rest.map(kaLabel),
-               reciter:kaReciter(),
-               posMs:posMs,
-               repeat:more,
-               stopAt:RD.sleepAt || 0,
-               speed:RD.speed || 1 });
+  KAH.active = true; KAH.pending = true;
+  /* the files on the phone for everything still to come, looked up first -
+     otherwise every page after this one went to the network, and offline in
+     a pocket that meant silence */
+  var fromNow = Math.max(0, RD.qi - 1);
+  var go = function(){
+    KAH.pending = false;
+    if (!KAH.active) return;                                  /* taken back meanwhile */
+    if (!rdAudio || rdAudio.paused || !RD.queue.length){ KAH.active = false; return; }
+    /* the meaning was playing: that ayah is done - hand over from the next */
+    var inTr = RD.midAyah === "tr";
+    var from = inTr ? RD.qi : Math.max(0, RD.qi - 1);
+    var rest = RD.queue.slice(from);
+    if (!rest.length){ KAH.active = false; return; }
+    /* The repeat count travels with the queue. A reader who set the lesson to
+       play endlessly meant endlessly in their pocket - that is the whole
+       reason they asked for it - so the passes still owed go native too, and
+       the sleep timer goes with them so it can still end the day. */
+    var more = (RD.left === Infinity) ? -1 : Math.max(0, (RD.left || 1) - 1);
+    /* the native player has no "repeat each ayah", so each ayah goes in as
+       many times as it is to be heard; map[] says which ayah each entry is */
+    var reps = (RD.ayahRep || 0) + 1;
+    var build = function(keys, base, first){
+      var q = [], lab = [], map = [];
+      for (var i = 0; i < keys.length && q.length < KA_MAX; i++){
+        var times = (first && i === 0) ? Math.max(1, (RD.ayahLeft || 0) + 1) : reps;
+        var src = kaSrcs(keys[i]), lb = kaLabel(keys[i]);
+        for (var r = 0; r < times; r++){ q.push(src); lab.push(lb); map.push(base + i); }
+      }
+      return { q:q, lab:lab, map:map };
+    };
+    var now = build(rest, from, !inTr), loop = more ? build(RD.queue, 0, false) : { q:[], map:[] };
+    KAH.base = from; KAH.map = now.map; KAH.loopMap = loop.map;
+    /* the part of this ayah already heard does not need hearing again */
+    var posMs = 0;
+    if (!inTr) try { posMs = Math.max(0, Math.round((rdAudio.currentTime || 0) * 1000)); } catch(e){}
+    try { rdAudio.pause(); } catch(e){}
+    KA.handoff({ queue:now.q,
+                 loop:loop.q,
+                 labels:now.lab,
+                 reciter:kaReciter(),
+                 posMs:posMs,
+                 repeat:more,
+                 stopAt:RD.sleepAt || 0,
+                 speed:RD.speed || 1 });
+  };
+  rdFilesFill(RD.queue.slice(fromNow, fromNow + KA_MAX)).then(go, go);
 }
 function kaTakeBack(){
   var KA = kaPlugin();
   if (!KA || !KAH.active){ return; }
   KAH.active = false;
+  /* still looking up files - nothing was handed over, the page never paused */
+  if (KAH.pending){ KAH.pending = false; return; }
   KA.status().then(function(st){
     KA.stop();
-    if (!st || st.done){ rdStop(); return; }
-    /* the first pass is the tail we handed over, so it is offset by where we
-       broke off; every pass after it is the whole queue from its start */
-    var passes = st.passes || 0;
-    var qi = (passes ? 0 : KAH.base) + Math.max(0, st.index || 0);
-    RD.left = (st.repeat < 0) ? Infinity : Math.max(1, (st.repeat || 0) + 1);
-    if (st.playing === false && qi >= RD.queue.length && !passes){ rdStop(); return; }
-    if (qi < RD.queue.length){
-      RD.qi = qi;
-      /* the seconds already heard natively, so the page does not replay them */
-      RD.resumeAt = (st.posMs > 0) ? st.posMs / 1000 : 0;
-      rdNext();
+    st = st || { done:true };
+    /* which ayah the phone had reached: the first pass is the tail handed
+       over, every later pass the whole queue - each entry mapped back */
+    var passes = st.passes || 0, idx = Math.max(0, st.index || 0);
+    var map = (passes ? KAH.loopMap : KAH.map) || [];
+    var qi = idx < map.length ? map[idx] : RD.queue.length;
+    if (RD.sleepAt && Date.now() >= RD.sleepAt){ RD.sleepAt = 0; RD.sleepFor = 0; }
+    /* where the pocket got to is where "carry on" picks up - not the ayah the
+       screen went off on, which replayed the whole night */
+    if (RD.listen && S && S.settings){
+      var at = RD.queue[Math.min(qi, RD.queue.length - 1)];
+      if (at) S.settings.lastListenAt = at;
     }
-    else rdStop();
+    if (st.done || qi >= RD.queue.length){ rdStop(); return; }
+    RD.left = (st.repeat < 0) ? Infinity : Math.max(1, (st.repeat || 0) + 1);
+    RD.qi = qi;
+    RD.midAyah = "start";
+    /* repeats of this ayah already heard in the pocket are spent */
+    var owed = 0;
+    for (var j = idx + 1; j < map.length && map[j] === qi; j++) owed++;
+    RD.ayahLeft = owed;
+    /* the seconds already heard natively, so the page does not replay them */
+    RD.resumeAt = (st.posMs > 0) ? st.posMs / 1000 : 0;
+    /* paused from the lock screen stays paused */
+    if (st.playing === false) RD.startPaused = true;
+    rdNext();
   }).catch(function(){ try { KA.stop(); } catch(e){} });
 }
 document.addEventListener("visibilitychange", function(){
   if (document.visibilityState === "hidden"){ kaHandoff(); rdMarkWhere(); return; }
+  try { rollDay(); } catch(e){}
   kaTakeBack();
   if (rdAudio && !rdAudio.paused) wakeOn();
   try { dlCheckJob(); } catch(e){}
+  try { ntStatusRefresh(); } catch(e){}
 });
 window.addEventListener("pagehide", rdMarkWhere);
 function rdClear(cls){ qa(".qline .w." + cls).forEach(function(e){ e.classList.remove(cls); }); }
@@ -7876,7 +8099,7 @@ function rdStop(){
   wakeOff();
   if (rdRaf){ cancelAnimationFrame(rdRaf); rdRaf = null; }
   RD.queue = []; RD.left = 0; RD.words = null; RD.wi = -1; RD.turning = false;
-  RD.midAyah = null; RD.ayahLeft = 0;
+  RD.midAyah = null; RD.ayahLeft = 0; RD.cont = false; RD.stopAt = 0; RD.startPaused = false;
   clearTimeout(RD.tapT);
   try { kaNoteStop(); } catch(e){}
   rdClear("on"); rdClear("now");
@@ -7918,12 +8141,8 @@ function rdMedia(vk){
   set("pause", function(){ if (rdAudio && !rdAudio.paused) rdTogglePause(); });
   set("stop",  function(){ rdStop(); });
   /* someone listening with the screen off needs to skip, not only pause */
-  set("nexttrack", function(){ if (RD.queue.length) rdNext(); });
-  set("previoustrack", function(){
-    if (!RD.queue.length) return;
-    RD.qi = Math.max(0, RD.qi - 2);
-    rdNext();
-  });
+  set("nexttrack", function(){ rdSkip(1); });
+  set("previoustrack", function(){ rdSkip(-1); });
 }
 function rdSyncBtns(){
   var live = !!(rdAudio && !rdAudio.paused);
@@ -7960,11 +8179,15 @@ function rdSyncBtns(){
   if (live || document.body.classList.contains("mushaf")) wakeOn(); else wakeOff();
   /* and for the times the screen does go off, the native side keeps the process
      alive so the WebView is not frozen mid-ayah */
-  if (RD.ka !== live && !KAH.active){
-    RD.ka = live;
+  if (!KAH.active){
     try {
       var KA = kaPlugin();
-      if (KA){ if (live) KA.start(); else KA.stop(); }
+      if (KA){
+        if (live && !RD.ka){ RD.ka = true; KA.start(); }
+        /* paused is still a recitation: its notification and lock-screen
+           button stay, or there is nothing to press to carry on */
+        else if (!rdAudio && RD.ka){ RD.ka = false; KA.stop(); }
+      }
     } catch(e){}
   }
   if ("mediaSession" in navigator)
@@ -7993,6 +8216,15 @@ function rdTogglePause(){
 function rdTrack(){
   rdRaf = requestAnimationFrame(rdTrack);
   var els = RD.words;
+  /* the page was drawn again (speed, translation, cover changed): follow the
+     same ayah on the new words, not the ones that were taken away */
+  if (els && els.length && !els[0].isConnected && RD.curVk){
+    els = RD.words = qa('.qline .w[data-vk="' + RD.curVk + '"]');
+    RD.wts = els.map(function(e){ return e.dataset.end === "1" ? 0.4 : Math.max(1, e.textContent.length); });
+    RD.wtot = RD.wts.reduce(function(a, b){ return a + b; }, 0) || 1;
+    RD.wi = -1;
+    if (rdAudio && !rdAudio.paused) els.forEach(function(e){ e.classList.add("on"); });
+  }
   if (!rdAudio || rdAudio.paused || !els || !els.length || !rdAudio.duration) return;
   var frac = Math.min(1, rdAudio.currentTime / rdAudio.duration), acc = 0, i = 0;
   for (; i < els.length - 1; i++){ acc += RD.wts[i]; if (acc / RD.wtot >= frac) break; }
@@ -8081,8 +8313,8 @@ function fabRender(){
         if (src) src.click();
         return;
       }
-      if (k === "play"){ if (pg) (rdReadMode(), rdPlay(rdPlayKeys(pg), RD.loops)); }
-      else if (k === "pause"){ if (FAB.longStop){ FAB.longStop = false; rdStop(); } else if (rdAudio) rdTogglePause(); else if (pg) (rdReadMode(), rdPlay(rdPlayKeys(pg), RD.loops)); }
+      if (k === "play"){ rdPlayOrResume(pg); }
+      else if (k === "pause"){ if (FAB.longStop){ FAB.longStop = false; rdStop(); } else if (rdAudio) rdTogglePause(); else rdPlayOrResume(pg); }
       else if (k === "stop") rdStop();
       else if (k === "loopc"){
         var LPf = [1,3,5,7,Infinity]; RD.loops = LPf[(LPf.indexOf(RD.loops) + 1) % LPf.length];
@@ -8189,6 +8421,7 @@ function rdPlay(keys, loops, noFollow){
    Someone who only wants to listen has no use for that edge — carry on into the
    next page, turning it as the audio reaches it. */
 async function rdContNext(){
+  var t0 = RD.tok;
   if (RD.page >= TOTAL_PAGES){ rdStop(); return; }
   /* a chosen surah or juz ends where it ends — only the open-ended reader runs on */
   if (RD.stopAt && RD.page >= RD.stopAt){ rdStop(); return; }
@@ -8207,7 +8440,7 @@ async function rdContNext(){
         await new Promise(function(r){ setTimeout(r, 50); });
       }
     }
-    if (RD.page !== p) return;              /* the reader moved on meanwhile */
+    if (RD.page !== p || RD.tok !== t0) return;   /* moved on, or stopped, meanwhile */
     RD.queue = pg.keys.slice(); RD.qi = 0;
     /* Listening plays each page once. This used to restart the repeat count on
        every page, so "repeat 3" meant three times per page for the whole surah
@@ -8219,6 +8452,7 @@ async function rdContNext(){
 async function rdTurnToAyah(vk){
   if (RD.turning) return;
   RD.turning = true;
+  var t0 = RD.tok;
   try {
     var ix = await mushafIndex(), st = ix.start || {}, q = String(vk).split(":");
     var pn = knPageOf(st, +q[0], +q[1]);
@@ -8237,6 +8471,8 @@ async function rdTurnToAyah(vk){
     }
   } catch(e){}
   RD.turning = false;
+  /* Stop pressed, or something else started, while the page was turning */
+  if (RD.tok !== t0 || !RD.queue.length) return;
   rdNext();
 }
 /* Between one ayah and the next.
@@ -8280,7 +8516,8 @@ function rdSpeakMeaning(vk){
   };
   a.onended = done;
   a.onerror = done;               /* no recording for it: carry on rather than stall */
-  try { a.src = trAudioSrc(vk); var pr = a.play(); if (pr && pr.catch) pr.catch(done); }
+  try { a.src = trAudioSrc(vk); a.defaultPlaybackRate = a.playbackRate = RD.speed || 1;
+        var pr = a.play(); if (pr && pr.catch) pr.catch(done); }
   catch(e){ done(); }
 }
 function rdMsg2(t){
@@ -8319,28 +8556,19 @@ function rdNext(){
     }
   }
   RD.turnedFor = null;
-  /* the reader's own qari: their file is the only source there is. One the
-     page has not looked up yet is asked for once; one that is not there is
-     named on screen and passed over - never read in another voice. Seven in a
-     row missing means the folder does not reach here, and it stops. */
+  /* a file on the phone always wins. One not looked up yet is asked for once
+     (a native call, a few milliseconds) before anything goes to the network */
   var mine = recCustom(S.settings.reciter);
-  if (mine && !(RD.files && RD.files[vk])){
+  if (asPlugin() && !rdFilesMine()[vk] && RD.lookFor !== vk){
+    RD.lookFor = vk;
     var t0 = RD.tok = (RD.tok || 0) + 1;
-    asHave([vk]).then(function(h){
+    rdFilesFill([vk]).then(function(){
       if (RD.tok !== t0 || !RD.queue.length) return;
-      RD.midAyah = "start"; RD.ayahLeft = RD.ayahRep;
-      if (h && h[vk]){ RD.files[vk] = h[vk]; RD.qi--; rdNext(); return; }
-      RD.missRun = (RD.missRun || 0) + 1;
-      if (RD.missRun >= 7){
-        rdStop();
-        rdMsg2(fmt(mqL().missRun, mine.name));
-        return;
-      }
-      rdMsg2(mqL().miss + " \u00b7 " + ayLabel(vk) + " \u00b7 " + ayahFile(vk));
-      setTimeout(function(){ if (RD.tok === t0) rdNext(); }, 900);
-    });
+      RD.midAyah = "start"; RD.qi--; rdNext();
+    }, function(){ if (RD.tok === t0 && RD.queue.length){ RD.midAyah = "start"; RD.qi--; rdNext(); } });
     return;
   }
+  RD.lookFor = null;
   /* where to pick up next time someone just wants to keep listening. Held in
      memory only — the page turn already writes, and saving once an ayah would
      mean thousands of writes and sync pushes across one night of listening. */
@@ -8350,6 +8578,7 @@ function rdNext(){
   if (RD.listen && S && S.settings) S.settings.lastListenAt = vk;
   var tok = (RD.tok = (RD.tok || 0) + 1);
   rdClear("on"); rdClear("now");
+  RD.curVk = vk;
   var els = qa('.qline .w[data-vk="' + vk + '"]');
   RD.words = els; RD.wi = -1;
   RD.wts = els.map(function(e){ return e.dataset.end === "1" ? 0.4 : Math.max(1, e.textContent.length); });
@@ -8359,6 +8588,21 @@ function rdNext(){
      what makes "download the juz once over a VPN" worth anything */
   if (RD.blobs && RD.blobs[vk]) srcs = [{ h:"device", u:RD.blobs[vk] }].concat(srcs);
   if (RD.files && RD.files[vk]) srcs = [{ h:"file", u:asSrc(RD.files[vk]) }].concat(srcs);
+  /* nowhere to get it: only the reader's own qari has no address. The ayah
+     is named on screen and passed over - never read in another voice. Seven
+     in a row missing means the folder does not reach here, and it stops. */
+  if (!srcs.length){
+    RD.midAyah = "start";
+    RD.missRun = (RD.missRun || 0) + 1;
+    if (RD.missRun >= 7){
+      rdStop();
+      rdMsg2(fmt(mqL().missRun, mine ? mine.name : ""));
+      return;
+    }
+    rdMsg2(mqL().miss + " \u00b7 " + ayLabel(vk) + " \u00b7 " + ayahFile(vk));
+    setTimeout(function(){ if (RD.tok === tok) rdNext(); }, 900);
+    return;
+  }
   var a = rdEle();
   rdWipe(a);
   rdAudio = a;
@@ -8397,7 +8641,12 @@ function rdNext(){
        about to make, and that rejection came back as AbortError, which the old
        code blamed on the host and used to burn through the whole list */
     a.src = srcs[si].u;
+    /* a new src resets the rate to 1× - set after it, or only the first ayah
+       of a recitation ever obeyed the speed */
+    a.defaultPlaybackRate = a.playbackRate = RD.speed || 1;
     if (si > 0){ var pr = document.getElementById("rd-prog"); if (pr) pr.textContent = "⋯ " + srcs[si].h; }
+    /* paused from the lock screen: come back paused, at the same place */
+    if (RD.startPaused){ RD.startPaused = false; a.preload = "auto"; rdSyncBtns(); return; }
     watch();
     var p = a.play();
     if (p && p.catch) p.catch(function(err){
@@ -8497,7 +8746,7 @@ function ayRange(k0, k1){
   if (!k0 || !k1) return [];
   if (ayCmp(k0, k1) > 0){ var t = k0; k0 = k1; k1 = t; }
   var out = [], cur = k0, guard = 0;
-  while (cur && guard++ < 3000){
+  while (cur && guard++ < 6300){
     out.push(cur);
     if (cur === k1) break;
     cur = ayNext(cur);
@@ -8555,10 +8804,27 @@ function rdBarControls(BL){
    at the end. A listening session may have left the page-crossing on, so it is
    put back here rather than left for the reader to notice and undo. */
 function rdReadMode(){ RD.cont = false; RD.stopAt = 0; }
+/* ▶ on a paused recitation carries on from where it paused. It used to start
+   the page's selection over, so a paused surah Al-Kahf became page 294's
+   lines the moment the reader pressed play again. */
+function rdPlayOrResume(pg){
+  if (rdAudio && rdAudio.paused && RD.queue.length){ rdTogglePause(); return; }
+  if (pg){ rdReadMode(); rdPlay(rdPlayKeys(pg), RD.loops); }
+}
+/* next / previous ayah. A skip is not a repeat: whatever the ayah still owed
+   is dropped, or "next" during "repeat each ayah" played the same one again */
+function rdSkip(by){
+  if (!RD.queue.length) return;
+  RD.midAyah = "start"; RD.ayahLeft = RD.ayahRep;
+  if (by < 0) RD.qi = Math.max(0, RD.qi - 2);
+  rdNext();
+}
 /* what ▶ plays. Memorising means the selected lines, over and over; listening
    means the page, and then the page after it. */
 function rdPlayKeys(pg){
-  if (RD.cont) return pg.keys.slice();
+  /* nothing chosen on this page (only the default, which is not even drawn):
+     ▶ plays the page, as the reader sees it */
+  if (RD.cont || (RD.sel && RD.sel.auto)) return pg.keys.slice();
   return rdSelKeys(pg);
 }
 
@@ -8585,7 +8851,15 @@ function rdRemember(){
   S.settings.lastPage = RD.page;
   save();
 }
+function rdViewKeep(){
+  try {
+    var v = { tr: RD.tr !== false, trOnly: !!RD.trOnly };
+    var o = S.settings.view || {};
+    if (o.tr !== v.tr || o.trOnly !== v.trOnly){ S.settings.view = v; save(); }
+  } catch(e){}
+}
 function renderMushaf(){
+  rdViewKeep();
   var Rd = L.rd, el = document.getElementById("v-mushaf");
   if (!el) return;
   var d = day(TODAY), tp = (d.sabaq.pages && d.sabaq.pages[0]) || S.settings.startPage;
@@ -9106,7 +9380,7 @@ function rdAct(k, b){
       else if (k === "focus") rdFocusIn();
       else if (k === "pick"){ RD.pick = !RD.pick; RD.phrase = false; RD.pickA = null; rdStop(); renderMushaf(); }
       else if (k === "phrase"){ RD.phrase = !RD.phrase; RD.pick = false; RD.phraseA = null; rdStop(); renderMushaf(); }
-      else if (k === "play"){ if (pg) (rdReadMode(), rdPlay(rdPlayKeys(pg), RD.loops)); }
+      else if (k === "play"){ rdPlayOrResume(pg); }
       else if (k === "auto"){ if (pg){ RD.sel = rdAutoSel(pg, RD.sel ? RD.sel.a : 0); renderMushaf(); } }
       else if (k === "setday"){ if (pg) rdSetToday(pg); }
       else if (k === "pause") rdTogglePause();
@@ -9297,10 +9571,11 @@ function rdSheetOpen(which){
     sh.appendChild(top);
     top.querySelector('[data-lsx="many"]').onclick = function(){
       rdVeilClose();
-      /* several pages in a row: keep going past the edge of this one */
-      RD.cont = true; RD.stopAt = 0;
+      /* several pages in a row: from this page on, as one recitation, so the
+         repeat applies to all of it and it carries on with the screen off */
+      rdReadMode();
       var pg2 = RD.pages[RD.page];
-      if (pg2) rdPlay(pg2.keys.slice(), RD.loops);
+      if (pg2) rdPlay(ayRange(pg2.keys[0], "114:6"), RD.loops);
     };
     top.querySelector('[data-lsx="more"]').onclick = function(){ rdVeilClose(); lsOpen(); };
     var sc2 = top.querySelector("#ls-trh");
@@ -10680,7 +10955,7 @@ function rdAyahFull(pg, el){
   rdMeanWire();
   wmSide(el);
   rdReadMode();
-  rdPlay([el.dataset.vk], 1, true);
+  if (wordSound()) rdPlay([el.dataset.vk], 1, true);
 }
 function rdMeanPanel(pg, el){
   var vk = el.dataset.vk, fam = RD.fonts[RD.page] || "";
@@ -11097,6 +11372,16 @@ function revRecord(p, q){
   else if (r.str > 0.75) delete S.weak[p];
   save();
 }
+/* Pages ticked as revised without a rating: recorded as "fine", once a day.
+   Only the single-chip rating ever moved a page on, so the Sabaqi dot and the
+   Manzil tick left the same pages due again every day. */
+function revTickDone(pages){
+  (pages || []).forEach(function(p){
+    var r = S.rev && S.rev[p];
+    if (r && r.last === TODAY && r.reps > 0) return;
+    revRecord(p, 0.8);
+  });
+}
 function revDue(){
   if (!S.rev) return [];
   var m = {}; memorizedPages().forEach(function(p){ m[p] = true; });
@@ -11184,8 +11469,26 @@ if ("speechSynthesis" in window){
 }
 function ntVoiceOn(){ return S && S.settings.zikrVoice !== false; }
 function ntCan(){ return typeof Notification !== "undefined"; }
+/* what Android says about notifications and exact alarms, for the app */
+var NTN = { allowed:true, exact:null };
+function ntStatusRefresh(){
+  var R = ntPlugin();
+  if (!R || !R.status) return;
+  R.status().then(function(st){
+    if (!st) return;
+    var ch = st.allowed !== NTN.allowed || st.exact !== NTN.exact;
+    NTN.allowed = !!st.allowed; NTN.exact = st.exact;
+    if (ch) try { renderSettings(); } catch(e){}
+  }).catch(function(){});
+}
 function ntOn(){ return ntCan() && Notification.permission === "granted"; }
 async function ntAsk(){
+  var R = ntPlugin();
+  if (R && R.askNotify){
+    try { await R.askNotify(); } catch(e){}
+    ntStatusRefresh(); ntSchedule();
+    return;
+  }
   if (!ntCan()) return;
   try { await Notification.requestPermission(); } catch(e){}
   renderSettings(); ntSchedule();
@@ -11601,10 +11904,9 @@ function recBox(){
         if (!url) return;
         /* a fresh anchor, not this one — setting href and clicking the button
            that is handling the click just calls the handler again */
-        var a = document.createElement("a");
-        a.href = url;
-        a.download = "hifz-" + d + "-p" + RD.page + ".webm";
-        document.body.appendChild(a); a.click(); a.remove();
+        fetch(url).then(function(r){ return r.blob(); }).then(function(bl){
+          saveOut("hifz-" + d + "-p" + RD.page + ".webm", bl.type || "audio/webm", null, bl);
+        }).catch(function(){ alert(fxL().saveFail); });
       });
     };
   });
@@ -11624,7 +11926,11 @@ function rdPlayPhrase(pg, vk, i0, i1){
   for (i = 0; i < i0; i++) s0 += wt[i];
   for (i = 0; i <= i1; i++) s1 += wt[i];
   var f0 = s0 / tot, f1 = Math.min(1, s1 / tot), left = Math.max(1, RD.loops);
-  var a = rdEle(), cands = audioSrcs(vk), ci = 0;
+  var a = rdEle(), cands = audioSrcs(vk), ci = 0, looping = false;
+  /* the file on the phone first, as everywhere else */
+  if (RD.blobs && RD.blobs[vk]) cands = [{ h:"device", u:RD.blobs[vk] }].concat(cands);
+  if (RD.files && RD.files[vk]) cands = [{ h:"file", u:asSrc(RD.files[vk]) }].concat(cands);
+  if (!cands.length){ rdMsg2(mqL().miss + " \u00b7 " + ayLabel(vk) + " \u00b7 " + ayahFile(vk)); return; }
   rdWipe(a);
   rdUtok++;
   a.muted = false; a.volume = 1;
@@ -11635,11 +11941,15 @@ function rdPlayPhrase(pg, vk, i0, i1){
   a.onerror = function(){ if (rdAudio === a && ++ci < cands.length){ a.src = cands[ci].u; try { a.load(); } catch(e){} } };
   a.onloadedmetadata = function(){ a.currentTime = f0 * a.duration; a.play().catch(function(){}); };
   a.ontimeupdate = function(){
+    /* pause() fires one more timeupdate past the end point; without this each
+       pass was counted twice and "×3" played it twice */
+    if (looping) return;
     if (a.duration && a.currentTime >= f1 * a.duration){
+      looping = true;
       left--;
       if (left <= 0){ rdStop(); return; }
       a.pause();
-      setTimeout(function(){ if (rdAudio === a){ a.currentTime = f0 * a.duration; a.play().catch(function(){ rdMsg("tap"); }); } }, 800);
+      setTimeout(function(){ if (rdAudio === a){ a.currentTime = f0 * a.duration; looping = false; a.play().catch(function(){ rdMsg("tap"); }); } }, 800);
     }
   };
   a.onplay = rdSyncBtns; a.onpause = rdSyncBtns;
@@ -12233,6 +12543,10 @@ function uiLabels(){
 function mushafChoose(id){
   var wasId = S.settings.mushafId;
   if (id === wasId) return;
+  var nd = MUSHAFS.filter(function(m){ return m.id === id; })[0];
+  var hasData = Object.keys(S.days || {}).some(function(k){ return S.days[k].sabaq && S.days[k].sabaq.done; }) ||
+                knownPages().length || Object.keys(S.memp || {}).length || Object.keys(S.mem || {}).length;
+  if (nd && nd.pages !== TOTAL_PAGES && hasData && !confirm(fxL().mushafWarn)) return;
   S.settings.mushafId = id;
   applyMushaf();
   mushafProve(wasId, id);
@@ -12242,6 +12556,7 @@ function mushafChoose(id){
   S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, S.settings.startPage));
   S.settings.lastPage = Math.max(1, Math.min(TOTAL_PAGES, S.settings.lastPage || 1));
   RD.page = Math.max(1, Math.min(TOTAL_PAGES, RD.page || 1));
+  memBust();
   save(); renderAll();
 };
 
@@ -12489,26 +12804,30 @@ function lsSleepSet(m){
   RD.sleepAt = m ? Date.now() + m * 60000 : 0;
   lsFoot();
 }
+/* Pages p0 to p1, played as ONE queue of ayat that turns the pages as it goes.
+
+   It used to be one page at a time, each queued when the last ran out. So the
+   repeat count only ever applied to the first page ("endless" never left it,
+   "×3" played page one three times and the rest once), and with the screen
+   off the phone was handed a single page and stopped at its edge. */
 async function lsPlay(p0, p1, vk0){
   lsClose();
-  RD.cont = true;
-  RD.stopAt = Math.min(TOTAL_PAGES, p1 || TOTAL_PAGES);
-  if (RD.sleepFor) RD.sleepAt = Date.now() + RD.sleepFor * 60000;
+  RD.cont = false; RD.stopAt = 0;
+  var last = Math.min(TOTAL_PAGES, p1 || TOTAL_PAGES);
   openMushaf(p0);
   try {
     try { await rdLoadFont(p0); } catch(e){}
-    var pg = await rdLoadPage(p0);
+    var pg = await rdLoadPage(p0), pgE = await rdLoadPage(last);
     if (!document.hidden){
       for (var i = 0; i < 60; i++){
         if (document.querySelector('.qline .w[data-vk="' + pg.keys[0] + '"]')) break;
         await new Promise(function(r){ setTimeout(r, 50); });
       }
     }
-    var keys = pg.keys.slice();
     /* a surah rarely begins where its page does — start on its first ayah */
-    if (vk0){ var ix = keys.indexOf(vk0); if (ix > 0) keys = keys.slice(ix); }
+    var keys = ayRange(vk0 || pg.keys[0], pgE.keys[pgE.keys.length - 1]);
     if (!S.settings.lastListen || S.settings.lastListen.mode !== "page" || !vk0){
-      S.settings.lastListen = { mode:"page", p0:p0, p1:RD.stopAt };
+      S.settings.lastListen = { mode:"page", p0:p0, p1:last };
       save();
     }
     /* the repeat the picker was set to, not a hardcoded one - choosing "endless"
@@ -12608,10 +12927,9 @@ function lsFoot(){
     '</div>' +
     '<div class="lswhat">' + esc(lsWhat()) + '</div>';
   var pl = document.getElementById("ls-play");
-  if (pl) pl.onclick = function(){
-    if (live){ rdTogglePause(); lsFoot(); return; }
-    lsPlayChoice();
-  };
+  /* it plays what the sentence under it says - even over something already
+     playing. Pausing that is the card at the top's job. */
+  if (pl) pl.onclick = function(){ lsPlayChoice(); };
   var st = document.getElementById("ls-stop");
   if (st) st.onclick = function(){ rdStop(); lsFoot(); };
 }
@@ -12728,9 +13046,11 @@ async function lsRender(){
       '<div class="lssep">' + esc(T.repH) + '</div>' +
       '<div class="lspair">' +
         '<label>' + esc(T.repAyah) + '<select id="lf-repa">' +
-          [0,1,2,3,4,5,7,10].map(function(v){
-            return '<option value="' + v + '"' + ((RD.ayahRep || 0) === v ? " selected" : "") +
-                   '>' + n(v) + '</option>'; }).join("") + '</select></label>' +
+          /* how many times each ayah is heard - 1 is once. (It used to count the
+             extra plays, so "3" meant four.) */
+          [1,2,3,4,5,7,10].map(function(v){
+            return '<option value="' + v + '"' + ((RD.ayahRep || 0) + 1 === v ? " selected" : "") +
+                   '>' + (v === 1 ? "\u00d7" + n(1) : "\u00d7" + n(v)) + '</option>'; }).join("") + '</select></label>' +
         '<label>' + esc(T.repAll) + '<select id="lf-repall">' +
           [1,3,5,7,0].map(function(v){
             var cur = (RD.loops === Infinity) ? 0 : RD.loops;
@@ -12774,7 +13094,7 @@ async function lsRender(){
     if (LSP.p1 < LSP.p0){ LSP.p0 = LSP.p1; lsRender(); } else lsFoot();
   });
   on("lf-repa", "onchange", function(){
-    RD.ayahRep = +this.value || 0; RD.ayahLeft = RD.ayahRep;
+    RD.ayahRep = Math.max(0, (+this.value || 1) - 1); RD.ayahLeft = RD.ayahRep;
     S.settings.ayahRep = RD.ayahRep; save();
   });
   on("lf-repall", "onchange", function(){
@@ -12973,15 +13293,21 @@ function knFoot(){
   f.innerHTML = '<span class="sum">' + fmt(T.have, n(have)) + ' · ' + fmt(T.left, n(left)) + '</span>' +
     '<span style="display:flex;align-items:center;gap:8px;white-space:nowrap">' +
       '<label for="kn-start" style="font-size:12px;color:var(--ink-3)">' + T.startAt + '</label>' +
-      '<input type="number" id="kn-start" min="1" max="' + TOTAL_PAGES + '" value="' + (S.settings.startPage || first) +
+      '<input type="number" id="kn-start" min="1" max="' + TOTAL_PAGES + '" value="' + (first || S.settings.startPage || 1) +
         '" style="width:74px;padding:9px 10px;border:1px solid var(--rule);border-radius:999px;background:var(--card);font:inherit;color:var(--ink)">' +
       '<button class="abtn go" id="kn-setstart">' + T.set + '</button>' +
     '</span>' +
     '<button class="abtn danger" id="kn-wipe">' + T.wipe + '</button>';
   document.getElementById("kn-setstart").onclick = function(){
     S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +document.getElementById("kn-start").value || 1));
+    planStartChanged();
+    /* chosen here during the welcome: the welcome's own field says the same,
+       or pressing its button put page 1 back */
+    var op = document.getElementById("ob-page");
+    if (op) op.value = S.settings.startPage;
     save();
     knFoot();
+    try { renderToday(); } catch(e){}
   };
   document.getElementById("kn-wipe").onclick = function(){
     knownMark(knownPages(), null);
@@ -13638,7 +13964,7 @@ function drawerWire(){
   if (sb) sb.onclick = idxOpen;   /* "search" in a mushaf means find a surah or juz */
   qa("#drawer [data-go]").forEach(function(b){ b.onclick = function(){ goView(b.dataset.go); }; });
   var cb = document.getElementById("dw-cloud");
-  if (cb) cb.onclick = cloudOpen;
+  if (cb){ cb.onclick = cloudOpen; cb.hidden = !Cloud.url(); }
   var db = document.getElementById("dw-dl");
   if (db){
     db.onclick = dlOpen;
@@ -13721,13 +14047,10 @@ function fatal(err){
 }
 window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message); });
 
-(async function init(){ try {
-  var loaded = await Store.get();
-  var fresh = !(loaded && loaded.settings);
-
-  if (fresh) S = defaults();
-  else {
-    S = loaded;
+/* Everything a saved state from an older version may lack, filled in - and
+   the mushaf it was made in applied. Run at start, and again whenever the
+   whole state is replaced (import, restore), which used to skip all of it. */
+function normalizeState(){
     if (!S.weak) S.weak = {};
     if (S.settings.manualLines == null) S.settings.manualLines = 0;
     if (S.settings.lastPage == null) S.settings.lastPage = 0;
@@ -13743,8 +14066,8 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     if (S.settings.loops != null) RD.loops = +S.settings.loops ? +S.settings.loops : Infinity;
     if (S.settings.ayahRep != null) RD.ayahRep = +S.settings.ayahRep || 0;
     RD.trAudio = !!S.settings.trAudio;
+    if (S.settings.view){ RD.tr = S.settings.view.tr !== false; RD.trOnly = !!S.settings.view.trOnly; }
     if (S.settings.zikrEvery == null) S.settings.zikrEvery = 0;
-    try { zikrScan(); } catch(e){}
     if (S.settings.zikrVoice == null) S.settings.zikrVoice = true;
     if (!S.rev) S.rev = {};
     if (!S.hl) S.hl = {};
@@ -13758,7 +14081,23 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
     if (!S.drill) S.drill = { items:{}, salat:{}, sess:{} };
     applyMushaf();
     if (S.settings.drive === undefined) S.settings.drive = null;
+    /* someone who got this far had finished the welcome */
+    if (S.settings.obDone == null) S.settings.obDone = 1;
+    memBust();
+}
+(async function init(){ try {
+  var loaded = await Store.get();
+  /* not finished the welcome = still new, even if something was saved while
+     it was open (the language choice saves) */
+  var fresh = !(loaded && loaded.settings) || loaded.settings.obDone === 0;
+
+  /* a welcome left half way keeps what was chosen in it (known pages) */
+  if (!(loaded && loaded.settings)) S = defaults();
+  else {
+    S = loaded;
+    normalizeState();
   }
+  try { zikrScan(); } catch(e){}
 
   /* preload every language so the picker shows real names */
   await Promise.all(LANGS.map(function(c){

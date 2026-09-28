@@ -37,6 +37,11 @@ public class ReminderReceiver extends BroadcastReceiver {
     static final String KEY_BODY  = "body";
     static final String KEY_AWAY  = "away";
     static final String KEY_SEEN  = "seen";
+    /* the planned rest day (0 = Sunday, as the page counts), the date today's
+       lesson was ticked off, and the date the lesson words were written for */
+    static final String KEY_REST  = "restDow";
+    static final String KEY_DONE  = "doneDay";
+    static final String KEY_BDAY  = "bodyDay";
     static final int    ALARM_ID  = 7311;
     static final int    NOTE_ID   = 7312;
 
@@ -80,20 +85,27 @@ public class ReminderReceiver extends BroadcastReceiver {
 
         if (ACT_SUNNAH.equals(action)) {
             int idx = intent.getIntExtra(EXTRA_IDX, -1);
-            if (idx >= 0) { showSunnah(ctx, idx); ReminderPlugin.scheduleSunnah(ctx, idx); }
+            if (idx >= 0) { showSunnah(ctx, idx, false); ReminderPlugin.scheduleSunnah(ctx, idx); }
             return;
         }
 
-        show(ctx);
+        show(ctx, true);
         /* an exact alarm fires once; ask for tomorrow's before this one ends */
         SharedPreferences p = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         int h = p.getInt(KEY_HOUR, -1), m = p.getInt(KEY_MIN, -1);
         if (h >= 0 && m >= 0) ReminderPlugin.schedule(ctx, h, m);
     }
 
-    boolean post(Context ctx) { return show(ctx); }
+    boolean post(Context ctx) { return show(ctx, false); }
+
+    static String today() {
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        return String.format(java.util.Locale.US, "%04d-%02d-%02d",
+                c.get(java.util.Calendar.YEAR), c.get(java.util.Calendar.MONTH) + 1,
+                c.get(java.util.Calendar.DAY_OF_MONTH));
+    }
     boolean postZikr(Context ctx) { return showZikr(ctx); }
-    boolean postSunnah(Context ctx, int idx) { return showSunnah(ctx, idx); }
+    boolean postSunnah(Context ctx, int idx) { return showSunnah(ctx, idx, true); }
 
     static JSONObject sunnahItem(Context ctx, int idx) {
         String raw = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY_SUNNAH, "");
@@ -106,9 +118,9 @@ public class ReminderReceiver extends BroadcastReceiver {
 
     /** One sunnah reminder. Its words come from the web layer (five languages);
      *  tapping it opens the app on that surah, or that ayah. */
-    private boolean showSunnah(Context ctx, int idx) {
+    private boolean showSunnah(Context ctx, int idx, boolean test) {
         JSONObject o = sunnahItem(ctx, idx);
-        if (o == null || !o.optBoolean("on", true)) return false;
+        if (o == null || (!test && !o.optBoolean("on", true))) return false;   /* "show" works even when off */
         String title = o.optString("t", ""), body = o.optString("b", ""), vk = o.optString("vk", "");
         if (title.length() == 0) return false;
 
@@ -231,7 +243,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         return null;
     }
 
-    private boolean show(Context ctx) {
+    private boolean show(Context ctx, boolean fromAlarm) {
         NotificationManager nm =
                 (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         if (nm == null) return false;
@@ -253,6 +265,17 @@ public class ReminderReceiver extends BroadcastReceiver {
            the one that fits. */
         String[] away = awayWords(p);
         if (away != null) { title = away[0]; body = away[1]; }
+        else if (fromAlarm) {
+            /* the page does not ring on a rest day, or once the lesson is done;
+               the alarm used to, every day, naming a lesson already finished */
+            String t = today();
+            if (t.equals(p.getString(KEY_DONE, ""))) return false;
+            int dow = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_WEEK) - 1;
+            if (dow == p.getInt(KEY_REST, -1)) return false;
+            /* words written on another day name another day's lesson */
+            String bd = p.getString(KEY_BDAY, "");
+            if (bd.length() > 0 && !t.equals(bd)) body = "";
+        }
 
         Intent open = new Intent(ctx, MainActivity.class);
         open.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
