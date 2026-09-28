@@ -4806,12 +4806,26 @@ function memSyncDay(){
 /* where the marks say the next lesson begins — a reader who marked three pages
    tonight starts after them tomorrow, not after the one the checklist knows */
 function memSlot(){
-  var mp = memPages(), pages = Object.keys(mp).map(Number).sort(function(a,b){ return a-b; });
-  if (!pages.length) return null;
-  var last = pages[pages.length - 1], o = mp[last];
-  if (o.upto >= LINES_PER_PAGE) return { page:Math.min(TOTAL_PAGES, last + 1), from:1 };
-  if (o.upto > 0) return { page:last, from:o.upto + 1 };
-  return null;
+  /* The most recently marked ayah decides - not the highest page ever marked.
+     A reader who ticked juz 30 last year and is now working through Al-Kahf
+     continues in Al-Kahf; the old rule sent them to page 604. And a lesson
+     that starts mid-page (lines 8-12) counts from where it actually ends,
+     not from an unbroken run down from the top of the page. */
+  var m = memMap(), mp = mempMap(), best = null;
+  var take = function(date, page, ln){
+    if (!best || date > best.date ||
+        (date === best.date && (page > best.page || (page === best.page && ln > best.ln))))
+      best = { date:date, page:page, ln:ln };
+  };
+  Object.keys(m).forEach(function(vk){
+    var e = m[vk];
+    if (e && e.length >= 4) take(String(e[0]), +e[1], +e[3]);
+  });
+  Object.keys(mp).forEach(function(pn){ take(String(mp[pn]), +pn, LINES_PER_PAGE); });
+  if (!best) return null;
+  var o = memPages()[best.page], last = (o && o.last) || LINES_PER_PAGE;
+  if (best.ln >= last) return { page:Math.min(TOTAL_PAGES, best.page + 1), from:1, date:best.date };
+  return { page:best.page, from:best.ln + 1, date:best.date };
 }
 
 /* only pages finished to the last line count as memorized — plus whatever was
@@ -4833,6 +4847,7 @@ function nextSlot(){
       var p = ps[ps.length - 1], to = last.to || LINES_PER_PAGE;
       byDay = (to < LINES_PER_PAGE) ? { page:p, from:to + 1 }
                                     : { page:Math.min(TOTAL_PAGES, p + 1), from:1 };
+      byDay.date = keys[keys.length - 1];
     }
   }
   /* the marks on the page win when they run further than the checklist does */
@@ -4840,6 +4855,8 @@ function nextSlot(){
   if (!byDay && !byMem) return { page: S.settings.startPage, from: 1 };
   if (!byDay) return byMem;
   if (!byMem) return byDay;
+  /* whichever was worked on more recently; on the same day, the further one */
+  if (byMem.date !== byDay.date) return byMem.date > byDay.date ? byMem : byDay;
   var ahead = (byMem.page > byDay.page) || (byMem.page === byDay.page && byMem.from > byDay.from);
   return ahead ? byMem : byDay;
 }
@@ -5211,7 +5228,9 @@ function renderToday(){
   var prevPages = prev ? S.days[prev].sabaq.pages : [];
   var H = hbL();
 
-  if (blocked && prevPages.length){
+  /* d.sabaq.user: the reader set today's lesson themselves (☀). From then on
+     it is theirs - neither a failed test nor the weekly line target rewrites it. */
+  if (blocked && prevPages.length && !d.sabaq.user){
     d.sabaq.pages = prevPages.slice();
     d.sabaq.from  = S.days[prev].sabaq.from || 1;
     d.sabaq.to    = S.days[prev].sabaq.to   || Math.min(LINES_PER_PAGE, (S.days[prev].sabaq.from || 1) + lines - 1);
@@ -5220,7 +5239,7 @@ function renderToday(){
     d.sabaq.pages = [slot.page];
     d.sabaq.from  = slot.from;
     d.sabaq.to    = Math.min(LINES_PER_PAGE, slot.from + lines - 1);
-  } else if (!rest && (d.sabaq.pages || []).length < 2){
+  } else if (!rest && (d.sabaq.pages || []).length < 2 && !d.sabaq.user && !d.sabaq.ayahFrom){
     var nto = Math.min(LINES_PER_PAGE, (d.sabaq.from || 1) + lines - 1);
     if (nto !== d.sabaq.to){ d.sabaq.to = nto; d.sabaq.ayahFrom = null; d.sabaq.ayahTo = null; }
   }
@@ -6892,10 +6911,10 @@ async function mushafIndex(){
   var def = mushafDef();
   if (IDX.cache[def.id]) return IDX.cache[def.id];
   var info = await ipInfo(def);
-  var per = info.chunk || 25, n = Math.ceil(def.pages / per), sp = {}, st = {};
+  var per = info.chunk || 25, n = Math.ceil(def.pages / per), sp = {}, st = {}, partial = false;
   for (var k = 0; k < n; k++){
     var c;
-    try { c = await getJSON(def.local + "/c" + k + ".json"); } catch(e){ continue; }
+    try { c = await getJSON(def.local + "/c" + k + ".json"); } catch(e){ partial = true; continue; }
     Object.keys(c).forEach(function(ps){
       var p = +ps;
       (c[ps] || []).forEach(function(ln){
@@ -6908,8 +6927,12 @@ async function mushafIndex(){
       });
     });
   }
-  IDX.cache[def.id] = { surah:sp, start:st };
-  return IDX.cache[def.id];
+  /* a chunk that failed to load (a poor line) would leave pages unplaced, and
+     every ayah after the gap would be filed under the wrong page - forever,
+     if it were cached. Try again next time instead. */
+  var ix = { surah:sp, start:st };
+  if (!partial) IDX.cache[def.id] = ix;
+  return ix;
 }
 var WBW = { data:{} };
 /* GitHub Pages serves the app from a sub-folder (/repo/), and a URL without the
@@ -8149,6 +8172,11 @@ function ayRange(k0, k1){
   }
   return out;
 }
+/* A page turn: a range the reader chose is kept - it may run onto this page,
+   and rdPaint decides - while a mere default is dropped. */
+function rdSelTurn(){
+  if (!RD.sel || RD.sel.auto) RD.sel = null;
+}
 function rdSelKeys(pg){
   if (!RD.sel) return [];
   /* k0/k1 are the range the reader actually chose; a/b are only where it lands
@@ -8275,7 +8303,7 @@ function renderMushaf(){
        '<div class="rdsabaq" id="rd-selbar"></div>' +
        '</div>';
 
-  if (RD.pick) h += '<p class="pickmsg">' + (RD.pickA ? Rd.pickB : Rd.pickA) + '</p>';
+  if (RD.pick) h += '<p class="pickmsg">' + (RD.pickA != null ? Rd.pickB : Rd.pickA) + '</p>';
   if (RD.phrase) h += '<p class="pickmsg">' + L.rec.phraseHint + '</p>';
   h += '<div class="rdinfo" id="rd-info"></div>';
   h += '<div class="rdpapers">' +
@@ -8375,7 +8403,10 @@ async function rdSetToday(pg){
   d.sabaq.ayahFrom = keys[0];
   d.sabaq.ayahTo   = keys[keys.length - 1];
   d.sabaq.blocks   = [false,false,false];
-  save(); renderToday(); renderProgress();
+  d.sabaq.done     = false;
+  d.sabaq.user     = true;
+  if (RD.sel) RD.sel.auto = false;
+  save(); renderToday(); renderProgress(); renderMushaf();
   try { ntNative(); } catch(e){}
   var bar = document.getElementById("rd-prog");
   if (bar) bar.textContent = L.rd.setDone;
@@ -8399,7 +8430,7 @@ function rdPageSpan(pg){
   return [first || 1, last || LINES_PER_PAGE];
 }
 function rdMemKeys(pg, whole){
-  return ((!whole && RD.sel) ? rdSelKeys(pg) : pg.keys) || [];
+  return ((!whole && RD.sel && !RD.sel.auto) ? rdSelKeys(pg) : pg.keys) || [];
 }
 async function rdMarkMem(pg, whole){
   if (!pg) return;
@@ -8429,7 +8460,7 @@ async function rdMarkMem(pg, whole){
     });
     memMark(pn2, items, !already, target.keys, rdPageSpan(target));
   }
-  var what = (!whole && RD.sel)
+  var what = (!whole && RD.sel && !RD.sel.auto)
     ? L.rd.ay + " " + ayLabel(keys[0]) + "–" + ayLabel(keys[keys.length - 1])
     : L.mu.memPage;
   renderMushaf(); renderToday(); renderProgress(); renderChrome();
@@ -8454,10 +8485,11 @@ function rdSelBar(pg){
      page could not name the far end. The list opens at the page's own ayat,
      because that is where the reader is - scrolling reaches the rest. */
   var multi = false, surahs = [];
-  pg.keys.forEach(function(k){
-    var sn = +k.split(":")[0];
-    if (surahs.indexOf(sn) < 0) surahs.push(sn);
+  pg.keys.concat([RD.sel.k0, RD.sel.k1].filter(Boolean)).forEach(function(k){
+    var sn = +String(k).split(":")[0];
+    if (sn && surahs.indexOf(sn) < 0) surahs.push(sn);
   });
+  surahs.sort(function(x, y){ return x - y; });
   multi = surahs.length > 1;
   var opts = function(cur){
     var out = "";
@@ -8481,12 +8513,19 @@ function rdSelBar(pg){
     (nl ? '<span class="sbn">' + fmt(((L.set && L.set.linesN) || (L.settings && L.settings.linesN) || "{0}"), n(nl)) + '</span>' : '') +
     '<button class="sbbtn" data-rd="auto" title="' + L.rd.auto + '">⤢</button>' +
     '<button class="sbbtn go" data-rd="setday" title="' + L.rd.setDay + '">☀</button>';
+  var fill = function(){
+    if (!RD.sel.k0) RD.sel.k0 = pg.keys[RD.sel.a];
+    if (!RD.sel.k1) RD.sel.k1 = pg.keys[RD.sel.b];
+    RD.sel.auto = false;
+  };
   document.getElementById("rd-a").onchange = function(){
+    fill();
     RD.sel.k0 = this.value;
     if (ayCmp(RD.sel.k1, RD.sel.k0) < 0) RD.sel.k1 = RD.sel.k0;
     RD.sel.exact = true; RD.sel.ln0 = RD.sel.ln1 = null; rdStop(); renderMushaf();
   };
   document.getElementById("rd-b").onchange = function(){
+    fill();
     RD.sel.k1 = this.value;
     if (ayCmp(RD.sel.k1, RD.sel.k0) < 0) RD.sel.k0 = RD.sel.k1;
     RD.sel.exact = true; RD.sel.ln0 = RD.sel.ln1 = null; rdStop(); renderMushaf();
@@ -8494,7 +8533,7 @@ function rdSelBar(pg){
   qa("#rd-selbar [data-rd]").forEach(function(b){
     b.onclick = function(){
       var k = b.dataset.rd;
-      if (k === "auto"){ RD.sel = rdAutoSel(pg, RD.sel.a); renderMushaf(); }
+      if (k === "auto"){ RD.sel = rdAutoSel(pg, RD.sel.a); RD.sel.auto = false; renderMushaf(); }
       else if (k === "setday") rdSetToday(pg);
       else if (k === "hide"){ RD.hide = ((+RD.hide || 0) + 1) % 4; renderMushaf(); }
       else if (k === "tr"){ RD.tr = (RD.tr === false); renderMushaf(); }
@@ -8644,7 +8683,7 @@ function rdSwipeWire(){
     setTimeout(function(){
       rdStop();
       RD.page = fwd ? Math.min(TOTAL_PAGES, RD.page + 1) : Math.max(1, RD.page - 1);
-      RD.sel = null; renderMushaf();
+      rdSelTurn(); renderMushaf();
     }, 150);
   }
   box.addEventListener("touchstart", function(e){
@@ -8718,8 +8757,8 @@ function rdAct(k, b){
   else if (k === "menu"){ drawerOpen(); }
       else if (k === "index"){ idxOpen(); }
       else if (k === "mic"){ rdMicToggle(); }
-      else if (k === "prev"){ rdStop(); RD.page = Math.max(1, RD.page - 1); RD.sel = null; renderMushaf(); }
-      else if (k === "next"){ rdStop(); RD.page = Math.min(TOTAL_PAGES, RD.page + 1); RD.sel = null; renderMushaf(); }
+      else if (k === "prev"){ rdStop(); RD.page = Math.max(1, RD.page - 1); rdSelTurn(); renderMushaf(); }
+      else if (k === "next"){ rdStop(); RD.page = Math.min(TOTAL_PAGES, RD.page + 1); rdSelTurn(); renderMushaf(); }
       else if (k === "hide"){ RD.hide = ((+RD.hide || 0) + 1) % 4; renderMushaf(); }
       else if (k === "paper"){ rdPaperCycle(); }
       else if (k === "curtain"){ RD.curtainOn = !RD.curtainOn; RD.curtain = RD.curtainOn ? 0.25 : 0; renderMushaf(); }
@@ -10016,12 +10055,23 @@ async function rdPaint(p, isTodayPage){
     }
     /* a range chosen across a boundary must survive the page turn that follows it */
     if (RD.sel && RD.sel.page !== p && rdSelTouches(pg)) RD.sel.page = p;
+    var d = day(TODAY), lp = (d.sabaq && d.sabaq.pages) || [];
+    /* every page the lesson touches is a lesson page, not just the first */
+    var lessonHere = lp.indexOf(p) >= 0 && !!d.sabaq.from;
     if (!RD.sel || RD.sel.page !== p){
-      var d = day(TODAY);
-      if (isTodayPage && d.sabaq.from)
+      if (lessonHere && d.sabaq.ayahFrom && d.sabaq.ayahTo){
+        /* an ayah-chosen lesson reopens as exactly those ayat, on each page */
+        RD.sel = { k0:d.sabaq.ayahFrom, k1:d.sabaq.ayahTo, exact:true, a:0, b:0, ln0:null, ln1:null };
+      } else if (lessonHere && p === lp[0]){
         RD.sel = rdSelFromLines(pg, d.sabaq.from, d.sabaq.to || (d.sabaq.from + targetLines() - 1));
-      else
+      } else if (lessonHere){
+        RD.sel = rdSelFromLines(pg, 1, d.sabaq.to || LINES_PER_PAGE);
+      } else {
+        /* only a suggestion: nothing is lit and ✓ marks the whole page until
+           the reader actually chooses something */
         RD.sel = rdAutoSel(pg, 0);
+        RD.sel.auto = true;
+      }
       RD.sel.page = p;
     }
     /* where the chosen range lands on THIS page: a range starting earlier opens
@@ -10037,9 +10087,11 @@ async function rdPaint(p, isTodayPage){
     }
     var dayNow = day(TODAY);
     var plain = !!(S.settings && S.settings.plain);
-    var marking = (!plain && !!(isTodayPage && dayNow.sabaq && dayNow.sabaq.from)) || !!RD.pick || !!RD.phrase;
-    var sel = {}, pickOne = RD.pick && RD.pickA != null;
-    if (pickOne) sel[pg.keys[RD.pickA]] = true;
+    /* a choice the reader made shows wherever it is - not only on the lesson page */
+    var marking = (!plain && (lessonHere || !RD.sel.auto)) || !!RD.pick || !!RD.phrase;
+    var pickIx = RD.pickA != null ? rdKeyIdx(pg, RD.pickA) : -1;
+    var sel = {}, pickOne = RD.pick && pickIx >= 0;
+    if (pickOne) sel[RD.pickA] = true;
     else rdSelKeys(pg).forEach(function(k){ sel[k] = true; });
     /* ayah-picked blocks highlight word by word (exactly the chosen ayat);
        line-based blocks highlight whole lines */
@@ -10105,7 +10157,7 @@ async function rdPaint(p, isTodayPage){
           var wi = wcnt[w.vk] || 0; wcnt[w.vk] = wi + 1;
           var hc = S.hl && S.hl[w.vk + "#" + wi];
           var tpw = TPP.map[w.vk];
-          return '<span class="w' + (on ? (byWord ? " sw" : "") : " off") + (on && cov ? " cov" + cov : "") +
+          return '<span class="w' + (on ? ((byWord && marking) ? " sw" : "") : " off") + (on && cov ? " cov" + cov : "") +
                  (tpw ? " tp tp" + tpw.ci : "") +
                  (hc ? " hl hl-" + hc : "") + (S.bm && S.bm[w.vk] ? " bmk" : "") +
                  '" data-vk="' + w.vk + '" data-wi="' + wi + '"' +
@@ -10161,12 +10213,13 @@ async function rdPaint(p, isTodayPage){
           return;
         }
         if (RD.pick){
-          if (RD.pickA == null){ RD.pickA = ix; }
+          if (RD.pickA == null){ RD.pickA = w.dataset.vk; }
           else {
-            var pa = Math.min(RD.pickA, ix), pb = Math.max(RD.pickA, ix);
-            var ra = rdLinesOf(pg, pg.keys[pa]), rb = rdLinesOf(pg, pg.keys[pb]);
-            RD.sel = { a:pa, b:pb, page:RD.page, exact:true,
-                       ln0:(ra ? ra[0] : 1), ln1:(rb ? rb[1] : LINES_PER_PAGE) };
+            /* the first tap may have been on the page before: the range runs
+               from that ayah to this one, whichever way round */
+            var ka = RD.pickA, kb = w.dataset.vk;
+            if (ayCmp(ka, kb) > 0){ var kt = ka; ka = kb; kb = kt; }
+            RD.sel = { k0:ka, k1:kb, a:0, b:0, page:RD.page, exact:true, ln0:null, ln1:null };
             RD.pickA = null; RD.pick = false;
           }
           renderMushaf();
@@ -10178,10 +10231,7 @@ async function rdPaint(p, isTodayPage){
       /* two taps ask what the ayah says; a hold asks about the one word and
          offers to mark it. Ask and mark are different questions, so they are
          different gestures. */
-      w.ondblclick = function(){
-        if (RD.pick || RD.phrase) return;
-        rdWordMean(pg, w);
-      };
+
       /* A finger is never still.
 
          This used to set moved on any pointermove at all, and both gestures
