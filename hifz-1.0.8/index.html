@@ -2473,6 +2473,16 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .lsnowb{display:flex;gap:8px;flex-wrap:wrap}
 .lsnowb .abtn{flex:1 1 auto;justify-content:center}
 .dlrecrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.dlxrow0{display:flex;justify-content:flex-end;margin:10px 0 2px}
+.dlxbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 10px;
+  font-size:13.5px;color:var(--ink-2)}
+.dlxbar b{font-weight:600;color:var(--ink)}
+.dlrow.dlx1.on{background:rgba(128,32,32,.09)}
+.abtn.danger[disabled]{opacity:.45;pointer-events:none}
+.myq{margin-top:8px}
+.myq summary{font-size:13px;color:var(--verdigris);cursor:pointer;padding:6px 0;list-style:none}
+.myq summary::-webkit-details-marker{display:none}
+.myq .hint{line-height:1.6}
 .dlrecrow>span{font-size:13px;color:var(--ink-2)}
 .dlrecrow .knchip{max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dlbar{height:6px;border-radius:999px;background:var(--paper-2);overflow:hidden;margin:10px 0 6px}
@@ -5653,7 +5663,7 @@ var DLL = {
        recPick:"اختر القرّاء", recAll:"الكل", recN:"{0} قارئ", recDone:"تم" },
 };
 function dlL(){ return DLL[L.code] || DLL.en; }
-var DL = { sel:{}, q:"", ix:null };
+var DL = { sel:{}, q:"", ix:null, del:false, xsel:{} };
 
 /* What the device actually holds for a surah.
 
@@ -5733,26 +5743,38 @@ async function dlRender(){
       if (hay.indexOf(q) < 0) continue;
     }
     var r = knSurahPages(sp, sn), st = dlState(sn), got = st === "full", part = st === "part";
-    rows += '<label class="dlrow' + (got ? " got" : (part ? " part" : "")) + '"><input type="checkbox" data-dls="' + sn + '"' +
-      (DL.sel[sn] ? " checked" : "") + (got ? " disabled" : "") + '>' +
-      '<span class="dlnum">' + n(sn) + '</span>' +
+    var mid = '<span class="dlnum">' + n(sn) + '</span>' +
       '<span class="dlnm"><b>' + esc(nm) + (ar ? ' <span class="dlar">' + esc(ar) + '</span>' : '') + '</b>' +
       '<i>' + (part ? esc(fmt(T.part, n(dlMiss(sn))))
-                    : fmt(T.pgs, n(r.a), n(r.b)) + ' · ' + fmt(T.ayat, n(AYAHS[sn - 1] || 0))) + '</i></span>' +
+                    : fmt(T.pgs, n(r.a), n(r.b)) + ' · ' + fmt(T.ayat, n(AYAHS[sn - 1] || 0))) + '</i></span>';
+    if (DL.del){
+      /* choosing what to delete: only what is on the phone, one box each */
+      if (!got && !part) continue;
+      rows += '<label class="dlrow dlx1' + (DL.xsel[sn] ? " on" : "") + '"><input type="checkbox" data-dlx="' + sn + '"' +
+        (DL.xsel[sn] ? " checked" : "") + '>' + mid +
+        (got ? '<span class="dlgot">✓</span>' : '<span class="dlgot part">◐</span>') + '</label>';
+      continue;
+    }
+    rows += '<label class="dlrow' + (got ? " got" : (part ? " part" : "")) + '"><input type="checkbox" data-dls="' + sn + '"' +
+      (DL.sel[sn] ? " checked" : "") + (got ? " disabled" : "") + '>' + mid +
       (got  ? '<span class="dlgot">✓</span><button type="button" class="dlx" data-dldel="' + sn + '" aria-label="' + esc(T.del) + '">✕</button>'
        : part ? '<button type="button" class="dlgot part" data-dlfix="' + sn + '" title="' + esc(T.retry) + '">◐</button>' +
                 '<button type="button" class="dlx" data-dldel="' + sn + '" aria-label="' + esc(T.del) + '">✕</button>'
        : '<span class="dlay">☁</span>') +
       '</label>';
   }
-  if (!rows) rows = '<p class="idx-empty">' + T.nores + '</p>';
+  var M = mqL();
+  if (!rows) rows = '<p class="idx-empty">' + esc(DL.del && !haveN && !partN ? M.xempty : T.nores) + '</p>';
 
   var picked = Object.keys(DL.sel).filter(function(k){ return DL.sel[k]; });
-  body.innerHTML =
+  var head =
     '<div class="dlhead"><span>' + T.have + '</span><b>' + n(haveN) +
       (partN ? ' <i class="dlpart">+' + n(partN) + ' \u25d0</i>' : '') + ' / ' + n(114) + '</b></div>' +
     '<div class="dlpages">' + esc(fmt(T.pagesHave, n(dlPageCount()), n(TOTAL_PAGES))) + '</div>' +
-    '<div class="dlbar dltotal"><i style="width:' + Math.round(haveN / 114 * 100) + '%"></i></div>' +
+    '<div class="dlbar dltotal"><i style="width:' + Math.round(haveN / 114 * 100) + '%"></i></div>';
+  if (DL.del){ dlDelMode(body, head, rows); return; }
+  body.innerHTML = head +
+    (haveN || partN ? '<div class="dlxrow0"><button type="button" class="knchip" id="dl-xmode">' + esc(M.xmode) + '</button></div>' : '') +
     '<div class="dlquick">' +
       /* a button that will not say what it acts on is a button nobody can
          trust: "juz" downloaded whichever one the mushaf happened to be open
@@ -5792,6 +5814,8 @@ async function dlRender(){
 
   var ac = document.getElementById("dl-audio");
   if (ac) ac.onchange = function(){ DL.audio = this.checked; };
+  var xm = document.getElementById("dl-xmode");
+  if (xm) xm.onclick = function(){ DL.del = true; DL.xsel = {}; dlRender(); };
   recPickSync();
   var rcb = document.getElementById("dl-recbtn");
   if (rcb) rcb.onclick = recPick;
@@ -5948,35 +5972,118 @@ function dlRecord(res, list, singlePage, chosen){
   }
 }
 
-/* removes a surah's cached audio and page fonts. A font page shared with a
+/* The download screen, choosing what to delete.
+
+   One ✕ at a time was fine for a surah; clearing out a juz' worth meant
+   thirty confirmations. Here the reader ticks as many as they like - or all
+   of them - and says yes once. */
+function dlXPicked(){ return Object.keys(DL.xsel || {}).filter(function(k){ return DL.xsel[k]; }).map(Number); }
+function dlDelMode(body, head, rows){
+  var M = mqL(), T = dlL(), xs = dlXPicked();
+  body.innerHTML = head +
+    '<div class="dlxbar"><b id="dl-xn">' + esc(xs.length ? fmt(M.xn, n(xs.length)) : T.none) + '</b>' +
+      '<button type="button" class="knchip" id="dl-xall">' + esc(M.xall) + '</button></div>' +
+    '<input type="search" id="dl-q" placeholder="' + esc(T.q) + '" value="' + esc(DL.q) + '">' +
+    '<div class="dllist">' + rows + '</div>' +
+    '<div class="dlfoot">' +
+      '<div class="dlbar"><i id="dl-bar-i" style="width:0%"></i></div>' +
+      '<div class="hint" id="rd-prog2"></div>' +
+      '<div class="act"><button class="abtn danger" id="dl-xgo"' + (xs.length ? '' : ' disabled') + '>\ud83d\uddd1 ' +
+        esc(fmt(M.xgo, n(xs.length))) + '</button>' +
+      '<button class="abtn" id="dl-xno">' + esc(M.xcancel) + '</button></div>' +
+    '</div>';
+  var sync = function(){
+    var k = dlXPicked(), e = document.getElementById("dl-xn"), b = document.getElementById("dl-xgo");
+    if (e) e.textContent = k.length ? fmt(M.xn, n(k.length)) : T.none;
+    if (b){ b.disabled = !k.length; b.textContent = "\ud83d\uddd1 " + fmt(M.xgo, n(k.length)); }
+    var boxes = qa("#dl-body [data-dlx]"), all = boxes.length && boxes.every(function(x){ return x.checked; });
+    var ab = document.getElementById("dl-xall");
+    if (ab) ab.textContent = all ? M.xnone : M.xall;
+  };
+  qa("#dl-body [data-dlx]").forEach(function(c){
+    c.onchange = function(){
+      DL.xsel[c.dataset.dlx] = c.checked;
+      c.closest("label").classList.toggle("on", c.checked);
+      sync();
+    };
+  });
+  var ab = document.getElementById("dl-xall");
+  if (ab) ab.onclick = function(){
+    /* all of what is shown - the search narrows it, as the reader expects */
+    var boxes = qa("#dl-body [data-dlx]"), on = !boxes.every(function(x){ return x.checked; });
+    boxes.forEach(function(x){
+      x.checked = on; DL.xsel[x.dataset.dlx] = on;
+      x.closest("label").classList.toggle("on", on);
+    });
+    sync();
+  };
+  var qi = document.getElementById("dl-q");
+  if (qi) qi.oninput = function(){
+    DL.q = this.value;
+    clearTimeout(DL.t);
+    DL.t = setTimeout(function(){ dlRender(); }, 220);
+  };
+  var no = document.getElementById("dl-xno");
+  if (no) no.onclick = function(){ DL.del = false; DL.xsel = {}; dlRender(); };
+  var go = document.getElementById("dl-xgo");
+  if (go) go.onclick = async function(){
+    var list = dlXPicked();
+    if (!list.length) return;
+    if (dlBusy()){ dlProg(T.busy); return; }
+    if (!confirm(fmt(M.xq, n(list.length)))) return;
+    go.disabled = true;
+    await dlDeleteMany(list, function(i, t){ dlProg(fmt(M.xing, n(i), n(t)), i / t * 100); });
+    DL.del = false; DL.xsel = {};
+    await dlRender();
+    dlProg(fmt(M.xdone, n(list.length)), 100);
+  };
+  sync();
+}
+/* removes a surah's downloaded audio and page fonts. A font page shared with a
    neighbouring surah simply downloads again the next time it is read - cheaper
    than tracking shared ownership of six hundred pages. */
-async function dlDelete(sn){
-  delete S.dls[sn];
+async function dlDelete(sn){ return dlDeleteMany([sn]); }
+async function dlDeleteMany(list, prog){
+  var sp = ((DL.ix && DL.ix.surah) || {});
+  list.forEach(function(sn){
+    delete S.dls[sn];
+    /* its pages are no longer whole on the phone either */
+    var r = knSurahPages(sp, sn);
+    if (S.dlp && r && r.a) for (var pp = r.a; pp <= r.b; pp++) delete S.dlp[pp];
+  });
   save();
   var A = asPlugin();
-  if (A && A.remove){
-    var ks = [];
-    for (var ai = 1; ai <= (AYAHS[sn - 1] || 0); ai++) ks.push(sn + ":" + ai);
-    /* a surah downloaded in three qaris' voices needs all three removed, not
-       just whichever one happens to be playing today */
-    try { await A.remove({ reciter:S.settings.reciter || "", reciters:dlReciters(), keys:ks }); } catch(e){}
+  /* every qari the app downloads for, not only today's: a surah fetched in
+     three voices goes in all three. A folder of the reader's own is theirs,
+     and is never touched from here. */
+  var all = RECITERS.map(function(r){ return r.id; });
+  for (var i = 0; i < list.length; i++){
+    var sn = list[i];
+    if (A && A.remove){
+      var ks = [];
+      for (var ai = 1; ai <= (AYAHS[sn - 1] || 0); ai++) ks.push(sn + ":" + ai);
+      try { await A.remove({ reciter:"", reciters:all, keys:ks }); } catch(e){}
+    }
+    if (prog) prog(i + 1, list.length);
   }
   try {
-    var c = await rdCache(); if (!c) return;
-    var sp = ((DL.ix && DL.ix.surah) || {}), r = knSurahPages(sp, sn);
-    var keys = await c.keys();
-    for (var i = 0; i < keys.length; i++){
-      var u = keys[i].url, drop = false;
-      for (var a = 1; a <= (AYAHS[sn - 1] || 0); a++){
-        if (u.indexOf(ayahFile(sn + ":" + a)) > -1){ drop = true; break; }
+    var c = await rdCache();
+    if (c){
+      var files = {}, pages = {};
+      list.forEach(function(sn){
+        for (var a = 1; a <= (AYAHS[sn - 1] || 0); a++) files[ayahFile(sn + ":" + a)] = 1;
+        var r = knSurahPages(sp, sn);
+        if (r && r.a) for (var pp = r.a; pp <= r.b; pp++) pages["/p" + pp + ".woff2"] = 1;
+      });
+      var keys = await c.keys();
+      for (var k = 0; k < keys.length; k++){
+        var u = keys[k].url, m = u.match(/\/(\d{6}\.mp3)(?:$|[?#])/), p = u.match(/\/p\d+\.woff2/);
+        if ((m && files[m[1]]) || (p && pages[p[0]])) await c.delete(keys[k]);
       }
-      if (!drop) for (var pp = r.a; pp <= r.b; pp++){
-        if (u.indexOf("/p" + pp + ".woff2") > -1){ drop = true; break; }
-      }
-      if (drop) await c.delete(keys[i]);
     }
   } catch(e){}
+  /* the page open in the mushaf forgets the files that just went */
+  try { if (document.body.classList.contains("mushaf") && RD.page) rdWarmAudio(RD.pages[RD.page]); } catch(e){}
 }
 function dlSeq(a, b){
   var out = [];
@@ -5990,6 +6097,7 @@ function dlSeq(a, b){
 function dlClose(){
   var el = document.getElementById("dlsheet");
   if (el) el.hidden = true;
+  DL.del = false; DL.xsel = {};
 }
 
 function renderSettings(){
@@ -6004,9 +6112,12 @@ function renderSettings(){
       '<div class="act"><button class="abtn" id="s-mushafpick">' + esc(mushafName()) + '</button></div>' +
       '<div class="hint">' + uit("mushafOnce") + '</div></div>' +
     '<div class="fld"><label for="s-reciter">' + L.rd.reciter + '</label><select id="s-reciter">' +
-      RECITERS.map(function(r){
-        return '<option value="' + r.id + '"' + (s.reciter === r.id ? " selected" : "") + '>' + (r.nm[L.code] || r.nm.en) + '</option>';
-      }).join("") + '</select></div>' +
+      recOptions(s.reciter) + '</select>' +
+      '<div class="hint" id="s-myq"' + (recInfo() ? '' : ' hidden') + '>' + recInfo() + '</div>' +
+      (asPlugin() ? '<details class="myq"><summary>' + esc(mqL().how) + '</summary>' +
+        '<div class="hint">' + mqL().help + '</div>' +
+        '<div class="act"><button class="abtn" id="s-myqscan">' + esc(mqL().scan) + '</button></div></details>' : '') +
+      '</div>' +
     '</div>';
 
   /* 2 - the plan */
@@ -6118,7 +6229,17 @@ function renderSettings(){
   var on = function(id, ev, fn){ var e = g(id); if (e) e[ev] = fn; };
 
   on("s-mushafpick", "onclick", mushafPick);
-  on("s-reciter", "onchange", function(){ S.settings.reciter = this.value; S.settings.audioHost = ""; save(); });
+  on("s-reciter", "onchange", function(){ recSet(this.value); });
+  on("s-myqscan", "onclick", function(){
+    var b = this;
+    b.disabled = true;
+    recScan(true).then(function(){
+      b.disabled = false;
+      var e = g("s-myq");
+      if (e && !recInfo()){ e.hidden = false; e.textContent = mqL().none; }
+    });
+  });
+  recScan(false);
 
   on("s-date", "onchange", function(){ S.settings.startDate = this.value || TODAY; save(); renderAll(); });
   on("s-page", "onchange", function(){ S.settings.startPage = Math.max(1, Math.min(TOTAL_PAGES, +this.value || 1)); save(); renderAll(); });
@@ -6572,6 +6693,8 @@ function trAudioSrc(vk){
   return TR_AUDIO_BASE + pad(q[0], 3) + pad(q[1], 3) + ".mp3";
 }
 function audioSrcsFor(vk, rec){
+  /* the reader's own qari lives only in their folder: no address, no stand-in */
+  if (recCustom(rec)) return [];
   var cands = audioCands(vk, rec);
   if (rec !== "Alafasy_128kbps") cands = cands.concat(audioCands(vk, "Alafasy_128kbps"));
   /* the host that answered last time goes first, so after one success the app
@@ -6583,6 +6706,133 @@ function audioSrcsFor(vk, rec){
   return list;
 }
 function audioSrcs(vk){ return audioSrcsFor(vk, S.settings.reciter); }
+/* A qari of the reader's own.
+
+   Any folder they make in Music/Quran Hifz and fill with ayah files named the
+   way every recitation site names them (018010.mp3) is a reciter here, listed
+   with how many of the 6236 it holds. It has no address on the internet, so
+   nothing is ever downloaded for it - and an ayah it lacks is said to be
+   missing, never quietly read in somebody else's voice. */
+var MQL = {
+  bn:{ mine:"নিজের ক্বারী", how:"নিজের ক্বারী যোগ করবেন কীভাবে?",
+       help:"১. ফোনের Music › Quran Hifz ফোল্ডারে ক্বারীর নামে একটা নতুন ফোল্ডার বানান।<br>২. তাতে আয়াতের mp3 ফাইল রাখুন। নাম হবে সূরার ৩ অঙ্ক + আয়াতের ৩ অঙ্ক — যেমন 001001.mp3 (ফাতিহা ১), 018010.mp3 (কাহফ ১০)।<br>৩. নিচের বোতাম চাপুন — ক্বারী তালিকায় চলে আসবে।",
+       scan:"↻ ফোল্ডার খুঁজুন", found:"নিজের {0}টি ক্বারী পাওয়া গেছে", none:"নিজের কোনো ক্বারীর ফোল্ডার পাওয়া যায়নি",
+       cur:"{0}: {1} / {2}টি আয়াতের ফাইল আছে। যে আয়াতের ফাইল নেই, সেটা অন্য ক্বারী দিয়ে বাজবে না — শুধু “ফাইল নেই” দেখাবে।",
+       perm:"ফোল্ডারের ফাইল দেখার অনুমতি নেই — “ফোল্ডার খুঁজুন” চাপলে চাওয়া হবে",
+       miss:"ফাইল নেই", bad:"ফাইলটা বাজানো গেল না", missRun:"এখানের আয়াতগুলোর ফাইল “{0}” ফোল্ডারে নেই",
+       xmode:"☑ বাছাই করে মুছুন", xall:"সব বাছুন", xnone:"কিছুই না", xn:"{0}টি সূরা বাছা", xgo:"মুছুন ({0})", xcancel:"বাতিল",
+       xq:"{0}টি সূরার নামানো তিলাওয়াত ফোন থেকে মুছবেন?", xing:"মুছছে… {0} / {1}", xdone:"{0}টি সূরা মুছে ফেলা হলো", xempty:"মোছার মতো কিছু নামানো নেই" },
+  en:{ mine:"Your own qaris", how:"How to add your own qari?",
+       help:"1. On the phone, open Music › Quran Hifz and make a new folder named after the qari.<br>2. Put the ayah mp3 files in it, named surah (3 digits) + ayah (3 digits) — e.g. 001001.mp3 (Al-Fatihah 1), 018010.mp3 (Al-Kahf 10).<br>3. Press the button below — the qari joins the list.",
+       scan:"↻ Find folders", found:"{0} qaris of your own found", none:"No qari folders of your own were found",
+       cur:"{0}: {1} / {2} ayah files. An ayah with no file is not filled in by another qari — it just shows “file missing”.",
+       perm:"No permission to see the folder’s files — “Find folders” will ask",
+       miss:"File missing", bad:"The file would not play", missRun:"The ayat here have no files in “{0}”",
+       xmode:"☑ Select to delete", xall:"Select all", xnone:"None", xn:"{0} surahs selected", xgo:"Delete ({0})", xcancel:"Cancel",
+       xq:"Remove the downloaded recitation of {0} surahs from the phone?", xing:"Deleting… {0} / {1}", xdone:"{0} surahs deleted", xempty:"Nothing downloaded to delete" },
+  ar:{ mine:"قرّاؤك", how:"كيف تضيف قارئًا خاصًا بك؟",
+       help:"١. افتح في الهاتف Music › Quran Hifz وأنشئ مجلدًا جديدًا باسم القارئ.<br>٢. ضع فيه ملفات mp3 للآيات، واسم كل ملف: رقم السورة (٣ أرقام) + رقم الآية (٣ أرقام) — مثل 001001.mp3 (الفاتحة ١)، 018010.mp3 (الكهف ١٠).<br>٣. اضغط الزر أدناه — يظهر القارئ في القائمة.",
+       scan:"↻ ابحث عن المجلدات", found:"وُجد {0} من قرّائك", none:"لم يوجد مجلد قارئ خاص بك",
+       cur:"{0}: {1} / {2} ملف آية. الآية التي لا ملف لها لا تُكمَّل بقارئ آخر — يظهر فقط «الملف غير موجود».",
+       perm:"لا إذن برؤية ملفات المجلد — سيطلبه زر «ابحث عن المجلدات»",
+       miss:"الملف غير موجود", bad:"تعذّر تشغيل الملف", missRun:"آيات هذا الموضع لا ملفات لها في «{0}»",
+       xmode:"☑ اختر للحذف", xall:"اختر الكل", xnone:"لا شيء", xn:"{0} سور مختارة", xgo:"احذف ({0})", xcancel:"إلغاء",
+       xq:"حذف التلاوة المنزّلة لـ {0} سور من الهاتف؟", xing:"جارٍ الحذف… {0} / {1}", xdone:"حُذفت {0} سور", xempty:"لا شيء منزّل للحذف" },
+  ur:{ mine:"اپنے قاری", how:"اپنا قاری کیسے شامل کریں؟",
+       help:"١. فون میں Music › Quran Hifz کھولیں اور قاری کے نام سے نیا فولڈر بنائیں۔<br>٢. اس میں آیات کی mp3 فائلیں رکھیں، نام: سورہ کے ٣ ہندسے + آیت کے ٣ ہندسے — جیسے 001001.mp3 (فاتحہ ١)، 018010.mp3 (کہف ١٠)۔<br>٣. نیچے کا بٹن دبائیں — قاری فہرست میں آ جائے گا۔",
+       scan:"↻ فولڈر تلاش کریں", found:"آپ کے {0} قاری ملے", none:"آپ کا کوئی قاری فولڈر نہیں ملا",
+       cur:"{0}: {1} / {2} آیات کی فائلیں۔ جس آیت کی فائل نہیں، وہ کسی اور قاری سے نہیں بجے گی — صرف “فائل نہیں” دکھے گا۔",
+       perm:"فولڈر کی فائلیں دیکھنے کی اجازت نہیں — “فولڈر تلاش کریں” دبانے پر مانگی جائے گی",
+       miss:"فائل نہیں", bad:"فائل نہیں چل سکی", missRun:"یہاں کی آیات کی فائلیں “{0}” میں نہیں",
+       xmode:"☑ منتخب کر کے مٹائیں", xall:"سب منتخب", xnone:"کوئی نہیں", xn:"{0} سورتیں منتخب", xgo:"مٹائیں ({0})", xcancel:"منسوخ",
+       xq:"{0} سورتوں کی اتاری ہوئی تلاوت فون سے مٹائیں؟", xing:"مٹایا جا رہا ہے… {0} / {1}", xdone:"{0} سورتیں مٹا دی گئیں", xempty:"مٹانے کو کچھ اتارا ہوا نہیں" },
+  zh:{ mine:"自己的诵读者", how:"如何添加自己的诵读者？",
+       help:"1. 在手机上打开 Music › Quran Hifz，新建一个以诵读者命名的文件夹。<br>2. 把各节的 mp3 放进去，文件名 = 章号（3 位）+ 节号（3 位），例如 001001.mp3（开端章 1）、018010.mp3（山洞章 10）。<br>3. 点下面的按钮 —— 诵读者就会出现在列表里。",
+       scan:"↻ 查找文件夹", found:"找到 {0} 位自己的诵读者", none:"没有找到自己的诵读者文件夹",
+       cur:"{0}：{1} / {2} 节有文件。没有文件的那一节不会用别的诵读者代替 —— 只显示“文件缺失”。",
+       perm:"没有查看文件夹内文件的权限 —— 点“查找文件夹”时会请求",
+       miss:"文件缺失", bad:"文件无法播放", missRun:"此处各节在“{0}”中没有文件",
+       xmode:"☑ 选择后删除", xall:"全选", xnone:"全不选", xn:"已选 {0} 章", xgo:"删除（{0}）", xcancel:"取消",
+       xq:"从手机删除 {0} 章已下载的诵读？", xing:"正在删除… {0} / {1}", xdone:"已删除 {0} 章", xempty:"没有可删除的下载" }
+};
+function mqL(){ return MQL[L.code] || MQL.en; }
+var AYAH_TOTAL = 6236, RC_CAN = true, RC_T = 0;
+function recBuiltin(id){ return RECITERS.some(function(r){ return r.id === id; }); }
+function recMine(){ return (S && S.settings && S.settings.myQari) || []; }
+/* the reader's own folder by that name, or null for any qari the app knows */
+function recCustom(id){
+  if (!id || recBuiltin(id)) return null;
+  return recMine().filter(function(c){ return c.name === id; })[0] || null;
+}
+function recName(id){
+  var r = RECITERS.filter(function(x){ return x.id === id; })[0];
+  return r ? (r.nm[L.code] || r.nm.en) : String(id || "");
+}
+function recOptions(sel){
+  var h = RECITERS.map(function(r){
+    return '<option value="' + r.id + '"' + (sel === r.id ? " selected" : "") + '>' + esc(r.nm[L.code] || r.nm.en) + '</option>';
+  }).join("");
+  var my = recMine();
+  if (my.length) h += '<optgroup label="' + esc(mqL().mine) + '">' + my.map(function(c){
+    return '<option value="' + esc(c.name) + '"' + (sel === c.name ? " selected" : "") + '>\ud83d\udcc1 ' +
+      esc(c.name) + ' \u00b7 ' + n(c.count || 0) + '/' + n(AYAH_TOTAL) + '</option>';
+  }).join("") + '</optgroup>';
+  return h;
+}
+function recInfo(onlyMine){
+  var M = mqL(), c = recCustom(S.settings.reciter), my = recMine();
+  if (c) return (RC_CAN ? "" : M.perm + "<br>") + fmt(M.cur, esc(c.name), n(c.count || 0), n(AYAH_TOTAL));
+  if (onlyMine) return "";
+  if (!RC_CAN) return M.perm;
+  return my.length ? fmt(M.found, n(my.length)) : "";
+}
+/* Asks the phone which folders are there. Quietly on its own (at most every
+   quarter minute); with the permission question when the reader pressed the
+   button for it. */
+async function recScan(ask){
+  var A = asPlugin();
+  if (!A || !A.folders) return false;
+  if (!ask && Date.now() - RC_T < 15000) return false;
+  RC_T = Date.now();
+  var r = null;
+  try { r = await A.folders(); } catch(e){ return false; }
+  if (ask && r && r.canRead === false && A.askRead){
+    try { var g = await A.askRead(); if (g && g.granted) r = await A.folders(); } catch(e){}
+  }
+  RC_CAN = !(r && r.canRead === false);
+  var cur = S.settings.reciter;
+  var list = ((r && r.folders) || []).filter(function(f){
+    return f && f.name && !recBuiltin(f.name) && f.name !== "default";
+  }).map(function(f){ return { name:String(f.name), path:f.path || "", count:+f.count || 0 }; });
+  /* the one in use stays listed even if its folder has gone, so the choice
+     never silently becomes somebody else's voice */
+  if (recCustom(cur) && !list.some(function(c){ return c.name === cur; })) list.push({ name:cur, path:"", count:0 });
+  var was = JSON.stringify(recMine());
+  S.settings.myQari = list;
+  if (JSON.stringify(list) !== was) save();
+  recFill();
+  return true;
+}
+/* every reciter list on screen, and the line under it */
+function recFill(){
+  ["s-reciter", "lf-qari", "sh-qari"].forEach(function(id){
+    var e = document.getElementById(id);
+    if (e) e.innerHTML = recOptions(S.settings.reciter);
+  });
+  ["s-myq", "lf-myq"].forEach(function(id){
+    var e = document.getElementById(id);
+    if (e){ var t = recInfo(id === "lf-myq"); e.innerHTML = t; e.hidden = !t; }
+  });
+}
+function recSet(id){
+  S.settings.reciter = id;
+  /* the host that answered last belongs to the old voice, not the new one */
+  S.settings.audioHost = "";
+  save();
+  /* the page open in the mushaf looks again, for files in the new voice */
+  try { if (document.body.classList.contains("mushaf") && RD.page) rdWarmAudio(RD.pages[RD.page]); } catch(e){}
+  recFill();
+}
 var RD = { page:0, hide:0, curtain:0, curtainOn:false, blind:false, loops:1, speed:1, files:{}, pages:{}, fonts:{}, blobs:{}, busy:false, queue:[], qi:0, left:0, cont:false, stopAt:0, sleepAt:0, sleepFor:0, ka:false, turning:false, resumeAt:0,
   /* three things that happen between one ayah and the next: hear it again,
      hear what it means, or say it yourself into the gap. */
@@ -6806,7 +7056,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "1.1.0";
+var APP_VER = "1.1.1";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -7217,8 +7467,9 @@ function dlBusy(){ return RD.busy || DLJ.running; }
    kept in that qari's own folder. */
 function dlReciters(){
   var r = S.settings.dlReciters;
-  if (r && r.length) return r.filter(function(id){ return RECITERS.some(function(x){ return x.id === id; }); });
-  return [S.settings.reciter];
+  if (r && r.length){ r = r.filter(recBuiltin); if (r.length) return r; }
+  /* a qari of the reader's own has nothing to download; the list shows who will */
+  return [recBuiltin(S.settings.reciter) ? S.settings.reciter : RECITERS[0].id];
 }
 function dlRecName(id){
   var r = RECITERS.filter(function(x){ return x.id === id; })[0];
@@ -7451,6 +7702,13 @@ function kaPlugin(){
 }
 var KAH = { active:false, base:0 };
 function kaSrcs(vk){
+  var mine = recCustom(S.settings.reciter);
+  if (mine){
+    /* the path itself - a missing file fails in the native player, which
+       then moves on to the next ayah */
+    var f = (RD.files && RD.files[vk]) || (mine.path ? mine.path + "/" + ayahFile(vk) : "");
+    return f ? [f] : [];
+  }
   var u = audioSrcs(vk).map(function(c){ return c.u; });
   /* a stored file is the only address that works with the network off; a
      blob: is the one that never works, and is deliberately not here */
@@ -7465,12 +7723,7 @@ function kaLabel(vk){
   } catch(e){ return ""; }
 }
 function kaReciter(){
-  try {
-    for (var i = 0; i < RECITERS.length; i++){
-      if (RECITERS[i].id === S.settings.reciter)
-        return RECITERS[i].nm[L.code] || RECITERS[i].nm.en;
-    }
-  } catch(e){}
+  try { return recName(S.settings.reciter); } catch(e){}
   return "";
 }
 /* The notification, while the page is the one playing.
@@ -7649,11 +7902,11 @@ function rdMicSync(){
 function rdMedia(vk){
   if (!("mediaSession" in navigator) || typeof MediaMetadata === "undefined") return;
   var q = String(vk || "").split(":"), s = +q[0] || 1;
-  var rec = (RECITERS.filter(function(r){ return r.id === S.settings.reciter; })[0] || {}).nm;
+  var recNm = recName(S.settings.reciter);
   try {
     navigator.mediaSession.metadata = new MediaMetadata({
       title:  surahName(s) + " · " + (L.rd.ay || "") + " " + n(q[1] || 1),
-      artist: (rec && (rec[L.code] || rec.en)) || "",
+      artist: recNm || "",
       album:  (mushafName()),
       artwork:[{ src:dataUrl("icon-512.png"), sizes:"512x512", type:"image/png" }]
     });
@@ -8066,6 +8319,28 @@ function rdNext(){
     }
   }
   RD.turnedFor = null;
+  /* the reader's own qari: their file is the only source there is. One the
+     page has not looked up yet is asked for once; one that is not there is
+     named on screen and passed over - never read in another voice. Seven in a
+     row missing means the folder does not reach here, and it stops. */
+  var mine = recCustom(S.settings.reciter);
+  if (mine && !(RD.files && RD.files[vk])){
+    var t0 = RD.tok = (RD.tok || 0) + 1;
+    asHave([vk]).then(function(h){
+      if (RD.tok !== t0 || !RD.queue.length) return;
+      RD.midAyah = "start"; RD.ayahLeft = RD.ayahRep;
+      if (h && h[vk]){ RD.files[vk] = h[vk]; RD.qi--; rdNext(); return; }
+      RD.missRun = (RD.missRun || 0) + 1;
+      if (RD.missRun >= 7){
+        rdStop();
+        rdMsg2(fmt(mqL().missRun, mine.name));
+        return;
+      }
+      rdMsg2(mqL().miss + " \u00b7 " + ayLabel(vk) + " \u00b7 " + ayahFile(vk));
+      setTimeout(function(){ if (RD.tok === t0) rdNext(); }, 900);
+    });
+    return;
+  }
   /* where to pick up next time someone just wants to keep listening. Held in
      memory only — the page turn already writes, and saving once an ayah would
      mean thousands of writes and sync pushes across one night of listening. */
@@ -8102,6 +8377,11 @@ function rdNext(){
     if (tok !== RD.tok) return;
     clearTimeout(RD.watch);
     if (++si < srcs.length){ load(); return; }
+    if (mine){
+      rdMsg2(mqL().bad + " \u00b7 " + ayahFile(vk));
+      if (RD.queue.length > 1) rdNext(); else rdStop();
+      return;
+    }
     if (!navigator.onLine){ rdMsg("off"); rdStop(); return; }
     /* every host refused this one ayah with "no such file" — that is a gap in
        the reciter's set, so carry on with the next ayah instead of stopping */
@@ -8156,6 +8436,7 @@ function rdNext(){
   });
   a.onplaying = step(function(){
     clearTimeout(RD.watch);
+    RD.missRun = 0;
     if (S.settings.audioHost !== srcs[si].h){ S.settings.audioHost = srcs[si].h; try { save(); } catch(e){} }
     rdClear("on");
     els.forEach(function(e){ e.classList.add("on"); });
@@ -9037,10 +9318,7 @@ function rdSheetOpen(which){
                '</option>';
       }).join("") + '</select>' +
       '<div class="shlab">' + esc(L.rd.reciter) + '</div>' +
-      '<select id="sh-qari">' + RECITERS.map(function(r){
-        return '<option value="' + r.id + '"' + (S.settings.reciter === r.id ? " selected" : "") + '>' +
-          esc(r.nm[L.code] || r.nm.en) + '</option>';
-      }).join("") + '</select>' +
+      '<select id="sh-qari">' + recOptions(S.settings.reciter) + '</select>' +
       '<div class="shlab">' + esc(T.sleep) + '</div>' +
       '<select id="sh-sleep">' + opts.map(function(m){
         return '<option value="' + m + '"' + ((RD.sleepFor || 0) === m ? " selected" : "") + '>' +
@@ -9058,10 +9336,7 @@ function rdSheetOpen(which){
     };
     var qs = ex.querySelector("#sh-qari");
     qs.onchange = function(){
-      S.settings.reciter = this.value;
-      /* the host that answered last belongs to the old voice, not the new one */
-      S.settings.audioHost = "";
-      save();
+      recSet(this.value);
       try { renderSettings(); } catch(e){}
     };
     var sl = ex.querySelector("#sh-sleep");
@@ -12041,7 +12316,7 @@ function recPick(){
       /* the box the reader is reading from today stays in the list even if
          they uncheck every other one - a download with nobody to read it
          makes no sense, and there is always at least the one already playing */
-      if (!ids.length) ids = [S.settings.reciter];
+      if (!ids.length) ids = [recBuiltin(S.settings.reciter) ? S.settings.reciter : RECITERS[0].id];
       S.settings.dlReciters = ids;
       save();
       cb.closest("label").classList.toggle("on", cb.checked);
@@ -12426,9 +12701,8 @@ async function lsRender(){
     '<div id="ls-nowbox">' + lsNowHTML() + '</div>' +
     '<div class="lsform">' +
       '<label class="lslab2">' + esc(T.pickQari) + '</label>' +
-      '<select id="lf-qari">' + RECITERS.map(function(r){
-        return '<option value="' + r.id + '"' + (S.settings.reciter === r.id ? " selected" : "") +
-               '>' + esc(r.nm[L.code] || r.nm.en) + '</option>'; }).join("") + '</select>' +
+      '<select id="lf-qari">' + recOptions(S.settings.reciter) + '</select>' +
+      '<div class="hint" id="lf-myq" hidden></div>' +
 
       '<div class="lsmodes">' +
         '<label class="lsradio' + (LSP.mode === "surah" ? " on" : "") + '">' +
@@ -12472,9 +12746,9 @@ async function lsRender(){
     '</div>';
 
   var on = function(id, ev, fn){ var e = document.getElementById(id); if (e) e[ev] = fn; };
-  on("lf-qari", "onchange", function(){
-    S.settings.reciter = this.value; S.settings.audioHost = ""; save();
-  });
+  on("lf-qari", "onchange", function(){ recSet(this.value); });
+  recFill();
+  recScan(false);
   qa('input[name="lsmode"]').forEach(function(r){
     r.onchange = function(){ LSP.mode = this.value; lsRender(); };
   });
@@ -13520,6 +13794,7 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
      written down now; one still running is picked up again */
   setTimeout(function(){ try { dlCheckJob(); } catch(e){} }, 1200);
   setTimeout(function(){ try { asReconnectAuto(0); } catch(e){} }, 5000);
+  setTimeout(function(){ try { recScan(false); } catch(e){} }, 2500);
   try {
     var Rn = ntPlugin();
     if (Rn && Rn.addListener) Rn.addListener("open", function(ev){ sunnahOpen(ev && ev.vk); });

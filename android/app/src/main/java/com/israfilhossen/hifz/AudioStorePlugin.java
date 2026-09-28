@@ -130,7 +130,7 @@ public class AudioStorePlugin extends Plugin {
                     for (String reciter : reciters) {
                         File s = HifzStore.sharedFile(reciter, k);
                         File p = HifzStore.privateFile(getContext(), reciter, k);
-                        File l = new File(new File(HifzStore.legacyRoot(), HifzStore.safe(reciter)), HifzStore.fileName(k));
+                        File l = new File(HifzStore.legacyDir(reciter), HifzStore.fileName(k));
                         if (s.exists() && s.delete()) gone++;
                         if (l.exists() && l.delete()) gone++;
                         if (p.exists() && p.delete()) gone++;
@@ -259,6 +259,32 @@ public class AudioStorePlugin extends Plugin {
         call.resolve(new JSObject().put("granted", ok));
     }
 
+    /** Every folder in Music/Quran Hifz and how many ayah files each holds.
+        A folder the reader made and filled is a qari of their own; the page
+        tells those apart from the ones the app downloads into. */
+    @PluginMethod
+    public void folders(PluginCall call) {
+        File root = HifzStore.musicRoot();
+        /* made here if missing, so the reader can find where to put a qari */
+        if (!root.isDirectory() && HifzStore.canWriteShared(getContext())) root.mkdirs();
+        JSArray out = new JSArray();
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        for (File r : new File[] { root, HifzStore.legacyRoot() }) {
+            File[] ds = r.listFiles();
+            if (ds == null) continue;
+            java.util.Arrays.sort(ds);
+            for (File d : ds) {
+                String nm = d.getName();
+                if (!d.isDirectory() || nm.startsWith(".") || !seen.add(nm)) continue;
+                out.put(new JSObject().put("name", nm).put("path", d.getAbsolutePath())
+                        .put("count", HifzStore.ayahFiles(d)));
+            }
+        }
+        call.resolve(new JSObject().put("folders", out)
+                .put("canRead", HifzStore.canReadShared(getContext()))
+                .put("root", root.getAbsolutePath()));
+    }
+
     /** every ayah of this reciter the phone holds, wherever it is */
     @PluginMethod
     public void scan(PluginCall call) {
@@ -266,7 +292,7 @@ public class AudioStorePlugin extends Plugin {
         JSArray keys = new JSArray();
         List<File> all = new ArrayList<>();
         File[] a1 = HifzStore.sharedDir(reciter).listFiles();
-        File[] a2 = new File(HifzStore.legacyRoot(), HifzStore.safe(reciter)).listFiles();
+        File[] a2 = HifzStore.legacyDir(reciter).listFiles();
         if (a1 != null) java.util.Collections.addAll(all, a1);
         if (a2 != null) java.util.Collections.addAll(all, a2);
         for (File f : all) {

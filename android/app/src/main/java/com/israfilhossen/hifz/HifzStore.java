@@ -89,8 +89,34 @@ final class HifzStore {
         }
     }
 
-    static File sharedDir(String reciter) {
-        return new File(musicRoot(), safe(reciter));
+    /** A folder the reader made themselves - a qari of their own - is used by
+        the name they gave it, spaces and all, whenever that folder exists. The
+        folders the app makes keep their plain names. */
+    static File named(File root, String reciter) {
+        if (reciter != null && reciter.length() > 0 && reciter.indexOf('/') < 0
+                && reciter.indexOf('\\') < 0 && !reciter.startsWith(".")) {
+            File exact = new File(root, reciter);
+            if (exact.isDirectory()) return exact;
+        }
+        return new File(root, safe(reciter));
+    }
+
+    static File sharedDir(String reciter) { return named(musicRoot(), reciter); }
+
+    static File legacyDir(String reciter) { return named(legacyRoot(), reciter); }
+
+    /** how many ayah files (SSSAAA.mp3) a folder holds */
+    static int ayahFiles(File d) {
+        String[] ns = d.list();
+        int c = 0;
+        if (ns != null) for (String n : ns) if (isAyahName(n)) c++;
+        return c;
+    }
+
+    static boolean isAyahName(String n) {
+        if (n == null || n.length() != 10 || !n.regionMatches(true, 6, ".mp3", 0, 4)) return false;
+        for (int i = 0; i < 6; i++) if (!Character.isDigit(n.charAt(i))) return false;
+        return true;
     }
 
     static File sharedFile(String reciter, String key) {
@@ -118,7 +144,7 @@ final class HifzStore {
     static File existing(Context c, String reciter, String key) {
         File s = sharedFile(reciter, key);
         if (ok(s)) return s;
-        File l = new File(new File(legacyRoot(), safe(reciter)), fileName(key));
+        File l = new File(legacyDir(reciter), fileName(key));
         if (ok(l)) return l;
         File p = privateFile(c, reciter, key);
         if (ok(p)) return p;
