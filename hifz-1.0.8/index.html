@@ -2460,6 +2460,12 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .dlprev{margin-top:8px}
 .dlpart{font-style:normal;font-size:11.5px;color:var(--ink-3);font-weight:600}
 .dlfoot{margin-top:14px}
+.snrow{padding:10px 0;border-top:1px solid var(--rule)}
+.snrow .chk{display:flex;align-items:flex-start;gap:8px}
+.snrow .chk span{display:flex;flex-direction:column;gap:2px}
+.snrow .chk i{font-style:normal;font-size:12px;color:var(--ink-3)}
+.snact{display:flex;gap:8px;align-items:center;margin:8px 0 0 26px}
+.snact input[type=time]{flex:0 0 auto}
 .lsnow{margin:0 0 16px;padding:14px 16px;border-radius:16px;background:rgba(95,127,82,.12);
   border:1px solid rgba(95,127,82,.28)}
 .lsnowk{font-size:12.5px;color:var(--verdigris);font-weight:600;letter-spacing:.02em}
@@ -6044,6 +6050,18 @@ function renderSettings(){
     '<div class="fld"><label class="chk"><input type="checkbox" id="s-zkvoice"' +
       (s.zikrVoice !== false ? " checked" : "") + '>' + L.nt.voice + '</label>' +
       '<div class="act"><button class="abtn" id="s-zktest">' + L.nt.voiceTest + '</button></div></div>' +
+    '<div class="fld"><label>' + esc(snL().h) + '</label>' +
+      '<div class="hint" style="margin:0 0 8px">' + esc(snL().hint) + '</div>' +
+      SUNNAH.map(function(x, i){
+        var st = snState(x.id);
+        return '<div class="snrow">' +
+          '<label class="chk"><input type="checkbox" data-sn="' + x.id + '"' + (st.on ? " checked" : "") + '> ' +
+            '<span><b>' + esc(snTx(x.t)) + '</b><i>' + esc(x.dow === 5 ? snL().fri : snL().daily) + ' · ' + esc(snTx(x.src)) + '</i></span></label>' +
+          '<div class="snact"><input type="time" data-snat="' + x.id + '" value="' + esc(st.at) + '">' +
+            '<button class="abtn" data-sntest="' + i + '">' + esc(snL().test) + '</button></div>' +
+        '</div>';
+      }).join("") +
+    '</div>' +
     '</div>';
 
   /* 4 - the app itself */
@@ -6138,6 +6156,24 @@ function renderSettings(){
   });
   on("s-zikr", "onchange", function(){ S.settings.zikrEvery = +this.value; save(); ntSchedule(); });
   on("s-zkvoice", "onchange", function(){ S.settings.zikrVoice = this.checked; save(); });
+  var snSet = function(id, k, v){
+    if (!S.settings.sunnah) S.settings.sunnah = {};
+    var o = S.settings.sunnah[id] || (S.settings.sunnah[id] = {});
+    o[k] = v; save(); ntSunnahNative();
+  };
+  qa("[data-sn]").forEach(function(c){ c.onchange = function(){ snSet(c.dataset.sn, "on", c.checked ? 1 : 0); }; });
+  qa("[data-snat]").forEach(function(t){ t.onchange = function(){ if (t.value) snSet(t.dataset.snat, "at", t.value); }; });
+  qa("[data-sntest]").forEach(function(b){
+    b.onclick = function(){
+      var R = ntPlugin();
+      ntSunnahNative();
+      if (R && R.sunnahNow) R.sunnahNow({ idx: +b.dataset.sntest }).catch(function(){});
+      else {
+        var x = SUNNAH[+b.dataset.sntest];
+        try { if (window.Notification && Notification.permission === "granted") new Notification(snTx(x.t), { body: snTx(x.b) }); } catch(e){}
+      }
+    };
+  });
   on("s-zktest", "onclick", function(){
     NT.unlocked = true;
     var pool = ZIKR.concat(DUROOD), z = pool[Math.floor(Math.random() * pool.length)];
@@ -10956,11 +10992,97 @@ function ntZikrNative(){
   } catch(e){ return false; }
   return true;
 }
+/* The sunnah recitations - only what a sahih (or hasan sahih) hadith ties to
+   a time. Each opens the app on its surah when the notification is tapped.
+   dow: 0 = Sunday ... 5 = Friday ... 6 = Saturday; -1 = every day. */
+var SUNNAH = [
+  { id:"kahf", dow:5, at:"09:00", vk:"18:1",
+    t:{ bn:"আজ জুমআ — সূরা কাহফ", en:"It is Friday — Surah Al-Kahf", ur:"آج جمعہ ہے — سورۃ الکہف", zh:"今天是聚礼日 — 山洞章", ar:"اليوم الجمعة — سورة الكهف" },
+    b:{ bn:"যে জুমআর দিন সূরা কাহফ পড়ে, দুই জুমআর মাঝের সময় তার জন্য নূরে আলোকিত থাকে।",
+        en:"Whoever recites Surah Al-Kahf on Friday, light shines for him between the two Fridays.",
+        ur:"جو جمعہ کے دن سورۃ الکہف پڑھے، اس کے لیے دو جمعوں کے درمیان نور روشن رہتا ہے۔",
+        zh:"谁在聚礼日诵读山洞章，两个聚礼日之间将为他照亮光明。",
+        ar:"من قرأ سورة الكهف يوم الجمعة أضاء له من النور ما بين الجمعتين." },
+    src:{ bn:"হাকিম ২/৩৯৯, বায়হাকি · আলবানি: সহিহ", en:"al-Hakim 2/399, al-Bayhaqi · al-Albani: sahih", ur:"حاکم ۲/۳۹۹، بیہقی · البانی: صحیح", zh:"哈基姆 2/399、拜哈基 · 艾勒巴尼：正确", ar:"الحاكم ٢/٣٩٩، البيهقي · الألباني: صحيح" } },
+  { id:"mulk", dow:-1, at:"22:00", vk:"67:1",
+    t:{ bn:"ঘুমের আগে — সূরা মুলক ও সূরা সাজদা", en:"Before sleep — Al-Mulk and As-Sajdah", ur:"سونے سے پہلے — سورۃ الملک اور السجدہ", zh:"睡前 — 国权章与叩头章", ar:"قبل النوم — سورة الملك والسجدة" },
+    b:{ bn:"নবী ﷺ সূরা আলিফ-লাম-মীম তানযীল (সাজদা) আর তাবারাকাল্লাযী (মুলক) না পড়ে ঘুমাতেন না।",
+        en:"The Prophet ﷺ would not sleep until he had recited Alif-Lam-Mim Tanzil (As-Sajdah) and Tabarak (Al-Mulk).",
+        ur:"نبی ﷺ الم تنزیل (السجدہ) اور تبارک الذی (الملک) پڑھے بغیر نہیں سوتے تھے۔",
+        zh:"先知ﷺ睡前必诵读叩头章与国权章。",
+        ar:"كان النبي ﷺ لا ينام حتى يقرأ الم تنزيل وتبارك الذي بيده الملك." },
+    src:{ bn:"তিরমিযি ২৮৯২ · সহিহ", en:"at-Tirmidhi 2892 · sahih", ur:"ترمذی ۲۸۹۲ · صحیح", zh:"提尔密济 2892 · 正确", ar:"الترمذي ٢٨٩٢ · صحيح" } },
+  { id:"night", dow:-1, at:"22:00", vk:"2:255",
+    t:{ bn:"ঘুমের আগে — আয়াতুল কুরসি, বাকারার শেষ দুই আয়াত, তিন কুল", en:"Before sleep — Ayat al-Kursi, the end of Al-Baqarah, the three Quls", ur:"سونے سے پہلے — آیت الکرسی، البقرہ کی آخری دو آیات، تین قل", zh:"睡前 — 宝座经文、黄牛章末两节、三个古勒", ar:"قبل النوم — آية الكرسي وخواتيم البقرة والمعوذات" },
+    b:{ bn:"আয়াতুল কুরসি; সূরা বাকারার শেষ দুই আয়াত রাতে পড়লে তা যথেষ্ট; আর ইখলাস, ফালাক, নাস পড়ে হাতে ফুঁ দিয়ে শরীরে বুলিয়ে নেওয়া — তিনবার।",
+        en:"Ayat al-Kursi; the last two ayat of Al-Baqarah, which suffice whoever recites them at night; and Al-Ikhlas, Al-Falaq, An-Nas into the palms, wiped over the body — three times.",
+        ur:"آیت الکرسی؛ البقرہ کی آخری دو آیات رات کو کافی ہیں؛ اور اخلاص، فلق، ناس پڑھ کر ہاتھوں پر پھونک کر جسم پر پھیرنا — تین بار۔",
+        zh:"宝座经文；夜间诵读黄牛章末两节即已足够；诵读忠诚章、曙光章、世人章后吹于掌中抹身——三次。",
+        ar:"آية الكرسي؛ والآيتان من آخر البقرة من قرأهما في ليلة كفتاه؛ والإخلاص والمعوذتان ينفث في كفيه ويمسح بهما جسده ثلاثًا." },
+    src:{ bn:"বুখারি ২৩১১, ৫০০৯, ৫০১৭ · মুসলিম ৮০৭", en:"al-Bukhari 2311, 5009, 5017 · Muslim 807", ur:"بخاری ۲۳۱۱، ۵۰۰۹، ۵۰۱۷ · مسلم ۸۰۷", zh:"布哈里 2311、5009、5017 · 穆斯林 807", ar:"البخاري ٢٣١١، ٥٠٠٩، ٥٠١٧ · مسلم ٨٠٧" } },
+  { id:"morning", dow:-1, at:"07:00", vk:"112:1",
+    t:{ bn:"সকালের তিন কুল", en:"The three Quls — morning", ur:"صبح کے تین قل", zh:"早晨的三个古勒", ar:"المعوذات — الصباح" },
+    b:{ bn:"সূরা ইখলাস, ফালাক ও নাস — সকালে তিনবার করে। সব কিছু থেকে তা যথেষ্ট।",
+        en:"Al-Ikhlas, Al-Falaq and An-Nas, three times each in the morning — they suffice against everything.",
+        ur:"سورۃ الاخلاص، الفلق اور الناس — صبح تین تین بار۔ یہ ہر چیز سے کافی ہیں۔",
+        zh:"忠诚章、曙光章、世人章，早晨各诵三遍——足以护佑一切。",
+        ar:"الإخلاص والمعوذتان ثلاث مرات حين تصبح تكفيك من كل شيء." },
+    src:{ bn:"আবু দাউদ ৫০৮২, তিরমিযি ৩৫৭৫ · হাসান সহিহ", en:"Abu Dawud 5082, at-Tirmidhi 3575 · hasan sahih", ur:"ابو داؤد ۵۰۸۲، ترمذی ۳۵۷۵ · حسن صحیح", zh:"艾布·达乌德 5082、提尔密济 3575 · 良好正确", ar:"أبو داود ٥٠٨٢، الترمذي ٣٥٧٥ · حسن صحيح" } },
+  { id:"evening", dow:-1, at:"18:00", vk:"112:1",
+    t:{ bn:"সন্ধ্যার তিন কুল", en:"The three Quls — evening", ur:"شام کے تین قل", zh:"傍晚的三个古勒", ar:"المعوذات — المساء" },
+    b:{ bn:"সূরা ইখলাস, ফালাক ও নাস — সন্ধ্যায় তিনবার করে। সব কিছু থেকে তা যথেষ্ট।",
+        en:"Al-Ikhlas, Al-Falaq and An-Nas, three times each in the evening — they suffice against everything.",
+        ur:"سورۃ الاخلاص، الفلق اور الناس — شام تین تین بار۔ یہ ہر چیز سے کافی ہیں۔",
+        zh:"忠诚章、曙光章、世人章，傍晚各诵三遍——足以护佑一切。",
+        ar:"الإخلاص والمعوذتان ثلاث مرات حين تمسي تكفيك من كل شيء." },
+    src:{ bn:"আবু দাউদ ৫০৮২, তিরমিযি ৩৫৭৫ · হাসান সহিহ", en:"Abu Dawud 5082, at-Tirmidhi 3575 · hasan sahih", ur:"ابو داؤد ۵۰۸۲، ترمذی ۳۵۷۵ · حسن صحیح", zh:"艾布·达乌德 5082、提尔密济 3575 · 良好正确", ar:"أبو داود ٥٠٨٢، الترمذي ٣٥٧٥ · حسن صحيح" } }
+];
+var SNL = {
+  bn:{ h:"সুন্নাহ তিলাওয়াতের স্মরণ", hint:"সহিহ হাদিসে যে সূরা যে সময়ে পড়ার কথা আছে, সে সময়ে একটা নোটিফিকেশন। চাপলে সরাসরি সূরাটা খুলবে।", test:"দেখুন", fri:"শুক্রবার", daily:"প্রতিদিন" },
+  en:{ h:"Sunnah recitation reminders", hint:"A notification at the time a sahih hadith gives for each surah. Tap it and the surah opens.", test:"Show", fri:"Fridays", daily:"Daily" },
+  ur:{ h:"سنت تلاوت کی یاد دہانی", hint:"صحیح حدیث میں جس سورت کا جو وقت آیا ہے، اسی وقت نوٹیفکیشن۔ دبانے پر سورت کھل جائے گی۔", test:"دیکھیں", fri:"جمعہ", daily:"روزانہ" },
+  zh:{ h:"圣行诵读提醒", hint:"在正确圣训所载的时间提醒诵读相应章节。点按即打开该章。", test:"查看", fri:"每周五", daily:"每天" },
+  ar:{ h:"تذكير بتلاوات السنة", hint:"إشعار في الوقت الذي ورد فيه الحديث الصحيح لكل سورة. اضغط عليه فتفتح السورة.", test:"اعرض", fri:"الجمعة", daily:"يوميًا" }
+};
+function snL(){ return SNL[L.code] || SNL.en; }
+function snTx(o){ return o[L.code] || o.en; }
+/* the reader's own switches and times, over the defaults above */
+function snState(id){
+  var st = (S.settings.sunnah || {})[id] || {};
+  var def = SUNNAH.filter(function(x){ return x.id === id; })[0] || {};
+  return { on: st.on !== 0 && st.on !== false, at: st.at || def.at };
+}
+function ntSunnahNative(){
+  var R = ntPlugin();
+  if (!R || !R.sunnah) return false;
+  try {
+    R.sunnah({ items: SUNNAH.map(function(x){
+      var st = snState(x.id), hm = String(st.at || "").split(":");
+      return { on: st.on, dow: x.dow, hour: +hm[0], minute: +hm[1] || 0, vk: x.vk,
+               t: snTx(x.t), b: snTx(x.b) + " (" + snTx(x.src) + ")" };
+    }) });
+  } catch(e){ return false; }
+  return true;
+}
+/* a tapped reminder: open the mushaf on that ayah */
+async function sunnahOpen(vk){
+  if (!vk) return;
+  try {
+    var ix = await mushafIndex(), q = String(vk).split(":");
+    var pn = knPageOf(ix.start || {}, +q[0], +q[1]);
+    RD.pendingSel = vk;
+    openMushaf(pn);
+  } catch(e){}
+}
 function ntSchedule(){
   clearInterval(NT.timer);
   /* Android holds the dhikr alarm too now, so the page timer must not also
      fire one - that is how a reader ends up reminded twice a minute apart */
+  ntSunnahNative();
   if (ntZikrNative()){
+    /* the dhikr is native, and so is the daily lesson - it was skipped here,
+       so moving the reminder time in Settings never reached Android */
+    ntNative();
     if (!ntOn() || !S) return;
     NT.timer = setInterval(ntTickDaily, 30000);
     ntTickDaily();
@@ -13398,6 +13520,10 @@ window.addEventListener("error", function(e){ if (!L) fatal(e.error || e.message
      written down now; one still running is picked up again */
   setTimeout(function(){ try { dlCheckJob(); } catch(e){} }, 1200);
   setTimeout(function(){ try { asReconnectAuto(0); } catch(e){} }, 5000);
+  try {
+    var Rn = ntPlugin();
+    if (Rn && Rn.addListener) Rn.addListener("open", function(ev){ sunnahOpen(ev && ev.vk); });
+  } catch(e){}
 
   Sync.init();
   if (Cloud.on()) Cloud.pull(true);

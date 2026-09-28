@@ -14,6 +14,9 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.Calendar;
 
 /**
@@ -96,6 +99,106 @@ public class ReminderPlugin extends Plugin {
                 am.set(AlarmManager.RTC_WAKEUP, when, pi);
             }
         } catch (SecurityException ignored) {}
+    }
+
+    /* ---- the sunnah recitations ---- */
+
+    static PendingIntent sPending(Context ctx, int idx) {
+        Intent i = new Intent(ctx, ReminderReceiver.class)
+                .setAction(ReminderReceiver.ACT_SUNNAH)
+                .putExtra(ReminderReceiver.EXTRA_IDX, idx);
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) flags |= PendingIntent.FLAG_IMMUTABLE;
+        return PendingIntent.getBroadcast(ctx, ReminderReceiver.SBASE + idx, i, flags);
+    }
+
+    /** The next time item idx is due: today or later at its hour, and - for a
+     *  weekly one - on its weekday (dow 0 = Sunday ... 6 = Saturday, as the
+     *  web layer counts; -1 = every day). */
+    static void scheduleSunnah(Context ctx, int idx) {
+        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+        if (am == null) return;
+        PendingIntent pi = sPending(ctx, idx);
+        JSONObject o = ReminderReceiver.sunnahItem(ctx, idx);
+        if (o == null || !o.optBoolean("on", true)) { am.cancel(pi); return; }
+        int hour = o.optInt("hour", -1), minute = o.optInt("minute", 0), dow = o.optInt("dow", -1);
+        if (hour < 0 || hour > 23) { am.cancel(pi); return; }
+
+        Calendar at = Calendar.getInstance();
+        at.set(Calendar.HOUR_OF_DAY, hour);
+        at.set(Calendar.MINUTE, minute);
+        at.set(Calendar.SECOND, 0);
+        at.set(Calendar.MILLISECOND, 0);
+        long now = System.currentTimeMillis();
+        if (dow >= 0 && dow <= 6) {
+            int want = dow + 1;                       /* Calendar: 1 = Sunday */
+            for (int i = 0; i < 8 && (at.get(Calendar.DAY_OF_WEEK) != want || at.getTimeInMillis() <= now); i++)
+                at.add(Calendar.DAY_OF_YEAR, 1);
+        } else if (at.getTimeInMillis() <= now) {
+            at.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        long when = at.getTimeInMillis();
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !am.canScheduleExactAlarms()) {
+                am.setWindow(AlarmManager.RTC_WAKEUP, when, 15 * 60 * 1000L, pi);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, when, pi);
+            } else {
+                am.setExact(AlarmManager.RTC_WAKEUP, when, pi);
+            }
+        } catch (SecurityException e) {
+            am.setWindow(AlarmManager.RTC_WAKEUP, when, 15 * 60 * 1000L, pi);
+        }
+    }
+
+    static int sunnahCount(Context ctx) {
+        String raw = ctx.getSharedPreferences(ReminderReceiver.PREFS, Context.MODE_PRIVATE)
+                        .getString(ReminderReceiver.KEY_SUNNAH, "");
+        try { return (raw == null || raw.length() == 0) ? 0 : new JSONArray(raw).length(); }
+        catch (Exception e) { return 0; }
+    }
+
+    static void scheduleSunnahAll(Context ctx) {
+        int n = sunnahCount(ctx);
+        for (int i = 0; i < n; i++) scheduleSunnah(ctx, i);
+    }
+
+    /** sunnah({items:[{on, dow, hour, minute, t, b, vk}]}): replace the whole set. */
+    @PluginMethod
+    public void sunnah(PluginCall call) {
+        Context ctx = getContext();
+        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+        int old = sunnahCount(ctx);
+        JSArray items = call.getArray("items");
+        ctx.getSharedPreferences(ReminderReceiver.PREFS, Context.MODE_PRIVATE).edit()
+           .putString(ReminderReceiver.KEY_SUNNAH, items == null ? "" : items.toString()).apply();
+        int now = sunnahCount(ctx);
+        /* a set that shrank leaves alarms behind for the indexes it lost */
+        if (am != null) for (int i = now; i < old; i++) am.cancel(sPending(ctx, i));
+        scheduleSunnahAll(ctx);
+        call.resolve(new JSObject().put("count", now));
+    }
+
+    /** Post one now, so the reader can see what they switched on. */
+    @PluginMethod
+    public void sunnahNow(PluginCall call) {
+        Integer idx = call.getInt("idx", 0);
+        call.resolve(new JSObject().put("shown",
+                new ReminderReceiver().postSunnah(getContext(), idx == null ? 0 : idx)));
+    }
+
+    /** A tapped reminder names an ayah to open. Capacitor hands both the launch
+     *  intent (a cold start) and later ones (the app already running) to this
+     *  method; the event is retained until the page's listener takes it, since
+     *  on a cold start the page is not listening yet. */
+    @Override
+    protected void handleOnNewIntent(Intent intent) {
+        super.handleOnNewIntent(intent);
+        if (intent == null) return;
+        String vk = intent.getStringExtra(ReminderReceiver.EXTRA_OPEN);
+        if (vk == null || vk.length() == 0) return;
+        intent.removeExtra(ReminderReceiver.EXTRA_OPEN);   /* not again on rotation */
+        notifyListeners("open", new JSObject().put("vk", vk), true);
     }
 
     /** zikr({every, items:[{t,b,f}]}): the phrases and how often. */

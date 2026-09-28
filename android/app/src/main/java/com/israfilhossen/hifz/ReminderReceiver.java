@@ -50,6 +50,17 @@ public class ReminderReceiver extends BroadcastReceiver {
     static final int    ZALARM_ID = 7321;
     static final int    ZNOTE_ID  = 7322;
 
+    /* the sunnah recitations - Al-Kahf on Friday, Al-Mulk at night and the
+       rest: each its own alarm (7400 + index) and its own notification, so
+       the night's reminder never replaces Friday's */
+    static final String SCHANNEL   = "hifz-sunnah";
+    static final String ACT_SUNNAH = "com.israfilhossen.hifz.SUNNAH";
+    static final String KEY_SUNNAH = "sunnah";
+    static final String EXTRA_IDX  = "idx";
+    /** read by ReminderPlugin.handleOnNewIntent: which ayah to open */
+    static final String EXTRA_OPEN = "hifzOpen";
+    static final int    SBASE      = 7400;
+
     @Override
     public void onReceive(Context ctx, Intent intent) {
         String action = intent == null ? null : intent.getAction();
@@ -61,10 +72,17 @@ public class ReminderReceiver extends BroadcastReceiver {
             int h = p.getInt(KEY_HOUR, -1), m = p.getInt(KEY_MIN, -1);
             if (h >= 0 && m >= 0) ReminderPlugin.schedule(ctx, h, m);
             if (p.getInt(KEY_ZEVERY, 0) > 0) ReminderPlugin.scheduleZikr(ctx);
+            ReminderPlugin.scheduleSunnahAll(ctx);
             return;
         }
 
         if (ACT_ZIKR.equals(action)) { showZikr(ctx); ReminderPlugin.scheduleZikr(ctx); return; }
+
+        if (ACT_SUNNAH.equals(action)) {
+            int idx = intent.getIntExtra(EXTRA_IDX, -1);
+            if (idx >= 0) { showSunnah(ctx, idx); ReminderPlugin.scheduleSunnah(ctx, idx); }
+            return;
+        }
 
         show(ctx);
         /* an exact alarm fires once; ask for tomorrow's before this one ends */
@@ -75,6 +93,55 @@ public class ReminderReceiver extends BroadcastReceiver {
 
     boolean post(Context ctx) { return show(ctx); }
     boolean postZikr(Context ctx) { return showZikr(ctx); }
+    boolean postSunnah(Context ctx, int idx) { return showSunnah(ctx, idx); }
+
+    static JSONObject sunnahItem(Context ctx, int idx) {
+        String raw = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY_SUNNAH, "");
+        if (raw == null || raw.length() == 0) return null;
+        try {
+            JSONArray arr = new JSONArray(raw);
+            return (idx >= 0 && idx < arr.length()) ? arr.getJSONObject(idx) : null;
+        } catch (JSONException e) { return null; }
+    }
+
+    /** One sunnah reminder. Its words come from the web layer (five languages);
+     *  tapping it opens the app on that surah, or that ayah. */
+    private boolean showSunnah(Context ctx, int idx) {
+        JSONObject o = sunnahItem(ctx, idx);
+        if (o == null || !o.optBoolean("on", true)) return false;
+        String title = o.optString("t", ""), body = o.optString("b", ""), vk = o.optString("vk", "");
+        if (title.length() == 0) return false;
+
+        NotificationManager nm =
+                (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (nm == null) return false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel ch = new NotificationChannel(
+                    SCHANNEL, "Sunnah recitation", NotificationManager.IMPORTANCE_DEFAULT);
+            ch.setDescription("Al-Kahf on Friday, Al-Mulk at night, and the rest");
+            nm.createNotificationChannel(ch);
+        }
+
+        Intent open = new Intent(ctx, MainActivity.class);
+        open.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if (vk.length() > 0) open.putExtra(EXTRA_OPEN, vk);
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) flags |= PendingIntent.FLAG_IMMUTABLE;
+        /* a request code of its own, or every sunnah notification would carry
+           the extras of whichever was posted last */
+        PendingIntent pi = PendingIntent.getActivity(ctx, SBASE + 100 + idx, open, flags);
+
+        Notification.Builder b = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                ? new Notification.Builder(ctx, SCHANNEL) : new Notification.Builder(ctx);
+        b.setSmallIcon(R.drawable.ic_stat_play)
+         .setContentTitle(title)
+         .setContentIntent(pi)
+         .setAutoCancel(true);
+        if (body.length() > 0) b.setContentText(body).setStyle(new Notification.BigTextStyle().bigText(body));
+
+        try { nm.notify(SBASE + idx, b.build()); return true; }
+        catch (SecurityException e) { return false; }
+    }
 
     /** One dhikr, then the next one next time.
      *
