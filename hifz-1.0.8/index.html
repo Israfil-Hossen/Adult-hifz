@@ -2310,6 +2310,7 @@ main.wrap{width:100%}
     <nav class="drawer-nav" id="drawer-nav"></nav>
     <button class="drawer-it" id="dw-index"><i data-dwic="index"></i><span id="dw-index-l">Mushaf index</span></button>
     <button class="drawer-it" id="dw-listen"><i data-dwic="listen"></i><span id="dw-listen-l">Listen only</span></button>
+    <button class="drawer-it" id="dw-amal"><i data-dwic="amal"></i><span id="dw-amal-l">Sunnah recitations</span></button>
     <button class="drawer-it" id="dw-dl"><i data-dwic="dl"></i><span id="dw-dl-l">Downloads</span></button>
 
     <div class="drawer-lbl dwgrp" id="dw-look-l">Appearance</div>
@@ -2480,6 +2481,56 @@ body.mushaf .rdcard .rdfab svg{width:21px;height:21px}
 .dlrow.dlx1.on{background:rgba(128,32,32,.09)}
 .abtn.danger[disabled]{opacity:.45;pointer-events:none}
 .myq{margin-top:8px}
+/* সুন্নাহ আমল */
+.rdtrs.amal{max-height:86dvh}
+.amtabs{display:flex;gap:7px;padding:10px 16px 2px;overflow-x:auto;flex:0 0 auto}
+.amtabs .knchip{min-width:0;padding:8px 13px;white-space:nowrap}
+.amtabs .knchip.on{background:var(--verdigris);border-color:var(--verdigris);color:#fff}
+.amhead{padding:8px 0 6px}
+.amhead b{font-family:var(--display);font-size:17px;color:var(--ink);display:block;line-height:1.4}
+.amhead p{margin:4px 0 0;font-size:13px;color:var(--ink-3);line-height:1.6}
+.amdone{margin:8px 0;padding:10px 12px;border-radius:12px;background:rgba(95,127,82,.14);
+  color:var(--verdigris);font-weight:600;text-align:center}
+.amrow{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid rgba(33,43,54,.08)}
+.amrow:last-child{border-bottom:none}
+.amrow.now{background:rgba(176,138,62,.10);border-radius:12px;padding-inline:8px;margin-inline:-8px}
+.amck{flex:none;width:34px;height:34px;border-radius:999px;border:1.5px solid var(--rule);
+  background:var(--card);color:var(--ink-3);font:600 13px var(--mono);cursor:pointer}
+.amrow.done .amck{background:var(--verdigris);border-color:var(--verdigris);color:#fff;font-size:16px}
+.amtx{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}
+.amtx b{font-size:15px;color:var(--ink);line-height:1.35}
+.amrow.done .amtx b{color:var(--ink-3);text-decoration:line-through;text-decoration-color:rgba(95,127,82,.6)}
+.amtx i{font-style:normal;font-size:12px;color:var(--ink-3)}
+.amtx em{font-style:normal;color:var(--gold,#b8860b);font-weight:600}
+.amtx small{font-size:11px;color:var(--ink-3);opacity:.8}
+.abtn.amrd{flex:none;padding:8px 12px;font-size:13px}
+.amplay{flex:none;width:36px;height:36px;border-radius:999px;border:none;background:var(--verdigris);
+  color:#fff;font-size:13px;cursor:pointer}
+.trs-ft.amft{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px calc(12px + env(safe-area-inset-bottom));
+  border-top:1px solid rgba(33,43,54,.10);flex:0 0 auto}
+.amprog{flex:1 1 100%;font-size:12.5px;color:var(--ink-3)}
+.amft .abtn.go{flex:1 1 auto}
+#amalbar{display:none}
+body.mushaf #amalbar.on{display:flex;position:fixed;z-index:60;inset-inline:10px;
+  bottom:calc(84px + env(safe-area-inset-bottom));align-items:center;gap:8px;padding:8px 8px 8px 6px;
+  background:var(--card);border:1px solid var(--rule);border-radius:16px;box-shadow:0 8px 26px rgba(28,32,38,.22)}
+#amalbar .ambl{flex:none;border:none;background:rgba(95,127,82,.14);color:var(--verdigris);border-radius:10px;
+  padding:7px 9px;font:600 12.5px var(--mono);cursor:pointer}
+#amalbar .ambn{flex:1 1 auto;min-width:0;font-size:14px;font-weight:600;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#amalbar .ambn em{font-style:normal;color:var(--gold,#b8860b)}
+#amalbar .abtn{flex:none;padding:8px 11px;font-size:13px}
+#amalbar .abtn.on{background:rgba(95,127,82,.14);border-color:var(--verdigris);color:var(--verdigris)}
+#amalbar .ambx{flex:none;border:none;background:none;color:var(--ink-3);font-size:15px;padding:6px;cursor:pointer}
+body.night #amalbar.on{background:#23272b;border-color:rgba(255,255,255,.12)}
+.amtoday{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0 4px;padding:13px 14px;
+  border:1px solid var(--rule);border-radius:16px;background:var(--card);cursor:pointer;text-align:start;font:inherit}
+.amti{flex:none;width:38px;height:38px;border-radius:999px;display:grid;place-items:center;
+  background:rgba(176,138,62,.14);color:var(--gold,#b8860b);font-size:18px}
+.amtt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
+.amtt b{font-size:14.5px;color:var(--ink);line-height:1.4}
+.amtt i{font-style:normal;font-size:12px;color:var(--ink-3)}
+.amtg{flex:none;font-size:20px;color:var(--ink-3)}
 .myq summary{font-size:13px;color:var(--verdigris);cursor:pointer;padding:6px 0;list-style:none}
 .myq summary::-webkit-details-marker{display:none}
 .myq .hint{line-height:1.6}
@@ -5386,6 +5437,8 @@ function renderToday(){
       '<button class="qp" data-rate="' + d.rateAsk + '|0.2">' + L.rev.bad + '</button></div>';
   }
 
+  h += amTodayCard();
+
   /* the only thing still worth asking a person for. Minutes come from the timer
      the app already runs; errors from the drills it already scores. */
   h += '<div class="log notelog' + (d.note ? " full" : "") + '"><div class="fld">' +
@@ -5395,6 +5448,8 @@ function renderToday(){
 
   document.getElementById("v-today").innerHTML = h;
   bindToday();
+  var amb = document.getElementById("am-today");
+  if (amb) amb.onclick = function(){ amalOpen(amb.dataset.amopen); };
 }
 
 function bindToday(){
@@ -7232,7 +7287,7 @@ function surahName(nn){
 /* The index is read out of the pack itself — the surah header rows carry their
    own page — so it always matches the print the reader is showing. */
 var IDX = { cache:{}, tab:"all" };
-var APP_VER = "1.1.2";
+var APP_VER = "1.1.3";
 /* Proper outlined line icons for the reader panel. Text glyphs like ◐ ▤ ‖ render
    at whatever weight the system font decides and look crude next to real icons. */
 function ric(d, extra){
@@ -7992,7 +8047,7 @@ function kaHandoff(){
     var more = (RD.left === Infinity) ? -1 : Math.max(0, (RD.left || 1) - 1);
     /* the native player has no "repeat each ayah", so each ayah goes in as
        many times as it is to be heard; map[] says which ayah each entry is */
-    var reps = (RD.ayahRep || 0) + 1;
+    var reps = rdRep() + 1;
     var build = function(keys, base, first){
       var q = [], lab = [], map = [];
       for (var i = 0; i < keys.length && q.length < KA_MAX; i++){
@@ -8099,7 +8154,7 @@ function rdStop(){
   wakeOff();
   if (rdRaf){ cancelAnimationFrame(rdRaf); rdRaf = null; }
   RD.queue = []; RD.left = 0; RD.words = null; RD.wi = -1; RD.turning = false;
-  RD.midAyah = null; RD.ayahLeft = 0; RD.cont = false; RD.stopAt = 0; RD.startPaused = false;
+  RD.midAyah = null; RD.ayahLeft = 0; RD.cont = false; RD.stopAt = 0; RD.startPaused = false; RD.repOff = false;
   clearTimeout(RD.tapT);
   try { kaNoteStop(); } catch(e){}
   rdClear("on"); rdClear("now");
@@ -8397,8 +8452,10 @@ function fabWire(){
      ACTING as record */
   fabRender();
 }
-function rdPlay(keys, loops, noFollow){
+function rdRep(){ return RD.repOff ? 0 : (RD.ayahRep || 0); }
+function rdPlay(keys, loops, noFollow, noRep){
   rdStop();
+  RD.repOff = !!noRep;
   /* a session started from the Listen screen carries on while the reader goes
      elsewhere; anything else (memorising on the page) is tied to the page */
   RD.listen = RD.listenNext || null; RD.listenNext = null;
@@ -8413,7 +8470,7 @@ function rdPlay(keys, loops, noFollow){
   /* a fresh recitation was never handed to Android; leaving the flag raised
      from a previous one would block the next handoff entirely */
   KAH.active = false; RD.resumeAt = 0;
-  RD.ayahLeft = RD.ayahRep; RD.midAyah = "start";
+  RD.ayahLeft = rdRep(); RD.midAyah = "start";
   rdNext();
   try { kaNote(); kaNoteTick(); } catch(e){}
 }
@@ -8492,7 +8549,7 @@ async function rdTurnToAyah(vk){
 */
 function rdBetween(vk){
   var ph = RD.midAyah, clear = function(){
-    RD.midAyah = null; RD.ayahLeft = RD.ayahRep; return false;
+    RD.midAyah = null; RD.ayahLeft = rdRep(); return false;
   };
   if (ph === "played"){
     /* again, first: repetition is what the ayah is for */
@@ -8532,6 +8589,7 @@ function rdNext(){
   if (RD.qi >= RD.queue.length){
     RD.left--; RD.qi = 0;
     if (RD.left <= 0){
+      try { amalProgress(0, true); } catch(e){}
       if (RD.cont){ rdContNext(); return; }
       rdStop(); return;
     }
@@ -8573,6 +8631,7 @@ function rdNext(){
      memory only — the page turn already writes, and saving once an ayah would
      mean thousands of writes and sync pushes across one night of listening. */
   if (S && S.settings) S.settings.lastPlayed = vk;
+  try { amalProgress(RD.qi - 1, false); } catch(e){}
   /* a listening session keeps its own place, so memorising on the page in
      between does not move where "carry on" picks up */
   if (RD.listen && S && S.settings) S.settings.lastListenAt = vk;
@@ -8815,7 +8874,7 @@ function rdPlayOrResume(pg){
    is dropped, or "next" during "repeat each ayah" played the same one again */
 function rdSkip(by){
   if (!RD.queue.length) return;
-  RD.midAyah = "start"; RD.ayahLeft = RD.ayahRep;
+  RD.midAyah = "start"; RD.ayahLeft = rdRep();
   if (by < 0) RD.qi = Math.max(0, RD.qi - 2);
   rdNext();
 }
@@ -10645,6 +10704,12 @@ async function rdPaint(p, isTodayPage){
     try { fam = (await rdLoadFont(p)) || fam; } catch(e){}
     var pg = await rdLoadPage(p);
     if (RD.page !== p || !document.getElementById("rd-paper")) return;
+    /* a passage to mark - a sunnah reading - across however many pages */
+    if (RD.pendingRange){
+      RD.sel = { k0:RD.pendingRange.k0, k1:RD.pendingRange.k1, exact:true, a:0, b:0,
+                 ln0:null, ln1:null, page:p, auto:false };
+      RD.pendingRange = null;
+    }
     if (RD.pendingSel){
       var pi = rdKeyIdx(pg, RD.pendingSel);
       RD.pendingSel = null;
@@ -11582,22 +11647,14 @@ var SUNNAH = [
         zh:"谁在聚礼日诵读山洞章，两个聚礼日之间将为他照亮光明。",
         ar:"من قرأ سورة الكهف يوم الجمعة أضاء له من النور ما بين الجمعتين." },
     src:{ bn:"হাকিম ২/৩৯৯, বায়হাকি · আলবানি: সহিহ", en:"al-Hakim 2/399, al-Bayhaqi · al-Albani: sahih", ur:"حاکم ۲/۳۹۹، بیہقی · البانی: صحیح", zh:"哈基姆 2/399、拜哈基 · 艾勒巴尼：正确", ar:"الحاكم ٢/٣٩٩، البيهقي · الألباني: صحيح" } },
-  { id:"mulk", dow:-1, at:"22:00", vk:"67:1",
-    t:{ bn:"ঘুমের আগে — সূরা মুলক ও সূরা সাজদা", en:"Before sleep — Al-Mulk and As-Sajdah", ur:"سونے سے پہلے — سورۃ الملک اور السجدہ", zh:"睡前 — 国权章与叩头章", ar:"قبل النوم — سورة الملك والسجدة" },
-    b:{ bn:"নবী ﷺ সূরা আলিফ-লাম-মীম তানযীল (সাজদা) আর তাবারাকাল্লাযী (মুলক) না পড়ে ঘুমাতেন না।",
-        en:"The Prophet ﷺ would not sleep until he had recited Alif-Lam-Mim Tanzil (As-Sajdah) and Tabarak (Al-Mulk).",
-        ur:"نبی ﷺ الم تنزیل (السجدہ) اور تبارک الذی (الملک) پڑھے بغیر نہیں سوتے تھے۔",
-        zh:"先知ﷺ睡前必诵读叩头章与国权章。",
-        ar:"كان النبي ﷺ لا ينام حتى يقرأ الم تنزيل وتبارك الذي بيده الملك." },
-    src:{ bn:"তিরমিযি ২৮৯২ · সহিহ", en:"at-Tirmidhi 2892 · sahih", ur:"ترمذی ۲۸۹۲ · صحیح", zh:"提尔密济 2892 · 正确", ar:"الترمذي ٢٨٩٢ · صحيح" } },
-  { id:"night", dow:-1, at:"22:00", vk:"2:255",
-    t:{ bn:"ঘুমের আগে — আয়াতুল কুরসি, বাকারার শেষ দুই আয়াত, তিন কুল", en:"Before sleep — Ayat al-Kursi, the end of Al-Baqarah, the three Quls", ur:"سونے سے پہلے — آیت الکرسی، البقرہ کی آخری دو آیات، تین قل", zh:"睡前 — 宝座经文、黄牛章末两节、三个古勒", ar:"قبل النوم — آية الكرسي وخواتيم البقرة والمعوذات" },
-    b:{ bn:"আয়াতুল কুরসি; সূরা বাকারার শেষ দুই আয়াত রাতে পড়লে তা যথেষ্ট; আর ইখলাস, ফালাক, নাস পড়ে হাতে ফুঁ দিয়ে শরীরে বুলিয়ে নেওয়া — তিনবার।",
-        en:"Ayat al-Kursi; the last two ayat of Al-Baqarah, which suffice whoever recites them at night; and Al-Ikhlas, Al-Falaq, An-Nas into the palms, wiped over the body — three times.",
-        ur:"آیت الکرسی؛ البقرہ کی آخری دو آیات رات کو کافی ہیں؛ اور اخلاص، فلق، ناس پڑھ کر ہاتھوں پر پھونک کر جسم پر پھیرنا — تین بار۔",
-        zh:"宝座经文；夜间诵读黄牛章末两节即已足够；诵读忠诚章、曙光章、世人章后吹于掌中抹身——三次。",
-        ar:"آية الكرسي؛ والآيتان من آخر البقرة من قرأهما في ليلة كفتاه؛ والإخلاص والمعوذتان ينفث في كفيه ويمسح بهما جسده ثلاثًا." },
-    src:{ bn:"বুখারি ২৩১১, ৫০০৯, ৫০১৭ · মুসলিম ৮০৭", en:"al-Bukhari 2311, 5009, 5017 · Muslim 807", ur:"بخاری ۲۳۱۱، ۵۰۰۹، ۵۰۱۷ · مسلم ۸۰۷", zh:"布哈里 2311、5009、5017 · 穆斯林 807", ar:"البخاري ٢٣١١، ٥٠٠٩، ٥٠١٧ · مسلم ٨٠٧" } },
+  { id:"night", dow:-1, at:"22:00", vk:"67:1",
+    t:{ bn:"ঘুমের আগে — রাতের আমল", en:"Before sleep — the night's recitation", ur:"سونے سے پہلے — رات کا معمول", zh:"睡前 — 夜间诵读", ar:"قبل النوم — ورد الليل" },
+    b:{ bn:"সূরা মুলক ও সাজদা, আয়াতুল কুরসি, বাকারার শেষ দুই আয়াত আর তিন কুল। চাপলে পুরো তালিকা খুলবে — একটার পর একটা।",
+        en:"Al-Mulk and As-Sajdah, Ayat al-Kursi, the last two ayat of Al-Baqarah and the three Quls. Tap to open the whole list — one after another.",
+        ur:"سورۃ الملک اور السجدہ، آیت الکرسی، البقرہ کی آخری دو آیات اور تین قل۔ دبائیں تو پوری فہرست کھل جائے گی — ایک کے بعد ایک۔",
+        zh:"国权章与叩头章、宝座经文、黄牛章末两节、三个古勒。点按即打开整份清单——一个接一个。",
+        ar:"سورة الملك والسجدة، وآية الكرسي، وخواتيم البقرة، والمعوذات. اضغط لتفتح القائمة كاملة — واحدة بعد أخرى." },
+    src:{ bn:"তিরমিযি ২৮৯২ · বুখারি ২৩১১, ৫০০৯, ৫০১৭", en:"at-Tirmidhi 2892 · al-Bukhari 2311, 5009, 5017", ur:"ترمذی ۲۸۹۲ · بخاری ۲۳۱۱، ۵۰۰۹، ۵۰۱۷", zh:"提尔密济 2892 · 布哈里 2311、5009、5017", ar:"الترمذي ٢٨٩٢ · البخاري ٢٣١١، ٥٠٠٩، ٥٠١٧" } },
   { id:"morning", dow:-1, at:"07:00", vk:"112:1",
     t:{ bn:"সকালের তিন কুল", en:"The three Quls — morning", ur:"صبح کے تین قل", zh:"早晨的三个古勒", ar:"المعوذات — الصباح" },
     b:{ bn:"সূরা ইখলাস, ফালাক ও নাস — সকালে তিনবার করে। সব কিছু থেকে তা যথেষ্ট।",
@@ -11615,9 +11672,64 @@ var SUNNAH = [
         ar:"الإخلاص والمعوذتان ثلاث مرات حين تمسي تكفيك من كل شيء." },
     src:{ bn:"আবু দাউদ ৫০৮২, তিরমিযি ৩৫৭৫ · হাসান সহিহ", en:"Abu Dawud 5082, at-Tirmidhi 3575 · hasan sahih", ur:"ابو داؤد ۵۰۸۲، ترمذی ۳۵۷۵ · حسن صحیح", zh:"艾布·达乌德 5082、提尔密济 3575 · 良好正确", ar:"أبو داود ٥٠٨٢، الترمذي ٣٥٧٥ · حسن صحيح" } }
 ];
+/* What each reminder asks for, piece by piece: where it starts and ends, how
+   many times, and the hadith for that piece. The notification used to open
+   only the first of them - the reader then had to go and find Al-Mulk after
+   Ayat al-Kursi on their own. */
+var AMN = {
+  kahf:  { bn:"সূরা কাহফ", en:"Surah Al-Kahf", ar:"سورة الكهف", ur:"سورۃ الکہف", zh:"山洞章" },
+  mulk:  { bn:"সূরা মুলক", en:"Surah Al-Mulk", ar:"سورة الملك", ur:"سورۃ الملک", zh:"国权章" },
+  sajda: { bn:"সূরা সাজদা", en:"Surah As-Sajdah", ar:"سورة السجدة", ur:"سورۃ السجدہ", zh:"叩头章" },
+  kursi: { bn:"আয়াতুল কুরসি", en:"Ayat al-Kursi", ar:"آية الكرسي", ur:"آیت الکرسی", zh:"宝座经文" },
+  baq:   { bn:"সূরা বাকারার শেষ দুই আয়াত", en:"The last two ayat of Al-Baqarah", ar:"خواتيم سورة البقرة", ur:"البقرہ کی آخری دو آیات", zh:"黄牛章末两节" },
+  ikh:   { bn:"সূরা ইখলাস", en:"Surah Al-Ikhlas", ar:"سورة الإخلاص", ur:"سورۃ الاخلاص", zh:"忠诚章" },
+  fal:   { bn:"সূরা ফালাক", en:"Surah Al-Falaq", ar:"سورة الفلق", ur:"سورۃ الفلق", zh:"曙光章" },
+  nas:   { bn:"সূরা নাস", en:"Surah An-Nas", ar:"سورة الناس", ur:"سورۃ الناس", zh:"世人章" }
+};
+var AMS = {
+  tir:  { bn:"তিরমিযি ২৮৯২", en:"at-Tirmidhi 2892", ar:"الترمذي ٢٨٩٢", ur:"ترمذی ۲۸۹۲", zh:"提尔密济 2892" },
+  kur:  { bn:"বুখারি ২৩১১", en:"al-Bukhari 2311", ar:"البخاري ٢٣١١", ur:"بخاری ۲۳۱۱", zh:"布哈里 2311" },
+  baq:  { bn:"বুখারি ৫০০৯ · মুসলিম ৮০৭", en:"al-Bukhari 5009 · Muslim 807", ar:"البخاري ٥٠٠٩ · مسلم ٨٠٧", ur:"بخاری ۵۰۰۹ · مسلم ۸۰۷", zh:"布哈里 5009 · 穆斯林 807" },
+  qn:   { bn:"বুখারি ৫০১৭", en:"al-Bukhari 5017", ar:"البخاري ٥٠١٧", ur:"بخاری ۵۰۱۷", zh:"布哈里 5017" },
+  qd:   { bn:"আবু দাউদ ৫০৮২ · তিরমিযি ৩৫৭৫", en:"Abu Dawud 5082 · at-Tirmidhi 3575", ar:"أبو داود ٥٠٨٢ · الترمذي ٣٥٧٥", ur:"ابو داؤد ۵۰۸۲ · ترمذی ۳۵۷۵", zh:"艾布·达乌德 5082 · 提尔密济 3575" }
+};
+var AMP = {
+  kahf:    [ { n:"kahf", k0:"18:1", k1:"18:110", x:1, s:null } ],
+  night:   [ { n:"mulk", k0:"67:1", k1:"67:30", x:1, s:"tir" },
+             { n:"sajda", k0:"32:1", k1:"32:30", x:1, s:"tir" },
+             { n:"kursi", k0:"2:255", k1:"2:255", x:1, s:"kur" },
+             { n:"baq", k0:"2:285", k1:"2:286", x:1, s:"baq" },
+             { n:"ikh", k0:"112:1", k1:"112:4", x:3, s:"qn" },
+             { n:"fal", k0:"113:1", k1:"113:5", x:3, s:"qn" },
+             { n:"nas", k0:"114:1", k1:"114:6", x:3, s:"qn" } ],
+  morning: [ { n:"ikh", k0:"112:1", k1:"112:4", x:3, s:"qd" },
+             { n:"fal", k0:"113:1", k1:"113:5", x:3, s:"qd" },
+             { n:"nas", k0:"114:1", k1:"114:6", x:3, s:"qd" } ],
+  evening: [ { n:"ikh", k0:"112:1", k1:"112:4", x:3, s:"qd" },
+             { n:"fal", k0:"113:1", k1:"113:5", x:3, s:"qd" },
+             { n:"nas", k0:"114:1", k1:"114:6", x:3, s:"qd" } ]
+};
+var AML = {
+  bn:{ menu:"সুন্নাহ আমল", read:"পড়ুন", all:"সব একসাথে শুনুন", done:"✓ শেষ", next:"পরেরটা", prog:"{0} / {1} সম্পন্ন",
+       times:"{0} বার", complete:"মাশাআল্লাহ — আজকের আমল সম্পূর্ণ", ay:"আয়াত {0}", ayR:"আয়াত {0}–{1}", whole:"পুরো সূরা",
+       list:"তালিকা", tabs:{ kahf:"জুমআ", night:"রাত", morning:"সকাল", evening:"সন্ধ্যা" }, redo:"আবার শুরু" },
+  en:{ menu:"Sunnah recitations", read:"Read", all:"Listen to all", done:"✓ Done", next:"Next", prog:"{0} / {1} done",
+       times:"{0} times", complete:"Masha'Allah — all done for now", ay:"Ayah {0}", ayR:"Ayat {0}–{1}", whole:"Whole surah",
+       list:"List", tabs:{ kahf:"Friday", night:"Night", morning:"Morning", evening:"Evening" }, redo:"Start again" },
+  ar:{ menu:"أوراد السنة", read:"اقرأ", all:"استمع إلى الكل", done:"✓ تم", next:"التالي", prog:"{0} / {1} تم",
+       times:"{0} مرات", complete:"ما شاء الله — تمّ الورد", ay:"آية {0}", ayR:"الآيات {0}–{1}", whole:"السورة كاملة",
+       list:"القائمة", tabs:{ kahf:"الجمعة", night:"الليل", morning:"الصباح", evening:"المساء" }, redo:"من جديد" },
+  ur:{ menu:"سنت معمولات", read:"پڑھیں", all:"سب ایک ساتھ سنیں", done:"✓ ہو گیا", next:"اگلا", prog:"{0} / {1} مکمل",
+       times:"{0} بار", complete:"ماشاءاللہ — آج کا معمول مکمل", ay:"آیت {0}", ayR:"آیات {0}–{1}", whole:"پوری سورت",
+       list:"فہرست", tabs:{ kahf:"جمعہ", night:"رات", morning:"صبح", evening:"شام" }, redo:"دوبارہ" },
+  zh:{ menu:"圣行诵读", read:"阅读", all:"全部收听", done:"✓ 完成", next:"下一个", prog:"已完成 {0} / {1}",
+       times:"{0} 遍", complete:"真主意欲 —— 今日功课已完成", ay:"第 {0} 节", ayR:"第 {0}–{1} 节", whole:"整章",
+       list:"清单", tabs:{ kahf:"聚礼日", night:"夜间", morning:"早晨", evening:"傍晚" }, redo:"重新开始" }
+};
+function amL(){ return AML[L.code] || AML.en; }
 var SNL = {
-  bn:{ h:"সুন্নাহ তিলাওয়াতের স্মরণ", hint:"সহিহ হাদিসে যে সূরা যে সময়ে পড়ার কথা আছে, সে সময়ে একটা নোটিফিকেশন। চাপলে সরাসরি সূরাটা খুলবে।", test:"দেখুন", fri:"শুক্রবার", daily:"প্রতিদিন" },
-  en:{ h:"Sunnah recitation reminders", hint:"A notification at the time a sahih hadith gives for each surah. Tap it and the surah opens.", test:"Show", fri:"Fridays", daily:"Daily" },
+  bn:{ h:"সুন্নাহ তিলাওয়াতের স্মরণ", hint:"সহিহ হাদিসে যে সূরা যে সময়ে পড়ার কথা আছে, সে সময়ে একটা নোটিফিকেশন। চাপলে সেই সময়ের পুরো তালিকা খুলবে — একটার পর একটা পড়া বা শোনা যাবে।", test:"দেখুন", fri:"শুক্রবার", daily:"প্রতিদিন" },
+  en:{ h:"Sunnah recitation reminders", hint:"A notification at the time a sahih hadith gives for each surah. Tap it and that time's whole list opens — read or listen to one after another.", test:"Show", fri:"Fridays", daily:"Daily" },
   ur:{ h:"سنت تلاوت کی یاد دہانی", hint:"صحیح حدیث میں جس سورت کا جو وقت آیا ہے، اسی وقت نوٹیفکیشن۔ دبانے پر سورت کھل جائے گی۔", test:"دیکھیں", fri:"جمعہ", daily:"روزانہ" },
   zh:{ h:"圣行诵读提醒", hint:"在正确圣训所载的时间提醒诵读相应章节。点按即打开该章。", test:"查看", fri:"每周五", daily:"每天" },
   ar:{ h:"تذكير بتلاوات السنة", hint:"إشعار في الوقت الذي ورد فيه الحديث الصحيح لكل سورة. اضغط عليه فتفتح السورة.", test:"اعرض", fri:"الجمعة", daily:"يوميًا" }
@@ -11636,21 +11748,251 @@ function ntSunnahNative(){
   try {
     R.sunnah({ items: SUNNAH.map(function(x){
       var st = snState(x.id), hm = String(st.at || "").split(":");
-      return { on: st.on, dow: x.dow, hour: +hm[0], minute: +hm[1] || 0, vk: x.vk,
+      return { on: st.on, dow: x.dow, hour: +hm[0], minute: +hm[1] || 0, vk: "set:" + x.id,
                t: snTx(x.t), b: snTx(x.b) + " (" + snTx(x.src) + ")" };
     }) });
   } catch(e){ return false; }
   return true;
 }
-/* a tapped reminder: open the mushaf on that ayah */
+/* a tapped reminder: its whole list ("set:night"); an older notification
+   still names a single ayah */
 async function sunnahOpen(vk){
   if (!vk) return;
+  if (/^set:/.test(vk)){ amalOpen(vk.slice(4)); return; }
   try {
     var ix = await mushafIndex(), q = String(vk).split(":");
     var pn = knPageOf(ix.start || {}, +q[0], +q[1]);
     RD.pendingSel = vk;
     openMushaf(pn);
   } catch(e){}
+}
+/* ---------- সুন্নাহ আমল: the list a reminder opens ----------
+
+   Each time of day has its readings (AMP). Tapping the reminder opens them
+   all as one list; "Read" opens the mushaf on that passage with a small bar
+   that says "3 / 7 · Ayat al-Kursi" and has Done and Next, so moving on to
+   Al-Mulk is one tap - never a search. "Listen to all" plays the whole list
+   in order, the three Quls three times each. What was done is kept for the
+   day, and starts fresh the next. */
+var AM = { id:null, active:null, play:null };
+function amSet(id){ return SUNNAH.filter(function(x){ return x.id === id; })[0] || null; }
+/* which list fits the hour: Friday's Kahf until the evening, then the time of day */
+function amNow(){
+  var d = new Date(), h = d.getHours();
+  if (d.getDay() === 5 && h >= 5 && h < 18 && !amAllDone("kahf")) return "kahf";
+  if (h >= 4 && h < 12) return "morning";
+  if (h >= 15 && h < 20) return "evening";
+  return "night";
+}
+function amDay(){
+  if (!S.amal || S.amal.day !== TODAY) S.amal = { day:TODAY, done:{} };
+  return S.amal;
+}
+function amDoneList(id){ var a = amDay().done[id]; return Array.isArray(a) ? a : []; }
+function amIsDone(id, i){ return amDoneList(id).indexOf(i) >= 0; }
+function amMark(id, i, on){
+  var a = amDoneList(id).filter(function(x){ return x !== i; });
+  if (on) a.push(i);
+  amDay().done[id] = a;
+  save();
+}
+function amAllDone(id){ var p = AMP[id] || []; return p.length > 0 && p.every(function(_, i){ return amIsDone(id, i); }); }
+function amCount(id){ return (AMP[id] || []).filter(function(_, i){ return amIsDone(id, i); }).length; }
+function amRange(p){
+  var T = amL(), a = p.k0.split(":"), b = p.k1.split(":");
+  if (+a[1] === 1 && +b[1] === (AYAHS[+b[0] - 1] || 0)) return T.whole;
+  return a[1] === b[1] ? fmt(T.ay, n(+a[1])) : fmt(T.ayR, n(+a[1]), n(+b[1]));
+}
+/* the ayat of one piece, as many times as it is to be said */
+function amKeys(p){
+  var one = ayRange(p.k0, p.k1), out = [];
+  for (var r = 0; r < (p.x || 1); r++) out = out.concat(one);
+  return out;
+}
+function amalOpen(id){
+  id = (id && AMP[id]) ? id : amNow();
+  AM.id = id;
+  var el = document.getElementById("amal");
+  if (!el){
+    el = document.createElement("div");
+    el.id = "amal"; el.className = "rdtrs amal";
+    document.body.appendChild(el);
+  }
+  amalRender();
+  el.classList.add("on");
+}
+function amalClose(){
+  var el = document.getElementById("amal");
+  if (el) el.classList.remove("on");
+}
+function amalRender(){
+  var el = document.getElementById("amal"), id = AM.id, set = amSet(id), T = amL();
+  if (!el || !set) return;
+  var parts = AMP[id] || [], all = amAllDone(id), cnt = amCount(id);
+  var playing = AM.play && AM.play.id === id && rdAudio && RD.queue === AM.play.q;
+  el.innerHTML =
+    '<div class="trs-hd"><span class="trs-ttl">' + esc(T.menu) + '</span>' +
+      '<button class="trs-x" aria-label="' + esc(uit("close")) + '">✕</button></div>' +
+    '<div class="amtabs">' + ["kahf", "night", "morning", "evening"].map(function(k){
+      return '<button class="knchip' + (k === id ? " on" : "") + '" data-amtab="' + k + '">' + esc(T.tabs[k]) +
+        (amAllDone(k) ? ' ✓' : '') + '</button>';
+    }).join("") + '</div>' +
+    '<div class="trs-bd">' +
+      '<div class="amhead"><b>' + esc(snTx(set.t)) + '</b><p>' + esc(snTx(set.b)) + '</p></div>' +
+      (all ? '<div class="amdone">' + esc(T.complete) + '</div>' : '') +
+      parts.map(function(p, i){
+        var dn = amIsDone(id, i), now = AM.active && AM.active.id === id && AM.active.i === i;
+        return '<div class="amrow' + (dn ? " done" : "") + (now ? " now" : "") + '">' +
+          '<button class="amck" data-amck="' + i + '" aria-pressed="' + (dn ? "true" : "false") + '">' + (dn ? "✓" : n(i + 1)) + '</button>' +
+          '<div class="amtx"><b>' + esc(snTx(AMN[p.n])) + '</b>' +
+            '<i>' + esc(n(+p.k0.split(":")[0]) + " · " + amRange(p)) +
+              (p.x > 1 ? ' · <em>' + esc(fmt(T.times, n(p.x))) + '</em>' : '') + '</i>' +
+            '<small>' + esc(p.s ? snTx(AMS[p.s]) : snTx(set.src)) + '</small></div>' +
+          '<button class="abtn amrd" data-amrd="' + i + '">' + esc(T.read) + '</button>' +
+          '<button class="amplay" data-amply="' + i + '" aria-label="' + esc(L.rd.play || "play") + '">▶</button>' +
+        '</div>';
+      }).join("") +
+    '</div>' +
+    '<div class="trs-ft amft"><span class="amprog">' + esc(fmt(T.prog, n(cnt), n(parts.length))) + '</span>' +
+      (playing ? '<button class="abtn" id="am-stop">' + esc(L.rd.stop) + '</button>'
+               : '<button class="abtn go" id="am-all">▶ ' + esc(T.all) + '</button>') +
+      (cnt ? '<button class="abtn" id="am-redo">' + esc(T.redo) + '</button>' : '') + '</div>';
+  el.querySelector(".trs-x").onclick = amalClose;
+  qa("#amal [data-amtab]").forEach(function(b){ b.onclick = function(){ AM.id = b.dataset.amtab; amalRender(); }; });
+  qa("#amal [data-amck]").forEach(function(b){
+    b.onclick = function(){ var i = +b.dataset.amck; amMark(id, i, !amIsDone(id, i)); amalRender(); amalBar(); amTodaySync(); };
+  });
+  qa("#amal [data-amrd]").forEach(function(b){ b.onclick = function(){ amalRead(id, +b.dataset.amrd); }; });
+  qa("#amal [data-amply]").forEach(function(b){ b.onclick = function(){ amalPlay(id, +b.dataset.amply, false); }; });
+  var ab = document.getElementById("am-all");
+  if (ab) ab.onclick = function(){ amalPlay(id, amFirstOpen(id), true); };
+  var sb = document.getElementById("am-stop");
+  if (sb) sb.onclick = function(){ rdStop(); amalRender(); };
+  var rb = document.getElementById("am-redo");
+  if (rb) rb.onclick = function(){ amDay().done[id] = []; save(); amalRender(); amalBar(); amTodaySync(); };
+}
+function amFirstOpen(id){
+  var p = AMP[id] || [];
+  for (var i = 0; i < p.length; i++) if (!amIsDone(id, i)) return i;
+  return 0;
+}
+async function amPageOf(vk){
+  var ix = await mushafIndex(), q = String(vk).split(":");
+  return knPageOf(ix.start || {}, +q[0], +q[1]) || 1;
+}
+/* read one piece: the mushaf on it, the passage marked, the bar below */
+async function amalRead(id, i){
+  var p = (AMP[id] || [])[i];
+  if (!p) return;
+  amalClose();
+  AM.active = { id:id, i:i };
+  try {
+    var pn = await amPageOf(p.k0);
+    RD.pendingRange = { k0:p.k0, k1:p.k1 };
+    openMushaf(pn);
+  } catch(e){}
+  amalBar();
+}
+/* listen: one piece, or from this piece to the end of the list */
+async function amalPlay(id, i, toEnd){
+  var parts = AMP[id] || [];
+  if (!parts[i]) return;
+  var q = [], map = [];
+  for (var j = i; j < (toEnd ? parts.length : i + 1); j++){
+    amKeys(parts[j]).forEach(function(k){ q.push(k); map.push(j); });
+  }
+  amalClose();
+  AM.active = { id:id, i:i };
+  try {
+    var pn = await amPageOf(parts[i].k0);
+    RD.pendingRange = { k0:parts[i].k0, k1:parts[i].k1 };
+    openMushaf(pn);
+    try { await rdLoadFont(pn); } catch(e){}
+    await rdLoadPage(pn);
+  } catch(e){}
+  /* the reader's own "repeat each ayah" is for memorising; it is not part of
+     a sunnah reading, which already says how many times */
+  rdPlay(q, 1, false, true);
+  AM.play = { id:id, q:RD.queue, map:map, cur:i };
+  amalBar();
+}
+/* called for every ayah the recitation reaches: a piece left behind is done */
+function amalProgress(qi, ended){
+  var P = AM.play;
+  if (!P || RD.queue !== P.q) return;
+  var part = ended ? null : P.map[qi];
+  if (P.cur != null && (ended || part !== P.cur)) amMark(P.id, P.cur, true);
+  if (ended){ AM.play = null; if (amAllDone(P.id)) AM.active = null; amTodaySync(); amalBar(); return; }
+  if (part !== P.cur){
+    P.cur = part;
+    AM.active = { id:P.id, i:part };
+    RD.pendingRange = { k0:AMP[P.id][part].k0, k1:AMP[P.id][part].k1 };
+    amalBar(); amTodaySync();
+  }
+}
+/* the bar in the mushaf: where in the list, Done, Next */
+function amalBar(){
+  var bar = document.getElementById("amalbar");
+  var A = AM.active, T = amL();
+  if (!A || !AMP[A.id]){ if (bar) bar.remove(); return; }
+  if (!bar){
+    bar = document.createElement("div");
+    bar.id = "amalbar";
+    document.body.appendChild(bar);
+  }
+  var parts = AMP[A.id], p = parts[A.i], last = A.i >= parts.length - 1;
+  var dn = amIsDone(A.id, A.i);
+  bar.innerHTML =
+    '<button class="ambl" data-ab="list" aria-label="' + esc(T.list) + '"><b>' + n(A.i + 1) + '/' + n(parts.length) + '</b></button>' +
+    '<span class="ambn">' + esc(snTx(AMN[p.n])) + (p.x > 1 ? ' <em>×' + n(p.x) + '</em>' : '') + '</span>' +
+    '<button class="abtn' + (dn ? " on" : "") + '" data-ab="done">' + esc(T.done) + '</button>' +
+    (last ? '' : '<button class="abtn go" data-ab="next">' + esc(T.next) + ' ›</button>') +
+    '<button class="ambx" data-ab="x" aria-label="' + esc(uit("close")) + '">✕</button>';
+  bar.classList.add("on");
+  qa("#amalbar [data-ab]").forEach(function(b){
+    b.onclick = function(){
+      var k = b.dataset.ab, A2 = AM.active;
+      if (!A2) return;
+      var playingList = AM.play && RD.queue === AM.play.q && rdAudio;
+      if (k === "x"){ AM.active = null; amalBar(); return; }
+      if (k === "list"){ amalOpen(A2.id); return; }
+      if (k === "done") amMark(A2.id, A2.i, true);
+      amTodaySync();
+      var nx = A2.i + 1;
+      if (nx >= parts.length){
+        /* the last one: the list, with everything ticked */
+        if (!playingList){ AM.active = null; amalBar(); }
+        amalOpen(A2.id);
+        return;
+      }
+      if (playingList){
+        /* listening to all of it: jump the recitation to the next piece */
+        var j = AM.play.map.indexOf(nx);
+        if (j >= 0){ RD.qi = j; RD.midAyah = "start"; RD.ayahLeft = 0; rdNext(); return; }
+      }
+      if (rdAudio) rdStop();
+      amalRead(A2.id, nx);
+    };
+  });
+}
+/* a small line on Today for the list that fits the hour, while it is not done */
+function amTodayCard(){
+  var id = amNow(), set = amSet(id), T = amL();
+  if (!set || !snState(id).on || amAllDone(id)) return "";
+  return '<button class="amtoday" id="am-today" data-amopen="' + id + '">' +
+    '<span class="amti">' + (id === "night" ? "☾" : id === "kahf" ? "✦" : "☀") + '</span>' +
+    '<span class="amtt"><b>' + esc(snTx(set.t)) + '</b><i>' + esc(fmt(T.prog, n(amCount(id)), n((AMP[id] || []).length))) + '</i></span>' +
+    '<span class="amtg">›</span></button>';
+}
+function amTodaySync(){
+  var b = document.getElementById("am-today");
+  if (!b) return;
+  var h = amTodayCard();
+  if (!h){ b.remove(); return; }
+  var t = document.createElement("div"); t.innerHTML = h;
+  b.replaceWith(t.firstChild);
+  var nb = document.getElementById("am-today");
+  if (nb) nb.onclick = function(){ amalOpen(nb.dataset.amopen); };
 }
 function ntSchedule(){
   clearInterval(NT.timer);
@@ -13829,6 +14171,8 @@ function drawerIcons(){
       night:   ricc('<path d="M20 14.6A8.6 8.6 0 0 1 9.4 4a8.6 8.6 0 1 0 10.6 10.6z" fill="' + IC.skyS + '" stroke="' + IC.skyD + '" stroke-width="1.4"/>'),
       cloud:   ricc('<path d="M7 18.4a4.2 4.2 0 0 1 .5-8.4A5.6 5.6 0 0 1 18 10.6a3.9 3.9 0 0 1-.5 7.8z" fill="' + IC.skyS + '" stroke="' + IC.skyD + '" stroke-width="1.3"/>' +
                     '<path d="M12 20.4v-7M9.2 15.8L12 13l2.8 2.8" stroke="' + IC.skyD + '" stroke-width="1.8"/>'),
+      amal:    ricc('<path d="M15.8 4.2A8.2 8.2 0 1 0 19.8 16a6.6 6.6 0 1 1-4-11.8z" fill="' + IC.brassS + '" stroke="' + IC.brassD + '" stroke-width="1.4"/>' +
+                    '<path d="M17.6 7.4l.7 1.5 1.6.2-1.2 1.1.3 1.6-1.4-.8-1.4.8.3-1.6-1.2-1.1 1.6-.2z" fill="' + IC.brassD + '"/>'),
       contact: ricc('<rect x="2.8" y="5" width="18.4" height="14" rx="2.2" fill="' + IC.brassS + '" stroke="' + IC.brassD + '" stroke-width="1.3"/>' +
                     '<path d="M3.6 6.6L12 13l8.4-6.4" stroke="' + IC.brassD + '" stroke-width="1.5"/>')
     };
@@ -13970,6 +14314,12 @@ function drawerWire(){
     db.onclick = dlOpen;
     var dbl = document.getElementById("dw-dl-l");
     if (dbl) dbl.textContent = dlL().title;
+  }
+  var amd = document.getElementById("dw-amal");
+  if (amd){
+    amd.onclick = function(){ drawerClose(); amalOpen(); };
+    var aml = document.getElementById("dw-amal-l");
+    if (aml) aml.textContent = amL().menu;
   }
   var lb = document.getElementById("dw-listen");
   if (lb){
